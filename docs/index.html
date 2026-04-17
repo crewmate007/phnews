@@ -85,7 +85,7 @@
     <h1 id="h-title">🇵🇭 PHNews 预测市场话题日报</h1>
     <div class="meta">
       <span>📅 2026-04-17</span>
-      <span id="h-clusters">📰 抓取 170 条 Google News 聚类</span>
+      <span id="h-clusters">📰 抓取 151 条 Google News 聚类</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
   </div>
@@ -96,11 +96,11 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="val">10</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
-  <div class="stat"><div class="val" style="color:#4ade80">5</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
+  <div class="stat"><div class="val">9</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val" style="color:#4ade80">3</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
   <div class="stat"><div class="val" style="color:#fbbf24">3</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">9</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
-  <div class="stat"><div class="val" style="color:#64748b">119</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+  <div class="stat"><div class="val">6</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">109</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
 <div class="main" id="cards"></div>
@@ -135,142 +135,124 @@ const i18n = {
 
 const groups = [
   {
-    name_en: "Israel-Lebanon War & Iran Impact",
-    name_zh: "以黎战争与伊朗危机",
-    density: 9,
-    R: 2, S: 2, T: 1, U: 2, H: 2,
-    narrative_zh: "停火协议仍在效力中，但全球能源安全与航运通道封锁仍是关键风险。伊朗制裁直接影响菲律宾油价。",
-    narrative_en: "A ceasefire is in effect between Israel and Lebanon, but global energy security and shipping lane blockades remain critical risks. Iran sanctions directly impact Philippine fuel prices.",
+    name_en: "Middle East Conflict Energy Impacts",
+    name_zh: "中东冲突能源影响",
+    density: 11,
+    R: 2, S: 2, T: 2, U: 2, H: 2,
+    narrative_zh: "中东紧张局势升级和霍尔木兹海峡封锁风险推动油价波动，引发菲律宾通胀与能源短缺忧虑。",
+    narrative_en: "Escalating tensions in the Middle East and the closure of the Strait of Hormuz are driving oil price volatility, inflation risks, and potential energy shortages in the Philippines.",
     bettable: true,
-    question: "Will the Israel-Lebanon ceasefire hold for at least 30 days?",
-    source: "UN Security Council / major international news outlets",
-    prob: 38,
-    prob_reason_zh: "美伊制裁同步升级，停火基础脆弱",
-    prob_reason_en: "US-Iran sanctions escalating simultaneously; ceasefire foundation is fragile"
+    question: "Will average gasoline pump prices in Metro Manila exceed P80 per liter by May 31, 2026?",
+    source: "Department of Energy (DOE) Weekly Advisory",
+    prob: 45,
+    prob_reason_zh: "油价处于高位但尚未突破₱80，海湾局势决定性因素仍在演变",
+    prob_reason_en: "Prices elevated but not yet past ₱80; Gulf situation is the decisive variable and remains in flux"
   },
   {
-    name_en: "Fuel & Energy Price Relief",
-    name_zh: "能源价格与通胀纾困",
-    density: 7,
-    R: 2, S: 2, T: 2, U: 1, H: 2,
-    narrative_zh: "政府推进燃油补贴、消费税暂停等纾困措施，应对高能源成本对民众生活的冲击。",
-    narrative_en: "Government advancing fuel subsidies and excise tax suspensions to cushion households from high energy costs amid global oil market volatility.",
+    name_en: "VP Duterte Corruption Allegations",
+    name_zh: "副总统腐败调查",
+    density: 4,
+    R: 1, S: 1, T: 1, U: 2, H: 2,
+    narrative_zh: "国会专门委员会与监察专员办公室加紧调查副总统Sara Duterte机密资金及涉嫌不明财富问题。",
+    narrative_en: "Congressional panels and the Ombudsman are intensifying investigations into Vice President Sara Duterte's confidential funds and alleged unexplained wealth.",
     bettable: true,
-    question: "Will the average price of diesel in Metro Manila drop below ₱65/L by June 2026?",
-    source: "Department of Energy weekly price monitoring report",
-    prob: 28,
-    prob_reason_zh: "中东危机推高全球油价，₱65门槛偏乐观",
-    prob_reason_en: "Middle East crisis pushing global oil prices up; ₱65 threshold is optimistic"
+    question: "Will the House of Representatives formally recommend the filing of impeachment charges against VP Duterte by July 2026?",
+    source: "House of Representatives Official Records",
+    prob: 55,
+    prob_reason_zh: "调查进展快、民调支持高，但正式弹劾建议需政治博弈",
+    prob_reason_en: "Investigation advancing fast with strong public support; formal recommendation still requires political negotiation"
   },
   {
-    name_en: "Entertainment & Celebrity News",
-    name_zh: "娱乐与名人新闻",
-    density: 7,
-    R: 0, S: 0, T: 0, U: 0, H: 2,
-    narrative_zh: "BINI走红、名人官司、ABS-CBN监管争议等娱乐议题。社交媒体热度高但无可下注结果。",
-    narrative_en: "BINI's rising fame, celebrity lawsuits, and ABS-CBN regulatory controversies dominate entertainment news. High social media engagement but no resolvable outcomes.",
+    name_en: "ABS-CBN Leadership and Recovery",
+    name_zh: "ABS-CBN领导层与恢复",
+    density: 4,
+    R: 1, S: 1, T: 0, U: 1, H: 2,
+    narrative_zh: "ABS-CBN管理层面临董事会内部纠纷及复兴计划执行压力，持续受到密切关注。",
+    narrative_en: "ABS-CBN management remains under intense scrutiny amid internal board disputes and ongoing efforts to execute its recovery plan.",
     bettable: false,
     question: null,
     source: null,
     prob: null
   },
   {
-    name_en: "Sara Duterte Political Scandals",
-    name_zh: "莎拉·杜特尔特政治丑闻",
+    name_en: "Economic Stimulus and MSME Aid",
+    name_zh: "中小企业经济救助",
+    density: 5,
+    R: 2, S: 2, T: 1, U: 1, H: 1,
+    narrative_zh: "政府推出数十亿比索贷款与现金救助计划，支持中小企业、司机、农民应对经济压力。",
+    narrative_en: "The government is rolling out multi-billion peso loan packages and cash aid to support MSMEs, drivers, and farmers against economic pressures.",
+    bettable: true,
+    question: "Will the P6B loan package for MSMEs reach 50% disbursement by end of Q3 2026?",
+    source: "Department of Trade and Industry (DTI) Reports",
+    prob: 38,
+    prob_reason_zh: "菲律宾政府资金发放历来迟缓，50%门槛在Q3前偏乐观",
+    prob_reason_en: "PH disbursement historically slow; 50% by Q3 is an optimistic benchmark"
+  },
+  {
+    name_en: "Jollibee International Expansion",
+    name_zh: "快乐蜂国际扩张",
     density: 3,
-    R: 2, S: 2, T: 1, U: 2, H: 2,
-    narrative_zh: "副总统Sara Duterte深陷与中国资金、COA审计和安全人员相关的多重争议，弹劾调查持续推进。",
-    narrative_en: "VP Sara Duterte faces intensifying controversies over Chinese-linked funds, COA audits, and security detail personnel. Impeachment investigation continues to advance.",
-    bettable: true,
-    question: "Will an impeachment complaint against Sara Duterte be officially filed in the House by end of 2026?",
-    source: "House of Representatives of the Philippines",
-    prob: 82,
-    prob_reason_zh: "民调过半支持、多份申诉已在准备中，政治动能强劲",
-    prob_reason_en: "Majority public support; multiple complaints in preparation; strong political momentum"
+    R: 2, S: 2, T: 1, U: 0, H: 1,
+    narrative_zh: "快乐蜂集团积极收购国际资产，包括韩国火锅连锁，并将Compose Coffee引入菲律宾市场。",
+    narrative_en: "Jollibee Foods Corp is aggressively acquiring international assets, including hot pot chains in South Korea and the introduction of Compose Coffee to the PH market.",
+    bettable: false,
+    question: null,
+    source: null,
+    prob: null
   },
   {
-    name_en: "Philippine Banking Sector Resilience",
-    name_zh: "菲律宾银行业稳定性",
-    density: 5,
-    R: 2, S: 2, T: 2, U: 2, H: 1,
-    narrative_zh: "分析师评估菲律宾银行业在外部经济冲击下的韧性，BSP货币政策走向备受关注。",
-    narrative_en: "Analysts assess Philippine banks' resilience against external economic shocks. BSP monetary policy direction closely watched as inflation pressures mount.",
+    name_en: "Zaldy Co Corruption Case",
+    name_zh: "Zaldy Co贪腐案",
+    density: 3,
+    R: 2, S: 2, T: 1, U: 1, H: 2,
+    narrative_zh: "前议员Zaldy Co在布拉格被捕，将面临与菲律宾防洪贪腐案相关的引渡程序。",
+    narrative_en: "Former MP Zaldy Co has been arrested in Prague and faces deportation/extradition regarding a Philippine flood corruption scandal.",
     bettable: true,
-    question: "Will the BSP keep interest rates unchanged in the Q3 2026 meeting?",
-    source: "Bangko Sentral ng Pilipinas monetary policy releases",
+    question: "Will Zaldy Co be successfully extradited to the Philippines by end of 2026?",
+    source: "Department of Justice (DOJ) Philippines",
+    prob: 48,
+    prob_reason_zh: "捷克引渡程序耗时，政府已正式施压但2026年底前完成存在不确定性",
+    prob_reason_en: "Czech extradition procedures are lengthy; strong PH government pressure but year-end 2026 is tight"
+  },
+  {
+    name_en: "Infrastructure and Power Stability",
+    name_zh: "基建与电力稳定",
+    density: 3,
+    R: 2, S: 2, T: 2, U: 2, H: 2,
+    narrative_zh: "吕宋电网频发黄色警戒，燃料成本推高电价，ERC与Meralco面临压力。",
+    narrative_en: "Luzon is experiencing grid instability (yellow alerts) and rising power rates due to fuel costs, putting pressure on ERC and Meralco.",
+    bettable: true,
+    question: "Will there be more than 10 yellow grid alerts in the Luzon grid during May 2026?",
+    source: "National Grid Corporation of the Philippines (NGCP)",
+    prob: 72,
+    prob_reason_zh: "夏季用电高峰+燃料供应紧张，5月黄色警戒大概率频发",
+    prob_reason_en: "Summer peak demand plus tight fuel supply make frequent May yellow alerts likely"
+  },
+  {
+    name_en: "National Sports and Culture",
+    name_zh: "体育与文化动态",
+    density: 6,
+    R: 2, S: 2, T: 2, U: 2, H: 2,
+    narrative_zh: "菲律宾运动员在篮球/排球联赛及国际流行文化领域取得进展，BINI登上Coachella舞台。",
+    narrative_en: "Updates on Filipino athletes in basketball/volleyball leagues and international pop culture success, such as BINI at Coachella.",
+    bettable: true,
+    question: "Will Creamline win the PVL Finals?",
+    source: "PVL Official Results",
     prob: 42,
-    prob_reason_zh: "OCBC明确预测加息，通胀压力持续但经济增长顾虑制衡",
-    prob_reason_en: "OCBC explicitly forecasts a hike; inflation pressure ongoing but growth concerns provide counterweight"
+    prob_reason_zh: "Creamline常规赛表现强劲但对手实力相当，总决赛通常五五开",
+    prob_reason_en: "Creamline strong in regular season but finals matchups historically close to coin-flip"
   },
   {
-    name_en: "Corporate Expansion & M&A",
-    name_zh: "企业并购与扩张",
-    density: 5,
+    name_en: "Public Health and Vaccination",
+    name_zh: "公共卫生与疫苗",
+    density: 4,
     R: 2, S: 2, T: 2, U: 1, H: 1,
-    narrative_zh: "Jollibee、Megaworld等龙头企业宣布新收购和扩张计划，菲律宾航空开辟新国际航线。",
-    narrative_en: "Major conglomerates Jollibee and Megaworld announce new acquisitions and expansion plans. Philippine Airlines set to launch new international routes.",
-    bettable: true,
-    question: "Will Philippine Airlines launch the Manila-Chicago route by Nov 9, 2026?",
-    source: "CAAP / PAL official announcements",
-    prob: 58,
-    prob_reason_zh: "已公告具体日期，但航线开通常因监管/时刻表问题延期",
-    prob_reason_en: "Specific date announced, but route launches frequently delayed by regulatory or slot issues"
-  },
-  {
-    name_en: "Public Infrastructure & Transport",
-    name_zh: "交通与公共设施项目",
-    density: 5,
-    R: 2, S: 2, T: 1, U: 1, H: 2,
-    narrative_zh: "参议院调查不存在的防洪工程，PNPA骚扰事件，交通罢工冲击公共服务。",
-    narrative_en: "Senate investigates 'non-existent' flood control projects. PNPA hazing incident and transport strikes continue to impact public services.",
-    bettable: true,
-    question: "Will the Senate conclude its inquiry into the 'non-existent' flood control projects by mid-2026?",
-    source: "Senate of the Philippines",
-    prob: 18,
-    prob_reason_zh: "距今仅6-8周，菲律宾参院调查历来拖延，极少按时结案",
-    prob_reason_en: "Only 6-8 weeks away; Philippine Senate inquiries historically drag on well past deadlines"
-  },
-  {
-    name_en: "Zaldy Co Case & Corruption",
-    name_zh: "Zaldy Co腐败指控",
-    density: 4,
-    R: 2, S: 2, T: 1, U: 2, H: 2,
-    narrative_zh: "高知名度腐败调查及相关法律障碍，涉及Zaldy Co等多名与腐败指控相关联的人员。",
-    narrative_en: "High-profile corruption investigation facing legal hurdles. Multiple officials linked to Zaldy Co face scrutiny from DOJ and congressional probes.",
-    bettable: true,
-    question: "Will an arrest warrant be issued for any high-ranking official linked to the Zaldy Co probe by Q4 2026?",
-    source: "Department of Justice press releases or court dockets",
-    prob: 28,
-    prob_reason_zh: "菲律宾司法程序慢，政治庇护风险高，历史案例鲜有快速结案",
-    prob_reason_en: "Philippine justice system moves slowly; political patronage risk high; few high-profile cases conclude quickly"
-  },
-  {
-    name_en: "West Philippine Sea Tensions",
-    name_zh: "西菲律宾海局势",
-    density: 4,
-    R: 1, S: 1, T: 1, U: 2, H: 2,
-    narrative_zh: "菲律宾与美国、中国之间的领土争端持续，Salaknib、Balikatan军事演习相继举行。",
-    narrative_en: "Ongoing territorial disputes between Philippines, US, and China. Salaknib and Balikatan joint military exercises signal heightened security posture.",
-    bettable: true,
-    question: "Will the Philippines and the US conduct any unplanned joint maritime patrol by year-end 2026?",
-    source: "Armed Forces of the Philippines official announcements",
-    prob: 68,
-    prob_reason_zh: "双方海军高频活动，'临时'定义宽松，南海紧张态势持续",
-    prob_reason_en: "Both navies highly active in region; 'unplanned' definition is loose; South China Sea tensions remain elevated"
-  },
-  {
-    name_en: "PH-US Economic Security Zone",
-    name_zh: "美菲经济安全区",
-    density: 2,
-    R: 2, S: 2, T: 1, U: 1, H: 2,
-    narrative_zh: "美菲两国正在建立4000英亩经济区，旨在保障供应链安全，具有重要地缘战略意义。",
-    narrative_en: "US and Philippines launching a 4,000-acre economic zone to secure supply chains, carrying significant geopolitical strategic importance.",
-    bettable: true,
-    question: "Will the first phase of the PH-US Economic Security Zone be operational by Dec 31, 2026?",
-    source: "Official Gazette of the Philippines or U.S. Embassy announcement",
-    prob: 22,
-    prob_reason_zh: "4000英亩经济区8个月内运营极不现实，大型基建项目普遍延期",
-    prob_reason_en: "4,000-acre economic zones don't become operational in 8 months; large infrastructure projects almost always run late"
+    narrative_zh: "麻疹疫情爆发、宫颈癌筛查覆盖不足、职场疫苗接种计划等公共卫生议题受到关注。",
+    narrative_en: "Public health concerns regarding measles outbreaks, cervical cancer screening gaps, and workplace vaccination initiatives.",
+    bettable: false,
+    question: null,
+    source: null,
+    prob: null
   },
 ];
 
