@@ -1,0 +1,41 @@
+topic_id: ph-bsp-rate
+topic_name: BSP 利率决议
+category: economy
+subcategory: monetary-policy
+cadence: one-shot       # 每次会议结束后 ARCHIVED，下次会议前重建
+language_primary: en
+status: ACTIVE
+expires_at: null        # 实例化时按日历填
+
+queries:
+  google_news:
+    en:
+      - 'BSP interest rate Philippines when:14d'
+      - 'Bangko Sentral monetary board when:14d'
+    tl:
+      - 'BSP interes Pilipinas when:14d'
+  reddit:
+    - feed_url: 'https://www.reddit.com/r/phinvest/search/.rss?q=BSP+OR+interest+rate&restrict_sr=on&sort=new'
+      subreddit: phinvest
+
+resolution:
+  primary_source: "Bangko Sentral ng Pilipinas - Monetary Board Press Release"
+  primary_url: "https://www.bsp.gov.ph/SitePages/MediaAndResearch/MonetaryPolicy.aspx"
+  secondary_sources:
+    - "BSP Official Twitter/X"
+  publication_schedule: "会议当日下午"
+  dispute_risk: low
+
+market_templates:
+  - template_id: bsp-rate-direction
+    type: multi-outcome
+    question_template: "BSP's decision at the {meeting_date} Monetary Board meeting?"
+    buckets: ["Cut 50bps+", "Cut 25bps", "Hold", "Hike 25bps", "Hike 50bps+"]
+  - template_id: bsp-rate-cut-binary
+    type: binary
+    question_template: "Will BSP cut the overnight rate at the {meeting_date} meeting?"
+    resolution_rule: "YES if BSP Monetary Board press release announces reduction in RRP rate"
+
+related_topics:
+  - ph-inflation-monthly
+  - ph-php-usd-weekly

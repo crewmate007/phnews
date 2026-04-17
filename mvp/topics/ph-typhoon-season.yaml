@@ -1,0 +1,40 @@
+topic_id: ph-typhoon-season
+topic_name: 台风季事件
+category: disaster
+subcategory: typhoon
+cadence: continuous       # 6-11 月活跃，其他月份 DORMANT
+language_primary: bilingual
+status: ACTIVE
+
+queries:
+  google_news:
+    en:
+      - 'PAGASA typhoon signal Philippines when:7d'
+      - 'Philippines typhoon landfall when:7d'
+      - 'Philippines storm signal when:24h'
+    tl:
+      - 'bagyo PAGASA when:24h'
+  reddit:
+    - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=typhoon+OR+bagyo+OR+pagasa&restrict_sr=on&sort=new'
+      subreddit: Philippines
+
+resolution:
+  primary_source: "PAGASA Severe Weather Bulletin"
+  primary_url: "https://www.pagasa.dost.gov.ph/"
+  publication_schedule: "每 3-6 小时更新"
+  dispute_risk: low
+
+market_templates:
+  - template_id: seasonal-landfall-count
+    type: numeric-bucket
+    question_template: "How many typhoons will make landfall during {year} season?"
+    buckets: ["0-5", "6-10", "11-15", "16-20", "20+"]
+    cadence: annual
+  - template_id: storm-signal-level
+    type: multi-outcome
+    question_template: "Highest storm signal reached for {storm_name}?"
+    buckets: ["Signal 1", "Signal 2", "Signal 3", "Signal 4", "Signal 5"]
+
+related_topics:
+  - ph-agriculture-damage
+  - ph-php-usd-weekly       # 严重台风会压汇率

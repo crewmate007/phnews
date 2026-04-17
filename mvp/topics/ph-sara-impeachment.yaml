@@ -1,0 +1,51 @@
+topic_id: ph-sara-impeachment
+topic_name: Sara Duterte 弹劾案
+category: politics
+subcategory: impeachment
+cadence: one-shot
+language_primary: bilingual
+status: ACTIVE
+expires_at: 2026-07-31    # 假设期限；实际按议会进程更新
+
+queries:
+  google_news:
+    en:
+      - '"Sara Duterte" (impeachment OR impeach OR conviction) when:7d'
+      - 'Philippines Vice President impeachment trial when:7d'
+      - 'Senate impeachment court Sara when:7d'
+    tl:
+      - 'Sara Duterte impeachment when:7d'
+  reddit:
+    - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=%22sara+duterte%22+impeachment&restrict_sr=on&sort=new'
+      subreddit: Philippines
+    - feed_url: 'https://www.reddit.com/r/PH_Politics/search/.rss?q=impeachment&restrict_sr=on&sort=new'
+      subreddit: PH_Politics
+
+canonical_entities:
+  - entity_id: "person:sara-duterte"
+    aliases: ["Sara Duterte", "Inday Sara", "VP Duterte", "Sara Z Duterte"]
+
+resolution:
+  primary_source: "Senate of the Philippines - Impeachment Court Verdict"
+  primary_url: "https://web.senate.gov.ph/"
+  secondary_sources:
+    - "Official Gazette"
+    - "House of Representatives"
+  publication_schedule: "表决当日"
+  dispute_risk: medium
+  dispute_notes: "区分'弹劾（众议院）'、'审判（参议院）'、'定罪'三个阶段；挂市场时要明确哪一阶段"
+
+market_templates:
+  - template_id: senate-conviction
+    type: binary
+    question_template: "Will the Senate convict Sara Duterte in the impeachment trial before {expires_at}?"
+    resolution_rule: "YES if 2/3 majority of Senators vote to convict on any article"
+  - template_id: trial-start-date
+    type: multi-outcome
+    question_template: "When will the Senate impeachment trial begin?"
+    buckets: ["Before 2026-06-01", "Jun-Jul 2026", "Aug-Oct 2026", "After 2026-10-01", "Never"]
+
+related_topics:
+  - ph-marcos-duterte-feud
+  - ph-duterte-icc
+  - ph-2028-election-positioning

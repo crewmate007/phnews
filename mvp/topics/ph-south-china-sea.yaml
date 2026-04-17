@@ -1,0 +1,44 @@
+topic_id: ph-south-china-sea
+topic_name: 南海中菲冲突事件
+category: geopolitics
+subcategory: maritime-dispute
+cadence: continuous      # 事件驱动，常态 DORMANT，有事件则 ACTIVE
+language_primary: bilingual
+status: ACTIVE
+
+queries:
+  google_news:
+    en:
+      - '"Scarborough Shoal" OR "Ayungin" OR "Second Thomas" Philippines when:7d'
+      - 'Philippines China (water cannon OR collision OR coast guard) when:7d'
+      - 'West Philippine Sea incident when:7d'
+    tl:
+      - 'Ayungin barko China when:7d'
+  reddit:
+    - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=scarborough+OR+ayungin+OR+%22south+china+sea%22&restrict_sr=on&sort=new'
+      subreddit: Philippines
+    - feed_url: 'https://www.reddit.com/r/geopolitics/search/.rss?q=philippines+china&restrict_sr=on&sort=new'
+      subreddit: geopolitics
+
+resolution:
+  primary_source: "Philippine Coast Guard + AFP + DFA (three-source cross-verification)"
+  primary_url: "https://coastguard.gov.ph/"
+  secondary_sources:
+    - "https://www.afp.mil.ph/"
+    - "https://dfa.gov.ph/"
+  publication_schedule: "事件后数小时内官方声明"
+  dispute_risk: medium
+  dispute_notes: "三方口径偶有出入；结算时以 PCG 主声明为准"
+
+market_templates:
+  - template_id: monthly-incident-count
+    type: numeric-bucket
+    question_template: "How many PCG-confirmed confrontations with Chinese vessels in {month}?"
+    buckets: ["0", "1-2", "3-5", "6+"]
+  - template_id: weekly-water-cannon
+    type: binary
+    question_template: "Will a water cannon incident be reported in the week of {week_start}?"
+
+related_topics:
+  - ph-us-military-deployment
+  - ph-duterte-icc

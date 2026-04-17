@@ -1,0 +1,45 @@
+topic_id: ph-fuel-weekly
+topic_name: 菲律宾每周油价调整
+category: economy
+subcategory: energy-prices
+cadence: weekly
+language_primary: bilingual
+status: ACTIVE
+
+queries:
+  google_news:
+    en:
+      - '"fuel price" Philippines (rollback OR hike) when:7d'
+      - 'diesel pump price Philippines DOE when:7d'
+    tl:
+      - 'presyo ng gasolina (taas OR baba) when:7d'
+  reddit:
+    - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=fuel+price+OR+gasoline+OR+diesel&restrict_sr=on&sort=new'
+      subreddit: Philippines
+    - feed_url: 'https://www.reddit.com/r/phinvest/search/.rss?q=oil+OR+fuel&restrict_sr=on&sort=new'
+      subreddit: phinvest
+
+resolution:
+  primary_source: "Department of Energy (DOE) - Weekly Oil Price Monitoring"
+  primary_url: "https://www.doe.gov.ph/energy-statistics/oil-monitor"
+  secondary_sources:
+    - "Petron Corp pump price advisory"
+    - "Pilipinas Shell pump price advisory"
+  publication_schedule: "DOE 公告每周一 15:00 PHT; 生效周二 00:01"
+  dispute_risk: low
+
+market_templates:
+  - template_id: weekly-diesel-direction
+    type: binary
+    question_template: "Will Philippine pump diesel prices see a NET INCREASE (hike > rollback) in the week of {week_start}?"
+    resolution_rule: "Resolved YES if DOE weekly bulletin shows net change > 0 PHP/L for Metro Manila diesel. Source: DOE weekly oil monitor."
+    cadence: weekly
+  - template_id: weekly-gasoline-magnitude
+    type: numeric-bucket
+    question_template: "Net change in Metro Manila RON95 gasoline for week of {week_start}?"
+    buckets: ["< -1.0", "-1.0 to -0.3", "-0.3 to +0.3", "+0.3 to +1.0", "> +1.0"]
+    cadence: weekly
+
+related_topics:
+  - ph-php-usd-weekly
+  - ph-inflation-monthly

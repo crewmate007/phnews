@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "created_at": "2026-04-15",
+    "purpose": "Few-shot examples for the Bettability Classifier LLM prompt. Include these as in-context examples before asking the LLM to score a new topic. One strong positive (10/10) and one strong negative (4/10 with double veto) — this pair calibrates both dimensions: recognizing bettability AND recognizing the 'hot but unbettable' trap.",
+    "usage": "Prepend to system prompt. Keep examples stable across calls so scoring is reproducible."
+  },
+
+  "examples": [
+    {
+      "label": "POSITIVE_EXAMPLE - perfect bettability",
+      "topic_id": "ph-fuel-weekly-2026",
+      "topic_description": "Weekly pump price adjustment for diesel and gasoline in the Philippines. DOE announces every Monday; oil companies implement every Tuesday.",
+      "raw_signals": {
+        "google_news_24h_en": 12,
+        "google_news_24h_tl": 5,
+        "google_news_7d_total": 74,
+        "reddit_posts_24h": 4,
+        "reddit_top_upvotes": 847,
+        "factcheck_mentions_7d": 1,
+        "source_diversity": 7,
+        "is_bilingual_hot": true
+      },
+      "scoring": {
+        "R": {"score": 2, "reason": "DOE publishes exact peso/liter figures; cleanly verifiable"},
+        "S": {"score": 2, "reason": "DOE is the sole authoritative source under Philippine Oil Deregulation Law; cross-verified by oil companies", "proposed_source": "DOE Weekly Oil Price Monitoring Bulletin"},
+        "T": {"score": 2, "reason": "Weekly cycle; every Tuesday implementation is a natural anchor", "proposed_deadline": "next Tuesday 00:01 PHT"},
+        "U": {"score": 2, "reason": "Both direction and magnitude vary weekly based on crude futures + FX; no dominant prior", "implied_prob": 0.52},
+        "H": {"score": 2, "reason": "Multi-source news coverage + Reddit engagement + FB disinformation activity (fact-checkers intervening) = broad public attention"},
+        "total": 10,
+        "veto_dimensions": [],
+        "disposition": "TOP",
+        "suggested_market_question": "Will Philippine pump diesel prices see a NET INCREASE in the week of {week_start}?",
+        "market_type": "binary",
+        "cadence": "weekly"
+      },
+      "teaching_point": "When R/S/T/U are all strong AND the topic is hot, disposition is TOP. Extra signal: recurring cadence (weekly) means one topic spawns perpetual markets."
+    },
+
+    {
+      "label": "NEGATIVE_EXAMPLE - hot but unbettable, double veto",
+      "topic_id": "ph-celeb-breakup-q2-2026",
+      "topic_description": "Viral rumor that a famous Philippine showbiz couple (KathNiel-type national CP) has broken up. Multiple anonymous-source reports; managed silence from parties.",
+      "raw_signals": {
+        "google_news_24h_en": 42,
+        "google_news_24h_tl": 61,
+        "google_news_7d_total": 380,
+        "reddit_posts_24h": 21,
+        "reddit_top_upvotes": 2100,
+        "factcheck_mentions_7d": 1,
+        "source_diversity": 14,
+        "is_bilingual_hot": true,
+        "youtube_24h_views_estimate": "2M+"
+      },
+      "scoring": {
+        "R": {"score": 1, "reason": "'Officially confirm breakup' is nominally binary but in Philippine showbiz culture, couples rarely make formal announcements. Definition is fuzzy."},
+        "S": {"score": 0, "reason": "VETO. No authoritative resolution source exists. Celebrity Instagram posts can be deleted; management statements are deliberately ambiguous; media outlets contradict each other citing 'sources close to'.", "proposed_source": null},
+        "T": {"score": 1, "reason": "'By end of Q2' is an artificial time box, not a natural event deadline. High risk of expiring with neither confirmation nor denial."},
+        "U": {"score": 0, "reason": "VETO. Outcome is effectively predetermined. When 100+ articles already treat the breakup as fact, the probability of formal confirmation within any given window is < 15% (standard PH showbiz playbook is silence). Market will crush to one side, zero liquidity on the other.", "implied_prob": 0.12},
+        "H": {"score": 2, "reason": "Extreme heat: bilingual coverage, 14+ distinct outlets, viral Reddit threads, fact-checkers intervening on FB misinformation"},
+        "total": 4,
+        "veto_dimensions": ["S", "U"],
+        "disposition": "DROP_BUT_DIGEST",
+        "digest_category": "showbiz",
+        "suggested_market_question": null,
+        "rejection_explanation": "Double veto on S (no authoritative resolution source) and U (outcome effectively predetermined by the time it's this hot). Heat alone is insufficient — it may even be a red flag that the story has already resolved."
+      },
+      "teaching_point": "High heat with S=0 or U=0 is the classic trap. The rule: when H=2 but S or U is 0, the topic goes to DROP_BUT_DIGEST (shown in non-market 'hot topics' sidebar, never listed as a market). This protects market quality while still using the attention signal for product engagement."
+    }
+  ],
+
+  "decision_rules": {
+    "disposition_mapping": {
+      "TOP":              "total >= 9 AND veto_dimensions is empty",
+      "CANDIDATE":        "7 <= total <= 8 AND veto_dimensions is empty",
+      "WATCH":            "5 <= total <= 6 OR (total >= 7 AND veto_dimensions has exactly one of ['T'])",
+      "DROP":             "total <= 4 AND heat_score < 0.7",
+      "DROP_BUT_DIGEST":  "veto_dimensions contains 'S' OR 'U' AND heat_score >= 0.7"
+    },
+    "hard_rules": [
+      "Any topic with S=0 CANNOT be disposition=TOP regardless of total score",
+      "Any topic with U=0 CANNOT be disposition=TOP regardless of total score",
+      "Topics with T=0 can reach CANDIDATE but not TOP (pending a known resolution date)",
+      "Topics with R=0 must be rewritten by LLM into a well-defined question and re-scored, not directly dropped"
+    ]
+  }
+}
