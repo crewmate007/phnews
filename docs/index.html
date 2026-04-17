@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHNews · Prediction Market Daily · 2026-04-17</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+
+  header { padding: 32px 40px 24px; border-bottom: 1px solid #1e2535; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  header h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  header .meta { margin-top: 6px; font-size: 13px; color: #64748b; }
+  header .meta span { margin-right: 20px; }
+
+  .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; }
+  .lang-btn.active { background: #1e2535; color: #fff; }
+
+  .stats { display: flex; gap: 12px; padding: 20px 40px; border-bottom: 1px solid #1e2535; flex-wrap: wrap; }
+  .stat { background: #161b27; border: 1px solid #1e2535; border-radius: 8px; padding: 14px 20px; min-width: 110px; }
+  .stat .val { font-size: 26px; font-weight: 700; color: #fff; }
+  .stat .lbl { font-size: 11px; color: #64748b; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
+
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card:hover { border-color: #334155; }
+  .card.top    { border-left: 3px solid #22c55e; }
+  .card.candidate { border-left: 3px solid #f59e0b; }
+  .card.watch  { border-left: 3px solid #3b82f6; }
+  .card.drop   { border-left: 3px solid #374151; opacity: 0.6; }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .card-title { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.3; }
+  .card-title .sub { display: block; font-size: 12px; color: #64748b; font-weight: 400; margin-top: 3px; }
+
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 10px; margin-top: 2px; }
+  .badge.top       { background: #14532d; color: #4ade80; }
+  .badge.candidate { background: #451a03; color: #fbbf24; }
+  .badge.watch     { background: #1e3a5f; color: #60a5fa; }
+  .badge.drop      { background: #1f2937; color: #6b7280; }
+
+  .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+
+  .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 4px; background: #1e2535; border-radius: 2px; }
+  .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
+  .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
+
+  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
+  .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
+  .dim .score  { font-size: 16px; font-weight: 700; }
+  .dim .score.s2 { color: #22c55e; }
+  .dim .score.s1 { color: #f59e0b; }
+  .dim .score.s0 { color: #ef4444; }
+  .dim-total { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; margin-left: 4px; border: 1px solid #1e2535; }
+  .dim-total .letter { font-size: 10px; color: #64748b; font-weight: 600; }
+  .dim-total .score  { font-size: 16px; font-weight: 700; color: #fff; }
+
+  .question-box { background: #0f1117; border: 1px solid #1e2535; border-radius: 8px; padding: 12px 14px; margin-top: 4px; }
+  .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
+  .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    header, .stats, .main { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="h-title">🇵🇭 PHNews 预测市场话题日报</h1>
+    <div class="meta">
+      <span>📅 2026-04-17</span>
+      <span id="h-clusters">📰 抓取 170 条 Google News 聚类</span>
+      <span>🤖 Gemini 3.1 Flash Lite</span>
+    </div>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="val">10</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val" style="color:#4ade80">5</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
+  <div class="stat"><div class="val" style="color:#fbbf24">3</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
+  <div class="stat"><div class="val">9</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">119</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+</div>
+
+<div class="main" id="cards"></div>
+
+<script>
+let currentLang = "zh";
+
+const i18n = {
+  zh: {
+    title: "🇵🇭 PHNews 预测市场话题日报",
+    clusters: "📰 抓取 170 条 Google News 聚类",
+    density: "新闻密度",
+    articles: "条",
+    total: "合计",
+    q_label: "建议市场问题",
+    resolution: "📎 结算源：",
+    no_bet: "不适合作为预测市场话题",
+    badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
+  },
+  en: {
+    title: "🇵🇭 PHNews Prediction Market Daily",
+    clusters: "📰 170 Google News clusters fetched",
+    density: "Coverage",
+    articles: "articles",
+    total: "Total",
+    q_label: "Suggested Market Question",
+    resolution: "📎 Resolution source: ",
+    no_bet: "Not suitable as a prediction market topic",
+    badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
+  }
+};
+
+const groups = [
+  {
+    name_en: "Israel-Lebanon War & Iran Impact",
+    name_zh: "以黎战争与伊朗危机",
+    density: 9,
+    R: 2, S: 2, T: 1, U: 2, H: 2,
+    narrative_zh: "停火协议仍在效力中，但全球能源安全与航运通道封锁仍是关键风险。伊朗制裁直接影响菲律宾油价。",
+    narrative_en: "A ceasefire is in effect between Israel and Lebanon, but global energy security and shipping lane blockades remain critical risks. Iran sanctions directly impact Philippine fuel prices.",
+    bettable: true,
+    question: "Will the Israel-Lebanon ceasefire hold for at least 30 days?",
+    source: "UN Security Council / major international news outlets"
+  },
+  {
+    name_en: "Fuel & Energy Price Relief",
+    name_zh: "能源价格与通胀纾困",
+    density: 7,
+    R: 2, S: 2, T: 2, U: 1, H: 2,
+    narrative_zh: "政府推进燃油补贴、消费税暂停等纾困措施，应对高能源成本对民众生活的冲击。",
+    narrative_en: "Government advancing fuel subsidies and excise tax suspensions to cushion households from high energy costs amid global oil market volatility.",
+    bettable: true,
+    question: "Will the average price of diesel in Metro Manila drop below ₱65/L by June 2026?",
+    source: "Department of Energy weekly price monitoring report"
+  },
+  {
+    name_en: "Entertainment & Celebrity News",
+    name_zh: "娱乐与名人新闻",
+    density: 7,
+    R: 0, S: 0, T: 0, U: 0, H: 2,
+    narrative_zh: "BINI走红、名人官司、ABS-CBN监管争议等娱乐议题。社交媒体热度高但无可下注结果。",
+    narrative_en: "BINI's rising fame, celebrity lawsuits, and ABS-CBN regulatory controversies dominate entertainment news. High social media engagement but no resolvable outcomes.",
+    bettable: false,
+    question: null,
+    source: null
+  },
+  {
+    name_en: "Sara Duterte Political Scandals",
+    name_zh: "莎拉·杜特尔特政治丑闻",
+    density: 3,
+    R: 2, S: 2, T: 1, U: 2, H: 2,
+    narrative_zh: "副总统Sara Duterte深陷与中国资金、COA审计和安全人员相关的多重争议，弹劾调查持续推进。",
+    narrative_en: "VP Sara Duterte faces intensifying controversies over Chinese-linked funds, COA audits, and security detail personnel. Impeachment investigation continues to advance.",
+    bettable: true,
+    question: "Will an impeachment complaint against Sara Duterte be officially filed in the House by end of 2026?",
+    source: "House of Representatives of the Philippines"
+  },
+  {
+    name_en: "Philippine Banking Sector Resilience",
+    name_zh: "菲律宾银行业稳定性",
+    density: 5,
+    R: 2, S: 2, T: 2, U: 2, H: 1,
+    narrative_zh: "分析师评估菲律宾银行业在外部经济冲击下的韧性，BSP货币政策走向备受关注。",
+    narrative_en: "Analysts assess Philippine banks' resilience against external economic shocks. BSP monetary policy direction closely watched as inflation pressures mount.",
+    bettable: true,
+    question: "Will the BSP keep interest rates unchanged in the Q3 2026 meeting?",
+    source: "Bangko Sentral ng Pilipinas monetary policy releases"
+  },
+  {
+    name_en: "Corporate Expansion & M&A",
+    name_zh: "企业并购与扩张",
+    density: 5,
+    R: 2, S: 2, T: 2, U: 1, H: 1,
+    narrative_zh: "Jollibee、Megaworld等龙头企业宣布新收购和扩张计划，菲律宾航空开辟新国际航线。",
+    narrative_en: "Major conglomerates Jollibee and Megaworld announce new acquisitions and expansion plans. Philippine Airlines set to launch new international routes.",
+    bettable: true,
+    question: "Will Philippine Airlines launch the Manila-Chicago route by Nov 9, 2026?",
+    source: "CAAP / PAL official announcements"
+  },
+  {
+    name_en: "Public Infrastructure & Transport",
+    name_zh: "交通与公共设施项目",
+    density: 5,
+    R: 2, S: 2, T: 1, U: 1, H: 2,
+    narrative_zh: "参议院调查不存在的防洪工程，PNPA骚扰事件，交通罢工冲击公共服务。",
+    narrative_en: "Senate investigates 'non-existent' flood control projects. PNPA hazing incident and transport strikes continue to impact public services.",
+    bettable: true,
+    question: "Will the Senate conclude its inquiry into the 'non-existent' flood control projects by mid-2026?",
+    source: "Senate of the Philippines"
+  },
+  {
+    name_en: "Zaldy Co Case & Corruption",
+    name_zh: "Zaldy Co腐败指控",
+    density: 4,
+    R: 2, S: 2, T: 1, U: 2, H: 2,
+    narrative_zh: "高知名度腐败调查及相关法律障碍，涉及Zaldy Co等多名与腐败指控相关联的人员。",
+    narrative_en: "High-profile corruption investigation facing legal hurdles. Multiple officials linked to Zaldy Co face scrutiny from DOJ and congressional probes.",
+    bettable: true,
+    question: "Will an arrest warrant be issued for any high-ranking official linked to the Zaldy Co probe by Q4 2026?",
+    source: "Department of Justice press releases or court dockets"
+  },
+  {
+    name_en: "West Philippine Sea Tensions",
+    name_zh: "西菲律宾海局势",
+    density: 4,
+    R: 1, S: 1, T: 1, U: 2, H: 2,
+    narrative_zh: "菲律宾与美国、中国之间的领土争端持续，Salaknib、Balikatan军事演习相继举行。",
+    narrative_en: "Ongoing territorial disputes between Philippines, US, and China. Salaknib and Balikatan joint military exercises signal heightened security posture.",
+    bettable: true,
+    question: "Will the Philippines and the US conduct any unplanned joint maritime patrol by year-end 2026?",
+    source: "Armed Forces of the Philippines official announcements"
+  },
+  {
+    name_en: "PH-US Economic Security Zone",
+    name_zh: "美菲经济安全区",
+    density: 2,
+    R: 2, S: 2, T: 1, U: 1, H: 2,
+    narrative_zh: "美菲两国正在建立4000英亩经济区，旨在保障供应链安全，具有重要地缘战略意义。",
+    narrative_en: "US and Philippines launching a 4,000-acre economic zone to secure supply chains, carrying significant geopolitical strategic importance.",
+    bettable: true,
+    question: "Will the first phase of the PH-US Economic Security Zone be operational by Dec 31, 2026?",
+    source: "Official Gazette of the Philippines or U.S. Embassy announcement"
+  },
+];
+
+function getDisposition(g) {
+  const total = g.R + g.S + g.T + g.U + g.H;
+  const veto = [g.R, g.S, g.T, g.U, g.H].filter(s => s === 0).length;
+  if (!g.bettable) return "drop";
+  if (veto === 0 && total >= 9) return "top";
+  if (veto === 0 && total >= 7) return "candidate";
+  return "watch";
+}
+
+const MAX_DENSITY = Math.max(...groups.map(g => g.density));
+
+const sorted = [...groups].sort((a, b) => {
+  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
+  const da = getDisposition(a), db = getDisposition(b);
+  if (order[da] !== order[db]) return order[da] - order[db];
+  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+});
+
+function renderCards(lang) {
+  const t = i18n[lang];
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+
+  sorted.forEach(g => {
+    const disp = getDisposition(g);
+    const total = g.R + g.S + g.T + g.U + g.H;
+    const pct = Math.round((g.density / MAX_DENSITY) * 100);
+    const title   = lang === "zh" ? g.name_zh : g.name_en;
+    const sub     = lang === "zh" ? g.name_en : g.name_zh;
+    const narr    = lang === "zh" ? g.narrative_zh : g.narrative_en;
+    const densityCount = lang === "zh" ? `${g.density} ${t.articles}` : `${g.density} ${t.articles}`;
+
+    const card = document.createElement("div");
+    card.className = `card ${disp}`;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-title">
+          ${title}
+          <span class="sub">${sub}</span>
+        </div>
+        <span class="badge ${disp}">${t.badge[disp]}</span>
+      </div>
+
+      <p class="narrative">${narr}</p>
+
+      <div class="density-bar">
+        <div class="label">${t.density}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="count">${densityCount}</div>
+      </div>
+
+      <div class="rstuh">
+        ${["R","S","T","U","H"].map((l,i) => {
+          const s = [g.R,g.S,g.T,g.U,g.H][i];
+          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+        }).join("")}
+        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+      </div>
+
+      ${g.bettable && g.question ? `
+      <div class="question-box">
+        <div class="q-label">${t.q_label}</div>
+        <div class="q-text">${g.question}</div>
+        <div class="q-source">${t.resolution}${g.source}</div>
+      </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+    `;
+    container.appendChild(card);
+  });
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.textContent.trim() === (lang === "zh" ? "中文" : "EN")));
+  document.getElementById("h-title").textContent = i18n[lang].title;
+  document.getElementById("h-clusters").textContent = i18n[lang].clusters;
+  document.querySelectorAll("[data-zh]").forEach(el => {
+    el.textContent = el.dataset[lang];
+  });
+  renderCards(lang);
+}
+
+// Initial render
+renderCards("zh");
+</script>
+
+</body>
+</html>
