@@ -66,6 +66,12 @@
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
 
+  .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .prob-bar-track { flex: 1; height: 6px; background: #1e2535; border-radius: 3px; }
+  .prob-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+  .prob-val { font-size: 14px; font-weight: 700; white-space: nowrap; min-width: 38px; text-align: right; }
+
   @media (max-width: 900px) {
     .main { grid-template-columns: 1fr; }
     header, .stats, .main { padding-left: 20px; padding-right: 20px; }
@@ -137,7 +143,10 @@ const groups = [
     narrative_en: "A ceasefire is in effect between Israel and Lebanon, but global energy security and shipping lane blockades remain critical risks. Iran sanctions directly impact Philippine fuel prices.",
     bettable: true,
     question: "Will the Israel-Lebanon ceasefire hold for at least 30 days?",
-    source: "UN Security Council / major international news outlets"
+    source: "UN Security Council / major international news outlets",
+    prob: 38,
+    prob_reason_zh: "美伊制裁同步升级，停火基础脆弱",
+    prob_reason_en: "US-Iran sanctions escalating simultaneously; ceasefire foundation is fragile"
   },
   {
     name_en: "Fuel & Energy Price Relief",
@@ -148,7 +157,10 @@ const groups = [
     narrative_en: "Government advancing fuel subsidies and excise tax suspensions to cushion households from high energy costs amid global oil market volatility.",
     bettable: true,
     question: "Will the average price of diesel in Metro Manila drop below ₱65/L by June 2026?",
-    source: "Department of Energy weekly price monitoring report"
+    source: "Department of Energy weekly price monitoring report",
+    prob: 28,
+    prob_reason_zh: "中东危机推高全球油价，₱65门槛偏乐观",
+    prob_reason_en: "Middle East crisis pushing global oil prices up; ₱65 threshold is optimistic"
   },
   {
     name_en: "Entertainment & Celebrity News",
@@ -159,7 +171,8 @@ const groups = [
     narrative_en: "BINI's rising fame, celebrity lawsuits, and ABS-CBN regulatory controversies dominate entertainment news. High social media engagement but no resolvable outcomes.",
     bettable: false,
     question: null,
-    source: null
+    source: null,
+    prob: null
   },
   {
     name_en: "Sara Duterte Political Scandals",
@@ -170,7 +183,10 @@ const groups = [
     narrative_en: "VP Sara Duterte faces intensifying controversies over Chinese-linked funds, COA audits, and security detail personnel. Impeachment investigation continues to advance.",
     bettable: true,
     question: "Will an impeachment complaint against Sara Duterte be officially filed in the House by end of 2026?",
-    source: "House of Representatives of the Philippines"
+    source: "House of Representatives of the Philippines",
+    prob: 82,
+    prob_reason_zh: "民调过半支持、多份申诉已在准备中，政治动能强劲",
+    prob_reason_en: "Majority public support; multiple complaints in preparation; strong political momentum"
   },
   {
     name_en: "Philippine Banking Sector Resilience",
@@ -181,7 +197,10 @@ const groups = [
     narrative_en: "Analysts assess Philippine banks' resilience against external economic shocks. BSP monetary policy direction closely watched as inflation pressures mount.",
     bettable: true,
     question: "Will the BSP keep interest rates unchanged in the Q3 2026 meeting?",
-    source: "Bangko Sentral ng Pilipinas monetary policy releases"
+    source: "Bangko Sentral ng Pilipinas monetary policy releases",
+    prob: 42,
+    prob_reason_zh: "OCBC明确预测加息，通胀压力持续但经济增长顾虑制衡",
+    prob_reason_en: "OCBC explicitly forecasts a hike; inflation pressure ongoing but growth concerns provide counterweight"
   },
   {
     name_en: "Corporate Expansion & M&A",
@@ -192,7 +211,10 @@ const groups = [
     narrative_en: "Major conglomerates Jollibee and Megaworld announce new acquisitions and expansion plans. Philippine Airlines set to launch new international routes.",
     bettable: true,
     question: "Will Philippine Airlines launch the Manila-Chicago route by Nov 9, 2026?",
-    source: "CAAP / PAL official announcements"
+    source: "CAAP / PAL official announcements",
+    prob: 58,
+    prob_reason_zh: "已公告具体日期，但航线开通常因监管/时刻表问题延期",
+    prob_reason_en: "Specific date announced, but route launches frequently delayed by regulatory or slot issues"
   },
   {
     name_en: "Public Infrastructure & Transport",
@@ -203,7 +225,10 @@ const groups = [
     narrative_en: "Senate investigates 'non-existent' flood control projects. PNPA hazing incident and transport strikes continue to impact public services.",
     bettable: true,
     question: "Will the Senate conclude its inquiry into the 'non-existent' flood control projects by mid-2026?",
-    source: "Senate of the Philippines"
+    source: "Senate of the Philippines",
+    prob: 18,
+    prob_reason_zh: "距今仅6-8周，菲律宾参院调查历来拖延，极少按时结案",
+    prob_reason_en: "Only 6-8 weeks away; Philippine Senate inquiries historically drag on well past deadlines"
   },
   {
     name_en: "Zaldy Co Case & Corruption",
@@ -214,7 +239,10 @@ const groups = [
     narrative_en: "High-profile corruption investigation facing legal hurdles. Multiple officials linked to Zaldy Co face scrutiny from DOJ and congressional probes.",
     bettable: true,
     question: "Will an arrest warrant be issued for any high-ranking official linked to the Zaldy Co probe by Q4 2026?",
-    source: "Department of Justice press releases or court dockets"
+    source: "Department of Justice press releases or court dockets",
+    prob: 28,
+    prob_reason_zh: "菲律宾司法程序慢，政治庇护风险高，历史案例鲜有快速结案",
+    prob_reason_en: "Philippine justice system moves slowly; political patronage risk high; few high-profile cases conclude quickly"
   },
   {
     name_en: "West Philippine Sea Tensions",
@@ -225,7 +253,10 @@ const groups = [
     narrative_en: "Ongoing territorial disputes between Philippines, US, and China. Salaknib and Balikatan joint military exercises signal heightened security posture.",
     bettable: true,
     question: "Will the Philippines and the US conduct any unplanned joint maritime patrol by year-end 2026?",
-    source: "Armed Forces of the Philippines official announcements"
+    source: "Armed Forces of the Philippines official announcements",
+    prob: 68,
+    prob_reason_zh: "双方海军高频活动，'临时'定义宽松，南海紧张态势持续",
+    prob_reason_en: "Both navies highly active in region; 'unplanned' definition is loose; South China Sea tensions remain elevated"
   },
   {
     name_en: "PH-US Economic Security Zone",
@@ -236,7 +267,10 @@ const groups = [
     narrative_en: "US and Philippines launching a 4,000-acre economic zone to secure supply chains, carrying significant geopolitical strategic importance.",
     bettable: true,
     question: "Will the first phase of the PH-US Economic Security Zone be operational by Dec 31, 2026?",
-    source: "Official Gazette of the Philippines or U.S. Embassy announcement"
+    source: "Official Gazette of the Philippines or U.S. Embassy announcement",
+    prob: 22,
+    prob_reason_zh: "4000英亩经济区8个月内运营极不现实，大型基建项目普遍延期",
+    prob_reason_en: "4,000-acre economic zones don't become operational in 8 months; large infrastructure projects almost always run late"
   },
 ];
 
@@ -303,7 +337,18 @@ function renderCards(lang) {
       <div class="question-box">
         <div class="q-label">${t.q_label}</div>
         <div class="q-text">${g.question}</div>
-        <div class="q-source">${t.resolution}${g.source}</div>
+        ${g.prob !== null ? (() => {
+          const p = g.prob;
+          const color = p >= 65 ? '#22c55e' : p >= 40 ? '#f59e0b' : '#ef4444';
+          const reason = lang === 'zh' ? g.prob_reason_zh : g.prob_reason_en;
+          return `<div class="prob-row">
+            <div class="prob-label">${lang === 'zh' ? 'YES 概率' : 'YES prob'}</div>
+            <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${p}%;background:${color}"></div></div>
+            <div class="prob-val" style="color:${color}">${p}%</div>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px">${reason}</div>`;
+        })() : ''}
+        <div class="q-source" style="margin-top:8px">${t.resolution}${g.source}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
     `;
     container.appendChild(card);
