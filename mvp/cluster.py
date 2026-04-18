@@ -82,7 +82,7 @@ SCORING GUIDE:
 
 
 def cluster_with_llm(clusters: List[Dict], api_key: str,
-                     model: str = "gemini-3.1-flash-lite-preview") -> Dict:
+                     model: str = "gemini-flash-latest") -> Dict:
     """Send all cluster titles to Gemini Flash and get topic groups back.
 
     Args:
