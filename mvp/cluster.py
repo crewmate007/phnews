@@ -177,34 +177,77 @@ def cluster_keyword_fallback(clusters: List[Dict]) -> Dict:
         if assigned[i] != -1:
             continue
         group_ids = [i]
-        assigned[i] = len(groups)
         for j in range(i + 1, len(clusters)):
             if assigned[j] != -1:
                 continue
             overlap = len(entry_kw[i] & entry_kw[j])
             if overlap >= 2:
                 group_ids.append(j)
-                assigned[j] = len(groups)
         if len(group_ids) > 1:
+            group_idx = len(groups)
+            for k in group_ids:
+                assigned[k] = group_idx
             rep = clusters[group_ids[0]]["cluster_title"]
+            source_count = sum(clusters[k].get("source_count", 1) for k in group_ids)
             groups.append({
                 "name": rep[:50],
                 "name_zh": rep[:50],
                 "entry_ids": group_ids,
-                "density": len(group_ids),
+                "density": source_count,
                 "narrative": f"{len(group_ids)} related entries",
                 "R": 1, "R_reason": "(heuristic)",
                 "S": 1, "S_reason": "(heuristic)",
                 "T": 1, "T_reason": "(heuristic)",
                 "U": 1, "U_reason": "(heuristic)",
-                "H": min(2, len(group_ids) // 2), "H_reason": f"{len(group_ids)} entries",
-                "bettable": len(group_ids) >= 3,
+                "H": 2 if source_count >= 5 else 1,
+                "H_reason": f"{source_count} source articles across {len(group_ids)} entries",
+                "bettable": source_count >= 3,
                 "suggested_question": None,
                 "resolution_source": "",
                 "clusters": [clusters[k] for k in group_ids],
             })
 
+    # Keep the no-LLM path useful for mock runs and low-dependency demos:
+    # promote the strongest remaining Google News clusters as standalone topics.
+    remaining = [i for i, a in enumerate(assigned) if a == -1]
+    remaining.sort(key=lambda i: clusters[i].get("source_count", 1), reverse=True)
+    for i in remaining[:max(0, 15 - len(groups))]:
+        c = clusters[i]
+        source_count = c.get("source_count", 1)
+        if source_count < 2:
+            continue
+        assigned[i] = len(groups)
+        title = c["cluster_title"]
+        groups.append({
+            "name": title[:50],
+            "name_zh": title[:50],
+            "entry_ids": [i],
+            "density": source_count,
+            "narrative": f"{source_count} source articles in one Google News cluster",
+            "R": 1, "R_reason": "(heuristic singleton)",
+            "S": 1, "S_reason": "(heuristic singleton)",
+            "T": 1, "T_reason": "(heuristic singleton)",
+            "U": 1, "U_reason": "(heuristic singleton)",
+            "H": 2 if source_count >= 5 else 1,
+            "H_reason": f"{source_count} source articles",
+            "bettable": source_count >= 3,
+            "suggested_question": None,
+            "resolution_source": "",
+            "clusters": [c],
+        })
+
     noise = [i for i, a in enumerate(assigned) if a == -1]
+    if len(groups) > 15:
+        groups.sort(key=lambda g: g.get("density", 0), reverse=True)
+        dropped_groups = groups[15:]
+        groups = groups[:15]
+        noise.extend(
+            entry_id
+            for group in dropped_groups
+            for entry_id in group.get("entry_ids", [])
+        )
+        noise = sorted(set(noise))
+
     return {
         "groups": groups,
         "noise": noise,

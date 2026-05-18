@@ -19,6 +19,7 @@ from __future__ import annotations
 import os
 import sys
 import argparse
+import subprocess
 import yaml
 import datetime as dt
 from pathlib import Path
@@ -40,6 +41,60 @@ def load_topics(topics_dir: str) -> list:
     return topics
 
 
+def load_gemini_api_key() -> str | None:
+    """Load Gemini key from shell env, then repo .env as a local fallback."""
+    key = os.environ.get("GEMINI_API_KEY")
+    if key:
+        return key
+
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if not env_path.exists():
+        return None
+
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        if name.strip() == "GEMINI_API_KEY":
+            return value.strip().strip('"').strip("'") or None
+    return None
+
+
+def run_site_step(script_name: str, date: str, required: bool = True) -> bool:
+    """Run a repo-level site publishing helper script."""
+    base = Path(__file__).resolve().parent
+    repo_root = base.parent
+    script_path = repo_root / "scripts" / script_name
+    if not script_path.exists():
+        msg = f"[WARN] Site script missing: {script_path}"
+        if required:
+            raise FileNotFoundError(msg)
+        print(msg)
+        return False
+
+    try:
+        completed = subprocess.run(
+            [sys.executable, str(script_path), date],
+            cwd=str(repo_root),
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        if completed.stdout:
+            print(completed.stdout.rstrip())
+        return True
+    except subprocess.CalledProcessError as exc:
+        if exc.stdout:
+            print(exc.stdout.rstrip())
+        if exc.stderr:
+            print(exc.stderr.rstrip(), file=sys.stderr)
+        if required:
+            raise
+        print(f"[WARN] Optional site step failed ({script_name}): {exc}")
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mock", action="store_true",
@@ -58,7 +113,7 @@ def main():
     topics_dir = os.path.join(base, args.topics_dir)
     output_dir = os.path.join(base, args.output_dir)
 
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = load_gemini_api_key()
     use_llm = (not args.no_llm) and bool(api_key)
     print(f"[INFO] LLM mode: {'Gemini Flash' if use_llm else 'heuristic only'}")
     print(f"[INFO] Fetch mode: {'mock' if args.mock else 'live'}")
@@ -106,6 +161,16 @@ def main():
         out = os.path.join(output_dir, f"cluster_{today}.xlsx")
         generate_report(scored, out)
         print(f"[OK] Report → {out}")
+        print()
+
+        print("═══ Static Site Publish ═══")
+        run_site_step("gen_html.py", today)
+        if use_llm:
+            run_site_step("add_probabilities.py", today, required=False)
+        else:
+            print("[INFO] Skipping probability enrichment: no Gemini API key")
+        run_site_step("publish_site.py", today)
+        print("[OK] GitHub Pages site updated in ../docs")
         return
 
     # ══════════════════════════════════════════════════════

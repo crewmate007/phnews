@@ -18,7 +18,22 @@ python run_daily.py --mock
 
 跑完生成 `reports/daily_YYYY-MM-DD.xlsx`。用于开发测试和样例展示。
 
-### 3. 真实模式（需要网络）
+### 3. 网站模式（推荐，输出 GitHub Pages 站点）
+
+```bash
+python run_daily.py --cluster
+```
+
+跑完会生成三类文件：
+
+- `reports/clusters_YYYY-MM-DD.json`：当天聚类结果
+- `reports/cluster_YYYY-MM-DD.xlsx`：Excel 辅助表
+- `../docs/index.html` 和 `../docs/reports/cluster_YYYY-MM-DD.html`：GitHub Pages 静态网站
+
+把 `docs/` 推到 GitHub 后，网站会由 GitHub Pages 托管，例如：
+`https://crewmate007.github.io/phnews/`
+
+### 4. 经典真实模式（需要网络）
 
 ```bash
 python run_daily.py
@@ -26,13 +41,13 @@ python run_daily.py
 
 会访问 `news.google.com` 和 `www.reddit.com`。Reddit 有 User-Agent 限速，遇到 429 就放慢。
 
-### 4. 启用 Gemini Flash 评 U 维度（推荐）
+### 5. 启用 Gemini Flash 评 U 维度（推荐）
 
 免费层：[aistudio.google.com](https://aistudio.google.com/app/apikey) 申请 API key。
 
 ```bash
 export GEMINI_API_KEY=your_key_here
-python run_daily.py
+python run_daily.py --cluster
 ```
 
 只有 R/S/T/H 规则没触发 veto 的话题才会调 LLM，MVP 规模下完全在免费配额内。
@@ -49,10 +64,13 @@ mvp/
 │   └── ph-sara-impeachment.yaml
 ├── fetchers.py                 # Google News + Reddit 抓取（含 mock 数据）
 ├── scorer.py                   # RSTUH 评分（规则 + LLM）
-├── reporter.py                 # Excel 报告生成
+├── reporter.py                 # Excel 辅助报告生成
 ├── run_daily.py                # 主入口
 └── reports/                    # 每日报告输出（自动生成）
     └── daily_YYYY-MM-DD.xlsx
+../docs/                        # GitHub Pages 静态网站根目录
+├── index.html                  # 最新日报首页
+└── reports/                    # 历史 HTML 日报
 ```
 
 ## 加新话题
@@ -79,6 +97,8 @@ Mac/Linux：
 也可以挂到 Cowork 的 schedule 里（见 `schedule` 技能）。
 
 ## 输出说明
+
+最终产品是 `../docs/` 下的静态网站；Excel 是审核和排查用的辅助输出。
 
 Excel 报告有 6 个 Sheet：
 
