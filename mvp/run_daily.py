@@ -30,6 +30,7 @@ from scorer import score_topic, classify_with_gemini
 from reporter import generate_report
 from discover import discover_new_topics, save_discoveries, fetch_gnews_clusters
 from cluster import cluster_with_llm, cluster_keyword_fallback, groups_to_scored_topics, save_cluster_result
+from regions import get_region, reports_dir
 
 
 def load_topics(topics_dir: str) -> list:
@@ -61,7 +62,8 @@ def load_gemini_api_key() -> str | None:
     return None
 
 
-def run_site_step(script_name: str, date: str, required: bool = True) -> bool:
+def run_site_step(script_name: str, date: str, region_slug: str,
+                  required: bool = True) -> bool:
     """Run a repo-level site publishing helper script."""
     base = Path(__file__).resolve().parent
     repo_root = base.parent
@@ -75,7 +77,7 @@ def run_site_step(script_name: str, date: str, required: bool = True) -> bool:
 
     try:
         completed = subprocess.run(
-            [sys.executable, str(script_path), date],
+            [sys.executable, str(script_path), date, "--region", region_slug],
             cwd=str(repo_root),
             check=True,
             text=True,
@@ -105,18 +107,25 @@ def main():
                         help="启用 Google News 话题聚类发现")
     parser.add_argument("--cluster", action="store_true",
                         help="LLM 聚类模式：直接从 Google News 发现并聚类，不依赖 topics/ YAML")
+    parser.add_argument("--region", default="ph", choices=("ph", "id"),
+                        help="地区：ph=菲律宾，id=印尼")
     parser.add_argument("--topics-dir", default="topics")
     parser.add_argument("--output-dir", default="reports")
     args = parser.parse_args()
 
+    region = get_region(args.region)
     base = os.path.dirname(os.path.abspath(__file__))
     topics_dir = os.path.join(base, args.topics_dir)
-    output_dir = os.path.join(base, args.output_dir)
+    output_dir = reports_dir(os.path.join(base, args.output_dir), region)
 
     api_key = load_gemini_api_key()
     use_llm = (not args.no_llm) and bool(api_key)
+    gemini_model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
     print(f"[INFO] LLM mode: {'Gemini Flash' if use_llm else 'heuristic only'}")
+    if use_llm:
+        print(f"[INFO] LLM model: {gemini_model}")
     print(f"[INFO] Fetch mode: {'mock' if args.mock else 'live'}")
+    print(f"[INFO] Region: {region.flag} {region.country_name}")
     print()
 
     today = dt.date.today().isoformat()
@@ -132,16 +141,21 @@ def main():
             from discover import _mock_clusters
             raw_clusters = _mock_clusters()
         else:
-            raw_clusters = fetch_gnews_clusters()
+            raw_clusters = fetch_gnews_clusters(region=region)
         print(f"[INFO] Fetched {len(raw_clusters)} Google News clusters")
 
         # 2. LLM 聚类
         if use_llm:
             print("[INFO] Sending to Gemini Flash for topic grouping...")
-            cluster_result = cluster_with_llm(raw_clusters, api_key)
+            cluster_result = cluster_with_llm(
+                raw_clusters,
+                api_key,
+                region=region,
+                model=gemini_model,
+            )
         else:
             print("[INFO] No API key — using keyword fallback clustering")
-            cluster_result = cluster_keyword_fallback(raw_clusters)
+            cluster_result = cluster_keyword_fallback(raw_clusters, region=region)
 
         n_groups = len(cluster_result["groups"])
         n_noise = len(cluster_result.get("noise", []))
@@ -151,7 +165,7 @@ def main():
             bet = "✓" if g.get("bettable") else "✗"
             print(f"  {bet} [{g['density']}] {g['name']} ({g.get('name_zh','')}) RSTUH={total}")
 
-        cluster_path = save_cluster_result(cluster_result, output_dir)
+        cluster_path = save_cluster_result(cluster_result, os.path.join(base, args.output_dir), region)
         print(f"[OK] Cluster result → {cluster_path}")
         print()
 
@@ -164,12 +178,12 @@ def main():
         print()
 
         print("═══ Static Site Publish ═══")
-        run_site_step("gen_html.py", today)
+        run_site_step("gen_html.py", today, region.slug)
         if use_llm:
-            run_site_step("add_probabilities.py", today, required=False)
+            run_site_step("add_probabilities.py", today, region.slug, required=False)
         else:
             print("[INFO] Skipping probability enrichment: no Gemini API key")
-        run_site_step("publish_site.py", today)
+        run_site_step("publish_site.py", today, region.slug)
         print("[OK] GitHub Pages site updated in ../docs")
         return
 

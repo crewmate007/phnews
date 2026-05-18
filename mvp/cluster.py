@@ -15,16 +15,20 @@ import json
 import datetime as dt
 from typing import List, Dict, Optional
 
+from regions import RegionConfig, get_region
+
 
 # ============================================================
 # LLM-based clustering (Gemini Flash)
 # ============================================================
 
 CLUSTER_PROMPT_TEMPLATE = """\
-You are a prediction market analyst covering the Philippines. Today is {date}.
+You are a prediction market analyst covering {country_name}. Today is {date}.
 
-Below are {n} Google News story clusters collected today from Philippine news feeds \
+Below are {n} Google News story clusters collected today from {country_adjective} news feeds \
 (Top Stories, Nation, Business, World sections). Each entry has an ID and cluster title.
+Some entries may be written in local-language media; still output English names, Chinese names,
+and English narratives/questions.
 
 YOUR TASK:
 Group these entries into 10–15 coherent topic groups and evaluate each group's \
@@ -44,6 +48,7 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
       "entry_ids": [0, 5, 12],
       "density": <int, number of entries in this group>,
       "narrative": "1-2 sentence summary of what is happening",
+      "narrative_zh": "中文摘要，1-2句",
       "R": <0|1|2>,
       "R_reason": "why this outcome is/isn't resolvable",
       "S": <0|1|2>,
@@ -56,6 +61,7 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
       "H_reason": "how much public attention / discussion",
       "bettable": <true|false>,
       "suggested_question": "Will ... by ...? (null if not bettable)",
+      "suggested_question_zh": "中文预测市场问题（不可下注则为 null）",
       "resolution_source": "e.g. BSP press release, DOE weekly bulletin"
     }}
   ],
@@ -82,6 +88,7 @@ SCORING GUIDE:
 
 
 def cluster_with_llm(clusters: List[Dict], api_key: str,
+                     region: RegionConfig | str | None = None,
                      model: str = "gemini-flash-latest") -> Dict:
     """Send all cluster titles to Gemini Flash and get topic groups back.
 
@@ -103,6 +110,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     except ImportError:
         raise RuntimeError("pip install google-genai")
 
+    region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
     client = genai.Client(api_key=api_key)
 
     entry_lines = []
@@ -119,6 +127,8 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         date=today,
         n=len(clusters),
         entries=entries_text,
+        country_name=region_cfg.country_name,
+        country_adjective=region_cfg.country_adjective,
     )
 
     response = client.models.generate_content(
@@ -134,6 +144,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         text = text.strip()
 
     result = json.loads(text)
+    result["region"] = region_cfg.slug
     result["total_entries"] = len(clusters)
     result["clustered_at"] = dt.datetime.now().isoformat()
 
@@ -148,7 +159,8 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
 # Fallback: keyword-based clustering (no LLM)
 # ============================================================
 
-def cluster_keyword_fallback(clusters: List[Dict]) -> Dict:
+def cluster_keyword_fallback(clusters: List[Dict],
+                             region: RegionConfig | str | None = None) -> Dict:
     """Simple keyword-based grouping when no API key is available.
 
     Groups entries by shared significant keywords. Much lower quality
@@ -156,11 +168,14 @@ def cluster_keyword_fallback(clusters: List[Dict]) -> Dict:
     """
     import re
 
+    region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
     STOP = {
         "the", "a", "an", "in", "on", "at", "to", "for", "of", "and", "or",
         "is", "are", "was", "were", "will", "be", "been", "has", "have", "had",
         "says", "said", "new", "news", "philippines", "philippine", "ph",
-        "vs", "by", "from", "with", "this", "that", "its",
+        "vs", "by", "from", "with", "this", "that", "its", "indonesia",
+        "indonesian", "jakarta", "ri", "berita", "terbaru", "dan", "yang",
+        "dari", "untuk", "dengan", "akan", "ini", "itu", "pada",
     }
 
     def keywords(text):
@@ -249,6 +264,7 @@ def cluster_keyword_fallback(clusters: List[Dict]) -> Dict:
         noise = sorted(set(noise))
 
     return {
+        "region": region_cfg.slug,
         "groups": groups,
         "noise": noise,
         "total_entries": len(clusters),
@@ -377,13 +393,19 @@ def _decide_disposition(total, veto, heat_score, H_score):
 # Save / Load cluster results
 # ============================================================
 
-def save_cluster_result(result: Dict, output_dir: str) -> str:
+def save_cluster_result(result: Dict, output_dir: str,
+                        region: RegionConfig | str | None = None) -> str:
     from pathlib import Path
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
+    out_dir = Path(output_dir)
+    if region_cfg.reports_subdir:
+        out_dir = out_dir / region_cfg.reports_subdir
+    out_dir.mkdir(parents=True, exist_ok=True)
     today = dt.date.today().isoformat()
-    path = Path(output_dir) / f"clusters_{today}.json"
+    path = out_dir / f"clusters_{today}.json"
     # Don't serialize the full clusters list (too large); save summary
     summary = {
+        "region": result.get("region", region_cfg.slug),
         "clustered_at": result["clustered_at"],
         "total_entries": result["total_entries"],
         "noise_count": len(result.get("noise", [])),

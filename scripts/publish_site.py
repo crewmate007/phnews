@@ -18,20 +18,31 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import shutil
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
+from regions import get_region
 
-def publish(date: str) -> tuple[Path, Path]:
+
+def publish(date: str, region_slug: str = "ph") -> tuple[Path, Path]:
+    region = get_region(region_slug)
     base = Path(__file__).resolve().parent.parent
-    src = base / "mvp" / "reports" / f"cluster_{date}.html"
+    src_dir = base / "mvp" / "reports"
+    if region.reports_subdir:
+        src_dir = src_dir / region.reports_subdir
+    src = src_dir / f"cluster_{date}.html"
     if not src.exists():
         raise FileNotFoundError(f"missing generated report: {src}")
 
-    reports_dir = base / "docs" / "reports"
+    docs_dir = base / "docs"
+    if region.reports_subdir:
+        docs_dir = docs_dir / region.reports_subdir
+    reports_dir = docs_dir / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
 
     archived = reports_dir / src.name
-    index = base / "docs" / "index.html"
+    index = docs_dir / "index.html"
     shutil.copy2(src, archived)
     shutil.copy2(src, index)
 
@@ -43,9 +54,10 @@ def publish(date: str) -> tuple[Path, Path]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("date", nargs="?", default=dt.date.today().isoformat())
+    parser.add_argument("--region", default="ph", choices=("ph", "id"))
     args = parser.parse_args()
 
-    archived, index = publish(args.date)
+    archived, index = publish(args.date, args.region)
     print(f"[OK] Published archive → {archived}")
     print(f"[OK] Published homepage → {index}")
 

@@ -1,30 +1,9 @@
-"""
-Generate a bilingual HTML report from clusters_YYYY-MM-DD.json.
-
-Usage:
-  python3 scripts/gen_html.py                    # use today's JSON
-  python3 scripts/gen_html.py 2026-04-18         # use a specific date
-
-Output:
-  mvp/reports/cluster_YYYY-MM-DD.html
-"""
-from __future__ import annotations
-import json
-import sys
-import datetime as dt
-import argparse
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
-from regions import get_region
-
-
-HTML_TEMPLATE = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>__SITE_NAME__ · Prediction Market Daily · __DATE__</title>
+<title>IDNews · Prediction Market Daily · 2026-05-18</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
@@ -104,17 +83,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
 <header>
   <div>
-    <h1 id="h-title">__FLAG__ __SITE_NAME__ __COUNTRY_ZH__预测市场话题日报</h1>
+    <h1 id="h-title">🇮🇩 IDNews 印尼预测市场话题日报</h1>
     <div class="meta">
-      <span>📅 __DATE__</span>
-      <span id="h-clusters">📰 抓取 __TOTAL__ 条 Google News 聚类</span>
+      <span>📅 2026-05-18</span>
+      <span id="h-clusters">📰 抓取 210 条 Google News 聚类</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
   </div>
   <div class="top-controls">
     <div class="region-toggle" aria-label="Region">
-      <a class="region-link __PH_ACTIVE__" data-region-link="ph" href="./index.html">PH</a>
-      <a class="region-link __ID_ACTIVE__" data-region-link="id" href="./id/index.html">IN</a>
+      <a class="region-link " data-region-link="ph" href="./index.html">PH</a>
+      <a class="region-link active" data-region-link="id" href="./id/index.html">IN</a>
     </div>
     <div class="lang-toggle" aria-label="Language">
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
@@ -124,11 +103,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="val">__N_GROUPS__</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
-  <div class="stat"><div class="val" style="color:#4ade80">__N_TOP__</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
-  <div class="stat"><div class="val" style="color:#fbbf24">__N_CAND__</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">__N_BET__</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
-  <div class="stat"><div class="val" style="color:#64748b">__N_NOISE__</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+  <div class="stat"><div class="val">9</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val" style="color:#4ade80">3</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
+  <div class="stat"><div class="val" style="color:#fbbf24">1</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
+  <div class="stat"><div class="val">4</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">0</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
 <div class="main" id="cards"></div>
@@ -138,8 +117,8 @@ let currentLang = "zh";
 
 const i18n = {
   zh: {
-    title: "__FLAG__ __SITE_NAME__ __COUNTRY_ZH__预测市场话题日报",
-    clusters: "📰 抓取 __TOTAL__ 条 Google News 聚类",
+    title: "🇮🇩 IDNews 印尼预测市场话题日报",
+    clusters: "📰 抓取 210 条 Google News 聚类",
     density: "新闻密度",
     articles: "条",
     total: "合计",
@@ -149,8 +128,8 @@ const i18n = {
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
-    title: "__FLAG__ __SITE_NAME__ __COUNTRY_EN__ Prediction Market Daily",
-    clusters: "📰 __TOTAL__ Google News clusters fetched",
+    title: "🇮🇩 IDNews Indonesia Prediction Market Daily",
+    clusters: "📰 210 Google News clusters fetched",
     density: "Coverage",
     articles: "articles",
     total: "Total",
@@ -161,7 +140,188 @@ const i18n = {
   }
 };
 
-const groups = __GROUPS_JSON__;
+const groups = [
+  {
+    "name_en": "Indonesia Rupiah and Economic Stability",
+    "name_zh": "印尼盾贬值与经济稳定",
+    "density": 10,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Indonesia faces economic pressure as the Rupiah hits record lows against the dollar, sparking parliamentary scrutiny of Bank Indonesia and concerns over market volatility.",
+    "narrative_zh": "印尼盾兑美元汇率跌至历史新低，引发印尼国会关注印尼央行的政策，以及对市场动荡的担忧。",
+    "bettable": true,
+    "question": "Will the USD/IDR exchange rate exceed 18,000 by June 30, 2026?",
+    "question_en": "Will the USD/IDR exchange rate exceed 18,000 by June 30, 2026?",
+    "question_zh": "到2026年6月30日，美元兑印尼盾汇率是否会超过18,000？",
+    "source": "Bank Indonesia",
+    "prob": 65,
+    "prob_reason_zh": "印尼盾持续走弱，汇率临近关键关口。",
+    "prob_reason_en": "IDR weakening trend nears key levels."
+  },
+  {
+    "name_en": "US-Iran Escalation and Middle East",
+    "name_zh": "美伊紧张局势与中东冲突",
+    "density": 12,
+    "R": 2,
+    "S": 1,
+    "T": 1,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Rising military tensions between the US/Israel and Iran, involving drone strikes, blockade threats in the Strait of Hormuz, and broader regional stability concerns.",
+    "narrative_zh": "美国/以色列与伊朗之间军事紧张局势加剧，涉及无人机袭击、霍尔木兹海峡封锁威胁及地区稳定问题。",
+    "bettable": true,
+    "question": "Will a major kinetic military conflict occur between the US and Iran before 2027?",
+    "question_en": "Will a major kinetic military conflict occur between the US and Iran before 2027?",
+    "question_zh": "2027年前，美国与伊朗之间是否会发生大规模军事冲突？",
+    "source": "International news media consensus and official statements",
+    "prob": 25,
+    "prob_reason_zh": "双方倾向于代理人战争，而非直接冲突。",
+    "prob_reason_en": "Prefer proxy war over direct conflict."
+  },
+  {
+    "name_en": "Global Gold Price Trends",
+    "name_zh": "全球黄金价格走势",
+    "density": 6,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Global and local gold prices are under pressure due to fluctuating currency markets and international geopolitical instability.",
+    "narrative_zh": "由于货币市场波动和地缘政治不稳定，黄金价格正面临压力。",
+    "bettable": true,
+    "question": "Will the price of Antam gold be higher than 1.5 million IDR/gram by the end of May 2026?",
+    "question_en": "Will the price of Antam gold be higher than 1.5 million IDR/gram by the end of May 2026?",
+    "question_zh": "到2026年5月底，安塔姆（Antam）金价是否会高于每克150万印尼盾？",
+    "source": "logammulia.com",
+    "prob": 80,
+    "prob_reason_zh": "近期金价高位波动，且印尼盾贬值推高成本。",
+    "prob_reason_en": "Gold remains high; IDR weakness adds cost."
+  },
+  {
+    "name_en": "Indonesian Political and Legal Issues",
+    "name_zh": "印尼国内政治与司法",
+    "density": 5,
+    "R": 1,
+    "S": 2,
+    "T": 0,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Internal political debates regarding the Capital City status, ongoing legal challenges, and scrutiny of government officials.",
+    "narrative_zh": "关于首都地位、法律挑战及政府官员审查的国内政治辩论。",
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": "Constitutional Court of Indonesia",
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Public Health Alerts",
+    "name_zh": "公共卫生警报",
+    "density": 4,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Concerns over emerging infectious disease threats including Hantavirus in Jakarta and Ebola outbreaks abroad.",
+    "narrative_zh": "对雅加达汉坦病毒及国外埃博拉疫情等新兴传染病威胁的担忧。",
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": "Dinkes DKI Jakarta / WHO",
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Electric Vehicle Market in Indonesia",
+    "name_zh": "印尼电动汽车市场",
+    "density": 9,
+    "R": 1,
+    "S": 1,
+    "T": 1,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Rapid competition in the Indonesian EV sector, with many manufacturers like BYD introducing budget-friendly models.",
+    "narrative_zh": "印尼电动汽车领域竞争激烈，比亚迪等制造商纷纷推出平价车型。",
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": "Gaikindo",
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Global Tech Industry Trends",
+    "name_zh": "全球科技行业趋势",
+    "density": 8,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 1,
+    "H": 2,
+    "narrative_en": "Developments in AI, management shifts in major tech firms like Meta and OpenAI, and SpaceX's expansion.",
+    "narrative_zh": "人工智能发展、Meta和OpenAI等大型科技公司的人事变动以及SpaceX的扩张。",
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": "Official company disclosures",
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Sports Results (General)",
+    "name_zh": "体育赛事结果",
+    "density": 16,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Results from various sports including MotoGP, Indonesian league football, and international club competitions.",
+    "narrative_zh": "包括摩托车大奖赛（MotoGP）、印尼足球联赛及国际俱乐部比赛在内的各类体育结果。",
+    "bettable": true,
+    "question": "Will Persib Bandung win the next Super League title in 2026?",
+    "question_en": "Will Persib Bandung win the next Super League title in 2026?",
+    "question_zh": "万隆佩西布队（Persib Bandung）能否夺得2026年超级联赛冠军？",
+    "source": "Official league website",
+    "prob": 15,
+    "prob_reason_zh": "印尼联赛竞争激烈，夺冠不确定性极高。",
+    "prob_reason_en": "High league competition, low certainty."
+  },
+  {
+    "name_en": "Space and Science News",
+    "name_zh": "太空与科学新闻",
+    "density": 4,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "Reports on astronomical events, such as asteroid approaches and space exploration missions.",
+    "narrative_zh": "关于小行星靠近及太空探测任务等天体事件的报告。",
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": "NASA",
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  }
+];
 
 function siteBasePath() {
   let path = window.location.pathname;
@@ -276,94 +436,3 @@ renderCards("zh");
 </script>
 
 </body></html>
-"""
-
-
-def classify_disposition(g: dict) -> str:
-    if not g.get("bettable"):
-        return "drop"
-    total = g["R"] + g["S"] + g["T"] + g["U"] + g["H"]
-    veto = sum(1 for k in "RSTUH" if g[k] == 0)
-    if veto == 0 and total >= 9:
-        return "top"
-    if veto == 0 and total >= 7:
-        return "candidate"
-    return "watch"
-
-
-def build_group(g: dict) -> dict:
-    narr = g.get("narrative", "")
-    question_en = g.get("suggested_question")
-    question_zh = g.get("suggested_question_zh") or question_en
-    return {
-        "name_en": g.get("name", ""),
-        "name_zh": g.get("name_zh") or g.get("name", ""),
-        "density": g.get("density", 0),
-        "R": g.get("R", 0),
-        "S": g.get("S", 0),
-        "T": g.get("T", 0),
-        "U": g.get("U", 0),
-        "H": g.get("H", 0),
-        "narrative_en": narr,
-        "narrative_zh": g.get("narrative_zh") or narr,
-        "bettable": bool(g.get("bettable")),
-        "question": question_en,
-        "question_en": question_en,
-        "question_zh": question_zh,
-        "source": g.get("resolution_source", ""),
-    }
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("date", nargs="?", default=dt.date.today().isoformat())
-    parser.add_argument("--region", default="ph", choices=("ph", "id"))
-    args = parser.parse_args()
-
-    date = args.date
-    region = get_region(args.region)
-    base = Path(__file__).resolve().parent.parent
-    reports_dir = base / "mvp" / "reports"
-    if region.reports_subdir:
-        reports_dir = reports_dir / region.reports_subdir
-    json_path = reports_dir / f"clusters_{date}.json"
-    if not json_path.exists():
-        print(f"[ERR] Not found: {json_path}", file=sys.stderr)
-        sys.exit(1)
-
-    data = json.loads(json_path.read_text(encoding="utf-8"))
-    groups_raw = data.get("groups", [])
-    groups = [build_group(g) for g in groups_raw if g.get("name", "").lower() != "noise"]
-
-    dispositions = [classify_disposition(g) for g in groups]
-    n_top = dispositions.count("top")
-    n_cand = dispositions.count("candidate")
-    n_bet = sum(1 for g in groups if g["bettable"])
-    total_entries = data.get("total_entries", sum(g["density"] for g in groups))
-    n_noise = data.get("noise_count", len(data.get("noise", [])))
-
-    groups_json = json.dumps(groups, ensure_ascii=False, indent=2)
-
-    html = (HTML_TEMPLATE
-            .replace("__SITE_NAME__", region.site_name)
-            .replace("__FLAG__", region.flag)
-            .replace("__COUNTRY_ZH__", region.country_name_zh)
-            .replace("__COUNTRY_EN__", region.country_label_en)
-            .replace("__PH_ACTIVE__", "active" if region.slug == "ph" else "")
-            .replace("__ID_ACTIVE__", "active" if region.slug == "id" else "")
-            .replace("__DATE__", date)
-            .replace("__TOTAL__", str(total_entries))
-            .replace("__N_GROUPS__", str(len(groups)))
-            .replace("__N_TOP__", str(n_top))
-            .replace("__N_CAND__", str(n_cand))
-            .replace("__N_BET__", str(n_bet))
-            .replace("__N_NOISE__", str(n_noise))
-            .replace("__GROUPS_JSON__", groups_json))
-
-    out_path = reports_dir / f"cluster_{date}.html"
-    out_path.write_text(html, encoding="utf-8")
-    print(f"[OK] HTML → {out_path}")
-
-
-if __name__ == "__main__":
-    main()

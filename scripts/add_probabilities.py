@@ -16,7 +16,11 @@ import os
 import re
 import sys
 import datetime as dt
+import argparse
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
+from regions import get_region
 
 
 PROMPT = """You are a prediction-market analyst.
@@ -73,7 +77,7 @@ def call_gemini(bettable_groups: list, api_key: str) -> list:
     )
     client = genai.Client(api_key=api_key)
     resp = client.models.generate_content(
-        model="gemini-flash-latest",
+        model=os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
         contents=prompt,
     )
     text = resp.text.strip()
@@ -121,11 +125,17 @@ def patch_html(html: str, probs_by_name: dict) -> str:
     if ".prob-row" not in html:
         html = html.replace("</style>", prob_css + "\n</style>", 1)
 
-    # 3) Replace the question-box render block to include the prob bar.
+    # 3) Older generated pages did not render prob fields; patch them in place.
     old_block = """      ${g.bettable && g.question ? `
       <div class="question-box">
         <div class="q-label">${t.q_label}</div>
         <div class="q-text">${g.question}</div>
+        <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
+      </div>` : `<div class="no-bet">${t.no_bet}</div>`}"""
+    current_block = """      ${g.bettable && question ? `
+      <div class="question-box">
+        <div class="q-label">${t.q_label}</div>
+        <div class="q-text">${question}</div>
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}"""
     new_block = """      ${g.bettable && g.question ? `
@@ -145,16 +155,44 @@ def patch_html(html: str, probs_by_name: dict) -> str:
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}"""
+    new_current_block = """      ${g.bettable && question ? `
+      <div class="question-box">
+        <div class="q-label">${t.q_label}</div>
+        <div class="q-text">${question}</div>
+        ${g.prob !== null && g.prob !== undefined ? (() => {
+          const p = g.prob;
+          const color = p >= 65 ? '#22c55e' : p >= 40 ? '#f59e0b' : '#ef4444';
+          const reason = lang === 'zh' ? g.prob_reason_zh : g.prob_reason_en;
+          return `<div class="prob-row">
+            <div class="prob-label">${lang === 'zh' ? 'YES 概率' : 'YES prob'}</div>
+            <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${p}%;background:${color}"></div></div>
+            <div class="prob-val" style="color:${color}">${p}%</div>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px">${reason || ''}</div>`;
+        })() : ''}
+        <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
+      </div>` : `<div class="no-bet">${t.no_bet}</div>`}"""
     if old_block in html:
         html = html.replace(old_block, new_block, 1)
+    if current_block in html:
+        html = html.replace(current_block, new_current_block, 1)
     return html
 
 
 def main():
-    date = sys.argv[1] if len(sys.argv) > 1 else dt.date.today().isoformat()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("date", nargs="?", default=dt.date.today().isoformat())
+    parser.add_argument("--region", default="ph", choices=("ph", "id"))
+    args = parser.parse_args()
+
+    date = args.date
+    region = get_region(args.region)
     base = Path(__file__).resolve().parent.parent
-    json_path = base / "mvp" / "reports" / f"clusters_{date}.json"
-    html_path = base / "mvp" / "reports" / f"cluster_{date}.html"
+    reports_dir = base / "mvp" / "reports"
+    if region.reports_subdir:
+        reports_dir = reports_dir / region.reports_subdir
+    json_path = reports_dir / f"clusters_{date}.json"
+    html_path = reports_dir / f"cluster_{date}.html"
     if not json_path.exists():
         print(f"[ERR] missing {json_path}", file=sys.stderr)
         sys.exit(1)

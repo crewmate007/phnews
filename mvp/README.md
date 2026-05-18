@@ -33,6 +33,22 @@ python run_daily.py --cluster
 把 `docs/` 推到 GitHub 后，网站会由 GitHub Pages 托管，例如：
 `https://crewmate007.github.io/phnews/`
 
+### 3.1 印尼地区页面
+
+同一套程序支持印尼地区：
+
+```bash
+python run_daily.py --cluster --region id
+```
+
+印尼输出会单独写入：
+
+- `reports/id/clusters_YYYY-MM-DD.json`
+- `reports/id/cluster_YYYY-MM-DD.xlsx`
+- `../docs/id/index.html` 和 `../docs/id/reports/cluster_YYYY-MM-DD.html`
+
+如果不传 `--region`，默认仍然是菲律宾页面，旧路径不变。
+
 ### 4. 经典真实模式（需要网络）
 
 ```bash

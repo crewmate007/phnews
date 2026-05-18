@@ -13,17 +13,9 @@ from pathlib import Path
 from typing import List, Dict, Optional
 
 from fetchers import _fetch_url
+from regions import RegionConfig, get_region
 
 import feedparser
-
-# Google News PH RSS feeds
-# Top Stories + 三个对预测市场有价值的 section
-GNEWS_FEEDS = {
-    "Top Stories": "https://news.google.com/rss?gl=PH&hl=en-PH&ceid=PH:en",
-    "Nation": "https://news.google.com/rss/topics/CAAqKggKIiRDQkFTRlFvSUwyMHZNRFZxYUdjU0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=PH&hl=en-PH&ceid=PH:en",
-    "Business": "https://news.google.com/rss/topics/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=PH&hl=en-PH&ceid=PH:en",
-    "World": "https://news.google.com/rss/topics/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=PH&hl=en-PH&ceid=PH:en",
-}
 
 
 # ============================================================
@@ -81,21 +73,24 @@ def _parse_cluster_articles(description_html: str) -> List[Dict[str, str]]:
 # 抓取 Google News 聚类
 # ============================================================
 
-def fetch_gnews_clusters(sections: List[str] = None) -> List[Dict]:
-    """从 Google News PH 多个 section 获取全部聚类，按 link 去重。
+def fetch_gnews_clusters(sections: List[str] = None,
+                         region: RegionConfig | str | None = None) -> List[Dict]:
+    """从 Google News 多个 section 获取全部聚类，按 link 去重。
 
     Args:
         sections: 要抓的 section 名称列表。None = 全部。
                   可选值: "Top Stories", "Nation", "Business", "World"
+        region: 地区配置或 slug。None = 菲律宾。
     """
+    region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
     if sections is None:
-        sections = list(GNEWS_FEEDS.keys())
+        sections = list(region_cfg.feeds.keys())
 
     clusters = []
     seen_links = set()
 
     for section_name in sections:
-        url = GNEWS_FEEDS.get(section_name)
+        url = region_cfg.feeds.get(section_name)
         if not url:
             print(f"  [WARN] unknown section: {section_name}")
             continue
@@ -119,6 +114,7 @@ def fetch_gnews_clusters(sections: List[str] = None) -> List[Dict]:
                     "published": entry.get("published", ""),
                     "link": link,
                     "section": section_name,
+                    "region": region_cfg.slug,
                     "sub_articles": sub_articles,
                     "source_count": len(sources),
                     "sources": sources,

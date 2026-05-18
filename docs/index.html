@@ -13,8 +13,10 @@
   header .meta { margin-top: 6px; font-size: 13px; color: #64748b; }
   header .meta span { margin-right: 20px; }
 
-  .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; }
+  .top-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .region-toggle, .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
+  .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
   .lang-btn.active { background: #1e2535; color: #fff; }
 
   .stats { display: flex; gap: 12px; padding: 20px 40px; border-bottom: 1px solid #1e2535; flex-wrap: wrap; }
@@ -65,34 +67,38 @@
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
-
-  @media (max-width: 900px) {
-    .main { grid-template-columns: 1fr; }
-    header, .stats, .main { padding-left: 20px; padding-right: 20px; }
-  }
-
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
   .prob-bar-track { flex: 1; height: 6px; background: #1e2535; border-radius: 3px; }
   .prob-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
   .prob-val { font-size: 14px; font-weight: 700; white-space: nowrap; min-width: 38px; text-align: right; }
 
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    header, .stats, .main { padding-left: 20px; padding-right: 20px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <h1 id="h-title">🇵🇭 PHNews 预测市场话题日报</h1>
+    <h1 id="h-title">🇵🇭 PHNews 菲律宾预测市场话题日报</h1>
     <div class="meta">
       <span>📅 2026-05-18</span>
       <span id="h-clusters">📰 抓取 161 条 Google News 聚类</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
   </div>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <div class="top-controls">
+    <div class="region-toggle" aria-label="Region">
+      <a class="region-link active" data-region-link="ph" href="./index.html">PH</a>
+      <a class="region-link " data-region-link="id" href="./id/index.html">IN</a>
+    </div>
+    <div class="lang-toggle" aria-label="Language">
+      <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
   </div>
 </header>
 
@@ -111,7 +117,7 @@ let currentLang = "zh";
 
 const i18n = {
   zh: {
-    title: "🇵🇭 PHNews 预测市场话题日报",
+    title: "🇵🇭 PHNews 菲律宾预测市场话题日报",
     clusters: "📰 抓取 161 条 Google News 聚类",
     density: "新闻密度",
     articles: "条",
@@ -122,7 +128,7 @@ const i18n = {
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
-    title: "🇵🇭 PHNews Prediction Market Daily",
+    title: "🇵🇭 PHNews Philippines Prediction Market Daily",
     clusters: "📰 161 Google News clusters fetched",
     density: "Coverage",
     articles: "articles",
@@ -148,10 +154,12 @@ const groups = [
     "narrative_zh": "ICC prosecutors are pushing for a November 2026 start for the trial of former President Rodrigo Duterte, while the Solicitor General is contesting Bato Dela Rosa's petition to block arrest warrants.",
     "bettable": true,
     "question": "Will the ICC trial of Rodrigo Duterte officially commence before December 1, 2026?",
+    "question_en": "Will the ICC trial of Rodrigo Duterte officially commence before December 1, 2026?",
+    "question_zh": "Will the ICC trial of Rodrigo Duterte officially commence before December 1, 2026?",
     "source": "International Criminal Court Official Records",
-    "prob": 40,
-    "prob_reason_zh": "法律程序复杂，国际法院审理通常耗时。",
-    "prob_reason_en": "Legal delays and procedural hurdles common."
+    "prob": 15,
+    "prob_reason_zh": "司法程序极其缓慢，年内开庭难度大。",
+    "prob_reason_en": "Legal delays make a 2026 start unlikely."
   },
   {
     "name_en": "Sara Duterte Impeachment Court Convening",
@@ -166,10 +174,12 @@ const groups = [
     "narrative_zh": "The Philippine Senate is preparing to convene as an impeachment court for Vice President Sara Duterte, amid rumors of leadership coups and ongoing investigations into budget use.",
     "bettable": true,
     "question": "Will the Philippine Senate vote to convict Vice President Sara Duterte by December 31, 2026?",
+    "question_en": "Will the Philippine Senate vote to convict Vice President Sara Duterte by December 31, 2026?",
+    "question_zh": "Will the Philippine Senate vote to convict Vice President Sara Duterte by December 31, 2026?",
     "source": "Senate of the Philippines Legislative Records",
-    "prob": 35,
-    "prob_reason_zh": "定罪需参议院高票通过，政治变数大。",
-    "prob_reason_en": "Conviction requires high political consensus."
+    "prob": 25,
+    "prob_reason_zh": "政治博弈复杂，定罪门槛极高。",
+    "prob_reason_en": "High threshold for Senate conviction."
   },
   {
     "name_en": "Middle East Crisis & Oil Supply",
@@ -184,10 +194,12 @@ const groups = [
     "narrative_zh": "Global tensions rise as the Strait of Hormuz faces potential shutdown threats from Iran, impacting jet fuel and oil prices, while Trump urges action.",
     "bettable": true,
     "question": "Will the Strait of Hormuz be closed to commercial traffic for more than 24 consecutive hours before September 2026?",
+    "question_en": "Will the Strait of Hormuz be closed to commercial traffic for more than 24 consecutive hours before September 2026?",
+    "question_zh": "Will the Strait of Hormuz be closed to commercial traffic for more than 24 consecutive hours before September 2026?",
     "source": "International Energy Agency (IEA) market reports",
-    "prob": 15,
-    "prob_reason_zh": "经济和军事震慑力强，全面封锁难。",
-    "prob_reason_en": "Massive economic and military deterrents."
+    "prob": 10,
+    "prob_reason_zh": "封锁霍尔木兹海峡后果严重，极罕见。",
+    "prob_reason_en": "Closure is a low-probability 'black swan'."
   },
   {
     "name_en": "Philippine Energy Crisis & Grid Stability",
@@ -202,10 +214,12 @@ const groups = [
     "narrative_zh": "The Visayas grid is under yellow alert, Siquijor faces daily losses due to power shortages, and the government is subsidizing diesel for off-grid areas.",
     "bettable": true,
     "question": "Will the NGCP issue a Red Alert for any major Philippine grid during the week of May 18-24, 2026?",
+    "question_en": "Will the NGCP issue a Red Alert for any major Philippine grid during the week of May 18-24, 2026?",
+    "question_zh": "Will the NGCP issue a Red Alert for any major Philippine grid during the week of May 18-24, 2026?",
     "source": "NGCP official social media/press releases",
     "prob": 65,
-    "prob_reason_zh": "现有预警暗示夏季用电高峰备用不足。",
-    "prob_reason_en": "Existing alerts indicate low summer reserves."
+    "prob_reason_zh": "夏季电力紧张，红警报风险较高。",
+    "prob_reason_en": "High grid strain increases red alert risk."
   },
   {
     "name_en": "NBA Playoffs and Postseason Awards",
@@ -220,10 +234,12 @@ const groups = [
     "narrative_zh": "Shai Gilgeous-Alexander wins back-to-back MVPs as the NBA playoffs enter critical Game 7s and conference finals matchups.",
     "bettable": true,
     "question": "Who will win Game 7 of the Cavaliers vs. Pistons series on May 17/18, 2026?",
+    "question_en": "Who will win Game 7 of the Cavaliers vs. Pistons series on May 17/18, 2026?",
+    "question_zh": "Who will win Game 7 of the Cavaliers vs. Pistons series on May 17/18, 2026?",
     "source": "NBA.com",
-    "prob": 52,
-    "prob_reason_zh": "第七场生死战通常利好主场球队。",
-    "prob_reason_en": "Game 7s usually favor the home team."
+    "prob": 50,
+    "prob_reason_zh": "体育比赛胜负难以预测。",
+    "prob_reason_en": "Sports outcomes are inherently uncertain."
   },
   {
     "name_en": "Hantavirus Outbreak on Cruise Ship",
@@ -238,10 +254,12 @@ const groups = [
     "narrative_zh": "A cruise ship hit by a Hantavirus outbreak is arriving in Rotterdam as the WHO warns about contagion risks at the onset of symptoms.",
     "bettable": true,
     "question": "Will the WHO declare the Hantavirus outbreak an International Public Health Emergency by June 2026?",
+    "question_en": "Will the WHO declare the Hantavirus outbreak an International Public Health Emergency by June 2026?",
+    "question_zh": "Will the WHO declare the Hantavirus outbreak an International Public Health Emergency by June 2026?",
     "source": "WHO Disease Outbreak News (DONs)",
-    "prob": 10,
-    "prob_reason_zh": "汉坦病毒人际传播罕见，难成全球危机。",
-    "prob_reason_en": "Limited human-to-human transmission history."
+    "prob": 5,
+    "prob_reason_zh": "汉坦病毒人传人概率极低，难成大疫。",
+    "prob_reason_en": "Human-to-human transmission is rare."
   },
   {
     "name_en": "Philippine Stock Market & IPOs",
@@ -256,10 +274,12 @@ const groups = [
     "narrative_zh": "The PSE reports profit growth but faces volatility from political and geopolitical tensions; MREIT eyes inclusion in the PSEi.",
     "bettable": true,
     "question": "Will the PSEi close above 7,000 points on June 30, 2026?",
+    "question_en": "Will the PSEi close above 7,000 points on June 30, 2026?",
+    "question_zh": "Will the PSEi close above 7,000 points on June 30, 2026?",
     "source": "PSE Edge",
-    "prob": 58,
-    "prob_reason_zh": "企业利润增长支持股市测试关键阻力位。",
-    "prob_reason_en": "Earnings growth supports testing 7,000."
+    "prob": 40,
+    "prob_reason_zh": "市场震荡大，站上7000点压力不小。",
+    "prob_reason_en": "Market volatility hinders rally to 7k."
   },
   {
     "name_en": "West Philippine Sea Maritime Tensions",
@@ -274,6 +294,8 @@ const groups = [
     "narrative_zh": "Illegal marine research by Chinese vessels is reported at Pag-asa Cays as Taiwan defends its security commitments amid US political rhetoric.",
     "bettable": false,
     "question": null,
+    "question_en": null,
+    "question_zh": null,
     "source": "Philippine Coast Guard",
     "prob": null,
     "prob_reason_zh": "",
@@ -292,6 +314,8 @@ const groups = [
     "narrative_zh": "Companies like PLDT are rolling out AI customer support while firms grapple with AI readiness and new corporate bond risks tied to AI debt.",
     "bettable": false,
     "question": null,
+    "question_en": null,
+    "question_zh": null,
     "source": null,
     "prob": null,
     "prob_reason_zh": "",
@@ -310,10 +334,12 @@ const groups = [
     "narrative_zh": "US funds feasibility for Sangley airport; Cebu Pacific is named most punctual, while VinFast deploys thousands of EVs in the PH.",
     "bettable": true,
     "question": "Will the Sangley Airport feasibility study be completed by December 31, 2026?",
+    "question_en": "Will the Sangley Airport feasibility study be completed by December 31, 2026?",
+    "question_zh": "Will the Sangley Airport feasibility study be completed by December 31, 2026?",
     "source": "DOTr Official Announcements",
-    "prob": 45,
-    "prob_reason_zh": "大型基建可行性研究周期通常较长。",
-    "prob_reason_en": "Typical timeline for major infra studies."
+    "prob": 70,
+    "prob_reason_zh": "可行性研究周期通常在一年内完成。",
+    "prob_reason_en": "Feasibility studies are typically timely."
   },
   {
     "name_en": "Agriculture & Food Price Controls",
@@ -328,10 +354,12 @@ const groups = [
     "narrative_zh": "The Department of Agriculture warns of jail for rice price cap violators as Jollibee manages US franchise demand despite global price risks.",
     "bettable": true,
     "question": "Will the Philippine Department of Agriculture announce more than 50 arrests for rice price cap violations by August 2026?",
+    "question_en": "Will the Philippine Department of Agriculture announce more than 50 arrests for rice price cap violations by August 2026?",
+    "question_zh": "Will the Philippine Department of Agriculture announce more than 50 arrests for rice price cap violations by August 2026?",
     "source": "Department of Agriculture Press Releases",
-    "prob": 25,
-    "prob_reason_zh": "执法通常针对重点，大规模逮捕少见。",
-    "prob_reason_en": "Enforcement usually targets key players."
+    "prob": 30,
+    "prob_reason_zh": "执法力度常受限，难达50人逮捕。",
+    "prob_reason_en": "Enforcement rarely reaches that volume."
   },
   {
     "name_en": "Senate Shooting Incident Investigation",
@@ -346,12 +374,29 @@ const groups = [
     "narrative_zh": "PNP is investigating an alleged shootout incident at the Senate involving Senator Bato Dela Rosa's security personnel.",
     "bettable": true,
     "question": "Will the PNP file formal criminal charges against any individual regarding the May 2026 Senate shooting incident by July 1, 2026?",
+    "question_en": "Will the PNP file formal criminal charges against any individual regarding the May 2026 Senate shooting incident by July 1, 2026?",
+    "question_zh": "Will the PNP file formal criminal charges against any individual regarding the May 2026 Senate shooting incident by July 1, 2026?",
     "source": "PNP Official Press Briefings",
-    "prob": 70,
-    "prob_reason_zh": "枪击事件证据明确，起诉程序通常较快。",
-    "prob_reason_en": "Clear physical incident warrants charges."
+    "prob": 80,
+    "prob_reason_zh": "涉及议员保镖，需通过立案回应舆论。",
+    "prob_reason_en": "Public pressure forces formal charges."
   }
 ];
+
+function siteBasePath() {
+  let path = window.location.pathname;
+  if (path.endsWith("/")) path += "index.html";
+  if (path.includes("/id/reports/")) return path.split("/id/reports/")[0] + "/";
+  if (path.includes("/id/")) return path.split("/id/")[0] + "/";
+  if (path.includes("/reports/")) return path.split("/reports/")[0] + "/";
+  return path.replace(/[^/]*$/, "");
+}
+
+function initRegionLinks() {
+  const base = siteBasePath();
+  document.querySelector('[data-region-link="ph"]').href = base + "index.html";
+  document.querySelector('[data-region-link="id"]').href = base + "id/index.html";
+}
 
 function getDisposition(g) {
   const total = g.R + g.S + g.T + g.U + g.H;
@@ -383,6 +428,7 @@ function renderCards(lang) {
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
+    const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
     const densityCount = `${g.density} ${t.articles}`;
 
     const card = document.createElement("div");
@@ -412,10 +458,10 @@ function renderCards(lang) {
         <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
       </div>
 
-      ${g.bettable && g.question ? `
+      ${g.bettable && question ? `
       <div class="question-box">
         <div class="q-label">${t.q_label}</div>
-        <div class="q-text">${g.question}</div>
+        <div class="q-text">${question}</div>
         ${g.prob !== null && g.prob !== undefined ? (() => {
           const p = g.prob;
           const color = p >= 65 ? '#22c55e' : p >= 40 ? '#f59e0b' : '#ef4444';
@@ -425,7 +471,7 @@ function renderCards(lang) {
             <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${p}%;background:${color}"></div></div>
             <div class="prob-val" style="color:${color}">${p}%</div>
           </div>
-          <div style="font-size:11px;color:#64748b;margin-top:4px">${reason}</div>`;
+          <div style="font-size:11px;color:#64748b;margin-top:4px">${reason || ''}</div>`;
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
@@ -445,6 +491,7 @@ function setLang(lang) {
   renderCards(lang);
 }
 
+initRegionLinks();
 renderCards("zh");
 </script>
 
