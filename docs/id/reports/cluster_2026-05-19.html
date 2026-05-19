@@ -86,7 +86,7 @@
     <h1 id="h-title">🇮🇩 IDNews 印尼预测市场话题日报</h1>
     <div class="meta">
       <span>📅 2026-05-19</span>
-      <span id="h-clusters">📰 读取 14 条 SourceIntel 热点</span>
+      <span id="h-clusters">📰 读取 22 条 SourceIntel 热点</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
   </div>
@@ -103,11 +103,11 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="val">5</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
-  <div class="stat"><div class="val" style="color:#4ade80">1</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
+  <div class="stat"><div class="val">10</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val" style="color:#4ade80">4</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
   <div class="stat"><div class="val" style="color:#fbbf24">3</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">4</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
-  <div class="stat"><div class="val" style="color:#64748b">6</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+  <div class="stat"><div class="val">9</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">5</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
 <div class="main" id="cards"></div>
@@ -118,7 +118,7 @@ let currentLang = "zh";
 const i18n = {
   zh: {
     title: "🇮🇩 IDNews 印尼预测市场话题日报",
-    clusters: "📰 读取 14 条 SourceIntel 热点",
+    clusters: "📰 读取 22 条 SourceIntel 热点",
     density: "新闻密度",
     articles: "条",
     total: "合计",
@@ -129,7 +129,7 @@ const i18n = {
   },
   en: {
     title: "🇮🇩 IDNews Indonesia Prediction Market Daily",
-    clusters: "📰 14 SourceIntel hotspots loaded",
+    clusters: "📰 22 SourceIntel hotspots loaded",
     density: "Coverage",
     articles: "articles",
     total: "Total",
@@ -142,104 +142,174 @@ const i18n = {
 
 const groups = [
   {
-    "name_en": "Prabowo Political Stability",
-    "name_zh": "普拉博沃执政稳定性",
+    "name_en": "Prabowo Administration and Fiscal Policy",
+    "name_zh": "普拉博沃政府与财政",
     "density": 3,
-    "R": 1,
-    "S": 1,
+    "R": 2,
+    "S": 2,
     "T": 1,
     "U": 2,
     "H": 2,
-    "narrative_en": "Discourse surrounding President Prabowo's legislative presence, Jokowi's potential political influence, and concerns regarding Prabowo's ability to complete his term.",
-    "narrative_zh": "围绕普拉博沃总统的立法会议出席、佐科潜在政治影响力以及其任期届满能力的讨论。",
+    "narrative_en": "The new administration faces rising fiscal deficits and potential institutional restructuring regarding commodity exports.",
+    "narrative_zh": "新政府面临日益增加的财政赤字，并可能针对大宗商品出口机构进行重组。",
     "bettable": true,
-    "question": "Will Prabowo Subianto serve as President of Indonesia until the end of 2029?",
-    "question_en": "Will Prabowo Subianto serve as President of Indonesia until the end of 2029?",
-    "question_zh": "普拉博沃·苏比安托是否会担任印度尼西亚总统至2029年底？",
-    "source": "General Election Commission (KPU) / Official State Gazette",
-    "prob": 85,
-    "prob_reason_zh": "印尼政权更迭通常平稳，且目前掌控议会。",
-    "prob_reason_en": "Indonesian transitions are stable; has house control."
+    "question": "Will the Indonesian budget deficit exceed 1% of GDP by the end of Q3 2026?",
+    "question_en": "Will the Indonesian budget deficit exceed 1% of GDP by the end of Q3 2026?",
+    "question_zh": "到2026年第三季度末，印尼财政赤字会超过GDP的1%吗？",
+    "source": "Ministry of Finance (Kemenkeu)"
   },
   {
-    "name_en": "Indonesian Fiscal Health",
-    "name_zh": "印尼财政健康状况",
+    "name_en": "Indonesian National Security Deployments",
+    "name_zh": "印尼国家安全部署",
     "density": 1,
-    "R": 2,
+    "R": 1,
     "S": 2,
-    "T": 2,
-    "U": 1,
-    "H": 2,
-    "narrative_en": "Official reporting of Indonesia's state budget deficit, indicating current fiscal performance under the new administration.",
-    "narrative_zh": "关于印尼国家预算赤字的官方报告，反映了新政府当前的财政表现。",
-    "bettable": true,
-    "question": "Will the Indonesian fiscal deficit exceed 2.0% of GDP by the end of 2026?",
-    "question_en": "Will the Indonesian fiscal deficit exceed 2.0% of GDP by the end of 2026?",
-    "question_zh": "到2026年底，印尼财政赤字是否会超过GDP的2.0%？",
-    "source": "Ministry of Finance of the Republic of Indonesia",
-    "prob": 65,
-    "prob_reason_zh": "新政策推行导致支出增加，赤字压力大。",
-    "prob_reason_en": "New policies increase spending, creating deficit risk."
-  },
-  {
-    "name_en": "Digital Security and Cybersecurity",
-    "name_zh": "数字安全与网络犯罪",
-    "density": 1,
-    "R": 2,
-    "S": 1,
     "T": 1,
-    "U": 1,
-    "H": 2,
-    "narrative_en": "Rising concerns over account theft and password hacking affecting a large number of Indonesians.",
-    "narrative_zh": "对影响大量印尼人的账户盗窃和密码黑客攻击行为日益增长的担忧。",
+    "U": 2,
+    "H": 1,
+    "narrative_en": "The Army Chief of Staff is proposing to station a TNI battalion in every district, signaling a shift in internal security strategy.",
+    "narrative_zh": "陆军参谋长提议在每个区部署一个TNI营，标志着国内安全战略的转变。",
     "bettable": true,
-    "question": "Will the government announce a new mandatory cybersecurity regulation for banking apps before 2027?",
-    "question_en": "Will the government announce a new mandatory cybersecurity regulation for banking apps before 2027?",
-    "question_zh": "政府在2027年前是否会颁布针对银行App的强制性网络安全新规？",
-    "source": "OJK or BSSN official policy announcements",
-    "prob": 75,
-    "prob_reason_zh": "近期黑客攻击频发，监管迫在眉睫。",
-    "prob_reason_en": "Rising cyberattacks make regulation urgent."
+    "question": "Will the Indonesian military successfully deploy a full battalion in at least 50% of regencies by year-end 2026?",
+    "question_en": "Will the Indonesian military successfully deploy a full battalion in at least 50% of regencies by year-end 2026?",
+    "question_zh": "到2026年底，印尼军队是否能在至少50%的县/区内部署一个完整营？",
+    "source": "TNI official press releases"
   },
   {
-    "name_en": "Energy Supply Resilience",
-    "name_zh": "能源供应韧性",
+    "name_en": "Rupiah and Economic Stability",
+    "name_zh": "印尼盾与经济稳定",
     "density": 1,
     "R": 2,
     "S": 2,
     "T": 2,
-    "U": 0,
+    "U": 2,
     "H": 2,
-    "narrative_en": "Status report on Pertalite and Pertamax fuel stock availability in Indonesia.",
-    "narrative_zh": "关于印尼Pertalite和Pertamax燃料库存可用性的现状报告。",
+    "narrative_en": "Concerns regarding currency depreciation and broader economic pressure on the Indonesian market.",
+    "narrative_zh": "对货币贬值以及印尼市场面临的更广泛经济压力的担忧。",
+    "bettable": true,
+    "question": "Will the USD/IDR exchange rate close above 16,500 on average in June 2026?",
+    "question_en": "Will the USD/IDR exchange rate close above 16,500 on average in June 2026?",
+    "question_zh": "2026年6月美元兑印尼盾平均汇率是否会收于16,500以上？",
+    "source": "Bank Indonesia"
+  },
+  {
+    "name_en": "Jokowi Political Influence",
+    "name_zh": "佐科政治影响力",
+    "density": 1,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Rumors and signs of former President Jokowi attempting to exert influence on the current administration.",
+    "narrative_zh": "关于前总统佐科试图对现任政府施加影响的传闻与迹象。",
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "PT Pertamina",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": null
   },
   {
-    "name_en": "Public Health Alerts",
-    "name_zh": "公共卫生警报",
+    "name_en": "Energy Security and Infrastructure",
+    "name_zh": "能源安全与基础设施",
     "density": 2,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Monitoring fuel stock levels and urban infrastructure challenges in Jakarta.",
+    "narrative_zh": "监测燃料库存水平以及雅加达面临的城市基础设施挑战。",
+    "bettable": true,
+    "question": "Will Pertalite national stock days fall below 10 days at any point in Q3 2026?",
+    "question_en": "Will Pertalite national stock days fall below 10 days at any point in Q3 2026?",
+    "question_zh": "2026年第三季度期间，Pertalite国家库存天数是否会跌破10天？",
+    "source": "Pertamina/ESDM"
+  },
+  {
+    "name_en": "International Relations and Gaza",
+    "name_zh": "国际关系与加沙局势",
+    "density": 3,
     "R": 1,
-    "S": 1,
+    "S": 2,
+    "T": 0,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Indonesia's diplomatic stance on the Gaza conflict and its exclusion from China-ASEAN regional infrastructure projects.",
+    "narrative_zh": "印尼在加沙冲突上的外交立场，及其被中国-东盟区域基础设施项目排除在外的情况。",
+    "bettable": true,
+    "question": "Will Indonesia formally sign a new bilateral infrastructure agreement with China before the end of 2026?",
+    "question_en": "Will Indonesia formally sign a new bilateral infrastructure agreement with China before the end of 2026?",
+    "question_zh": "印尼是否会在2026年底前与中国正式签署新的双边基础设施协议？",
+    "source": "Ministry of Foreign Affairs"
+  },
+  {
+    "name_en": "Public Health and Disease",
+    "name_zh": "公共卫生与疾病",
+    "density": 1,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Calls for intensified awareness and caution regarding Hantavirus in Indonesia.",
+    "narrative_zh": "呼吁加强印尼对汉坦病毒的意识与防范。",
+    "bettable": true,
+    "question": "Will the Indonesian Ministry of Health issue a nationwide health alert for Hantavirus by year-end 2026?",
+    "question_en": "Will the Indonesian Ministry of Health issue a nationwide health alert for Hantavirus by year-end 2026?",
+    "question_zh": "印尼卫生部是否会在2026年底前发布针对汉坦病毒的全国性健康预警？",
+    "source": "Ministry of Health (Kemenkes)"
+  },
+  {
+    "name_en": "Sports and International Events",
+    "name_zh": "体育与国际赛事",
+    "density": 3,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Performance of Indonesian athletes in international badminton and football, and global football market rumors.",
+    "narrative_zh": "印尼运动员在羽毛球和足球上的表现，以及全球足球市场的转会传闻。",
+    "bettable": true,
+    "question": "Will the Indonesian National Football Team advance to the next round of the World Cup qualifiers in the next match?",
+    "question_en": "Will the Indonesian National Football Team advance to the next round of the World Cup qualifiers in the next match?",
+    "question_zh": "印尼国家足球队是否能在下一场比赛中晋级世界杯预选赛下一阶段？",
+    "source": "FIFA/PSSI"
+  },
+  {
+    "name_en": "Climate and Weather Trends",
+    "name_zh": "气候与天气趋势",
+    "density": 1,
+    "R": 2,
+    "S": 2,
     "T": 1,
     "U": 2,
     "H": 2,
-    "narrative_en": "Emerging public health concerns regarding Hantavirus in Indonesia and Ebola in the Congo region.",
-    "narrative_zh": "关于印尼汉坦病毒和刚果地区埃博拉病毒的公共卫生担忧。",
+    "narrative_en": "Impact of El Nino weather patterns on Indonesian agriculture and climate stability.",
+    "narrative_zh": "厄尔尼诺气候模式对印尼农业及气候稳定性的影响。",
     "bettable": true,
-    "question": "Will the WHO declare the current Ebola outbreak in Congo a PHEIC by the end of 2026?",
-    "question_en": "Will the WHO declare the current Ebola outbreak in Congo a PHEIC by the end of 2026?",
-    "question_zh": "世界卫生组织是否会在2026年底前将当前刚果的埃博拉疫情宣布为国际关注的突发公共卫生事件？",
-    "source": "World Health Organization (WHO)",
-    "prob": 20,
-    "prob_reason_zh": "WHO宣布PHEIC门槛极高，概率较低。",
-    "prob_reason_en": "High threshold for WHO PHEIC status."
+    "question": "Will BMKG declare an El Nino climate event active in Indonesia during Q3 2026?",
+    "question_en": "Will BMKG declare an El Nino climate event active in Indonesia during Q3 2026?",
+    "question_zh": "印尼气象、气候和地球物理局（BMKG）是否会宣布2026年第三季度印尼处于厄尔尼诺气候事件中？",
+    "source": "BMKG"
+  },
+  {
+    "name_en": "Tech Industry and Consumer Trends",
+    "name_zh": "科技行业与消费趋势",
+    "density": 1,
+    "R": 2,
+    "S": 1,
+    "T": 0,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Samsung product strategy shifting, specifically concerning the discontinuation of the Z Flip line.",
+    "narrative_zh": "三星产品策略的转变，特别涉及Z Flip系列的停产。",
+    "bettable": true,
+    "question": "Will Samsung officially announce the discontinuation of the Galaxy Z Flip line before 2027?",
+    "question_en": "Will Samsung officially announce the discontinuation of the Galaxy Z Flip line before 2027?",
+    "question_zh": "三星是否会在2027年之前正式宣布停止Galaxy Z Flip系列产品？",
+    "source": "Samsung official announcements"
   }
 ];
 

@@ -86,7 +86,7 @@
     <h1 id="h-title">🇵🇭 PHNews 菲律宾预测市场话题日报</h1>
     <div class="meta">
       <span>📅 2026-05-19</span>
-      <span id="h-clusters">📰 读取 13 条 SourceIntel 热点</span>
+      <span id="h-clusters">📰 读取 22 条 SourceIntel 热点</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
   </div>
@@ -103,11 +103,11 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="val">5</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val">9</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
   <div class="stat"><div class="val" style="color:#4ade80">1</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
-  <div class="stat"><div class="val" style="color:#fbbf24">1</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">3</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
-  <div class="stat"><div class="val" style="color:#64748b">5</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+  <div class="stat"><div class="val" style="color:#fbbf24">6</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
+  <div class="stat"><div class="val">7</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">9</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
 <div class="main" id="cards"></div>
@@ -118,7 +118,7 @@ let currentLang = "zh";
 const i18n = {
   zh: {
     title: "🇵🇭 PHNews 菲律宾预测市场话题日报",
-    clusters: "📰 读取 13 条 SourceIntel 热点",
+    clusters: "📰 读取 22 条 SourceIntel 热点",
     density: "新闻密度",
     articles: "条",
     total: "合计",
@@ -129,7 +129,7 @@ const i18n = {
   },
   en: {
     title: "🇵🇭 PHNews Philippines Prediction Market Daily",
-    clusters: "📰 13 SourceIntel hotspots loaded",
+    clusters: "📰 22 SourceIntel hotspots loaded",
     density: "Coverage",
     articles: "articles",
     total: "Total",
@@ -142,104 +142,157 @@ const i18n = {
 
 const groups = [
   {
-    "name_en": "Senate Shooting Investigation",
-    "name_zh": "参议院枪击案调查",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 2,
-    "narrative_en": "Authorities have established a timeline regarding the recent shooting incident at the Senate.",
-    "narrative_zh": "有关部门已就参议院近期发生的枪击事件确定了时间线。",
-    "bettable": true,
-    "question": "Will at least one suspect be formally charged by the DOJ by July 1, 2026?",
-    "question_en": "Will at least one suspect be formally charged by the DOJ by July 1, 2026?",
-    "question_zh": "到2026年7月1日，是否有至少一名嫌疑人被司法部正式起诉？",
-    "source": "Department of Justice official press releases",
-    "prob": 85,
-    "prob_reason_zh": "证据确凿，司法部起诉程序通常较快。",
-    "prob_reason_en": "Clear evidence; DOJ filings are usually fast."
-  },
-  {
-    "name_en": "Bato dela Rosa ICC Case",
-    "name_zh": "德拉罗萨与ICC案件",
-    "density": 1,
+    "name_en": "Senate Fugitive Standoff",
+    "name_zh": "参议院逃犯对峙",
+    "density": 3,
     "R": 2,
     "S": 2,
     "T": 1,
     "U": 2,
     "H": 2,
-    "narrative_en": "Senator Bato dela Rosa is involved in a high-stakes legal battle regarding a potential ICC arrest warrant.",
-    "narrative_zh": "参议员德拉罗萨因面临国际刑事法院潜在逮捕令而陷入法律纠纷。",
+    "narrative_en": "A high-stakes standoff at the Senate involving a senator and potential arrest, accompanied by an internal investigation into shots fired by guards.",
+    "narrative_zh": "参议院发生逃犯对峙及逮捕危机，涉及警卫开火事件的内部调查。",
     "bettable": true,
-    "question": "Will an ICC arrest warrant for Bato dela Rosa be formally issued by end of 2026?",
-    "question_en": "Will an ICC arrest warrant for Bato dela Rosa be formally issued by end of 2026?",
-    "question_zh": "到2026年底，国际刑事法院是否会针对德拉罗萨发出逮捕令？",
-    "source": "International Criminal Court public records",
-    "prob": 25,
-    "prob_reason_zh": "政治阻力极大，且程序复杂耗时。",
-    "prob_reason_en": "High political friction; process is slow."
+    "question": "Will the senator be arrested by the PNP on Senate grounds before June 15, 2026?",
+    "question_en": "Will the senator be arrested by the PNP on Senate grounds before June 15, 2026?",
+    "question_zh": "该参议员是否会在2026年6月15日前在参议院内被菲律宾国家警察逮捕？",
+    "source": "Philippine National Police official reports"
   },
   {
-    "name_en": "BSKE Voter Registration",
-    "name_zh": "村级选举选民登记",
+    "name_en": "Philippine Energy Grid Stability",
+    "name_zh": "菲律宾电网稳定性",
+    "density": 2,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Ongoing rotational blackouts and grid alerts compounded by El Niño-driven agricultural and power demand strains.",
+    "narrative_zh": "受厄尔尼诺现象影响，农业与能源需求激增，导致电网轮流停电。",
+    "bettable": true,
+    "question": "Will the Department of Energy declare a Red Alert for the Luzon grid in June 2026?",
+    "question_en": "Will the Department of Energy declare a Red Alert for the Luzon grid in June 2026?",
+    "question_zh": "菲律宾能源部是否会在2026年6月宣布吕宋电网红色预警？",
+    "source": "Department of Energy (DOE) Philippines"
+  },
+  {
+    "name_en": "Sara Duterte Impeachment",
+    "name_zh": "莎拉·杜特尔特弹劾案",
     "density": 1,
     "R": 2,
     "S": 2,
-    "T": 2,
-    "U": 0,
-    "H": 2,
-    "narrative_en": "Registration figures for the Barangay and Sangguniang Kabataan Elections (BSKE) in the Negros Island Region (NIR) are being processed.",
-    "narrative_zh": "内格罗斯岛地区(NIR)的村级和青年委员会选举(BSKE)选民登记工作正在进行。",
+    "T": 1,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Growing political speculation regarding a potential impeachment trial for Vice President Sara Duterte.",
+    "narrative_zh": "有关副总统莎拉·杜特尔特可能面临弹劾审判的政治猜测升温。",
     "bettable": true,
-    "question": "Will final total BSKE voter registration in NIR exceed 250,000 by registration close?",
-    "question_en": "Will final total BSKE voter registration in NIR exceed 250,000 by registration close?",
-    "question_zh": "到登记截止时，NIR的BSKE选民登记总数是否会超过25万人？",
-    "source": "Commission on Elections (COMELEC) official portal",
-    "prob": 65,
-    "prob_reason_zh": "人口基数支撑，达标可能性较高。",
-    "prob_reason_en": "Demographics support hitting the target."
+    "question": "Will an official impeachment complaint be filed against Sara Duterte in the House of Representatives by year-end 2026?",
+    "question_en": "Will an official impeachment complaint be filed against Sara Duterte in the House of Representatives by year-end 2026?",
+    "question_zh": "众议院是否会在2026年底前正式对莎拉·杜特尔特提出弹劾案？",
+    "source": "House of Representatives of the Philippines"
   },
   {
-    "name_en": "Public Service and Infrastructure",
-    "name_zh": "公共服务与基础设施",
-    "density": 3,
-    "R": 1,
-    "S": 1,
+    "name_en": "Philippine Macroeconomic Stability",
+    "name_zh": "菲律宾宏观经济稳定性",
+    "density": 1,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Concerns over the weakening Philippine Peso and persistent inflationary pressures.",
+    "narrative_zh": "对菲律宾比索走弱和持续通胀压力的担忧。",
+    "bettable": true,
+    "question": "Will the USD/PHP exchange rate exceed 60.00 at any point in Q3 2026?",
+    "question_en": "Will the USD/PHP exchange rate exceed 60.00 at any point in Q3 2026?",
+    "question_zh": "2026年第三季度美元兑菲律宾比索汇率是否会突破60.00？",
+    "source": "Bangko Sentral ng Pilipinas (BSP)"
+  },
+  {
+    "name_en": "BARMM Election Preparations",
+    "name_zh": "邦萨摩洛选举准备",
+    "density": 1,
+    "R": 2,
+    "S": 2,
     "T": 1,
     "U": 1,
     "H": 1,
-    "narrative_en": "Government initiatives regarding digital senior ID compliance, mobile permitting, and DPWH accountability.",
-    "narrative_zh": "政府在数字老年人身份证合规性、移动政务许可及公共工程部问责制方面的举措。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "narrative_en": "Preparation for the upcoming parliamentary elections in the Bangsamoro Autonomous Region in Muslim Mindanao.",
+    "narrative_zh": "为即将到来的邦萨摩洛自治区议会选举进行的准备工作。",
+    "bettable": true,
+    "question": "Will the COMELEC announce a delay in the BARMM parliamentary elections by end of Q3 2026?",
+    "question_en": "Will the COMELEC announce a delay in the BARMM parliamentary elections by end of Q3 2026?",
+    "question_zh": "菲律宾选举委员会（COMELEC）是否会在2026年第三季度末前宣布推迟邦萨摩洛议会选举？",
+    "source": "Commission on Elections (COMELEC)"
   },
   {
-    "name_en": "Social Programs and Tech",
-    "name_zh": "社会福利与人力资源科技",
-    "density": 2,
-    "R": 0,
-    "S": 1,
-    "T": 0,
-    "U": 0,
+    "name_en": "Mayon Volcano Status",
+    "name_zh": "马荣火山活动",
+    "density": 1,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 2,
     "H": 1,
-    "narrative_en": "Government welfare outreach events (LAB for All) and private sector HR technology innovation.",
-    "narrative_zh": "政府福利外展活动（LAB for All）与私营部门人力资源科技创新。",
+    "narrative_en": "Increased volcanic activity and ashfall at Mayon Volcano, triggering monitoring alerts.",
+    "narrative_zh": "马荣火山活动增加及火山灰落入，引发监测预警。",
+    "bettable": true,
+    "question": "Will PHIVOLCS raise Mayon Volcano to Alert Level 4 before July 1, 2026?",
+    "question_en": "Will PHIVOLCS raise Mayon Volcano to Alert Level 4 before July 1, 2026?",
+    "question_zh": "PHIVOLCS是否会在2026年7月1日前将马荣火山的警戒级别提升至4级？",
+    "source": "PHIVOLCS (Philippine Institute of Volcanology and Seismology)"
+  },
+  {
+    "name_en": "Marine and Tourism Alerts",
+    "name_zh": "海洋与旅游警报",
+    "density": 2,
+    "R": 2,
+    "S": 2,
+    "T": 1,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Incidents in tourism hotspots like Siargao and shellfish ban warnings affecting marine safety.",
+    "narrative_zh": "锡亚高岛等旅游热点发生的事件及影响海洋安全的贝类禁令预警。",
+    "bettable": true,
+    "question": "Will BFAR lift the current shellfish ban in affected provinces before June 15, 2026?",
+    "question_en": "Will BFAR lift the current shellfish ban in affected provinces before June 15, 2026?",
+    "question_zh": "渔业与水产资源局（BFAR）是否会在2026年6月15日前解除受影响省份的贝类禁令？",
+    "source": "Bureau of Fisheries and Aquatic Resources (BFAR)"
+  },
+  {
+    "name_en": "Illegal Trade Enforcement",
+    "name_zh": "非法贸易执法",
+    "density": 1,
+    "R": 2,
+    "S": 1,
+    "T": 1,
+    "U": 2,
+    "H": 0,
+    "narrative_en": "Enforcement actions against the illegal cigarette trade.",
+    "narrative_zh": "针对非法烟草贸易的执法行动。",
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Bureau of Customs / BIR"
+  },
+  {
+    "name_en": "Political Noise Suppression",
+    "name_zh": "政治噪音压制",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Official calls for police to ignore political noise and focus on order.",
+    "narrative_zh": "官方呼吁警方忽视政治噪音，专注于维持秩序。",
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null
   }
 ];
 
