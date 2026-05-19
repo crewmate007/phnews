@@ -8,13 +8,6 @@ status: ACTIVE
 expires_at: 2026-07-31    # 假设期限；实际按议会进程更新
 
 queries:
-  google_news:
-    en:
-      - '"Sara Duterte" (impeachment OR impeach OR conviction) when:7d'
-      - 'Philippines Vice President impeachment trial when:7d'
-      - 'Senate impeachment court Sara when:7d'
-    tl:
-      - 'Sara Duterte impeachment when:7d'
   reddit:
     - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=%22sara+duterte%22+impeachment&restrict_sr=on&sort=new'
       subreddit: Philippines

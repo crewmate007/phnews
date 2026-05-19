@@ -7,12 +7,6 @@ language_primary: bilingual
 status: ACTIVE
 
 queries:
-  google_news:
-    en:
-      - '"fuel price" Philippines (rollback OR hike) when:7d'
-      - 'diesel pump price Philippines DOE when:7d'
-    tl:
-      - 'presyo ng gasolina (taas OR baba) when:7d'
   reddit:
     - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=fuel+price+OR+gasoline+OR+diesel&restrict_sr=on&sort=new'
       subreddit: Philippines

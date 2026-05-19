@@ -66,7 +66,7 @@ def _add_summary(wb, scored_topics, discoveries=None):
     if discoveries:
         rows.append([""])
         rows.append(["话题发现"])
-        rows.append([f"  Google News 聚类", discoveries["total_clusters"]])
+        rows.append([f"  SourceIntel 热点", discoveries["total_clusters"]])
         rows.append([f"  匹配已有话题", len(discoveries["matched"])])
         rows.append([f"  新发现候选", len(discoveries["new"])])
 

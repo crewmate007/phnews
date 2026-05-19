@@ -8,12 +8,6 @@ status: ACTIVE
 expires_at: null        # 实例化时按日历填
 
 queries:
-  google_news:
-    en:
-      - 'BSP interest rate Philippines when:14d'
-      - 'Bangko Sentral monetary board when:14d'
-    tl:
-      - 'BSP interes Pilipinas when:14d'
   reddit:
     - feed_url: 'https://www.reddit.com/r/phinvest/search/.rss?q=BSP+OR+interest+rate&restrict_sr=on&sort=new'
       subreddit: phinvest

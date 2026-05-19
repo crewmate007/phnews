@@ -7,7 +7,7 @@
 ### 1. 环境
 
 ```bash
-pip install feedparser pyyaml openpyxl google-generativeai
+pip install pyyaml openpyxl google-generativeai certifi
 ```
 
 ### 2. Mock 模式（无需网络 / API key）
@@ -22,6 +22,13 @@ python run_daily.py --mock
 
 ```bash
 python run_daily.py --cluster
+```
+
+`--cluster` 不再直接访问新闻源。请先在相邻的 `SourceIntel` 项目里生成热点 JSON：
+
+```bash
+cd ../SourceIntel
+python3 -m source_intel.cli collect --source all --region ph --limit 12
 ```
 
 跑完会生成三类文件：
@@ -49,13 +56,13 @@ python run_daily.py --cluster --region id
 
 如果不传 `--region`，默认仍然是菲律宾页面，旧路径不变。
 
-### 4. 经典真实模式（需要网络）
+### 4. 经典真实模式
 
 ```bash
 python run_daily.py
 ```
 
-会访问 `news.google.com` 和 `www.reddit.com`。Reddit 有 User-Agent 限速，遇到 429 就放慢。
+会读取 SourceIntel 的热点 JSON，并访问 `www.reddit.com`。Reddit 有 User-Agent 限速，遇到 429 就放慢。
 
 ### 5. 启用 Gemini Flash 评 U 维度（推荐）
 
@@ -78,7 +85,8 @@ mvp/
 │   ├── ph-south-china-sea.yaml
 │   ├── ph-typhoon-season.yaml
 │   └── ph-sara-impeachment.yaml
-├── fetchers.py                 # Google News + Reddit 抓取（含 mock 数据）
+├── source_intel_bridge.py      # 读取 SourceIntel 热点 JSON
+├── fetchers.py                 # Reddit 抓取 + SourceIntel 信号适配
 ├── scorer.py                   # RSTUH 评分（规则 + LLM）
 ├── reporter.py                 # Excel 辅助报告生成
 ├── run_daily.py                # 主入口
@@ -96,7 +104,7 @@ mvp/
 - `topic_id`（全局唯一，kebab-case）
 - `category`（economy/politics/geopolitics/disaster/social）
 - `cadence`（weekly/monthly/one-shot/continuous）
-- `queries.google_news.en` 和 `queries.reddit`
+- `queries.reddit`
 - `resolution.primary_source` 和 `resolution.primary_url`
 - 至少一个 `market_templates`
 
@@ -130,7 +138,7 @@ Excel 报告有 6 个 Sheet：
 ## 当前局限（下一轮迭代项）
 
 - [ ] 话题状态机未实装（ACTIVE/WATCHING/ARCHIVED 转换）
-- [ ] 发现管道未实装（自动发现新话题）
+- [ ] 发现管道已迁到 SourceIntel，PHNews 仅消费其输出
 - [ ] Bing News 备份源未加
 - [ ] Fact-Checker feed 未接入热度信号
 - [ ] 反馈回路（市场结果回写）未实装
@@ -140,8 +148,8 @@ Excel 报告有 6 个 Sheet：
 
 ## 故障排查
 
-**Q: Google News 返回 0 条？**
-检查 User-Agent 是否被设；部分网络环境需要代理。
+**Q: SourceIntel 热点读取不到？**
+先在 `../SourceIntel` 运行 `python3 -m source_intel.cli collect --source all --region ph --limit 12`，或用 `--source-intel-report` 指定 JSON 文件。
 
 **Q: Reddit 429 限速？**
 `fetchers.py` 里的 `time.sleep(2)` 可以加长，或换住宅 IP。

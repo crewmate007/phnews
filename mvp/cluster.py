@@ -1,13 +1,12 @@
 """
-LLM-based topic clustering for Google News entries.
+LLM-based topic clustering for SourceIntel entries.
 
-Takes raw Google News clusters (160 entries) and groups them into
+Takes normalized SourceIntel hotspots and groups them into
 10-15 coherent topic groups, each assessed for prediction market
-bettability. This replaces per-entry keyword matching with holistic
-LLM reasoning over the full batch.
+bettability.
 
 Flow:
-  discoveries (160 entries) → cluster_with_llm() → 10-15 groups
+  SourceIntel hotspots → cluster_with_llm() → 10-15 groups
   Each group has: name, entry_ids, density, RSTUH scores, suggested question
 """
 from __future__ import annotations
@@ -25,8 +24,8 @@ from regions import RegionConfig, get_region
 CLUSTER_PROMPT_TEMPLATE = """\
 You are a prediction market analyst covering {country_name}. Today is {date}.
 
-Below are {n} Google News story clusters collected today from {country_adjective} news feeds \
-(Top Stories, Nation, Business, World sections). Each entry has an ID and cluster title.
+Below are {n} SourceIntel hotspots collected today for {country_adjective} coverage.
+Each entry has an ID, source label, coverage count, and title.
 Some entries may be written in local-language media; still output English names, Chinese names,
 and English narratives/questions.
 
@@ -93,7 +92,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     """Send all cluster titles to Gemini Flash and get topic groups back.
 
     Args:
-        clusters: list of cluster dicts from fetch_gnews_clusters()
+        clusters: list of SourceIntel cluster-shaped dicts
         api_key: Gemini API key
         model: Gemini model to use
 
@@ -223,7 +222,7 @@ def cluster_keyword_fallback(clusters: List[Dict],
             })
 
     # Keep the no-LLM path useful for mock runs and low-dependency demos:
-    # promote the strongest remaining Google News clusters as standalone topics.
+    # promote the strongest remaining SourceIntel hotspots as standalone topics.
     remaining = [i for i, a in enumerate(assigned) if a == -1]
     remaining.sort(key=lambda i: clusters[i].get("source_count", 1), reverse=True)
     for i in remaining[:max(0, 15 - len(groups))]:
@@ -238,7 +237,7 @@ def cluster_keyword_fallback(clusters: List[Dict],
             "name_zh": title[:50],
             "entry_ids": [i],
             "density": source_count,
-            "narrative": f"{source_count} source articles in one Google News cluster",
+            "narrative": f"{source_count} evidence items in one SourceIntel hotspot",
             "R": 1, "R_reason": "(heuristic singleton)",
             "S": 1, "S_reason": "(heuristic singleton)",
             "T": 1, "T_reason": "(heuristic singleton)",

@@ -7,13 +7,6 @@ language_primary: bilingual
 status: ACTIVE
 
 queries:
-  google_news:
-    en:
-      - 'PAGASA typhoon signal Philippines when:7d'
-      - 'Philippines typhoon landfall when:7d'
-      - 'Philippines storm signal when:24h'
-    tl:
-      - 'bagyo PAGASA when:24h'
   reddit:
     - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=typhoon+OR+bagyo+OR+pagasa&restrict_sr=on&sort=new'
       subreddit: Philippines

@@ -17,14 +17,10 @@ class RegionConfig:
     country_label_en: str
     country_name_zh: str
     timezone_label: str
-    feeds: dict[str, str]
 
     @property
     def reports_subdir(self) -> str:
         return "" if self.slug == "ph" else self.slug
-
-
-_PH_TOPIC_BASE = "https://news.google.com/rss/topics"
 
 
 REGIONS: dict[str, RegionConfig] = {
@@ -40,12 +36,6 @@ REGIONS: dict[str, RegionConfig] = {
         country_label_en="Philippines",
         country_name_zh="菲律宾",
         timezone_label="PHT",
-        feeds={
-            "Top Stories": "https://news.google.com/rss?gl=PH&hl=en-PH&ceid=PH:en",
-            "Nation": f"{_PH_TOPIC_BASE}/CAAqKggKIiRDQkFTRlFvSUwyMHZNRFZxYUdjU0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=PH&hl=en-PH&ceid=PH:en",
-            "Business": f"{_PH_TOPIC_BASE}/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=PH&hl=en-PH&ceid=PH:en",
-            "World": f"{_PH_TOPIC_BASE}/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=PH&hl=en-PH&ceid=PH:en",
-        },
     ),
     "id": RegionConfig(
         slug="id",
@@ -59,12 +49,6 @@ REGIONS: dict[str, RegionConfig] = {
         country_label_en="Indonesia",
         country_name_zh="印尼",
         timezone_label="WIB",
-        feeds={
-            "Top Stories": "https://news.google.com/rss?gl=ID&hl=id&ceid=ID:id",
-            "Nation": f"{_PH_TOPIC_BASE}/CAAqKggKIiRDQkFTRlFvSUwyMHZNRFZxYUdjU0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=ID&hl=id&ceid=ID:id",
-            "Business": f"{_PH_TOPIC_BASE}/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=ID&hl=id&ceid=ID:id",
-            "World": f"{_PH_TOPIC_BASE}/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKUVNDZ0FQAQ?gl=ID&hl=id&ceid=ID:id",
-        },
     ),
 }
 

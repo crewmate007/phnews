@@ -7,13 +7,6 @@ language_primary: bilingual
 status: ACTIVE
 
 queries:
-  google_news:
-    en:
-      - '"Scarborough Shoal" OR "Ayungin" OR "Second Thomas" Philippines when:7d'
-      - 'Philippines China (water cannon OR collision OR coast guard) when:7d'
-      - 'West Philippine Sea incident when:7d'
-    tl:
-      - 'Ayungin barko China when:7d'
   reddit:
     - feed_url: 'https://www.reddit.com/r/Philippines/search/.rss?q=scarborough+OR+ayungin+OR+%22south+china+sea%22&restrict_sr=on&sort=new'
       subreddit: Philippines

@@ -107,7 +107,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <h1 id="h-title">__FLAG__ __SITE_NAME__ __COUNTRY_ZH__预测市场话题日报</h1>
     <div class="meta">
       <span>📅 __DATE__</span>
-      <span id="h-clusters">📰 抓取 __TOTAL__ 条 Google News 聚类</span>
+      <span id="h-clusters">📰 读取 __TOTAL__ 条 SourceIntel 热点</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
   </div>
@@ -139,7 +139,7 @@ let currentLang = "zh";
 const i18n = {
   zh: {
     title: "__FLAG__ __SITE_NAME__ __COUNTRY_ZH__预测市场话题日报",
-    clusters: "📰 抓取 __TOTAL__ 条 Google News 聚类",
+    clusters: "📰 读取 __TOTAL__ 条 SourceIntel 热点",
     density: "新闻密度",
     articles: "条",
     total: "合计",
@@ -150,7 +150,7 @@ const i18n = {
   },
   en: {
     title: "__FLAG__ __SITE_NAME__ __COUNTRY_EN__ Prediction Market Daily",
-    clusters: "📰 __TOTAL__ Google News clusters fetched",
+    clusters: "📰 __TOTAL__ SourceIntel hotspots loaded",
     density: "Coverage",
     articles: "articles",
     total: "Total",

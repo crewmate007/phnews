@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-菲律宾预测市场话题每日分析主入口
+预测市场话题每日分析主入口
 
 用法：
   # 沙箱/离线测试（不联网，用 mock 数据）
   python run_daily.py --mock
 
-  # 真实运行（需要网络访问 Google News 和 Reddit）
+  # 真实运行（读取 SourceIntel JSON，并访问 Reddit）
   python run_daily.py
 
   # 启用 Gemini Flash 聚类/评分（推荐）
@@ -28,9 +28,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fetchers import fetch_topic_signals
 from scorer import score_topic, classify_with_gemini
 from reporter import generate_report
-from discover import discover_new_topics, save_discoveries, fetch_gnews_clusters
 from cluster import cluster_with_llm, cluster_keyword_fallback, groups_to_scored_topics, save_cluster_result
 from regions import get_region, reports_dir
+from source_intel_bridge import (
+    load_source_intel_clusters,
+    mock_source_intel_clusters,
+    source_intel_discoveries,
+)
 
 
 def load_topics(topics_dir: str) -> list:
@@ -104,13 +108,17 @@ def main():
     parser.add_argument("--no-llm", action="store_true",
                         help="跳过 Gemini 调用，纯规则评分")
     parser.add_argument("--discover", action="store_true",
-                        help="启用 Google News 话题聚类发现")
+                        help="启用 SourceIntel 话题发现匹配")
     parser.add_argument("--cluster", action="store_true",
-                        help="LLM 聚类模式：直接从 Google News 发现并聚类，不依赖 topics/ YAML")
+                        help="LLM 聚类模式：从 SourceIntel 热点聚类，不依赖 topics/ YAML")
     parser.add_argument("--region", default="ph", choices=("ph", "id"),
                         help="地区：ph=菲律宾，id=印尼")
     parser.add_argument("--topics-dir", default="topics")
     parser.add_argument("--output-dir", default="reports")
+    parser.add_argument("--source-intel-dir",
+                        help="SourceIntel project directory; default is sibling ../SourceIntel")
+    parser.add_argument("--source-intel-report",
+                        help="Explicit SourceIntel hotspots JSON report path")
     args = parser.parse_args()
 
     region = get_region(args.region)
@@ -136,13 +144,16 @@ def main():
     if args.cluster:
         print("═══ Cluster Mode (LLM-first) ═══")
 
-        # 1. 抓取所有 Google News 条目
+        # 1. 读取 SourceIntel 热点条目
         if args.mock:
-            from discover import _mock_clusters
-            raw_clusters = _mock_clusters()
+            raw_clusters = mock_source_intel_clusters(region)
         else:
-            raw_clusters = fetch_gnews_clusters(region=region)
-        print(f"[INFO] Fetched {len(raw_clusters)} Google News clusters")
+            raw_clusters = load_source_intel_clusters(
+                region=region,
+                source_intel_dir=args.source_intel_dir,
+                report_path=args.source_intel_report,
+            )
+        print(f"[INFO] Loaded {len(raw_clusters)} SourceIntel hotspots")
 
         # 2. LLM 聚类
         if use_llm:
@@ -197,25 +208,47 @@ def main():
     discoveries = None
     if args.discover:
         print("═══ Topic Discovery ═══")
-        discoveries = discover_new_topics(topics, mock=args.mock)
+        if args.mock:
+            mock_clusters = [
+                {"cluster": cluster, "matched_topic": None}
+                for cluster in mock_source_intel_clusters(region)
+            ]
+            discoveries = {
+                "matched": [],
+                "new": mock_clusters,
+                "total_clusters": len(mock_clusters),
+                "fetched_at": dt.datetime.now().isoformat(),
+                "source": "source_intel_mock",
+            }
+        else:
+            discoveries = source_intel_discoveries(
+                topics,
+                region=region,
+                source_intel_dir=args.source_intel_dir,
+                report_path=args.source_intel_report,
+            )
         n_new = len(discoveries["new"])
         n_matched = len(discoveries["matched"])
-        print(f"[INFO] Google News clusters: {discoveries['total_clusters']}")
+        print(f"[INFO] SourceIntel hotspots: {discoveries['total_clusters']}")
         print(f"[INFO] Matched to existing topics: {n_matched}")
         print(f"[INFO] New candidates: {n_new}")
         if n_new:
             for item in discoveries["new"]:
                 c = item["cluster"]
                 print(f"  🆕 {c['cluster_title'][:70]}  ({c['source_count']} sources)")
-        disco_path = save_discoveries(discoveries, output_dir)
-        print(f"[OK] Discoveries → {disco_path}")
         print()
 
     # ── 话题评分 ──
     scored = []
     for topic in topics:
         print(f"→ {topic['topic_id']} ({topic['topic_name']})")
-        signals = fetch_topic_signals(topic, mock=args.mock)
+        signals = fetch_topic_signals(
+            topic,
+            mock=args.mock,
+            region=region,
+            source_intel_dir=args.source_intel_dir,
+            source_intel_report=args.source_intel_report,
+        )
         n_news = len(signals["gnews_en"]) + len(signals["gnews_tl"])
         print(f"   signals: {n_news} news, {len(signals['reddit'])} reddit")
         scores = score_topic(topic, signals, use_llm=use_llm, api_key=api_key)
