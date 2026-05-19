@@ -1,0 +1,138 @@
+{
+  "region": "ph",
+  "clustered_at": "2026-05-19T21:53:48.493778",
+  "total_entries": 13,
+  "noise_count": 5,
+  "groups": [
+    {
+      "name": "Senate Shooting Investigation",
+      "name_zh": "参议院枪击案调查",
+      "entry_ids": [
+        4
+      ],
+      "density": 1,
+      "narrative": "Authorities have established a timeline regarding the recent shooting incident at the Senate.",
+      "narrative_zh": "有关部门已就参议院近期发生的枪击事件确定了时间线。",
+      "R": 1,
+      "R_reason": "Outcomes regarding arrests or policy changes are fuzzy, but legal proceedings are concrete.",
+      "S": 2,
+      "S_reason": "Department of Justice and PNP official findings.",
+      "T": 1,
+      "T_reason": "Investigation timeline is active over the next month.",
+      "U": 1,
+      "U_reason": "Official findings are expected to be definitive.",
+      "H": 2,
+      "H_reason": "High-profile security incident with multiple government agency involvement.",
+      "bettable": true,
+      "suggested_question": "Will at least one suspect be formally charged by the DOJ by July 1, 2026?",
+      "suggested_question_zh": "到2026年7月1日，是否有至少一名嫌疑人被司法部正式起诉？",
+      "resolution_source": "Department of Justice official press releases"
+    },
+    {
+      "name": "Bato dela Rosa ICC Case",
+      "name_zh": "德拉罗萨与ICC案件",
+      "entry_ids": [
+        12
+      ],
+      "density": 1,
+      "narrative": "Senator Bato dela Rosa is involved in a high-stakes legal battle regarding a potential ICC arrest warrant.",
+      "narrative_zh": "参议员德拉罗萨因面临国际刑事法院潜在逮捕令而陷入法律纠纷。",
+      "R": 2,
+      "R_reason": "The issuance of a warrant is a discrete, verifiable binary event.",
+      "S": 2,
+      "S_reason": "ICC proceedings and Philippine Supreme Court rulings.",
+      "T": 1,
+      "T_reason": "Legal proceedings are ongoing, potential for resolution within months.",
+      "U": 2,
+      "U_reason": "Highly contentious political and legal environment.",
+      "H": 2,
+      "H_reason": "Extremely high public and international attention.",
+      "bettable": true,
+      "suggested_question": "Will an ICC arrest warrant for Bato dela Rosa be formally issued by end of 2026?",
+      "suggested_question_zh": "到2026年底，国际刑事法院是否会针对德拉罗萨发出逮捕令？",
+      "resolution_source": "International Criminal Court public records"
+    },
+    {
+      "name": "BSKE Voter Registration",
+      "name_zh": "村级选举选民登记",
+      "entry_ids": [
+        11
+      ],
+      "density": 1,
+      "narrative": "Registration figures for the Barangay and Sangguniang Kabataan Elections (BSKE) in the Negros Island Region (NIR) are being processed.",
+      "narrative_zh": "内格罗斯岛地区(NIR)的村级和青年委员会选举(BSKE)选民登记工作正在进行。",
+      "R": 2,
+      "R_reason": "Voter count is a precise statistical figure.",
+      "S": 2,
+      "S_reason": "COMELEC official data.",
+      "T": 2,
+      "T_reason": "Registration deadlines provide a fixed point for resolution.",
+      "U": 0,
+      "U_reason": "Data collection is standard bureaucratic reporting.",
+      "H": 2,
+      "H_reason": "Significant regional participation.",
+      "bettable": true,
+      "suggested_question": "Will final total BSKE voter registration in NIR exceed 250,000 by registration close?",
+      "suggested_question_zh": "到登记截止时，NIR的BSKE选民登记总数是否会超过25万人？",
+      "resolution_source": "Commission on Elections (COMELEC) official portal"
+    },
+    {
+      "name": "Public Service and Infrastructure",
+      "name_zh": "公共服务与基础设施",
+      "entry_ids": [
+        2,
+        6,
+        7
+      ],
+      "density": 3,
+      "narrative": "Government initiatives regarding digital senior ID compliance, mobile permitting, and DPWH accountability.",
+      "narrative_zh": "政府在数字老年人身份证合规性、移动政务许可及公共工程部问责制方面的举措。",
+      "R": 1,
+      "R_reason": "Hard to quantify 'compliance' or 'official success' broadly.",
+      "S": 1,
+      "S_reason": "Government press releases vs implementation realities.",
+      "T": 1,
+      "T_reason": "Ongoing regulatory adjustments.",
+      "U": 1,
+      "U_reason": "Implementation effectiveness is somewhat unpredictable.",
+      "H": 1,
+      "H_reason": "Administrative and localized news.",
+      "bettable": false,
+      "suggested_question": null,
+      "suggested_question_zh": null,
+      "resolution_source": null
+    },
+    {
+      "name": "Social Programs and Tech",
+      "name_zh": "社会福利与人力资源科技",
+      "entry_ids": [
+        5,
+        8
+      ],
+      "density": 2,
+      "narrative": "Government welfare outreach events (LAB for All) and private sector HR technology innovation.",
+      "narrative_zh": "政府福利外展活动（LAB for All）与私营部门人力资源科技创新。",
+      "R": 0,
+      "R_reason": "General news updates on ongoing programs.",
+      "S": 1,
+      "S_reason": "Agency reports and media event coverage.",
+      "T": 0,
+      "T_reason": "No specific deadline for trends.",
+      "U": 0,
+      "U_reason": "Standard operational reporting.",
+      "H": 1,
+      "H_reason": "Moderate coverage.",
+      "bettable": false,
+      "suggested_question": null,
+      "suggested_question_zh": null,
+      "resolution_source": null
+    }
+  ],
+  "noise": [
+    0,
+    1,
+    3,
+    9,
+    10
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "region": "id",
+  "clustered_at": "2026-05-19T21:55:09.157828",
+  "total_entries": 14,
+  "noise_count": 6,
+  "groups": [
+    {
+      "name": "Prabowo Political Stability",
+      "name_zh": "普拉博沃执政稳定性",
+      "entry_ids": [
+        11,
+        12,
+        13
+      ],
+      "density": 3,
+      "narrative": "Discourse surrounding President Prabowo's legislative presence, Jokowi's potential political influence, and concerns regarding Prabowo's ability to complete his term.",
+      "narrative_zh": "围绕普拉博沃总统的立法会议出席、佐科潜在政治影响力以及其任期届满能力的讨论。",
+      "R": 1,
+      "R_reason": "Political stability is subjective, though term completion is binary.",
+      "S": 1,
+      "S_reason": "Official government announcements and credible media reports.",
+      "T": 1,
+      "T_reason": "Events occurring throughout the current presidential term.",
+      "U": 2,
+      "U_reason": "High political uncertainty regarding internal coalition dynamics.",
+      "H": 2,
+      "H_reason": "Multiple high-level sources and social media sentiment.",
+      "bettable": true,
+      "suggested_question": "Will Prabowo Subianto serve as President of Indonesia until the end of 2029?",
+      "suggested_question_zh": "普拉博沃·苏比安托是否会担任印度尼西亚总统至2029年底？",
+      "resolution_source": "General Election Commission (KPU) / Official State Gazette"
+    },
+    {
+      "name": "Indonesian Fiscal Health",
+      "name_zh": "印尼财政健康状况",
+      "entry_ids": [
+        1
+      ],
+      "density": 1,
+      "narrative": "Official reporting of Indonesia's state budget deficit, indicating current fiscal performance under the new administration.",
+      "narrative_zh": "关于印尼国家预算赤字的官方报告，反映了新政府当前的财政表现。",
+      "R": 2,
+      "R_reason": "Fiscal deficit percentages are objective numerical data.",
+      "S": 2,
+      "S_reason": "Ministry of Finance official budget reports.",
+      "T": 2,
+      "T_reason": "Monthly reporting cycles.",
+      "U": 1,
+      "U_reason": "Trends are visible but specific month-to-month data is subject to economic shifts.",
+      "H": 2,
+      "H_reason": "Standard economic news coverage.",
+      "bettable": true,
+      "suggested_question": "Will the Indonesian fiscal deficit exceed 2.0% of GDP by the end of 2026?",
+      "suggested_question_zh": "到2026年底，印尼财政赤字是否会超过GDP的2.0%？",
+      "resolution_source": "Ministry of Finance of the Republic of Indonesia"
+    },
+    {
+      "name": "Digital Security and Cybersecurity",
+      "name_zh": "数字安全与网络犯罪",
+      "entry_ids": [
+        9
+      ],
+      "density": 1,
+      "narrative": "Rising concerns over account theft and password hacking affecting a large number of Indonesians.",
+      "narrative_zh": "对影响大量印尼人的账户盗窃和密码黑客攻击行为日益增长的担忧。",
+      "R": 2,
+      "R_reason": "Incident reports are quantifiable by cybersecurity agencies.",
+      "S": 1,
+      "S_reason": "National Cyber and Crypto Agency (BSSN) reports.",
+      "T": 1,
+      "T_reason": "Quarterly trend monitoring.",
+      "U": 1,
+      "U_reason": "Trends are rising, but exact victim counts are hard to verify.",
+      "H": 2,
+      "H_reason": "High public interest due to financial impact.",
+      "bettable": true,
+      "suggested_question": "Will the government announce a new mandatory cybersecurity regulation for banking apps before 2027?",
+      "suggested_question_zh": "政府在2027年前是否会颁布针对银行App的强制性网络安全新规？",
+      "resolution_source": "OJK or BSSN official policy announcements"
+    },
+    {
+      "name": "Energy Supply Resilience",
+      "name_zh": "能源供应韧性",
+      "entry_ids": [
+        8
+      ],
+      "density": 1,
+      "narrative": "Status report on Pertalite and Pertamax fuel stock availability in Indonesia.",
+      "narrative_zh": "关于印尼Pertalite和Pertamax燃料库存可用性的现状报告。",
+      "R": 2,
+      "R_reason": "Inventory days are concrete metrics.",
+      "S": 2,
+      "S_reason": "Pertamina internal data.",
+      "T": 2,
+      "T_reason": "Dynamic daily tracking.",
+      "U": 0,
+      "U_reason": "Current stock is publicly stated; volatility is low.",
+      "H": 2,
+      "H_reason": "Essential utility information with high public visibility.",
+      "bettable": false,
+      "suggested_question": null,
+      "suggested_question_zh": null,
+      "resolution_source": "PT Pertamina"
+    },
+    {
+      "name": "Public Health Alerts",
+      "name_zh": "公共卫生警报",
+      "entry_ids": [
+        4,
+        7
+      ],
+      "density": 2,
+      "narrative": "Emerging public health concerns regarding Hantavirus in Indonesia and Ebola in the Congo region.",
+      "narrative_zh": "关于印尼汉坦病毒和刚果地区埃博拉病毒的公共卫生担忧。",
+      "R": 1,
+      "R_reason": "Outbreak definitions are clear, but local reporting can be inconsistent.",
+      "S": 1,
+      "S_reason": "Ministry of Health/WHO alerts.",
+      "T": 1,
+      "T_reason": "Epidemiological monitoring windows.",
+      "U": 2,
+      "U_reason": "Outbreak trajectory is inherently unpredictable.",
+      "H": 2,
+      "H_reason": "High public interest in health risks.",
+      "bettable": true,
+      "suggested_question": "Will the WHO declare the current Ebola outbreak in Congo a PHEIC by the end of 2026?",
+      "suggested_question_zh": "世界卫生组织是否会在2026年底前将当前刚果的埃博拉疫情宣布为国际关注的突发公共卫生事件？",
+      "resolution_source": "World Health Organization (WHO)"
+    }
+  ],
+  "noise": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    10
+  ]
+}
