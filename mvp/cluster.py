@@ -79,6 +79,18 @@ Below are broad topic clusters created from SourceIntel hotspots. Your task is
 to score every cluster for prediction-market usefulness. Do not merge clusters,
 drop clusters, or invent new clusters. Return one scored object per input cluster.
 
+Region discipline:
+- The market question must be relevant to {country_name} or to a genuinely
+  global outcome.
+- If a cluster is mainly another country's domestic policy, central bank,
+  local election, local sports league, local court case, or local company
+  story with no clear {country_name} relevance, mark it as digest/watch:
+  bettable=false, suggested_question=null, suggested_question_zh=null.
+- Use {country_name} or global authoritative sources for resolvable questions.
+  Do not use another country's domestic regulator or central bank as the
+  resolver for a {country_name} page unless the topic is explicitly about a
+  cross-border/global market outcome.
+
 CLUSTERS:
 {groups}
 
@@ -251,6 +263,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     score_response = _generate_content_with_retry(client, model, score_prompt)
     score_result = _parse_json_response(score_response.text)
     result = _merge_scored_groups(broad_result, score_result, clusters)
+    _apply_region_relevance_guard(result, region_cfg)
     result["region"] = region_cfg.slug
     result["total_entries"] = len(clusters)
     result["clustered_at"] = dt.datetime.now().isoformat()
@@ -438,6 +451,50 @@ def _merge_scored_groups(broad_result: Dict, score_result: Dict,
         "groups": groups,
         "noise": broad_result.get("noise", []),
     }
+
+
+def _apply_region_relevance_guard(result: Dict, region: RegionConfig) -> None:
+    """Prevent another country's domestic story from becoming the local market."""
+    foreign_terms_by_region = {
+        "ph": (
+            "bank indonesia", "rupiah", "ihsg", "idx ", "jakarta", "indonesian ",
+            "indonesia ", "ministry of finance of indonesia",
+            "ministry of energy and mineral resources of indonesia",
+        ),
+        "id": (
+            "bangko sentral", "bsp ", "philippine peso", "peso ", "comelec",
+            "senate of the philippines", "supreme court of the philippines",
+            "philippines ", "philippine ",
+        ),
+    }
+    foreign_terms = foreign_terms_by_region.get(region.slug, ())
+    if not foreign_terms:
+        return
+
+    for group in result.get("groups", []):
+        question_text = " ".join(str(group.get(key) or "") for key in (
+            "suggested_question", "suggested_question_zh", "resolution_source",
+        )).lower()
+        has_foreign_resolver = any(term in question_text for term in foreign_terms)
+        if has_foreign_resolver:
+            _mark_digest(
+                group,
+                f"Foreign domestic resolver is not suitable for {region.country_label_en} page.",
+            )
+
+
+def _mark_digest(group: Dict, reason: str) -> None:
+    group["bettable"] = False
+    group["suggested_question"] = None
+    group["suggested_question_zh"] = None
+    group["resolution_source"] = ""
+    group["disposition_hint"] = "digest"
+    group["R"] = min(group.get("R", 0), 1)
+    group["S"] = min(group.get("S", 0), 1)
+    group["T"] = min(group.get("T", 0), 1)
+    group["R_reason"] = reason
+    group["S_reason"] = reason
+    group["T_reason"] = reason
 
 
 def _fill_missing_scores(group: Dict) -> None:
