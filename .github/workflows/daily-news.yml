@@ -14,6 +14,10 @@ on:
         description: "Final SourceIntel hotspot cap per region"
         required: false
         default: "120"
+      x_limit:
+        description: "Grok/X hotspot cap per region"
+        required: false
+        default: "10"
 
 permissions:
   contents: write
@@ -34,6 +38,7 @@ jobs:
       XAI_MODEL: ${{ vars.XAI_MODEL || 'grok-4.3' }}
       SOURCE_INTEL_DAYS: ${{ github.event.inputs.days || '7' }}
       SOURCE_INTEL_TOTAL_LIMIT: ${{ github.event.inputs.total_limit || '120' }}
+      SOURCE_INTEL_X_LIMIT: ${{ github.event.inputs.x_limit || '10' }}
 
     steps:
       - name: Checkout PHNews
@@ -63,8 +68,8 @@ jobs:
       - name: Collect SourceIntel hotspots
         working-directory: SourceIntel
         run: |
-          python -m source_intel.cli collect --source all --region ph --days "$SOURCE_INTEL_DAYS" --limit all --x-limit all --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
-          python -m source_intel.cli collect --source all --region id --days "$SOURCE_INTEL_DAYS" --limit all --x-limit all --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
+          python -m source_intel.cli collect --source all --region ph --days "$SOURCE_INTEL_DAYS" --limit all --x-limit "$SOURCE_INTEL_X_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
+          python -m source_intel.cli collect --source all --region id --days "$SOURCE_INTEL_DAYS" --limit all --x-limit "$SOURCE_INTEL_X_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
 
       - name: Generate PHNews static pages
         working-directory: phnews
