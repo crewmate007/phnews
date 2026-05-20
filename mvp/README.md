@@ -28,7 +28,7 @@ python run_daily.py --cluster
 
 ```bash
 cd ../SourceIntel
-python3 -m source_intel.cli collect --source all --region ph --limit 12
+python3 -m source_intel.cli collect --source all --region ph --limit all --x-limit all --total-limit 120
 ```
 
 跑完会生成三类文件：
@@ -149,7 +149,7 @@ Excel 报告有 6 个 Sheet：
 ## 故障排查
 
 **Q: SourceIntel 热点读取不到？**
-先在 `../SourceIntel` 运行 `python3 -m source_intel.cli collect --source all --region ph --limit 12`，或用 `--source-intel-report` 指定 JSON 文件。
+先在 `../SourceIntel` 运行 `python3 -m source_intel.cli collect --source all --region ph --limit all --x-limit all --total-limit 120`，或用 `--source-intel-report` 指定 JSON 文件。
 
 **Q: Reddit 429 限速？**
 `fetchers.py` 里的 `time.sleep(2)` 可以加长，或换住宅 IP。

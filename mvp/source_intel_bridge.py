@@ -184,11 +184,14 @@ def _hotspot_to_cluster(index: int, item: dict[str, Any]) -> dict[str, Any]:
         })
 
     sources = item.get("entities") or [item.get("source", "source_intel")]
+    source_label = item.get("source", "unknown")
+    if item.get("source_section"):
+        source_label = f"{source_label}:{item['source_section']}"
     return {
         "cluster_title": item.get("title_en") or item.get("title_zh") or f"SourceIntel hotspot {index}",
         "published": item.get("observed_at", ""),
         "link": evidence[0] if evidence else "",
-        "section": f"source_intel:{item.get('source', 'unknown')}",
+        "section": f"source_intel:{source_label}",
         "region": item.get("region", ""),
         "sub_articles": sub_articles,
         "source_count": max(len(evidence), len(sub_articles), 1),
