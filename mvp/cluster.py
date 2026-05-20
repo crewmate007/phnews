@@ -10,6 +10,7 @@ Flow:
 from __future__ import annotations
 import json
 import datetime as dt
+import time
 from typing import List, Dict, Optional
 
 from regions import RegionConfig, get_region
@@ -237,22 +238,17 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         country_adjective=region_cfg.country_adjective,
     )
 
-    broad_response = client.models.generate_content(
-        model=model,
-        contents=broad_prompt,
-    )
+    broad_response = _generate_content_with_retry(client, model, broad_prompt)
     broad_result = _parse_json_response(broad_response.text)
     broad_result = _normalize_broad_result(broad_result, clusters)
+    broad_result = _ensure_minimum_broad_groups(broad_result, clusters, min_groups)
 
     score_prompt = SCORE_PROMPT_TEMPLATE.format(
         date=today,
         groups=_build_score_groups(broad_result["groups"], clusters),
         country_name=region_cfg.country_name,
     )
-    score_response = client.models.generate_content(
-        model=model,
-        contents=score_prompt,
-    )
+    score_response = _generate_content_with_retry(client, model, score_prompt)
     score_result = _parse_json_response(score_response.text)
     result = _merge_scored_groups(broad_result, score_result, clusters)
     result["region"] = region_cfg.slug
@@ -270,12 +266,33 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
 
 def _target_group_range(n_entries: int) -> tuple[int, int]:
     if n_entries >= 100:
-        return 25, 40
+        return 25, 60
     if n_entries >= 60:
-        return 18, 30
+        return 18, 40
     if n_entries >= 30:
-        return 12, 22
+        return 12, 28
     return 6, 14
+
+
+def _generate_content_with_retry(client, model: str, prompt: str,
+                                 attempts: int = 4):
+    """Retry transient Gemini overloads without hiding persistent failures."""
+    last_exc = None
+    for attempt in range(attempts):
+        try:
+            return client.models.generate_content(model=model, contents=prompt)
+        except Exception as exc:  # google-genai exposes multiple transient types.
+            last_exc = exc
+            message = str(exc).lower()
+            status_code = getattr(exc, "status_code", None)
+            transient = status_code in (429, 500, 502, 503, 504) or any(
+                marker in message
+                for marker in ("503", "429", "unavailable", "high demand", "timeout")
+            )
+            if not transient or attempt == attempts - 1:
+                raise
+            time.sleep(5 * (2 ** attempt))
+    raise last_exc
 
 
 def _build_broad_entries(clusters: List[Dict]) -> str:
@@ -359,6 +376,40 @@ def _normalize_broad_result(result: Dict, clusters: List[Dict]) -> Dict:
     assigned = {entry_id for group in normalized_groups for entry_id in group["entry_ids"]}
     noise.update(i for i in range(len(clusters)) if i not in assigned)
     return {"groups": normalized_groups, "noise": sorted(noise)}
+
+
+def _ensure_minimum_broad_groups(result: Dict, clusters: List[Dict],
+                                 min_groups: int) -> Dict:
+    groups = list(result.get("groups", []))
+    noise = list(result.get("noise", []))
+    if len(groups) >= min_groups or not noise:
+        return result
+
+    needed = min_groups - len(groups)
+    noise.sort(
+        key=lambda i: (
+            clusters[i].get("rank_score") or 0,
+            clusters[i].get("source_count") or 0,
+        ),
+        reverse=True,
+    )
+    promoted = noise[:needed]
+    remaining_noise = noise[needed:]
+    for entry_id in promoted:
+        cluster = clusters[entry_id]
+        title = cluster.get("cluster_title", "SourceIntel topic")
+        summary = cluster.get("summary") or title
+        groups.append({
+            "name": _clip(title, 64),
+            "name_zh": _clip(title, 32),
+            "entry_ids": [entry_id],
+            "density": 1,
+            "narrative": _clip(summary, 220),
+            "narrative_zh": _clip(summary, 120),
+            "topic_type": "other",
+            "market_hint": cluster.get("prediction_angle"),
+        })
+    return {"groups": groups, "noise": remaining_noise}
 
 
 def _merge_scored_groups(broad_result: Dict, score_result: Dict,
