@@ -1,0 +1,97 @@
+name: Daily News Automation
+
+on:
+  schedule:
+    # 08:30 Asia/Shanghai / PHT / WIB+1
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Lookback days for Grok/X search"
+        required: false
+        default: "7"
+      total_limit:
+        description: "Final SourceIntel hotspot cap per region"
+        required: false
+        default: "120"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-news-automation
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.1-flash-lite' }}
+      XAI_MODEL: ${{ vars.XAI_MODEL || 'grok-4.3' }}
+      SOURCE_INTEL_DAYS: ${{ github.event.inputs.days || '7' }}
+      SOURCE_INTEL_TOTAL_LIMIT: ${{ github.event.inputs.total_limit || '120' }}
+
+    steps:
+      - name: Checkout PHNews
+        uses: actions/checkout@v4
+        with:
+          path: phnews
+
+      - name: Checkout SourceIntel
+        uses: actions/checkout@v4
+        with:
+          repository: crewmate007/source-intel
+          path: SourceIntel
+          token: ${{ secrets.SOURCE_INTEL_REPO_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: phnews/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r phnews/requirements.txt
+
+      - name: Collect SourceIntel hotspots
+        working-directory: SourceIntel
+        run: |
+          python -m source_intel.cli collect --source all --region ph --days "$SOURCE_INTEL_DAYS" --limit all --x-limit all --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
+          python -m source_intel.cli collect --source all --region id --days "$SOURCE_INTEL_DAYS" --limit all --x-limit all --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
+
+      - name: Generate PHNews static pages
+        working-directory: phnews
+        run: |
+          python mvp/run_daily.py --cluster --region ph --source-intel-dir ../SourceIntel
+          python mvp/run_daily.py --cluster --region id --source-intel-dir ../SourceIntel
+
+      - name: Validate generated pages
+        working-directory: phnews
+        run: |
+          TODAY="$(date -u +%F)"
+          python scripts/validate_generated_pages.py --date "$TODAY"
+
+      - name: Commit and push generated site
+        working-directory: phnews
+        run: |
+          TODAY="$(date -u +%F)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html docs/id/index.html
+          git add "docs/reports/cluster_${TODAY}.html" "docs/id/reports/cluster_${TODAY}.html"
+          git add "mvp/reports/cluster_${TODAY}.html" "mvp/reports/id/cluster_${TODAY}.html"
+          git add "mvp/reports/id/clusters_${TODAY}.json"
+          git add -f "mvp/reports/clusters_${TODAY}.json"
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "Automated daily news ${TODAY}"
+            git push
+          fi
