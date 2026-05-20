@@ -196,6 +196,14 @@ def _hotspot_to_cluster(index: int, item: dict[str, Any]) -> dict[str, Any]:
         "sub_articles": sub_articles,
         "source_count": max(len(evidence), len(sub_articles), 1),
         "sources": sources,
+        "summary": item.get("summary_en") or item.get("summary_zh") or "",
+        "summary_zh": item.get("summary_zh") or item.get("summary_en") or "",
+        "keywords": item.get("keywords", []),
+        "prediction_angle": item.get("prediction_angle_en") or item.get("prediction_angle_zh") or "",
+        "social_heat": item.get("social_heat", ""),
+        "uncertainty": item.get("uncertainty", ""),
+        "rank_score": item.get("rank_score"),
+        "rank_reason": item.get("rank_reason", ""),
     }
 
 

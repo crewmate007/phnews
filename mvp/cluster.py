@@ -1,13 +1,11 @@
 """
 LLM-based topic clustering for SourceIntel entries.
 
-Takes normalized SourceIntel hotspots and groups them into
-10-15 coherent topic groups, each assessed for prediction market
-bettability.
+Takes normalized SourceIntel hotspots, first groups them broadly for coverage,
+then evaluates each group for prediction-market bettability.
 
 Flow:
-  SourceIntel hotspots → cluster_with_llm() → 10-15 groups
-  Each group has: name, entry_ids, density, RSTUH scores, suggested question
+  SourceIntel hotspots → broad clusters → RSTUH scoring → report groups
 """
 from __future__ import annotations
 import json
@@ -21,7 +19,121 @@ from regions import RegionConfig, get_region
 # LLM-based clustering (Gemini Flash)
 # ============================================================
 
-CLUSTER_PROMPT_TEMPLATE = """\
+BROAD_CLUSTER_PROMPT_TEMPLATE = """\
+You are a source-intelligence analyst covering {country_name}. Today is {date}.
+
+Below are {n} SourceIntel hotspots collected today for {country_adjective} coverage.
+Each entry has an ID, source label, source count, title, short summary, claims,
+entities/keywords, and a possible prediction angle.
+
+YOUR TASK:
+Create broad coverage clusters before any final market selection.
+
+Target {min_groups}–{max_groups} topic clusters.
+
+Rules:
+- Prefer semantic separation over neat large buckets.
+- Small but distinct topics with 1–3 entries should remain separate.
+- Merge entries only when they share the same real-world event, institution,
+  actor, market variable, policy decision, sports competition, court case,
+  disaster, health outbreak, or future outcome.
+- Do not create generic catch-all groups like "Sports", "Technology",
+  "Local Issues", "Business News", or "Entertainment". Split those by
+  specific event/company/league/agency/outcome.
+- Preserve local political, legal, economic, weather, health, security, and
+  infrastructure topics even if they have lower volume than global sports or
+  entertainment stories.
+- An entry may appear in at most one cluster.
+- Use "noise" only for entries that are truly unusable, duplicate residue, or
+  too vague to connect to a real-world topic. Do not put an entry in noise just
+  because it is small.
+
+ENTRIES:
+{entries}
+
+OUTPUT: strict JSON only, no markdown fences, no extra text.
+
+{{
+  "groups": [
+    {{
+      "name": "specific topic name (English, ≤8 words)",
+      "name_zh": "中文话题名（≤10字）",
+      "entry_ids": [0, 5, 12],
+      "density": <int, number of entries in this group>,
+      "narrative": "1 concise sentence describing the common real-world topic",
+      "narrative_zh": "中文摘要，1句",
+      "topic_type": "politics|legal|economy|security|weather|health|infrastructure|technology|sports|entertainment|science|world|local|other",
+      "market_hint": "most natural future outcome, or null if mostly digest"
+    }}
+  ],
+  "noise": [<entry_ids not assigned to any group>]
+}}
+"""
+
+
+SCORE_PROMPT_TEMPLATE = """\
+You are a prediction-market analyst covering {country_name}. Today is {date}.
+
+Below are broad topic clusters created from SourceIntel hotspots. Your task is
+to score every cluster for prediction-market usefulness. Do not merge clusters,
+drop clusters, or invent new clusters. Return one scored object per input cluster.
+
+CLUSTERS:
+{groups}
+
+OUTPUT: strict JSON only, no markdown fences, no extra text.
+
+{{
+  "groups": [
+    {{
+      "broad_index": <int, index from the input cluster>,
+      "R": <0|1|2>,
+      "R_reason": "why this outcome is/isn't resolvable",
+      "S": <0|1|2>,
+      "S_reason": "what authoritative source resolves it",
+      "T": <0|1|2>,
+      "T_reason": "what is the time window / deadline",
+      "U": <0|1|2>,
+      "U_reason": "how uncertain is the outcome (0=decided, 2=genuinely uncertain)",
+      "H": <0|1|2>,
+      "H_reason": "how much public attention / discussion",
+      "bettable": <true|false>,
+      "suggested_question": "Will ... by ...? (null if not bettable)",
+      "suggested_question_zh": "中文预测市场问题（不可下注则为 null）",
+      "resolution_source": "specific official or authoritative source",
+      "disposition_hint": "top|candidate|watch|digest|drop"
+    }}
+  ]
+}}
+
+SCORING GUIDE:
+- R=2: clear yes/no outcome with objective criteria (e.g. "Will BSP cut by 25bp?")
+- R=1: outcome exists but boundary is fuzzy
+- R=0: outcome is purely subjective or has no defined endpoint
+- S=2: official government/regulatory body, court, league, exchange, company, or
+  tournament body announces result
+- S=1: reputable media consensus, or official source exists but is not clean
+- S=0: no clear authoritative resolver
+- T=2: specific date, deadline, meeting, recurring cadence, or tournament window
+- T=1: approximate deadline (this quarter, this month)
+- T=0: open-ended, no deadline
+- U=2: outcome is genuinely in doubt, implied probability 25%–75%
+- U=1: one side heavily favored but not certain
+- U=0: outcome is essentially decided / a sure thing
+- H=2: multiple sources, social discussion, or cross-section coverage
+- H=1: 2–4 evidence items, limited social discussion
+- H=0: single weak source or very low interest
+
+Important:
+- A cluster can be valuable digest even when it is not bettable.
+- Sports and entertainment can be bettable if the event has an official result
+  and a future time window; otherwise mark digest/watch.
+- Local politics, legal processes, economic policy, health outbreaks, weather,
+  security, and infrastructure should get careful market-question treatment.
+"""
+
+
+LEGACY_CLUSTER_PROMPT_TEMPLATE = """\
 You are a prediction market analyst covering {country_name}. Today is {date}.
 
 Below are {n} SourceIntel hotspots collected today for {country_adjective} coverage.
@@ -89,7 +201,7 @@ SCORING GUIDE:
 def cluster_with_llm(clusters: List[Dict], api_key: str,
                      region: RegionConfig | str | None = None,
                      model: str = "gemini-flash-latest") -> Dict:
-    """Send all cluster titles to Gemini Flash and get topic groups back.
+    """Cluster SourceIntel entries broadly, then score each group with Gemini.
 
     Args:
         clusters: list of SourceIntel cluster-shaped dicts
@@ -112,46 +224,188 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
     client = genai.Client(api_key=api_key)
 
-    entry_lines = []
-    for i, c in enumerate(clusters):
-        section = c.get("section", "")
-        title = c.get("cluster_title", "")
-        n_src = c.get("source_count", 0)
-        entry_lines.append(f"[{i}] ({section}, {n_src}src) {title}")
-
-    entries_text = "\n".join(entry_lines)
     today = dt.date.today().isoformat()
+    min_groups, max_groups = _target_group_range(len(clusters))
 
-    prompt = CLUSTER_PROMPT_TEMPLATE.format(
+    broad_prompt = BROAD_CLUSTER_PROMPT_TEMPLATE.format(
         date=today,
         n=len(clusters),
-        entries=entries_text,
+        min_groups=min_groups,
+        max_groups=max_groups,
+        entries=_build_broad_entries(clusters),
         country_name=region_cfg.country_name,
         country_adjective=region_cfg.country_adjective,
     )
 
-    response = client.models.generate_content(
+    broad_response = client.models.generate_content(
         model=model,
-        contents=prompt,
+        contents=broad_prompt,
     )
-    text = response.text.strip()
-    if text.startswith("```"):
-        parts = text.split("```")
-        text = parts[1]
-        if text.startswith("json"):
-            text = text[4:]
-        text = text.strip()
+    broad_result = _parse_json_response(broad_response.text)
+    broad_result = _normalize_broad_result(broad_result, clusters)
 
-    result = json.loads(text)
+    score_prompt = SCORE_PROMPT_TEMPLATE.format(
+        date=today,
+        groups=_build_score_groups(broad_result["groups"], clusters),
+        country_name=region_cfg.country_name,
+    )
+    score_response = client.models.generate_content(
+        model=model,
+        contents=score_prompt,
+    )
+    score_result = _parse_json_response(score_response.text)
+    result = _merge_scored_groups(broad_result, score_result, clusters)
     result["region"] = region_cfg.slug
     result["total_entries"] = len(clusters)
     result["clustered_at"] = dt.datetime.now().isoformat()
+    result["cluster_pipeline"] = "broad_then_score"
+    result["target_group_range"] = [min_groups, max_groups]
 
     for group in result.get("groups", []):
         group["clusters"] = [clusters[i] for i in group.get("entry_ids", [])
                              if i < len(clusters)]
 
     return result
+
+
+def _target_group_range(n_entries: int) -> tuple[int, int]:
+    if n_entries >= 100:
+        return 25, 40
+    if n_entries >= 60:
+        return 18, 30
+    if n_entries >= 30:
+        return 12, 22
+    return 6, 14
+
+
+def _build_broad_entries(clusters: List[Dict]) -> str:
+    lines = []
+    for i, c in enumerate(clusters):
+        claims = [a.get("title", "") for a in c.get("sub_articles", []) if a.get("title")]
+        fields = [
+            f"[{i}]",
+            f"source={c.get('section', '')}",
+            f"source_count={c.get('source_count', 0)}",
+            f"rank={c.get('rank_score', '')}",
+            f"title={_clip(c.get('cluster_title', ''), 170)}",
+        ]
+        if c.get("summary"):
+            fields.append(f"summary={_clip(c.get('summary', ''), 220)}")
+        if claims:
+            fields.append(f"claims={_clip(' | '.join(claims[:3]), 260)}")
+        if c.get("sources"):
+            fields.append(f"entities={_clip(', '.join(str(s) for s in c.get('sources', [])[:8]), 140)}")
+        if c.get("keywords"):
+            fields.append(f"keywords={_clip(', '.join(str(k) for k in c.get('keywords', [])[:8]), 120)}")
+        if c.get("prediction_angle"):
+            fields.append(f"prediction_angle={_clip(c.get('prediction_angle', ''), 180)}")
+        lines.append("\n".join(fields))
+    return "\n\n".join(lines)
+
+
+def _build_score_groups(groups: List[Dict], clusters: List[Dict]) -> str:
+    blocks = []
+    for index, group in enumerate(groups):
+        entry_ids = [i for i in group.get("entry_ids", []) if isinstance(i, int) and 0 <= i < len(clusters)]
+        titles = [_clip(clusters[i].get("cluster_title", ""), 120) for i in entry_ids[:8]]
+        source_labels = sorted({clusters[i].get("section", "") for i in entry_ids})
+        blocks.append("\n".join([
+            f"[{index}] {group.get('name', '')} / {group.get('name_zh', '')}",
+            f"type={group.get('topic_type', '')}",
+            f"density={group.get('density', len(entry_ids))}",
+            f"entry_ids={entry_ids}",
+            f"sources={', '.join(source_labels[:6])}",
+            f"narrative={_clip(group.get('narrative', ''), 220)}",
+            f"market_hint={_clip(str(group.get('market_hint') or ''), 180)}",
+            "sample_titles=" + " | ".join(titles),
+        ]))
+    return "\n\n".join(blocks)
+
+
+def _parse_json_response(text: str) -> Dict:
+    text = text.strip()
+    if text.startswith("```"):
+        parts = text.split("```")
+        text = parts[1]
+        if text.startswith("json"):
+            text = text[4:]
+        text = text.strip()
+    return json.loads(text)
+
+
+def _normalize_broad_result(result: Dict, clusters: List[Dict]) -> Dict:
+    used: set[int] = set()
+    normalized_groups = []
+    for group in result.get("groups", []):
+        entry_ids = []
+        for value in group.get("entry_ids", []):
+            if not isinstance(value, int) or value < 0 or value >= len(clusters):
+                continue
+            if value in used:
+                continue
+            used.add(value)
+            entry_ids.append(value)
+        if not entry_ids:
+            continue
+        group = dict(group)
+        group["entry_ids"] = entry_ids
+        group["density"] = int(group.get("density") or len(entry_ids))
+        normalized_groups.append(group)
+
+    noise = {
+        value for value in result.get("noise", [])
+        if isinstance(value, int) and 0 <= value < len(clusters)
+    }
+    assigned = {entry_id for group in normalized_groups for entry_id in group["entry_ids"]}
+    noise.update(i for i in range(len(clusters)) if i not in assigned)
+    return {"groups": normalized_groups, "noise": sorted(noise)}
+
+
+def _merge_scored_groups(broad_result: Dict, score_result: Dict,
+                         clusters: List[Dict]) -> Dict:
+    scores_by_index = {
+        item.get("broad_index"): item
+        for item in score_result.get("groups", [])
+        if isinstance(item.get("broad_index"), int)
+    }
+    groups = []
+    for index, broad in enumerate(broad_result.get("groups", [])):
+        scored = scores_by_index.get(index, {})
+        group = dict(broad)
+        for key in (
+            "R", "R_reason", "S", "S_reason", "T", "T_reason",
+            "U", "U_reason", "H", "H_reason", "bettable",
+            "suggested_question", "suggested_question_zh",
+            "resolution_source", "disposition_hint",
+        ):
+            if key in scored:
+                group[key] = scored[key]
+        _fill_missing_scores(group)
+        group["density"] = len(group.get("entry_ids", []))
+        groups.append(group)
+    return {
+        "groups": groups,
+        "noise": broad_result.get("noise", []),
+    }
+
+
+def _fill_missing_scores(group: Dict) -> None:
+    for key in ("R", "S", "T", "U", "H"):
+        value = group.get(key)
+        group[key] = value if value in (0, 1, 2) else 0
+        reason_key = f"{key}_reason"
+        group.setdefault(reason_key, "")
+    group.setdefault("bettable", False)
+    group.setdefault("suggested_question", None)
+    group.setdefault("suggested_question_zh", None)
+    group.setdefault("resolution_source", "")
+
+
+def _clip(value: str, length: int) -> str:
+    value = " ".join(str(value or "").split())
+    if len(value) <= length:
+        return value
+    return value[:length - 1].rstrip() + "…"
 
 
 # ============================================================
@@ -407,6 +661,8 @@ def save_cluster_result(result: Dict, output_dir: str,
         "region": result.get("region", region_cfg.slug),
         "clustered_at": result["clustered_at"],
         "total_entries": result["total_entries"],
+        "cluster_pipeline": result.get("cluster_pipeline", "legacy"),
+        "target_group_range": result.get("target_group_range"),
         "noise_count": len(result.get("noise", [])),
         "groups": [
             {k: v for k, v in g.items() if k != "clusters"}
