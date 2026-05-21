@@ -245,7 +245,7 @@ const groups = [
     "source": "Senate of the Philippines",
     "prob": 15,
     "prob_reason_zh": "弹劾需三分之二多数，政治难度极高。",
-    "prob_reason_en": "Requires 2/3 senate vote; high bar."
+    "prob_reason_en": "Impeachment requires a 2/3 supermajority."
   },
   {
     "name_en": "Senate Shooting Controversy",
@@ -342,8 +342,8 @@ const groups = [
     "question_zh": "司法部是否会在2026年8月之前正式确认参议院枪击事件的嫌疑人？",
     "source": "Department of Justice (Philippines)",
     "prob": 70,
-    "prob_reason_zh": "政府需回应压力，尽快公布以平息民愤。",
-    "prob_reason_en": "Govt needs to quell unrest via naming."
+    "prob_reason_zh": "迫于舆论压力，司法部须给出调查结论。",
+    "prob_reason_en": "Public pressure forces a DOJ conclusion."
   },
   {
     "name_en": "Philippine Economic Pressure and Inflation",
@@ -442,8 +442,8 @@ const groups = [
     "question_zh": "2026年第三季度菲律宾平均通胀率是否会超过5%？",
     "source": "Philippine Statistics Authority",
     "prob": 65,
-    "prob_reason_zh": "通胀压力因供应中断和货币疲软加剧。",
-    "prob_reason_en": "Supply shocks and weak peso drive rates."
+    "prob_reason_zh": "通胀压力与供应限制导致物价持续走高。",
+    "prob_reason_en": "Supply shocks keep inflation pressure high."
   },
   {
     "name_en": "Philippine Disaster Preparedness and Climate",
@@ -498,8 +498,8 @@ const groups = [
     "question_zh": "2026年大米总产量是否会低于2000万公吨？",
     "source": "Department of Agriculture (Philippines)",
     "prob": 60,
-    "prob_reason_zh": "厄尔尼诺严重影响农业收成。",
-    "prob_reason_en": "El Niño severely impacts crop yields."
+    "prob_reason_zh": "厄尔尼诺与台风严重影响农业收成。",
+    "prob_reason_en": "El Niño and typhoons hurt crop yields."
   },
   {
     "name_en": "Philippine Maritime and Security Policy",
@@ -612,8 +612,8 @@ const groups = [
     "question_zh": "哪支球队将赢得2026年PBA专员杯冠军？",
     "source": "PBA",
     "prob": 0,
-    "prob_reason_zh": "问题是选择题，非二元判断。",
-    "prob_reason_en": "Question is multiple choice, not binary."
+    "prob_reason_zh": "此问题为开放式选择，非二元概率。",
+    "prob_reason_en": "Question is open-ended, not binary."
   },
   {
     "name_en": "NBA Western Conference Finals",
@@ -696,8 +696,8 @@ const groups = [
     "question_zh": "俄克拉荷马雷霆队是否会赢得NBA西部决赛？",
     "source": "NBA",
     "prob": 45,
-    "prob_reason_zh": "两队实力相当，伤病是关键变量。",
-    "prob_reason_en": "Well-matched teams; injuries are key."
+    "prob_reason_zh": "雷霆实力强劲但季后赛存在不确定性。",
+    "prob_reason_en": "Thunder are strong but playoffs vary."
   },
   {
     "name_en": "Corporate Expansion in Clark Ecozone",
@@ -2684,8 +2684,8 @@ const groups = [
     "question_zh": "扬尼克·辛纳是否会赢得2026年法国网球公开赛？",
     "source": "Roland Garros",
     "prob": 35,
-    "prob_reason_zh": "虽是夺冠热门，但红土竞争激烈。",
-    "prob_reason_en": "Top contender, but clay field is tough."
+    "prob_reason_zh": "红土竞争激烈，辛纳夺冠难度较大。",
+    "prob_reason_en": "Clay competition is fierce for Sinner."
   },
   {
     "name_en": "Tom Lynagh re-commits to Australian Rugby",
@@ -3869,6 +3869,7 @@ function renderCards(lang) {
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
+    const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
@@ -3893,7 +3894,7 @@ function renderCards(lang) {
         <span class="badge ${disp}">${t.badge[disp]}</span>
       </div>
 
-      <p class="narrative">${narr}</p>
+      ${showNarrative ? `<p class="narrative">${escapeHtml(narr)}</p>` : ""}
 
       ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
       ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
@@ -3932,6 +3933,19 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function shouldShowNarrative(g, disp, narr) {
+  if (!narr) return false;
+  if (disp !== "drop") return true;
+  if (g.density > 1) return true;
+  const lowered = String(narr).toLowerCase();
+  if (lowered.startsWith("google news groups this under")) return false;
+  const first = (g.source_examples || [])[0] || {};
+  const titles = [first.title_en, first.title_zh, g.name_en, g.name_zh]
+    .filter(Boolean)
+    .map(value => String(value).slice(0, 72).toLowerCase());
+  return !titles.some(title => title && lowered.includes(title));
 }
 
 function sourceLabel(source) {

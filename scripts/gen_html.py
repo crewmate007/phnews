@@ -229,6 +229,7 @@ function renderCards(lang) {
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
+    const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
@@ -253,7 +254,7 @@ function renderCards(lang) {
         <span class="badge ${disp}">${t.badge[disp]}</span>
       </div>
 
-      <p class="narrative">${narr}</p>
+      ${showNarrative ? `<p class="narrative">${escapeHtml(narr)}</p>` : ""}
 
       ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
       ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
@@ -292,6 +293,19 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function shouldShowNarrative(g, disp, narr) {
+  if (!narr) return false;
+  if (disp !== "drop") return true;
+  if (g.density > 1) return true;
+  const lowered = String(narr).toLowerCase();
+  if (lowered.startsWith("google news groups this under")) return false;
+  const first = (g.source_examples || [])[0] || {};
+  const titles = [first.title_en, first.title_zh, g.name_en, g.name_zh]
+    .filter(Boolean)
+    .map(value => String(value).slice(0, 72).toLowerCase());
+  return !titles.some(title => title && lowered.includes(title));
 }
 
 function sourceLabel(source) {
