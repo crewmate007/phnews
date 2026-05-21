@@ -14,6 +14,7 @@ import sys
 import datetime as dt
 import argparse
 from pathlib import Path
+import re
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region
@@ -431,12 +432,18 @@ def classify_disposition(g: dict) -> str:
 
 
 def build_group(g: dict) -> dict:
-    narr = g.get("narrative", "")
     question_en = g.get("suggested_question")
     question_zh = g.get("suggested_question_zh") or question_en
+    name_en = clean_title(g.get("name", ""))
+    name_zh = translated_name(g, question_zh, name_en)
+    narr = clean_summary(g.get("narrative", ""))
+    narr_zh = clean_summary(g.get("narrative_zh") or narr)
+    if is_effectively_english(narr_zh):
+        narr_zh = clean_summary(question_zh) if question_zh and not is_effectively_english(question_zh) else name_zh
+    source_examples = [clean_source_example(item) for item in g.get("source_examples", [])]
     return {
-        "name_en": g.get("name", ""),
-        "name_zh": g.get("name_zh") or g.get("name", ""),
+        "name_en": name_en,
+        "name_zh": name_zh,
         "density": g.get("density", 0),
         "R": g.get("R", 0),
         "S": g.get("S", 0),
@@ -446,16 +453,113 @@ def build_group(g: dict) -> dict:
         "BDLT": _bdlt_for_group(g),
         "why_users_bet": g.get("why_users_bet", ""),
         "narrative_en": narr,
-        "narrative_zh": g.get("narrative_zh") or narr,
+        "narrative_zh": narr_zh,
         "source_mix": g.get("source_mix", {}),
         "source_labels": g.get("source_labels", []),
-        "source_examples": g.get("source_examples", []),
+        "source_examples": source_examples,
         "bettable": bool(g.get("bettable")),
         "question": question_en,
         "question_en": question_en,
         "question_zh": question_zh,
         "source": g.get("resolution_source", ""),
     }
+
+
+def clean_source_example(item: dict) -> dict:
+    cleaned = dict(item)
+    cleaned["title_en"] = clean_title(cleaned.get("title_en", ""))
+    cleaned["title_zh"] = clean_title(cleaned.get("title_zh", ""))
+    cleaned["summary_en"] = clean_summary(cleaned.get("summary_en", ""))
+    cleaned["summary_zh"] = clean_summary(cleaned.get("summary_zh", ""))
+    if is_effectively_english(cleaned.get("title_zh", "")):
+        cleaned["title_zh"] = translate_title_fallback(cleaned["title_en"])
+    if is_effectively_english(cleaned.get("summary_zh", "")):
+        cleaned["summary_zh"] = cleaned["title_zh"]
+    return cleaned
+
+
+def clean_title(value: str) -> str:
+    text = " ".join(str(value or "").split())
+    text = re.sub(r"\s+-\s+[^-]{2,45}$", "", text)
+    return text
+
+
+def clean_summary(value: str) -> str:
+    text = " ".join(str(value or "").split())
+    text = re.sub(
+        r"^Google News groups this under [^:]{1,40}:\s*",
+        "",
+        text,
+        flags=re.IGNORECASE,
+    )
+    text = re.sub(
+        r"\s+Related coverag(?:e|[a-z]*)?.*$",
+        "",
+        text,
+        flags=re.IGNORECASE,
+    )
+    return text
+
+
+def translated_name(g: dict, question_zh: str | None, name_en: str) -> str:
+    current = clean_title(g.get("name_zh") or "")
+    if current and not is_effectively_english(current):
+        return current
+    if question_zh and not is_effectively_english(question_zh):
+        compact = question_zh
+        compact = re.sub(r"^(.*?)(是否会|会不会|能否|是否)", "", compact)
+        compact = compact.strip("？? ，,。")
+        if compact:
+            return compact[:28]
+    return translate_title_fallback(name_en)
+
+
+def is_effectively_english(value: str) -> bool:
+    text = str(value or "")
+    if not text:
+        return False
+    ascii_letters = len(re.findall(r"[A-Za-z]", text))
+    cjk = len(re.findall(r"[\u4e00-\u9fff]", text))
+    return ascii_letters >= 6 and cjk == 0
+
+
+def translate_title_fallback(title: str) -> str:
+    text = clean_title(title)
+    lowered = text.lower()
+    if "jannik sinner" in lowered and "french open" in lowered:
+        if "career grand slam" in lowered:
+            return "辛纳能否赢得2026法网？"
+        return "辛纳法网表现"
+    if "career grand slam" in lowered and "french open" in lowered:
+        return "法网职业全满贯"
+    dictionary = {
+        "Jannik Sinner": "辛纳",
+        "Career Grand Slam": "全满贯",
+        "French Open": "法网",
+        "NBA Western Conference Finals": "NBA西部决赛",
+        "PBA Commissioner's Cup": "PBA专员杯",
+        "Sara Duterte": "萨拉·杜特尔特",
+        "Senate Shooting": "参议院枪击",
+        "Philippine Economic": "菲律宾经济",
+        "Inflation": "通胀",
+        "Peso": "比索",
+        "South China Sea": "南海",
+        "Climate": "气候",
+        "Disaster": "灾害",
+        "World Cup": "世界杯",
+        "Rupiah": "印尼盾",
+        "Prabowo": "普拉博沃",
+        "MotoGP": "MotoGP",
+        "Malaysia Masters": "马来西亚大师赛",
+    }
+    translated = text
+    for en, zh in dictionary.items():
+        translated = re.sub(re.escape(en), zh, translated, flags=re.IGNORECASE)
+    if translated != text:
+        translated = re.sub(r"\b(can|will|the|a|an|at|in|on|to|of|and|with|for|achieve|win|wins)\b", "", translated, flags=re.IGNORECASE)
+        translated = " ".join(translated.split()).strip(" ?-–—")
+        return translated[:28] or text[:28]
+    return text[:28]
 
 
 def _bdlt_for_group(g: dict) -> dict:
