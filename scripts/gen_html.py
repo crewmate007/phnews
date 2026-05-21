@@ -39,6 +39,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
   .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
   .lang-btn.active { background: #1e2535; color: #fff; }
+  .filter-btn { padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1e2535; border-radius: 8px; background: #161b27; color: #64748b; transition: all 0.15s; }
+  .filter-btn.active { background: #1e2535; color: #e2e8f0; }
 
   .stats { display: flex; gap: 12px; padding: 20px 40px; border-bottom: 1px solid #1e2535; flex-wrap: wrap; }
   .stat { background: #161b27; border: 1px solid #1e2535; border-radius: 8px; padding: 14px 20px; min-width: 110px; }
@@ -130,6 +132,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
+    <button id="filter-toggle" class="filter-btn" onclick="toggleFiltered()"></button>
   </div>
 </header>
 
@@ -145,6 +148,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
 <script>
 let currentLang = "zh";
+let showFiltered = false;
 
 const i18n = {
   zh: {
@@ -157,6 +161,8 @@ const i18n = {
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
+    show_filtered: "显示过滤",
+    hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -169,6 +175,8 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
+    show_filtered: "Show filtered",
+    hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
@@ -215,6 +223,7 @@ function renderCards(lang) {
 
   sorted.forEach(g => {
     const disp = getDisposition(g);
+    if (disp === "drop" && !showFiltered) return;
     const total = g.R + g.S + g.T + g.U + g.H;
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
@@ -306,6 +315,18 @@ function escapeAttr(value) {
   return escapeHtml(value).replace(/`/g, "&#96;");
 }
 
+function updateFilterButton() {
+  const btn = document.getElementById("filter-toggle");
+  btn.textContent = showFiltered ? i18n[currentLang].hide_filtered : i18n[currentLang].show_filtered;
+  btn.classList.toggle("active", showFiltered);
+}
+
+function toggleFiltered() {
+  showFiltered = !showFiltered;
+  updateFilterButton();
+  renderCards(currentLang);
+}
+
 function setLang(lang) {
   currentLang = lang;
   document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.textContent.trim() === (lang === "zh" ? "中文" : "EN")));
@@ -314,10 +335,12 @@ function setLang(lang) {
   document.querySelectorAll("[data-zh]").forEach(el => {
     el.textContent = el.dataset[lang];
   });
+  updateFilterButton();
   renderCards(lang);
 }
 
 initRegionLinks();
+updateFilterButton();
 renderCards("zh");
 </script>
 

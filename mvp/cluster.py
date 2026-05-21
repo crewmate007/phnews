@@ -52,8 +52,14 @@ Rules:
   actor, market variable, policy decision, sports competition, court case,
   disaster, health outbreak, or future outcome.
 - Do not create generic catch-all groups like "Sports", "Technology",
-  "Local Issues", "Business News", or "Entertainment". Split those by
-  specific event/company/league/agency/outcome.
+  "Local Issues", "Business News", "Entertainment", "Global Political and
+  Economic Issues", "Global Sports News", "Science Discoveries", or "Product
+  Launches". Split those by specific event/company/league/agency/outcome.
+- A group with more than 6 entries is allowed only when all entries are about
+  the same named event/outcome or recurring data series. Otherwise split it.
+- Do not merge unrelated countries merely because they are "global" or
+  "international". Iran conflict, Thailand visa rules, Taiwan diplomacy, and
+  US indictments are separate topics unless a single outcome connects them.
 - Preserve local political, legal, economic, weather, health, security, and
   infrastructure topics even if they have lower volume than global sports or
   entertainment stories.
@@ -267,7 +273,9 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     broad_response = _generate_content_with_retry(client, model, broad_prompt)
     broad_result = _parse_json_response(broad_response.text)
     broad_result = _normalize_broad_result(broad_result, clusters)
+    broad_result = _split_catchall_groups(broad_result, clusters)
     broad_result = _ensure_minimum_broad_groups(broad_result, clusters, min_groups)
+    broad_result = _promote_excess_noise(broad_result, clusters)
 
     score_prompt = SCORE_PROMPT_TEMPLATE.format(
         date=today,
@@ -439,6 +447,157 @@ def _ensure_minimum_broad_groups(result: Dict, clusters: List[Dict],
             "market_hint": cluster.get("prediction_angle"),
         })
     return {"groups": groups, "noise": remaining_noise}
+
+
+def _promote_excess_noise(result: Dict, clusters: List[Dict]) -> Dict:
+    groups = list(result.get("groups", []))
+    noise = [
+        entry_id for entry_id in result.get("noise", [])
+        if isinstance(entry_id, int) and 0 <= entry_id < len(clusters)
+    ]
+    max_noise = max(8, int(len(clusters) * 0.12))
+    if len(noise) <= max_noise:
+        return result
+
+    noise.sort(
+        key=lambda i: (
+            clusters[i].get("rank_score") or 0,
+            clusters[i].get("source_count") or 0,
+        ),
+        reverse=True,
+    )
+    promoted = noise[:len(noise) - max_noise]
+    remaining_noise = noise[len(noise) - max_noise:]
+    for entry_id in promoted:
+        cluster = clusters[entry_id]
+        title = cluster.get("cluster_title", "SourceIntel topic")
+        title_zh = cluster.get("title_zh") or title
+        summary = cluster.get("summary") or title
+        summary_zh = cluster.get("summary_zh") or summary
+        groups.append({
+            "name": _compact_topic_name(title, max_len=58),
+            "name_zh": _compact_topic_name(title_zh, max_len=28),
+            "entry_ids": [entry_id],
+            "density": 1,
+            "narrative": _clip(summary, 220),
+            "narrative_zh": _clip(summary_zh, 120),
+            "topic_type": _infer_topic_type({}, cluster),
+            "source_mix": {},
+            "market_hint": cluster.get("prediction_angle"),
+            "promoted_from_noise": True,
+        })
+    return {"groups": groups, "noise": remaining_noise}
+
+
+_CATCHALL_NAME_TERMS = (
+    "global political", "global economic", "political and economic",
+    "international geopolitics", "global sports", "sports leagues",
+    "sports news", "technology product", "product launches",
+    "consumer electronics", "entertainment and celebrity",
+    "celebrity news", "global health", "health and outbreaks", "health alerts",
+    "space and science", "science milestones", "science discoveries", "public health initiatives",
+    "personal legal and celebrity",
+    "全球政经", "国际政经", "全球政治", "全球经济", "体育赛事",
+    "体育新闻", "科技产品", "产品发布", "消费电子", "娱乐与名人",
+    "全球健康", "疾病爆发", "太空与科学", "科学发现", "公共卫生倡议",
+)
+
+
+def _split_catchall_groups(result: Dict, clusters: List[Dict]) -> Dict:
+    groups = []
+    split_count = 0
+    for group in result.get("groups", []):
+        entry_ids = [
+            entry_id for entry_id in group.get("entry_ids", [])
+            if isinstance(entry_id, int) and 0 <= entry_id < len(clusters)
+        ]
+        if _is_catchall_group(group, len(entry_ids)):
+            split_count += 1
+            groups.extend(_specific_groups_from_entries(group, entry_ids, clusters))
+        else:
+            groups.append(group)
+
+    normalized = {"groups": groups, "noise": result.get("noise", [])}
+    if split_count:
+        normalized["catchall_groups_split"] = split_count
+    return normalized
+
+
+def _is_catchall_group(group: Dict, density: int) -> bool:
+    name_text = " ".join(str(group.get(key) or "") for key in (
+        "name", "name_zh", "narrative", "narrative_zh",
+    )).lower()
+    has_generic_name = any(term in name_text for term in _CATCHALL_NAME_TERMS)
+    if has_generic_name and density >= 2:
+        return True
+    if density > 6 and any(term in name_text for term in (
+        "global", "international", "news", "updates", "issues", "trends",
+        "developments", "全球", "国际", "新闻", "动态", "议题", "趋势",
+    )):
+        return True
+    return False
+
+
+def _specific_groups_from_entries(group: Dict, entry_ids: List[int],
+                                  clusters: List[Dict]) -> List[Dict]:
+    split_groups = []
+    for entry_id in entry_ids:
+        cluster = clusters[entry_id]
+        title = cluster.get("cluster_title", "SourceIntel topic")
+        title_zh = cluster.get("title_zh") or title
+        summary = cluster.get("summary") or title
+        summary_zh = cluster.get("summary_zh") or summary
+        topic_type = _infer_topic_type(group, cluster)
+        split_groups.append({
+            "name": _compact_topic_name(title, max_len=58),
+            "name_zh": _compact_topic_name(title_zh, max_len=28),
+            "entry_ids": [entry_id],
+            "density": 1,
+            "narrative": _clip(summary, 220),
+            "narrative_zh": _clip(summary_zh, 120),
+            "topic_type": topic_type,
+            "source_mix": {},
+            "market_hint": cluster.get("prediction_angle"),
+            "split_from": group.get("name") or group.get("name_zh"),
+        })
+    return split_groups
+
+
+def _infer_topic_type(group: Dict, cluster: Dict) -> str:
+    text = " ".join([
+        str(group.get("topic_type") or ""),
+        str(cluster.get("section") or ""),
+        str(cluster.get("cluster_title") or ""),
+        str(cluster.get("summary") or ""),
+    ]).lower()
+    if any(term in text for term in ("sport", "nba", "pba", "fifa", "football", "basketball")):
+        return "sports"
+    if any(term in text for term in ("entertainment", "celebrity", "actor", "singer", "movie", "concert")):
+        return "entertainment"
+    if any(term in text for term in ("health", "virus", "outbreak", "disease", "medical")):
+        return "health"
+    if any(term in text for term in ("ai", "tech", "software", "phone", "chip", "app")):
+        return "technology"
+    if any(term in text for term in ("market", "rate", "peso", "rupiah", "stock", "inflation", "price")):
+        return "economy"
+    if any(term in text for term in ("court", "legal", "trial", "indict", "icc")):
+        return "legal"
+    if any(term in text for term in ("senate", "minister", "president", "visa", "policy")):
+        return "politics"
+    if any(term in text for term in ("war", "defense", "missile", "security")):
+        return "security"
+    if any(term in text for term in ("storm", "flood", "typhoon", "weather", "climate")):
+        return "weather"
+    return group.get("topic_type") or "other"
+
+
+def _compact_topic_name(title: str, max_len: int) -> str:
+    cleaned = " ".join(str(title or "").split())
+    for separator in (" - ", " | ", " — ", " – "):
+        if separator in cleaned:
+            cleaned = cleaned.split(separator, 1)[0].strip()
+            break
+    return _clip(cleaned, max_len)
 
 
 def _merge_scored_groups(broad_result: Dict, score_result: Dict,
