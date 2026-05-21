@@ -84,7 +84,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
   .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
 
-  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .score-panel { margin-bottom: 14px; border: 1px solid #1e2535; border-radius: 8px; background: #0f1117; overflow: hidden; }
+  .score-panel summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 10px; }
+  .score-panel summary::-webkit-details-marker { display: none; }
+  .score-totals { display: flex; gap: 8px; flex-wrap: wrap; }
+  .score-total-chip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid #273244; border-radius: 999px; padding: 4px 9px; color: #94a3b8; font-size: 11px; font-weight: 700; }
+  .score-total-chip.primary { color: #fbbf24; border-color: #92400e; background: #1f1608; }
+  .score-total-chip b { color: #fff; font-size: 15px; }
+  .score-expand { color: #64748b; font-size: 11px; }
+  .score-section { padding: 0 10px 10px; }
+  .score-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.4px; margin: 6px 0; }
+  .rstuh { display: flex; gap: 6px; margin-bottom: 8px; }
   .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
   .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
   .dim .score  { font-size: 16px; font-weight: 700; }
@@ -161,6 +171,9 @@ const i18n = {
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
+    expand_scores: "展开",
+    rstuh: "市场结构",
+    bdlt: "下注欲望",
     show_filtered: "显示过滤",
     hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
@@ -175,6 +188,9 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
+    expand_scores: "Expand",
+    rstuh: "Market quality",
+    bdlt: "Bet demand",
     show_filtered: "Show filtered",
     hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
@@ -210,10 +226,9 @@ function getDisposition(g) {
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
-  const da = getDisposition(a), db = getDisposition(b);
-  if (order[da] !== order[db]) return order[da] - order[db];
-  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+  const bdltDiff = bdltTotal(b) - bdltTotal(a);
+  if (bdltDiff !== 0) return bdltDiff;
+  return rstuhTotal(b) - rstuhTotal(a);
 });
 
 function renderCards(lang) {
@@ -224,7 +239,9 @@ function renderCards(lang) {
   sorted.forEach(g => {
     const disp = getDisposition(g);
     if (disp === "drop" && !showFiltered) return;
-    const total = g.R + g.S + g.T + g.U + g.H;
+    const total = rstuhTotal(g);
+    const bdlt = normalizeBDLT(g);
+    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
@@ -265,13 +282,33 @@ function renderCards(lang) {
         <div class="count">${densityCount}</div>
       </div>
 
-      <div class="rstuh">
-        ${["R","S","T","U","H"].map((l,i) => {
-          const s = [g.R,g.S,g.T,g.U,g.H][i];
-          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
-        }).join("")}
-        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
-      </div>
+      <details class="score-panel">
+        <summary>
+          <span class="score-totals">
+            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
+          </span>
+          <span class="score-expand">${t.expand_scores}</span>
+        </summary>
+        <div class="score-section">
+          <div class="score-label">${t.bdlt}</div>
+          <div class="rstuh">
+            ${["B","D","L","T"].map(l => {
+              const s = bdlt[l] || 0;
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+          </div>
+          <div class="score-label">${t.rstuh}</div>
+          <div class="rstuh">
+            ${["R","S","T","U","H"].map((l,i) => {
+              const s = [g.R,g.S,g.T,g.U,g.H][i];
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+          </div>
+        </div>
+      </details>
 
       ${g.bettable && question ? `
       <div class="question-box">
@@ -293,6 +330,25 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function rstuhTotal(g) {
+  return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
+}
+
+function normalizeBDLT(g) {
+  const bdlt = g.BDLT || {};
+  return {
+    B: Number.isInteger(bdlt.B) ? bdlt.B : 0,
+    D: Number.isInteger(bdlt.D) ? bdlt.D : 0,
+    L: Number.isInteger(bdlt.L) ? bdlt.L : 0,
+    T: Number.isInteger(bdlt.T) ? bdlt.T : 0,
+  };
+}
+
+function bdltTotal(g) {
+  const bdlt = normalizeBDLT(g);
+  return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
 }
 
 function shouldShowNarrative(g, disp, narr) {
@@ -387,6 +443,8 @@ def build_group(g: dict) -> dict:
         "T": g.get("T", 0),
         "U": g.get("U", 0),
         "H": g.get("H", 0),
+        "BDLT": _bdlt_for_group(g),
+        "why_users_bet": g.get("why_users_bet", ""),
         "narrative_en": narr,
         "narrative_zh": g.get("narrative_zh") or narr,
         "source_mix": g.get("source_mix", {}),
@@ -398,6 +456,43 @@ def build_group(g: dict) -> dict:
         "question_zh": question_zh,
         "source": g.get("resolution_source", ""),
     }
+
+
+def _bdlt_for_group(g: dict) -> dict:
+    bdlt = g.get("BDLT") if isinstance(g.get("BDLT"), dict) else {}
+    if all(bdlt.get(key) in (0, 1, 2) for key in ("B", "D", "L", "T")):
+        out = {key: bdlt.get(key, 0) for key in ("B", "D", "L", "T")}
+        out["total"] = sum(out.values())
+        return out
+    return _infer_bdlt_for_page(g)
+
+
+def _infer_bdlt_for_page(g: dict) -> dict:
+    text = " ".join(str(g.get(key) or "") for key in (
+        "name", "name_zh", "narrative", "narrative_zh",
+        "suggested_question", "suggested_question_zh", "topic_type",
+    )).lower()
+    text += " " + " ".join(
+        f"{item.get('title_en', '')} {item.get('title_zh', '')}"
+        for item in g.get("source_examples", [])[:4]
+    ).lower()
+    rstuh_total = sum(g.get(key, 0) for key in "RSTUH")
+    high_demand = any(term in text for term in (
+        "duterte", "marcos", "impeachment", "pba", "nba", "gilas", "lotto",
+        "jackpot", "peso", "rupiah", "fuel", "rice", "inflation", "typhoon",
+        "flood", "volcano", "celebrity", "菲律宾", "印尼", "杜特尔特", "马科斯",
+        "弹劾", "比索", "印尼盾", "油价", "大米", "通胀", "彩票", "台风",
+    ))
+    local = any(term in text for term in (
+        "philippine", "philippines", "filipino", "manila", "pba", "bsp",
+        "pagasa", "indonesia", "indonesian", "jakarta", "rupiah", "ihsg",
+        "prabowo", "菲律宾", "印尼", "雅加达", "马尼拉", "普拉博沃",
+    ))
+    b = 2 if high_demand else (1 if g.get("bettable") and rstuh_total >= 7 else 0)
+    d = 2 if g.get("U") == 2 else (1 if g.get("U") == 1 or g.get("bettable") else 0)
+    l = 2 if local else (1 if g.get("source_mix", {}).get("x_grok") else 0)
+    t = 2 if g.get("T") == 2 else (1 if g.get("T") == 1 else 0)
+    return {"B": b, "D": d, "L": l, "T": t, "total": b + d + l + t}
 
 
 def main():

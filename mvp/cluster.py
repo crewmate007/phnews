@@ -130,6 +130,17 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
       "U_reason": "how uncertain is the outcome (0=decided, 2=genuinely uncertain)",
       "H": <0|1|2>,
       "H_reason": "how much public attention / discussion",
+      "BDLT": {
+        "B": <0|1|2>,
+        "B_reason": "bet demand: would local DigiPlus-style users want to take a side?",
+        "D": <0|1|2>,
+        "D_reason": "disagreement: are there plausible buyers on both YES and NO?",
+        "L": <0|1|2>,
+        "L_reason": "local hook: is this familiar and emotionally relevant to local users?",
+        "T": <0|1|2>,
+        "T_reason": "timeliness: is settlement soon enough to feel playable?"
+      },
+      "why_users_bet": "1 short reason this might attract real-money local bettors",
       "bettable": <true|false>,
       "suggested_question": "Will ... by ...? (null if not bettable)",
       "suggested_question_zh": "中文预测市场问题（不可下注则为 null）",
@@ -156,6 +167,17 @@ SCORING GUIDE:
 - H=2: multiple sources, social discussion, or cross-section coverage
 - H=1: 2–4 evidence items, limited social discussion
 - H=0: single weak source or very low interest
+
+BDLT GUIDE, optimized for local DigiPlus-like betting demand:
+- B=2: strong real-money betting appeal; familiar rivalry, sports, prices,
+  lotto, disaster, celebrity, or political drama. B=1: niche but playable.
+  B=0: informative but unlikely to make users bet.
+- D=2: both YES and NO have emotionally/plausibly motivated buyers. D=1:
+  some uncertainty but one side dominates. D=0: boring, settled, or one-sided.
+- L=2: directly local and familiar to everyday users. L=1: indirect local
+  effect. L=0: foreign/abstract with little local hook.
+- T=2: settles in days/weeks or at a known event. T=1: this quarter/season.
+  T=0: long, vague, or open-ended.
 
 Important:
 - A cluster can be valuable digest even when it is not bettable.
@@ -615,13 +637,15 @@ def _merge_scored_groups(broad_result: Dict, score_result: Dict,
             "R", "R_reason", "S", "S_reason", "T", "T_reason",
             "U", "U_reason", "H", "H_reason", "bettable",
             "suggested_question", "suggested_question_zh",
-            "resolution_source", "disposition_hint",
+            "resolution_source", "disposition_hint", "BDLT",
+            "why_users_bet",
         ):
             if key in scored:
                 group[key] = scored[key]
         _fill_missing_scores(group)
         group["density"] = len(group.get("entry_ids", []))
         _attach_source_metadata(group, clusters)
+        _fill_missing_bdlt(group)
         groups.append(group)
     return {
         "groups": groups,
@@ -737,6 +761,17 @@ def _mark_digest(group: Dict, reason: str) -> None:
     group["R_reason"] = reason
     group["S_reason"] = reason
     group["T_reason"] = reason
+    group["BDLT"] = {
+        "B": min(group.get("BDLT", {}).get("B", 0), 1),
+        "B_reason": reason,
+        "D": min(group.get("BDLT", {}).get("D", 0), 1),
+        "D_reason": reason,
+        "L": 0,
+        "L_reason": reason,
+        "T": min(group.get("BDLT", {}).get("T", 0), 1),
+        "T_reason": reason,
+    }
+    group["BDLT"]["total"] = sum(group["BDLT"][key] for key in ("B", "D", "L", "T"))
 
 
 def _fill_missing_scores(group: Dict) -> None:
@@ -749,6 +784,89 @@ def _fill_missing_scores(group: Dict) -> None:
     group.setdefault("suggested_question", None)
     group.setdefault("suggested_question_zh", None)
     group.setdefault("resolution_source", "")
+
+
+def _fill_missing_bdlt(group: Dict) -> None:
+    raw = group.get("BDLT") if isinstance(group.get("BDLT"), dict) else {}
+    inferred = _infer_bdlt(group)
+    normalized = {}
+    for key in ("B", "D", "L", "T"):
+        value = raw.get(key)
+        normalized[key] = value if value in (0, 1, 2) else inferred[key]
+        reason_key = f"{key}_reason"
+        normalized[reason_key] = raw.get(reason_key) or inferred[f"{key}_reason"]
+    normalized["total"] = sum(normalized[key] for key in ("B", "D", "L", "T"))
+    group["BDLT"] = normalized
+    group.setdefault("why_users_bet", inferred["why_users_bet"])
+
+
+def _infer_bdlt(group: Dict) -> Dict:
+    text = " ".join(str(group.get(key) or "") for key in (
+        "name", "name_zh", "narrative", "narrative_zh",
+        "suggested_question", "suggested_question_zh", "topic_type",
+    )).lower()
+    text += " " + " ".join(
+        str(item.get("title_en") or "") + " " + str(item.get("title_zh") or "")
+        for item in group.get("source_examples", [])[:4]
+    ).lower()
+    topic_type = str(group.get("topic_type") or "").lower()
+    rstuh_total = sum(group.get(key, 0) for key in ("R", "S", "T", "U", "H"))
+    source_mix = group.get("source_mix", {})
+
+    high_demand_terms = (
+        "duterte", "marcos", "impeachment", "senate", "pba", "nba", "gilas",
+        "pacquiao", "lotto", "jackpot", "peso", "rupiah", "fuel", "rice",
+        "oil", "inflation", "rate", "bsp", "bank indonesia", "pvl", "fifa",
+        "world cup", "typhoon", "flood", "volcano", "earthquake", "celebrity",
+        "tiktok", "viral", "scandal", "菲律宾", "印尼", "杜特尔特", "马科斯",
+        "弹劾", "比索", "印尼盾", "油价", "大米", "通胀", "彩票", "台风",
+    )
+    local_terms = (
+        "philippine", "philippines", "filipino", "manila", "cebu", "pba",
+        "bsp", "pagasa", "meralco", "pcso", "sara duterte", "marcos",
+        "indonesia", "indonesian", "jakarta", "rupiah", "ihsg", "idx",
+        "prabowo", "pertamina", "bank indonesia", "菲律宾", "印尼", "雅加达",
+        "马尼拉", "杜特尔特", "马科斯", "普拉博沃", "印尼盾", "比索",
+    )
+    foreign_noise_terms = (
+        "ronald mcdonald house new england", "kentucky primary",
+        "hungary", "cuba", "lebanon", "gaza flotilla", "toyota corolla",
+    )
+
+    has_high_demand = any(term in text for term in high_demand_terms)
+    has_local = any(term in text for term in local_terms)
+    looks_foreign = any(term in text for term in foreign_noise_terms)
+
+    if not group.get("bettable") and not has_high_demand:
+        b = 0
+    elif has_high_demand or topic_type in ("sports", "politics", "economy", "weather", "entertainment"):
+        b = 2
+    elif rstuh_total >= 7 or source_mix.get("x_grok"):
+        b = 1
+    else:
+        b = 0
+
+    d = 2 if group.get("U") == 2 else (1 if group.get("U") == 1 or group.get("bettable") else 0)
+    l = 0 if looks_foreign else (2 if has_local else (1 if source_mix.get("x_grok") else 0))
+    t = 2 if group.get("T") == 2 else (1 if group.get("T") == 1 else 0)
+
+    why = "Local users know the actors and can take a side." if b >= 2 and l >= 2 else ""
+    if not why and b >= 1:
+        why = "Playable if framed with a clear near-term outcome."
+    if not why:
+        why = "Low expected betting demand."
+
+    return {
+        "B": b,
+        "B_reason": "Measures whether local users would actually want to bet.",
+        "D": d,
+        "D_reason": "Uses uncertainty and likely two-sided demand.",
+        "L": l,
+        "L_reason": "Measures local familiarity and emotional hook.",
+        "T": t,
+        "T_reason": "Uses the market time window and settlement proximity.",
+        "why_users_bet": why,
+    }
 
 
 def _clip(value: str, length: int) -> str:

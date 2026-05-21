@@ -63,7 +63,17 @@
   .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
   .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
 
-  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .score-panel { margin-bottom: 14px; border: 1px solid #1e2535; border-radius: 8px; background: #0f1117; overflow: hidden; }
+  .score-panel summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 10px; }
+  .score-panel summary::-webkit-details-marker { display: none; }
+  .score-totals { display: flex; gap: 8px; flex-wrap: wrap; }
+  .score-total-chip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid #273244; border-radius: 999px; padding: 4px 9px; color: #94a3b8; font-size: 11px; font-weight: 700; }
+  .score-total-chip.primary { color: #fbbf24; border-color: #92400e; background: #1f1608; }
+  .score-total-chip b { color: #fff; font-size: 15px; }
+  .score-expand { color: #64748b; font-size: 11px; }
+  .score-section { padding: 0 10px 10px; }
+  .score-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.4px; margin: 6px 0; }
+  .rstuh { display: flex; gap: 6px; margin-bottom: 8px; }
   .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
   .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
   .dim .score  { font-size: 16px; font-weight: 700; }
@@ -140,6 +150,9 @@ const i18n = {
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
+    expand_scores: "展开",
+    rstuh: "市场结构",
+    bdlt: "下注欲望",
     show_filtered: "显示过滤",
     hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
@@ -154,6 +167,9 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
+    expand_scores: "Expand",
+    rstuh: "Market quality",
+    bdlt: "Bet demand",
     show_filtered: "Show filtered",
     hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
@@ -170,6 +186,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Aston Villa won the Europa League title, sparking discussions about a potential English treble in European competitions.",
     "narrative_zh": "阿斯顿维拉夺得欧联杯冠军，引发关于英格兰球队在欧战实现“三冠”的讨论。",
     "source_mix": {
@@ -212,6 +236,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Rising regional hostilities involving Iran, Israel, and Gulf nations, compounded by Trump's diplomatic claims and military posturing.",
     "narrative_zh": "伊朗、以色列及海湾国家之间的区域敌对行动加剧，叠加特朗普的声明及军事姿态。",
     "source_mix": {
@@ -312,8 +344,8 @@ const groups = [
     "question_zh": "到 2026 年 12 月 31 日，布伦特原油价格是否会超过每桶 95 美元？",
     "source": "ICE Futures Europe",
     "prob": 35,
-    "prob_reason_zh": "地缘溢价已计入，除非战争全面爆发。",
-    "prob_reason_en": "Geopolitical risk priced in; war needed."
+    "prob_reason_zh": "地缘政治溢价有限，且原油需求疲软。",
+    "prob_reason_en": "Limited risk premium and weak oil demand."
   },
   {
     "name_en": "Indonesian Financial and Rupiah Market Volatility",
@@ -324,6 +356,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Indonesia faces economic pressure from rising BI interest rates, a struggling Rupiah, and declining stock market performance (IHSG).",
     "narrative_zh": "印尼面临央行加息、印尼盾汇率疲软及综合指数下跌带来的经济压力。",
     "source_mix": {
@@ -426,8 +466,8 @@ const groups = [
     "question_zh": "到 2026 年 7 月，印尼央行（BI）是否会将基准利率至少上调 25 个基点？",
     "source": "Bank Indonesia Official Press Release",
     "prob": 65,
-    "prob_reason_zh": "印尼盾压力大，央行常干预以稳定汇率。",
-    "prob_reason_en": "Rupiah pressure forces BI rate hikes."
+    "prob_reason_zh": "印尼央行需通过加息维稳印尼盾汇率。",
+    "prob_reason_en": "BI must hike rates to stabilize the Rupiah."
   },
   {
     "name_en": "Meta and Technology Sector Layoffs",
@@ -438,6 +478,14 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Mass layoffs at Meta impacting regional employees alongside broader manufacturing job loss concerns in Indonesia.",
     "narrative_zh": "Meta的全球裁员波及区域员工，同时印尼制造业就业前景面临严峻挑战。",
     "source_mix": {
@@ -496,6 +544,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Thierry Henry celebrates Arsenal's end to a 22-year Premier League title drought.",
     "narrative_zh": "亨利庆祝阿森纳结束长达22年的英超冠军荒。",
     "source_mix": {
@@ -538,6 +594,14 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Renewed efforts for Russian gas pipeline infrastructure to China amidst global diplomatic realignments.",
     "narrative_zh": "在全球外交格局重塑背景下，俄罗斯重启对华天然气管道基础设施建设。",
     "source_mix": {
@@ -580,6 +644,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Gojek and Grab end subsidized programs for drivers, raising concerns about potential tariff hikes and income instability.",
     "narrative_zh": "Gojek和Grab取消司机补贴计划，引发对运价上涨和收入不稳的担忧。",
     "source_mix": {
@@ -610,8 +682,8 @@ const groups = [
     "question_zh": "Gojek 是否会在 2026 年第三季度末前宣布官方上调网约车最低佣金费率？",
     "source": "Gojek Corporate Announcement",
     "prob": 70,
-    "prob_reason_zh": "削减补贴后，提高佣金以盈利属必然。",
-    "prob_reason_en": "Removing subsidies makes hikes likely."
+    "prob_reason_zh": "成本压力大，调整佣金符合平台利益。",
+    "prob_reason_en": "Cost pressure makes commission hikes likely."
   },
   {
     "name_en": "2026 World Cup Indonesian Broadcasting",
@@ -622,6 +694,14 @@ const groups = [
     "T": 2,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 2,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "TVRI partners with digital entities to broadcast the 2026 World Cup.",
     "narrative_zh": "TVRI与数字平台合作转播2026年世界杯。",
     "source_mix": {
@@ -652,8 +732,8 @@ const groups = [
     "question_zh": "TVRI 是否会获得 2026 年世界杯在印尼的独家公共转播权？",
     "source": "TVRI/FIFA Official Announcement",
     "prob": 20,
-    "prob_reason_zh": "版权费极其昂贵，TVRI预算有限。",
-    "prob_reason_en": "Rights are too costly for TVRI budget."
+    "prob_reason_zh": "私营巨头通常垄断版权，TVRI空间小。",
+    "prob_reason_en": "Private media usually dominate WC rights."
   },
   {
     "name_en": "Prabowo Subianto Economic Policy Agenda",
@@ -664,6 +744,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "President Prabowo outlines economic and commodity export control agendas while facing opposition scrutiny.",
     "narrative_zh": "普拉博沃总统阐述经济及大宗商品出口管控议程，同时面临反对派监督。",
     "source_mix": {
@@ -752,8 +840,8 @@ const groups = [
     "question_zh": "印尼政府是否会在 2026 年 12 月前通过针对特定大宗商品的出口管制法规？",
     "source": "Indonesian Ministry of Trade / DPR",
     "prob": 60,
-    "prob_reason_zh": "政策议程优先度高，执政党控制议会。",
-    "prob_reason_en": "High priority; party controls parliament."
+    "prob_reason_zh": "政府执行资源民族主义政策决心坚定。",
+    "prob_reason_en": "Strong resolve for resource nationalism."
   },
   {
     "name_en": "Chandra Asri (TPIA) Corporate Performance",
@@ -764,6 +852,14 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "TPIA stock faces significant downward pressure and MSCI reclassification scrutiny despite dividend payouts.",
     "narrative_zh": "尽管派发股息，TPIA股价仍面临巨大下行压力及MSCI重新分类的审查。",
     "source_mix": {
@@ -794,8 +890,8 @@ const groups = [
     "question_zh": "TPIA 是否会在下一次调整中被剔除出 MSCI 印尼指数？",
     "source": "MSCI Global Index Review",
     "prob": 40,
-    "prob_reason_zh": "股价低迷，但MSCI调整有滞后性。",
-    "prob_reason_en": "Stock weak, but MSCI changes lag."
+    "prob_reason_zh": "流动性问题虽存，但剔除门槛较高。",
+    "prob_reason_en": "Liquidity issues, but removal is strict."
   },
   {
     "name_en": "Harkitnas 2026 Observance",
@@ -806,6 +902,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Regional governments and police forces commemorate the 118th National Awakening Day.",
     "narrative_zh": "各地政府及警队举行第118届民族觉醒日纪念活动。",
     "source_mix": {
@@ -848,6 +952,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Focus on youth team roster updates, including the return of diaspora players and PSSI naturalization efforts.",
     "narrative_zh": "关注国家青年队名单更新，包括海外球员回归及印尼足协归化工作。",
     "source_mix": {
@@ -892,8 +1004,8 @@ const groups = [
     "question_zh": "到 2026 年底，[球员姓名]是否会获得印尼国籍？",
     "source": "Ministry of Law and Human Rights",
     "prob": 80,
-    "prob_reason_zh": "印尼足协积极招募海外球员归化。",
-    "prob_reason_en": "PSSI is aggressively naturalizing."
+    "prob_reason_zh": "归化政策积极，程序通常能够顺利推进。",
+    "prob_reason_en": "Aggressive naturalization policy is active."
   },
   {
     "name_en": "VKTR Leadership Transition",
@@ -904,6 +1016,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Ardi Bakrie is appointed as the new CEO of VKTR, signaling strategic shifts within the Bakrie Group's EV business.",
     "narrative_zh": "Ardi Bakrie被任命为VKTR新任首席执行官，标志着Bakrie集团电动汽车业务的战略调整。",
     "source_mix": {
@@ -946,6 +1066,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 2,
+      "total": 5
+    },
+    "why_users_bet": "",
     "narrative_en": "Rising concern over Hantavirus outbreaks, linking environmental factors and climate change to zoonotic threats.",
     "narrative_zh": "汉坦病毒爆发引关注，研究将环境因素及气候变化与人畜共患疾病联系起来。",
     "source_mix": {
@@ -1004,8 +1132,8 @@ const groups = [
     "question_zh": "到 2026 年底，世界卫生组织是否会将汉坦病毒列为国际突发公共卫生事件？",
     "source": "WHO Official Dashboard",
     "prob": 5,
-    "prob_reason_zh": "汉坦病毒极少人传人，不构成全球威胁。",
-    "prob_reason_en": "Rare human transmission; low PHEIC risk."
+    "prob_reason_zh": "此类疾病爆发成全球紧急事件概率低。",
+    "prob_reason_en": "Low base rate for global emergencies."
   },
   {
     "name_en": "Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ad…",
@@ -1016,6 +1144,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ada di Pixel 6 Pro - Media Kampung. Related coverage from Butota.id, Disway Malang, Media Kampung, Qoo Media centers on: G…",
     "narrative_zh": "Google News groups this under Technology: Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ada di Pixel 6 Pro - M…",
     "source_mix": {
@@ -1058,6 +1194,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Medcom.id, Media Kampung, Qoo Media centers on: Samsung Gulir…",
     "narrative_zh": "Google News groups this under Technology: Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy - AsatuNews.co.id.…",
     "source_mix": {
@@ -1100,6 +1244,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 24 Jam - Bloomberg Technoz. Related coverage from Bloomberg Technoz, Kumparan.com, Medcom.id, detikInet centers on: Googl…",
     "narrative_zh": "Google News groups this under Technology: Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 24 Jam - Bloomberg Te…",
     "source_mix": {
@@ -1142,6 +1294,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan Performa Brutal dan Layar QHD+ Memukau - Liputan6.com. Related coverage from Butota.id, Liputan6.com, Pelantar.id, Qoo M…",
     "narrative_zh": "Google News groups this under Technology: Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan Performa Brutal dan…",
     "source_mix": {
@@ -1184,6 +1344,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung Galaxy S26 Series - yangcanggih.com. Related coverage from IDN Times, Qoo Media, Samsung magazín, VIVA Gadget centers on:…",
     "narrative_zh": "Google News groups this under Technology: Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung Galaxy S26 Series - y…",
     "source_mix": {
@@ -1226,6 +1394,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary Edition Rilis di India - Gamebrott.com. Related coverage from Batuah News, Gamebrott.com, Inikata.co.id, Media Kampung c…",
     "narrative_zh": "Google News groups this under Technology: Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary Edition Rilis di Ind…",
     "source_mix": {
@@ -1268,6 +1444,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Redmi Turbo 6 Max Mengisyaratkan Peningkatan Signifikan dari Sisi Baterai dan Layar - Techbiz.ID. Related coverage from Babel Insight, Pelantar.id, Qoo Media, Suara.com centers…",
     "narrative_zh": "Google News groups this under Technology: Redmi Turbo 6 Max Mengisyaratkan Peningkatan Signifikan dari Sisi Baterai dan…",
     "source_mix": {
@@ -1310,6 +1494,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Itel A100 Pro Resmi, HP Rp 1 Jutaan Mirip iPhone 17 Pro Max - Kompas.com. Related coverage from Jagat Gadget, Kompas.com, Koran Manado, Pojok Papua centers on: Itel A100 Pro Res…",
     "narrative_zh": "Google News groups this under Technology: Itel A100 Pro Resmi, HP Rp 1 Jutaan Mirip iPhone 17 Pro Max - Kompas.com. Rel…",
     "source_mix": {
@@ -1352,6 +1544,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Xiaomi Siapkan Ponsel Konsep AI Kamera 200MP, Fotografi Mobile Masuk Era Baru - Akurat Jateng. Related coverage from ANTARA News, Akurat Jateng, Qoo Media, Selular.ID centers on…",
     "narrative_zh": "Google News groups this under Technology: Xiaomi Siapkan Ponsel Konsep AI Kamera 200MP, Fotografi Mobile Masuk Era Baru…",
     "source_mix": {
@@ -1394,6 +1594,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Forza Horizon 6 sudah menjadi judul Xbox Game Studios yang paling banyak dimainkan yang pernah ada di Steam - gamereactor.asia. Related coverage from Mobitekno, Qoo Media, Sorti…",
     "narrative_zh": "Google News groups this under Technology: Forza Horizon 6 sudah menjadi judul Xbox Game Studios yang paling banyak dima…",
     "source_mix": {
@@ -1436,6 +1644,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Sony Meluncurkan Konsol PlayStation 5 Pro di Indonesia - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Medcom.id, Suara Merdeka, detikInet centers on: Sony Meluncurkan…",
     "narrative_zh": "Google News groups this under Technology: Sony Meluncurkan Konsol PlayStation 5 Pro di Indonesia - AsatuNews.co.id. Rel…",
     "source_mix": {
@@ -1478,6 +1694,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Canva introduces offline design capabilities for users in Indonesia.",
     "narrative_zh": "Canva为印尼用户推出离线设计功能。",
     "source_mix": {
@@ -1520,6 +1744,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Slumping global coal prices and stagnant CPO trade volumes impact Indonesian commodity policy and market stability.",
     "narrative_zh": "全球煤炭价格下滑和棕榈油贸易停滞影响印尼大宗商品政策及市场稳定性。",
     "source_mix": {
@@ -1563,8 +1795,8 @@ const groups = [
     "question_en": "Will the average Newcastle Coal Index price remain below $120 per tonne in Q4 2026?",
     "question_zh": "2026 年第四季度纽卡斯尔煤炭价格指数的平均价格是否会保持在每吨 120 美元以下？",
     "source": "ICE / Bloomberg Commodity Index",
-    "prob": 55,
-    "prob_reason_zh": "能源转型下，煤炭长期价格承压。",
+    "prob": 65,
+    "prob_reason_zh": "全球能源转型压制煤炭长期价格。",
     "prob_reason_en": "Energy transition weighs on coal prices."
   },
   {
@@ -1576,6 +1808,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "BYD clarifies pricing rumors for the M6 DM model in the Indonesian automotive market.",
     "narrative_zh": "比亚迪回应印尼汽车市场对比亚迪M6 DM车型的定价传言。",
     "source_mix": {
@@ -1618,6 +1858,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "New high-resolution imagery of the Black Stone (Hajar Aswad) fuels scientific and public interest.",
     "narrative_zh": "黑石（Hajar Aswad）的高分辨率图像引发公众与科学界的关注。",
     "source_mix": {
@@ -1660,6 +1908,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Medical discussion on bariatric surgery as a treatment for obesity complications.",
     "narrative_zh": "关于减重手术作为肥胖并发症治疗手段的医学讨论。",
     "source_mix": {
@@ -1702,6 +1958,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Mercedes-AMG debuts its new 4-door performance EV.",
     "narrative_zh": "梅赛德斯-AMG推出其新款四门高性能电动汽车。",
     "source_mix": {
@@ -1744,6 +2008,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "UGM experts highlight environmental impacts on rising malaria and zoonotic disease cases.",
     "narrative_zh": "加查马达大学（UGM）专家强调环境影响导致疟疾及人畜共患病病例上升。",
     "source_mix": {
@@ -1786,6 +2058,14 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 1,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Honda addresses its first major financial loss in 70 years with a shift toward electrification.",
     "narrative_zh": "本田应对70年来首次重大财务亏损，转向电气化战略。",
     "source_mix": {
@@ -1828,6 +2108,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Top Stories: Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sudah Rusak! - detikHOT. Related coverage from ANTARA News, CNN Indonesia, JPNN.com, Kompas.com centers on: Erin Tutup Pin…",
     "narrative_zh": "Google News groups this under Top Stories: Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sudah Rusak! - detikHO…",
     "source_mix": {
@@ -1870,6 +2158,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi ke Acara Keluarga - detikHOT. Related coverage from CNN Indonesia, Medcom.id, Media Indonesia, celebrity.okezone.com…",
     "narrative_zh": "Google News groups this under Entertainment: Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi ke Acara Keluarg…",
     "source_mix": {
@@ -1912,6 +2208,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: John Travolta Tak Menua di Usia 72, Dokter Prediksi Perawatan Anti Aging-nya - Wolipop. Related coverage from Babel Insight, HARIAN DISWAY, Kompas.id, Wolipop centers on: Joh…",
     "narrative_zh": "Google News groups this under Entertainment: John Travolta Tak Menua di Usia 72, Dokter Prediksi Perawatan Anti Aging-n…",
     "source_mix": {
@@ -1954,6 +2258,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Momen Pratama Arhan dan Inka Andestha Liburan Bareng Keluarga - detikHOT. Related coverage from ANTARA News, IDN Times, RCTI+, RRI.co.id centers on: Momen Pratama Arhan dan I…",
     "narrative_zh": "Google News groups this under Entertainment: Momen Pratama Arhan dan Inka Andestha Liburan Bareng Keluarga - detikHOT.…",
     "source_mix": {
@@ -1996,6 +2308,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugihan di Gunung Kawi - detikHOT. Related coverage from CNN Indonesia, JPNN.com, Liputan6.com, Tabloidbintang.com center…",
     "narrative_zh": "Google News groups this under Entertainment: Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugihan di Gunung Kaw…",
     "source_mix": {
@@ -2038,6 +2358,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Raffi Ahmad Pamit ke Prabowo Subianto Berangkat Haji Malam Ini - detikHOT. Related coverage from Akurat.co, CNN Indonesia, JPNN.com, TribunStyle.com centers on: Raffi Ahmad P…",
     "narrative_zh": "Google News groups this under Entertainment: Raffi Ahmad Pamit ke Prabowo Subianto Berangkat Haji Malam Ini - detikHOT.…",
     "source_mix": {
@@ -2080,6 +2408,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Kondisi Nikita Mirzani Usai Jalani Operasi Tulang Belakang - detikHOT. Related coverage from CNN Indonesia, Grid.ID, VIVA.co.id, detikHOT centers on: Kondisi Nikita Mirzani U…",
     "narrative_zh": "Google News groups this under Entertainment: Kondisi Nikita Mirzani Usai Jalani Operasi Tulang Belakang - detikHOT. Rel…",
     "source_mix": {
@@ -2122,6 +2458,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Scheduling updates for Indonesian representatives in the 16th round of the Malaysia Masters.",
     "narrative_zh": "马来西亚羽毛球大师赛16强印尼选手赛程更新。",
     "source_mix": {
@@ -2151,9 +2495,9 @@ const groups = [
     "question_en": "Will an Indonesian singles player reach the semi-finals of the 2026 Malaysia Masters?",
     "question_zh": "印尼单打选手是否会进入 2026 年马来西亚大师赛的半决赛？",
     "source": "BWF Tournament Software",
-    "prob": 45,
-    "prob_reason_zh": "印尼单打竞争力不稳，竞争极其激烈。",
-    "prob_reason_en": "Indonesian singles form is inconsistent."
+    "prob": 55,
+    "prob_reason_zh": "印尼单打选手具备半决赛竞技水平。",
+    "prob_reason_en": "Indonesian singles have semifinal depth."
   },
   {
     "name_en": "Russo-British Air Interception",
@@ -2164,6 +2508,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Close encounter between a Russian fighter jet and a British surveillance aircraft over the Black Sea.",
     "narrative_zh": "一架俄罗斯战斗机与一架英国侦察机在黑海上空发生近距离遭遇。",
     "source_mix": {
@@ -2206,6 +2558,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "The visit of the North Korean women's football team to South Korea highlights cultural and political tensions.",
     "narrative_zh": "朝鲜女足访韩凸显了文化与政治紧张关系。",
     "source_mix": {
@@ -2248,6 +2608,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Taiwanese government asserts independence from foreign direction amidst regional political sensitivity.",
     "narrative_zh": "台湾当局在区域政治敏感背景下声明不受外国指挥。",
     "source_mix": {
@@ -2290,6 +2658,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Analysis of the growing use of laser defense systems in the Middle East, often sourced from Chinese markets.",
     "narrative_zh": "分析中东地区日益增长的激光防御系统使用情况，其中多来自中国市场。",
     "source_mix": {
@@ -2332,6 +2708,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Coverage of K-Pop global charts, film successes, and industry controversies.",
     "narrative_zh": "关于韩流全球榜单、电影成功及行业争议的报道。",
     "source_mix": {
@@ -2416,6 +2800,14 @@ const groups = [
     "T": 2,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 1,
+      "D": 1,
+      "L": 0,
+      "T": 2,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Telkom faces SEC scrutiny for governance issues and announces the closure of 10 subsidiaries by mid-2026.",
     "narrative_zh": "Telkom因公司治理问题面临美国证交会审查，并宣布将于2026年中期关闭10家子公司。",
     "source_mix": {
@@ -2459,9 +2851,9 @@ const groups = [
     "question_en": "Will Telkom fulfill its plan to close 10 subsidiaries by June 30, 2026?",
     "question_zh": "Telkom 是否会按计划在 2026 年 6 月 30 日前关闭 10 家子公司？",
     "source": "IDX disclosure",
-    "prob": 40,
-    "prob_reason_zh": "大型企业重组常有行政延误。",
-    "prob_reason_en": "Corporate restructuring often hits delays."
+    "prob": 45,
+    "prob_reason_zh": "企业重组计划常因运营复杂性延期。",
+    "prob_reason_en": "Restructuring often delayed by complexity."
   },
   {
     "name_en": "Shopee Consumer Protection Clarification",
@@ -2472,6 +2864,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Ministry of Trade requests clarification from Shopee regarding consumer complaints.",
     "narrative_zh": "印尼贸易部要求Shopee就消费者投诉进行澄清。",
     "source_mix": {
@@ -2514,6 +2914,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "IMF cautions against excessive energy and food subsidies to maintain fiscal stability.",
     "narrative_zh": "国际货币基金组织警告称应避免过度能源和食品补贴，以维持财政稳定。",
     "source_mix": {
@@ -2556,6 +2964,14 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Allegations and denials regarding ICC arrest warrants for Israeli ministers.",
     "narrative_zh": "关于国际刑事法院对以色列部长签发逮捕令的指控与否认。",
     "source_mix": {
@@ -2598,6 +3014,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 2,
+      "total": 5
+    },
+    "why_users_bet": "",
     "narrative_en": "High-profile football rumors involving managers like Pep Guardiola and players like Antony and Mohamed Salah.",
     "narrative_zh": "涉及瓜迪奥拉等主帅及安东尼、萨拉赫等球员的高调足球流言。",
     "source_mix": {
@@ -2669,9 +3093,9 @@ const groups = [
     "question_en": "Will Pep Guardiola sign a contract with a new club by end of 2026?",
     "question_zh": "瓜迪奥拉是否会在 2026 年底前与新俱乐部签约？",
     "source": "Official club statement",
-    "prob": 25,
-    "prob_reason_zh": "瓜帅倾向于在合约期满前保持稳定。",
-    "prob_reason_en": "Pep usually honors long-term contracts."
+    "prob": 30,
+    "prob_reason_zh": "瓜迪奥拉倾向于续约或暂别执教。",
+    "prob_reason_en": "Pep favors extension or sabbatical."
   },
   {
     "name_en": "MotoGP and World Superbike Racing",
@@ -2682,6 +3106,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Updates on Indonesian racers and MotoGP performance dynamics in the 2026 season.",
     "narrative_zh": "关于印尼车手动态及2026赛季MotoGP比赛表现的报道。",
     "source_mix": {
@@ -2740,8 +3172,8 @@ const groups = [
     "question_zh": "瓦伦蒂诺·罗西是否会在 2026 年重返大奖赛的竞争性赛事？",
     "source": "MotoGP Official",
     "prob": 10,
-    "prob_reason_zh": "罗西已退役，仅参与部分耐力赛。",
-    "prob_reason_en": "Rossi is retired from GP competition."
+    "prob_reason_zh": "罗西已退役，回归竞技赛场概率极低。",
+    "prob_reason_en": "Rossi is retired; return is unlikely."
   },
   {
     "name_en": "Indian Political Trends",
@@ -2752,6 +3184,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "The rise of the 'Cockroach Party' in India, reflecting youth protest and economic frustration.",
     "narrative_zh": "印度“蟑螂党”的崛起，反映了青年抗议与经济挫败感。",
     "source_mix": {
@@ -2794,6 +3234,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Performance tracking of Indonesian players like Jay Idzes and Nathan Tjoe-A-On in European leagues.",
     "narrative_zh": "追踪Jay Idzes和Nathan Tjoe-A-On等印尼球员在欧洲联赛的表现。",
     "source_mix": {
@@ -2837,9 +3285,9 @@ const groups = [
     "question_en": "Will Jay Idzes be in the starting lineup for Sassuolo for at least 50% of league matches in the 2026-27 season?",
     "question_zh": "Jay Idzes 在 2026-27 赛季是否会出现在萨索洛至少 50% 的联赛首发名单中？",
     "source": "Official League Stats",
-    "prob": 30,
-    "prob_reason_zh": "在意甲首发比例需极高竞技水平。",
-    "prob_reason_en": "Sassuolo starting role is very tough."
+    "prob": 40,
+    "prob_reason_zh": "竞争激烈，维持主力位置难度大。",
+    "prob_reason_en": "High competition; hard to keep spot."
   },
   {
     "name_en": "Cannes Film Festival Industry Insights",
@@ -2850,6 +3298,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Indonesian celebrity attendance and industry criticism regarding commercialization at the Cannes Film Festival.",
     "narrative_zh": "印尼名人的戛纳电影节出席情况，及对电影节商业化倾向的行业批评。",
     "source_mix": {
@@ -2906,6 +3362,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Personal stories of hardship and resilience among Hajj pilgrims during the 2026 season.",
     "narrative_zh": "2026年朝觐季节中朝圣者的艰辛故事与坚韧精神。",
     "source_mix": {
@@ -2962,6 +3426,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Local government initiatives to combat HIV/AIDS, immunization misinformation, stunting, and rabies across various Indonesian regions.",
     "narrative_zh": "印尼各地政府采取主动措施打击艾滋病、疫苗接种误导信息、发育迟缓及狂犬病问题。",
     "source_mix": {
@@ -3062,8 +3534,8 @@ const groups = [
     "question_zh": "到 2026 年底，全国儿童发育迟缓率是否会降至 14% 以下？",
     "source": "Indonesian Ministry of Health (Kemenkes)",
     "prob": 35,
-    "prob_reason_zh": "发育迟缓率改善缓慢，政策见效慢。",
-    "prob_reason_en": "Stunting reduction is a slow process."
+    "prob_reason_zh": "发育迟缓率改善缓慢，目标较激进。",
+    "prob_reason_en": "Target is aggressive given slow progress."
   },
   {
     "name_en": "Megawati Hangestri Volleyball Transfer",
@@ -3074,6 +3546,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Megawati Hangestri joins Hyundai E&C Hillstate, impacting South Korean volleyball dynamics.",
     "narrative_zh": "梅加瓦蒂加盟现代建设山州排球俱乐部，影响韩国排球格局。",
     "source_mix": {
@@ -3116,6 +3596,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa - Media Indonesia. Related coverage from Babel Insight, Media Indonesia, MediaKompeten, Qoo Media centers on: NASA Luncur…",
     "narrative_zh": "Google News groups this under Science: NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa - Media Indonesia. Re…",
     "source_mix": {
@@ -3158,6 +3646,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Katakini.com, MSN, Media Indonesia centers on: NASA Pastikan Aste…",
     "narrative_zh": "Google News groups this under Science: NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi - AsatuNews.co.id. Rela…",
     "source_mix": {
@@ -3200,6 +3696,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Sempat Dianggap Punah, Populasi Monyet Langka Ini Melonjak 3 Kali Lipat - Kompas.com. Related coverage from Kompas.com centers on: Sempat Dianggap Punah, Populasi Monyet Langka Ini…",
     "narrative_zh": "Google News groups this under Science: Sempat Dianggap Punah, Populasi Monyet Langka Ini Melonjak 3 Kali Lipat - Kompas…",
     "source_mix": {
@@ -3242,6 +3746,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Ilmuwan Ungkap Alasan Dinosaurus Predator seperti T-Rex Berlengan Sangat Kecil - Kompas.com. Related coverage from Kompas.com centers on: Ilmuwan Ungkap Alasan Dinosaurus Predator…",
     "narrative_zh": "Google News groups this under Science: Ilmuwan Ungkap Alasan Dinosaurus Predator seperti T-Rex Berlengan Sangat Kecil -…",
     "source_mix": {
@@ -3284,6 +3796,14 @@ const groups = [
     "T": 2,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 1,
+      "D": 1,
+      "L": 0,
+      "T": 2,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026 - Kompas.com. Related coverage from Kompas.com centers on: NASA Percepat Peluncuran Teleskop Antariksa Roman ke…",
     "narrative_zh": "Google News groups this under Science: NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026 - Kompas.com…",
     "source_mix": {
@@ -3313,9 +3833,9 @@ const groups = [
     "question_en": "Will the Roman Space Telescope launch successfully in September 2026?",
     "question_zh": "罗曼空间望远镜是否会在 2026 年 9 月成功发射？",
     "source": "NASA",
-    "prob": 40,
-    "prob_reason_zh": "航天项目推迟是常态，难以准时。",
-    "prob_reason_en": "Space launches frequently face delays."
+    "prob": 25,
+    "prob_reason_zh": "航天项目普遍存在延期风险。",
+    "prob_reason_en": "Space missions are prone to delays."
   },
   {
     "name_en": "Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima…",
@@ -3326,6 +3846,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - Mudanesia - Mudanesia. Related coverage from Mudanesia centers on: Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Ga…",
     "narrative_zh": "Google News groups this under Science: Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - Mudanesia - Mu…",
     "source_mix": {
@@ -3368,6 +3896,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta dan Rahasia Kematian Galaksi - Media Indonesia. Related coverage from Media Indonesia centers on: Teleskop James Webb Berhas…",
     "narrative_zh": "Google News groups this under Science: Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta dan Rahasia Kematian Gal…",
     "source_mix": {
@@ -3410,6 +3946,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Dikira Punah Hampir Seabad, Burung Ini Terlihat Bertengger Santai di Sabana Afrika - Kompas.com. Related coverage from Kompas.com centers on: Dikira Punah Hampir Seabad, Burung Ini…",
     "narrative_zh": "Google News groups this under Science: Dikira Punah Hampir Seabad, Burung Ini Terlihat Bertengger Santai di Sabana Afri…",
     "source_mix": {
@@ -3452,6 +3996,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Tengkorak Berjejer Rapi, Begini Isi \"Guci Kematian\" Berusia 1.200 Tahun yang Ditemukan di Laos - Kompas.com. Related coverage from Kompas.com centers on: Tengkorak Berjejer Rapi, B…",
     "narrative_zh": "Google News groups this under Science: Tengkorak Berjejer Rapi, Begini Isi \"Guci Kematian\" Berusia 1.200 Tahun yang Dit…",
     "source_mix": {
@@ -3494,6 +4046,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 1,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Delays and persistent challenges in flood recovery efforts in Tapanuli and Aceh.",
     "narrative_zh": "塔帕努利（Tapanuli）和亚齐（Aceh）洪水灾后重建工作面临延误和持续挑战。",
     "source_mix": {
@@ -3550,6 +4110,14 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Daihatsu continues to dominate the affordable automobile segment (under Rp 300 million) in Indonesia.",
     "narrative_zh": "大发汽车持续在印尼经济型汽车市场（3亿印尼盾以下）占据主导地位。",
     "source_mix": {
@@ -3592,6 +4160,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 1,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Ongoing protests and environmental concerns regarding national projects in Papua.",
     "narrative_zh": "关于巴布亚国家开发项目的持续抗议及环境担忧。",
     "source_mix": {
@@ -3654,10 +4230,9 @@ function getDisposition(g) {
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
-  const da = getDisposition(a), db = getDisposition(b);
-  if (order[da] !== order[db]) return order[da] - order[db];
-  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+  const bdltDiff = bdltTotal(b) - bdltTotal(a);
+  if (bdltDiff !== 0) return bdltDiff;
+  return rstuhTotal(b) - rstuhTotal(a);
 });
 
 function renderCards(lang) {
@@ -3668,7 +4243,9 @@ function renderCards(lang) {
   sorted.forEach(g => {
     const disp = getDisposition(g);
     if (disp === "drop" && !showFiltered) return;
-    const total = g.R + g.S + g.T + g.U + g.H;
+    const total = rstuhTotal(g);
+    const bdlt = normalizeBDLT(g);
+    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
@@ -3709,13 +4286,33 @@ function renderCards(lang) {
         <div class="count">${densityCount}</div>
       </div>
 
-      <div class="rstuh">
-        ${["R","S","T","U","H"].map((l,i) => {
-          const s = [g.R,g.S,g.T,g.U,g.H][i];
-          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
-        }).join("")}
-        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
-      </div>
+      <details class="score-panel">
+        <summary>
+          <span class="score-totals">
+            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
+          </span>
+          <span class="score-expand">${t.expand_scores}</span>
+        </summary>
+        <div class="score-section">
+          <div class="score-label">${t.bdlt}</div>
+          <div class="rstuh">
+            ${["B","D","L","T"].map(l => {
+              const s = bdlt[l] || 0;
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+          </div>
+          <div class="score-label">${t.rstuh}</div>
+          <div class="rstuh">
+            ${["R","S","T","U","H"].map((l,i) => {
+              const s = [g.R,g.S,g.T,g.U,g.H][i];
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+          </div>
+        </div>
+      </details>
 
       ${g.bettable && question ? `
       <div class="question-box">
@@ -3737,6 +4334,25 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function rstuhTotal(g) {
+  return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
+}
+
+function normalizeBDLT(g) {
+  const bdlt = g.BDLT || {};
+  return {
+    B: Number.isInteger(bdlt.B) ? bdlt.B : 0,
+    D: Number.isInteger(bdlt.D) ? bdlt.D : 0,
+    L: Number.isInteger(bdlt.L) ? bdlt.L : 0,
+    T: Number.isInteger(bdlt.T) ? bdlt.T : 0,
+  };
+}
+
+function bdltTotal(g) {
+  const bdlt = normalizeBDLT(g);
+  return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
 }
 
 function shouldShowNarrative(g, disp, narr) {

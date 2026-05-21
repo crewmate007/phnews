@@ -63,7 +63,17 @@
   .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
   .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
 
-  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .score-panel { margin-bottom: 14px; border: 1px solid #1e2535; border-radius: 8px; background: #0f1117; overflow: hidden; }
+  .score-panel summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 10px; }
+  .score-panel summary::-webkit-details-marker { display: none; }
+  .score-totals { display: flex; gap: 8px; flex-wrap: wrap; }
+  .score-total-chip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid #273244; border-radius: 999px; padding: 4px 9px; color: #94a3b8; font-size: 11px; font-weight: 700; }
+  .score-total-chip.primary { color: #fbbf24; border-color: #92400e; background: #1f1608; }
+  .score-total-chip b { color: #fff; font-size: 15px; }
+  .score-expand { color: #64748b; font-size: 11px; }
+  .score-section { padding: 0 10px 10px; }
+  .score-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.4px; margin: 6px 0; }
+  .rstuh { display: flex; gap: 6px; margin-bottom: 8px; }
   .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
   .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
   .dim .score  { font-size: 16px; font-weight: 700; }
@@ -140,6 +150,9 @@ const i18n = {
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
+    expand_scores: "展开",
+    rstuh: "市场结构",
+    bdlt: "下注欲望",
     show_filtered: "显示过滤",
     hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
@@ -154,6 +167,9 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
+    expand_scores: "Expand",
+    rstuh: "Market quality",
+    bdlt: "Bet demand",
     show_filtered: "Show filtered",
     hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
@@ -170,6 +186,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Impeachment proceedings against Vice President Sara Duterte are exacerbating political polarization and dynastic power struggles.",
     "narrative_zh": "针对副总统萨拉·杜特尔特的弹劾审判加剧了菲律宾政治的两极分化和家族权力斗争。",
     "source_mix": {
@@ -256,6 +280,14 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Ongoing fallout from the Senate shooting incident involves debates over culprit identification, alleged evidence manipulation, and political infighting.",
     "narrative_zh": "参议院枪击事件的持续余波涉及对嫌疑人的指控、录像篡改质疑及议员间的政治冲突。",
     "source_mix": {
@@ -343,7 +375,7 @@ const groups = [
     "source": "Department of Justice (Philippines)",
     "prob": 70,
     "prob_reason_zh": "迫于舆论压力，司法部须给出调查结论。",
-    "prob_reason_en": "Public pressure forces a DOJ conclusion."
+    "prob_reason_en": "Public pressure forces a DOJ resolution."
   },
   {
     "name_en": "Philippine Economic Pressure and Inflation",
@@ -354,6 +386,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Rising food prices, currency depreciation, and the end of transport fuel subsidies are creating significant economic anxiety and stagflation fears.",
     "narrative_zh": "食品价格上涨、货币贬值以及公共交通燃油补贴的取消，正在引发严重的经济焦虑和滞胀担忧。",
     "source_mix": {
@@ -442,8 +482,8 @@ const groups = [
     "question_zh": "2026年第三季度菲律宾平均通胀率是否会超过5%？",
     "source": "Philippine Statistics Authority",
     "prob": 65,
-    "prob_reason_zh": "通胀压力与供应限制导致物价持续走高。",
-    "prob_reason_en": "Supply shocks keep inflation pressure high."
+    "prob_reason_zh": "食品通胀压力持续，超出5%概率较大。",
+    "prob_reason_en": "Persistent food inflation risks 5%+."
   },
   {
     "name_en": "Philippine Disaster Preparedness and Climate",
@@ -454,6 +494,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Agencies are issuing warnings for combined Super El Niño effects and an intensified typhoon season, urging proactive mitigation for agriculture.",
     "narrative_zh": "政府机构就超级厄尔尼诺现象与加强版台风季的叠加效应发出预警，并敦促农业部门采取预防措施。",
     "source_mix": {
@@ -498,8 +546,8 @@ const groups = [
     "question_zh": "2026年大米总产量是否会低于2000万公吨？",
     "source": "Department of Agriculture (Philippines)",
     "prob": 60,
-    "prob_reason_zh": "厄尔尼诺与台风严重影响农业收成。",
-    "prob_reason_en": "El Niño and typhoons hurt crop yields."
+    "prob_reason_zh": "厄尔尼诺与台风严重打击农业产出。",
+    "prob_reason_en": "El Niño and typhoons hit crop yields."
   },
   {
     "name_en": "Philippine Maritime and Security Policy",
@@ -510,6 +558,14 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 0,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Diplomatic ties and territorial security concerns regarding the South China Sea remain central to ongoing Philippine foreign policy discussions.",
     "narrative_zh": "与日本的外交关系及南海领土安全问题依然是菲律宾当前外交政策讨论的核心。",
     "source_mix": {
@@ -568,6 +624,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Semifinal matchups for the PBA Commissioner's Cup are underway with tight competition between major local clubs.",
     "narrative_zh": "PBA专员杯半决赛正在进行中，各主要俱乐部间的竞争十分激烈。",
     "source_mix": {
@@ -612,7 +676,7 @@ const groups = [
     "question_zh": "哪支球队将赢得2026年PBA专员杯冠军？",
     "source": "PBA",
     "prob": 0,
-    "prob_reason_zh": "此问题为开放式选择，非二元概率。",
+    "prob_reason_zh": "问题是开放式选择，非二元概率事件。",
     "prob_reason_en": "Question is open-ended, not binary."
   },
   {
@@ -624,6 +688,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "High-stakes series between Thunder and Spurs includes injury concerns for key players and intense local fan engagement.",
     "narrative_zh": "雷霆与马刺之间的西部决赛竞争激烈，核心球员的伤病情况备受关注。",
     "source_mix": {
@@ -695,9 +767,9 @@ const groups = [
     "question_en": "Will the Oklahoma City Thunder win the NBA Western Conference Finals?",
     "question_zh": "俄克拉荷马雷霆队是否会赢得NBA西部决赛？",
     "source": "NBA",
-    "prob": 45,
-    "prob_reason_zh": "雷霆实力强劲但季后赛存在不确定性。",
-    "prob_reason_en": "Thunder are strong but playoffs vary."
+    "prob": 40,
+    "prob_reason_zh": "雷霆实力强劲但伤病影响胜算。",
+    "prob_reason_en": "Thunder are strong but injury-plagued."
   },
   {
     "name_en": "Corporate Expansion in Clark Ecozone",
@@ -708,6 +780,14 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Major logistics and office developers are significantly expanding their footprint in the Clark special economic zone.",
     "narrative_zh": "大型物流和办公开发商正在显著扩大其在克拉克经济特区的业务布局。",
     "source_mix": {
@@ -764,6 +844,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: HONOR Philippines’ new smartphone with AI-powered creativity features launched - - PeopleAsia. Related coverage from - PeopleAsia, Android Authority, Huawei Central, ManilaShake…",
     "narrative_zh": "Google News groups this under Technology: HONOR Philippines’ new smartphone with AI-powered creativity features launche…",
     "source_mix": {
@@ -806,6 +894,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Top Stories: realme P4 Series with up to a 10,001mAh Battery Set to Launch in the Philippines - Gadget Pilipinas. Related coverage from Gadget Pilipinas, ManilaShaker Philippines, ProductNa…",
     "narrative_zh": "Google News groups this under Top Stories: realme P4 Series with up to a 10,001mAh Battery Set to Launch in the Philipp…",
     "source_mix": {
@@ -848,6 +944,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Power Meets Brilliance: The New Infinix NOTE 60 Pro - Wazzup.PH. Related coverage from Business News Nigeria, Creative Bloq, Inquirer Technology, Wazzup.PH centers on: Power Mee…",
     "narrative_zh": "Google News groups this under Technology: Power Meets Brilliance: The New Infinix NOTE 60 Pro - Wazzup.PH. Related cove…",
     "source_mix": {
@@ -890,6 +994,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: BenQ Expands Mac Ecosystem with its Newest MA Series Monitors - Gadget Pilipinas. Related coverage from Gadget Pilipinas, ManilaShaker Philippines, TechPorn, The Herald centers…",
     "narrative_zh": "Google News groups this under Technology: BenQ Expands Mac Ecosystem with its Newest MA Series Monitors - Gadget Pilipi…",
     "source_mix": {
@@ -932,6 +1044,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Local: Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘Endgame unlocked’ - Inquirer.net. Related coverage from Daily Tribune, GMA Network, Inquirer.net, Manila Bulletin centers on: C…",
     "narrative_zh": "Google News groups this under Local: Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘Endgame unlocked’ - Inquire…",
     "source_mix": {
@@ -974,6 +1094,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: MNL48 to conclude activities this May - ABS-CBN. Related coverage from ABS-CBN, GMA Network, Inquirer.net, Manila Standard centers on: MNL48 to conclude activities this May;…",
     "narrative_zh": "Google News groups this under Entertainment: MNL48 to conclude activities this May - ABS-CBN. Related coverage from ABS…",
     "source_mix": {
@@ -1016,6 +1144,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Donny Pangilinan, Belle Mariano reflect on end of era in new ‘Tayo Sa Wakas’ trailer - ABS-CBN. Related coverage from ABS-CBN, Lifestyle.INQ, MEGA Magazine, facebook.com cent…",
     "narrative_zh": "Google News groups this under Entertainment: Donny Pangilinan, Belle Mariano reflect on end of era in new ‘Tayo Sa Waka…",
     "source_mix": {
@@ -1058,6 +1194,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: VLF XXI brings theater families together in star-studded 'coming-of-age' edition - ABS-CBN. Related coverage from ABS-CBN, Daily Tribune, Inquirer.net, Philstar.com centers o…",
     "narrative_zh": "Google News groups this under Entertainment: VLF XXI brings theater families together in star-studded 'coming-of-age' e…",
     "source_mix": {
@@ -1100,6 +1244,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: XONARA have arrived — and they aren’t waiting for approval - Manila Bulletin. Related coverage from ABS-CBN, Daily Tribune, GMA Network, Manila Bulletin centers on: XONARA ha…",
     "narrative_zh": "Google News groups this under Entertainment: XONARA have arrived — and they aren’t waiting for approval - Manila Bullet…",
     "source_mix": {
@@ -1142,6 +1294,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Judy Ann Santos reunites with Brillante Mendoza in Cannes-bound drama ‘Aid’ - The Manila Times. Related coverage from Daily Tribune, Inquirer.net, Manila Standard, The Manila…",
     "narrative_zh": "Google News groups this under Entertainment: Judy Ann Santos reunites with Brillante Mendoza in Cannes-bound drama ‘Aid…",
     "source_mix": {
@@ -1184,6 +1344,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Anne Curtis explores New York with this designer bag - GMA Network. Related coverage from ABS-CBN, GMA Network, INQUIRER.net USA, L'Officiel Philippines centers on: Anne Curt…",
     "narrative_zh": "Google News groups this under Entertainment: Anne Curtis explores New York with this designer bag - GMA Network. Relate…",
     "source_mix": {
@@ -1226,6 +1394,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Matteo Guidicelli reacts to 'insecure' comments following Erwan Heussaff interview - GMA Network. Related coverage from ABS-CBN, Daily Tribune, GMA Network, Inquirer.net cent…",
     "narrative_zh": "Google News groups this under Entertainment: Matteo Guidicelli reacts to 'insecure' comments following Erwan Heussaff i…",
     "source_mix": {
@@ -1268,6 +1444,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Disney+ and Hulu to livestream Lollapalooza and more major music festivals - ABS-CBN. Related coverage from ABS-CBN, IQ Magazine, Media Play News, Philstar.com centers on: Di…",
     "narrative_zh": "Google News groups this under Entertainment: Disney+ and Hulu to livestream Lollapalooza and more major music festivals…",
     "source_mix": {
@@ -1310,6 +1494,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Business: Mobile Legend Game with Jollibee mascots - Daily Tribune. Related coverage from Campaign Brief Asia, Daily Tribune, GadgetMatch, Manila Bulletin centers on: Mobile Legend Game wit…",
     "narrative_zh": "Google News groups this under Business: Mobile Legend Game with Jollibee mascots - Daily Tribune. Related coverage from…",
     "source_mix": {
@@ -1352,6 +1544,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: Australia is battling its worst diphtheria outbreak in decades. But vaccines could curb it - The Conversation. Related coverage from Australian Broadcasting Corporation, Merimbula N…",
     "narrative_zh": "Google News groups this under Health: Australia is battling its worst diphtheria outbreak in decades. But vaccines coul…",
     "source_mix": {
@@ -1394,6 +1594,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: Ebola Crisis Sparks Debate Over Global Health Double Standards - The New York Times. Related coverage from Financial Times, PBS, The Guardian, The New York Times centers on: Ebola C…",
     "narrative_zh": "Google News groups this under Health: Ebola Crisis Sparks Debate Over Global Health Double Standards - The New York Tim…",
     "source_mix": {
@@ -1436,6 +1644,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: How Wet Weather in Argentina Helped Fuel the Cruise Ship Hantavirus Outbreak - WIRED. Related coverage from Bluefield Daily Telegraph, Buenos Aires Herald, The Brussels Times, The E…",
     "narrative_zh": "Google News groups this under Health: How Wet Weather in Argentina Helped Fuel the Cruise Ship Hantavirus Outbreak - WI…",
     "source_mix": {
@@ -1478,6 +1694,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Risk of Ebola global spread is low, but high at regional levels, WHO says - The Herald. Related coverage from BBC, GMA Network, NBC News, The Herald centers on: Risk of Ebola global…",
     "narrative_zh": "Google News groups this under World: Risk of Ebola global spread is low, but high at regional levels, WHO says - The He…",
     "source_mix": {
@@ -1520,6 +1744,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: ASIA/SRI LANKA - Dengue alert: prevention committees in parishes - Agenzia Fides. Related coverage from Ada Derana, Agenzia Fides, Ground Report, Newswire centers on: ASIA/SRI LANKA…",
     "narrative_zh": "Google News groups this under Health: ASIA/SRI LANKA - Dengue alert: prevention committees in parishes - Agenzia Fides.…",
     "source_mix": {
@@ -1562,6 +1794,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: WHO Health Emergencies EPI-WIN webinar: Hantavirus in Focus II: hantavirus in an international maritime setting: natural history, infection control and clinical management of patien…",
     "narrative_zh": "Google News groups this under Health: WHO Health Emergencies EPI-WIN webinar: Hantavirus in Focus II: hantavirus in an…",
     "source_mix": {
@@ -1604,6 +1844,14 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Debate intensifies over AI's role in research integrity, persuasion tactics, and the professional implications of AI-generated content.",
     "narrative_zh": "关于AI在研究诚信、说服策略以及AI生成内容对职业影响方面的辩论日益加剧。",
     "source_mix": {
@@ -1702,6 +1950,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Top Stories: US indicts former Cuban President Raúl Castro over 1996 downing of planes - Manila Bulletin. Related coverage from AP News, BBC, CNN, Manila Bulletin centers on: US indicts for…",
     "narrative_zh": "Google News groups this under Top Stories: US indicts former Cuban President Raúl Castro over 1996 downing of planes -…",
     "source_mix": {
@@ -1744,6 +2000,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Middle East war live: Trump says willing to wait 'a few days' for right answer on Iran peace deal - France 24. Related coverage from Al Jazeera, CBS News, CNN, France 24 centers on:…",
     "narrative_zh": "Google News groups this under World: Middle East war live: Trump says willing to wait 'a few days' for right answer on…",
     "source_mix": {
@@ -1786,6 +2050,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Trump claims he will speak to Taiwan’s president, departing from decades-long diplomatic norms - The Guardian. Related coverage from Anadolu Ajansı, Eurasia Review, Financial Times,…",
     "narrative_zh": "Google News groups this under World: Trump claims he will speak to Taiwan’s president, departing from decades-long dipl…",
     "source_mix": {
@@ -1828,6 +2100,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists - BBC. Related coverage from AP News, Anadolu Ajansı, BBC, CNN centers on: Far-right Israeli mini…",
     "narrative_zh": "Google News groups this under World: Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activis…",
     "source_mix": {
@@ -1870,6 +2150,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Putin, Xi signal unity but fail to reach deal on pipeline sought by Russia - The Washington Post. Related coverage from Al Jazeera, BBC, CNN, The Guardian centers on: Putin, Xi signa…",
     "narrative_zh": "Google News groups this under World: Putin, Xi signal unity but fail to reach deal on pipeline sought by Russia - The W…",
     "source_mix": {
@@ -1912,6 +2200,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Flak jackets and final goodbyes: Lebanon’s first responders under fire - UN News. Related coverage from BBC, France 24, ReliefWeb, Reuters Connect centers on: Flak jackets and final…",
     "narrative_zh": "Google News groups this under World: Flak jackets and final goodbyes: Lebanon’s first responders under fire - UN News.…",
     "source_mix": {
@@ -1954,6 +2250,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Hungary: Lessons on the character and limits of right-populism - socialistparty.org.uk. Related coverage from Jacksonville Journal-Courier, Politics Today, The Dartmouth Review, Verf…",
     "narrative_zh": "Google News groups this under World: Hungary: Lessons on the character and limits of right-populism - socialistparty.or…",
     "source_mix": {
@@ -1996,6 +2300,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: FirstFT: Trump critic Thomas Massie loses Kentucky primary - Financial Times. Related coverage from ABC News - Breaking News, Latest News and Videos, Al Jazeera, Financial Times, The…",
     "narrative_zh": "Google News groups this under World: FirstFT: Trump critic Thomas Massie loses Kentucky primary - Financial Times. Rela…",
     "source_mix": {
@@ -2038,6 +2350,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: How the war in Iran is accelerating Asia's energy transformation - S&P Global. Related coverage from Eurasia Review, Financial Times, Rosa-Luxemburg-Stiftung, S&P Global centers on:…",
     "narrative_zh": "Google News groups this under World: How the war in Iran is accelerating Asia's energy transformation - S&P Global. Rel…",
     "source_mix": {
@@ -2080,6 +2400,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Ongoing scientific missions and discoveries regarding Mars, Neptune, and space debris management shaping space policy.",
     "narrative_zh": "有关火星、海王星的科学任务、发现以及太空碎片管理正影响着太空政策。",
     "source_mix": {
@@ -2192,6 +2520,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Top Stories: Thailand tightens visa rules for tourists, citing crime by foreigners - The Guardian. Related coverage from Al Jazeera, BBC, Thai Enquirer, The Guardian centers on: Thailand ti…",
     "narrative_zh": "Google News groups this under Top Stories: Thailand tightens visa rules for tourists, citing crime by foreigners - The…",
     "source_mix": {
@@ -2234,6 +2570,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Local: Trinoma unveils a refreshed look - Manila Bulletin. Related coverage from ABS-CBN, Bilyonaryo Business News, BusinessWorld - BusinessWorld Online, Manila Bulletin centers on: Trinoma…",
     "narrative_zh": "Google News groups this under Local: Trinoma unveils a refreshed look - Manila Bulletin. Related coverage from ABS-CBN,…",
     "source_mix": {
@@ -2276,6 +2620,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Local: Regulator voids registration of Mount Peak Securities - The Manila Times. Related coverage from BusinessMirror, Inquirer.net, Philippine Information Agency, Philippine News Agency ce…",
     "narrative_zh": "Google News groups this under Local: Regulator voids registration of Mount Peak Securities - The Manila Times. Related…",
     "source_mix": {
@@ -2318,6 +2670,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Local: Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin. Related coverage from AutoIndustriya, CarGuide.PH, Manila Bulletin, Top Gear Philippines centers on: Toyo…",
     "narrative_zh": "Google News groups this under Local: Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin. Relat…",
     "source_mix": {
@@ -2360,6 +2720,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: ChatCPR instructor delivers near-perfect CPR guidance in proof-of-concept study - News-Medical. Related coverage from MedCity News, MedicalResearch.com, News-Medical, TrendWatching…",
     "narrative_zh": "Google News groups this under Health: ChatCPR instructor delivers near-perfect CPR guidance in proof-of-concept study -…",
     "source_mix": {
@@ -2402,6 +2770,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: AMD’s Gorgon Halo is aimed at AI with 192GB of onboard memory. - The Verge. Related coverage from Digital Trends, Engadget, Neowin, The Verge centers on: AMD’s Gorgon Halo is ai…",
     "narrative_zh": "Google News groups this under Technology: AMD’s Gorgon Halo is aimed at AI with 192GB of onboard memory. - The Verge. R…",
     "source_mix": {
@@ -2444,6 +2820,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Business: The Swatch x AP Collection Sold for $8,000 on StockX Before Release - Yahoo. Related coverage from CNN, Lifestyle.INQ, The Guardian, The Manila Times centers on: The Swatch x AP C…",
     "narrative_zh": "Google News groups this under Business: The Swatch x AP Collection Sold for $8,000 on StockX Before Release - Yahoo. Re…",
     "source_mix": {
@@ -2486,6 +2870,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Filipino hospitality brands lean into local luxury appeal - InsiderPH. Related coverage from Asian Journal News, Bold Outline, InsiderPH, Philstar Life centers on: Filipino h…",
     "narrative_zh": "Google News groups this under Entertainment: Filipino hospitality brands lean into local luxury appeal - InsiderPH. Rel…",
     "source_mix": {
@@ -2528,6 +2920,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: Study identifies new marker to find patients with advanced prostate cancer more likely to benefit from combination immunotherapy | Newswise - Newswise. Related coverage from Earth.c…",
     "narrative_zh": "Google News groups this under Health: Study identifies new marker to find patients with advanced prostate cancer more l…",
     "source_mix": {
@@ -2570,6 +2970,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Arsenal to reward Mikel Arteta with huge pay rise and put Kroupi among transfer targets - The Guardian. Related coverage from EPL Index, Read Arsenal, The Guardian, The Mirror cente…",
     "narrative_zh": "Google News groups this under Sports: Arsenal to reward Mikel Arteta with huge pay rise and put Kroupi among transfer t…",
     "source_mix": {
@@ -2612,6 +3020,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Complex animals evolved up to 10 million years earlier than previously thought, fossil discovery shows - Live Science. Related coverage from Gizmodo, Live Science, Phys.org, Scienc…",
     "narrative_zh": "Google News groups this under Science: Complex animals evolved up to 10 million years earlier than previously thought,…",
     "source_mix": {
@@ -2654,6 +3070,14 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 2,
+      "total": 5
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Can Jannik Sinner achieve a Career Grand Slam at the French Open 2026? Here’s who already has – complete list - olympics.com. Related coverage from Inquirer.net, Punto de Break, Reu…",
     "narrative_zh": "Google News groups this under Sports: Can Jannik Sinner achieve a Career Grand Slam at the French Open 2026? Here’s who…",
     "source_mix": {
@@ -2684,8 +3108,8 @@ const groups = [
     "question_zh": "扬尼克·辛纳是否会赢得2026年法国网球公开赛？",
     "source": "Roland Garros",
     "prob": 35,
-    "prob_reason_zh": "红土竞争激烈，辛纳夺冠难度较大。",
-    "prob_reason_en": "Clay competition is fierce for Sinner."
+    "prob_reason_zh": "红土场竞争力提升，但竞争依然激烈。",
+    "prob_reason_en": "Improved clay form, but field is deep."
   },
   {
     "name_en": "Tom Lynagh re-commits to Australian Rugby",
@@ -2696,6 +3120,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Tom Lynagh re-commits to Australian Rugby - Wallabies. Related coverage from Devdiscourse, RUGBY.com.au, The Canberra Times, The Courier Mail centers on: Tom Lynagh re-commits to Au…",
     "narrative_zh": "Google News groups this under Sports: Tom Lynagh re-commits to Australian Rugby - Wallabies. Related coverage from Devd…",
     "source_mix": {
@@ -2738,6 +3170,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Europa League final reaction: Youri Tielemans, Morgan Rogers, Ollie Watkins, John McGinn, Ezri Konsa, Unai Emery - UEFA.com. Related coverage from BBC, Reuters Connect, Sky Sports,…",
     "narrative_zh": "Google News groups this under Sports: Europa League final reaction: Youri Tielemans, Morgan Rogers, Ollie Watkins, John…",
     "source_mix": {
@@ -2780,6 +3220,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Tennis players plan ‘work-to-rule’ French Open media protest over prize money - The Guardian. Related coverage from Front Office Sports, Options, The Edge, Tennis Now, The Guardian…",
     "narrative_zh": "Google News groups this under Sports: Tennis players plan ‘work-to-rule’ French Open media protest over prize money - T…",
     "source_mix": {
@@ -2822,6 +3270,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: China's cleaner air cuts PM2.5, but dementia deaths still rise with aging - Medical Xpress. Related coverage from Live Science, Medical Xpress, Nature, Technology Networks centers o…",
     "narrative_zh": "Google News groups this under Health: China's cleaner air cuts PM2.5, but dementia deaths still rise with aging - Medic…",
     "source_mix": {
@@ -2864,6 +3320,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: Study Questions Methods Used in Alzheimer's Drug Analysis - MedPage Today. Related coverage from Bioengineer.org, Findlay News, MedPage Today, Neuroscience News centers on: Study Qu…",
     "narrative_zh": "Google News groups this under Health: Study Questions Methods Used in Alzheimer's Drug Analysis - MedPage Today. Relate…",
     "source_mix": {
@@ -2906,6 +3370,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Justin Gaethje Is Here To Be Legendary | UFC Freedom 250 - UFC.com. Related coverage from Inbox.eu, MMA Junkie, Sky News, UFC.com centers on: Justin Gaethje Is Here To Be Legendary…",
     "narrative_zh": "Google News groups this under Sports: Justin Gaethje Is Here To Be Legendary | UFC Freedom 250 - UFC.com. Related cover…",
     "source_mix": {
@@ -2948,6 +3420,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Manchester City succession sheds light on Enzo Maresca’s Chelsea departure - The Guardian. Related coverage from MSN, The Guardian, The i Paper, Yahoo Sports centers on: Manchester…",
     "narrative_zh": "Google News groups this under Sports: Manchester City succession sheds light on Enzo Maresca’s Chelsea departure - The…",
     "source_mix": {
@@ -2990,6 +3470,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Top Stories: Thanks to MrBeast, the winner of 'Survivor' 50 takes home $2 million — letting the show finally keep up with inflation - Yahoo Finance. Related coverage from Gold Derby, MassLi…",
     "narrative_zh": "Google News groups this under Top Stories: Thanks to MrBeast, the winner of 'Survivor' 50 takes home $2 million — letti…",
     "source_mix": {
@@ -3032,6 +3520,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Health: Cytokine-armored CAR-T cell therapy successfully attacks aggressive brain tumors in mice - News-Medical. Related coverage from CancerNetwork, GlobeNewswire, News-Medical, The Indian…",
     "narrative_zh": "Google News groups this under Health: Cytokine-armored CAR-T cell therapy successfully attacks aggressive brain tumors…",
     "source_mix": {
@@ -3074,6 +3570,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: How Will Googlebooks Actually Work? I Answer Your 7 Biggest Questions About Google's New AI Laptop Line - PCMag. Related coverage from Android Authority, Chrome Unboxed, Gizmodo…",
     "narrative_zh": "Google News groups this under Technology: How Will Googlebooks Actually Work? I Answer Your 7 Biggest Questions About G…",
     "source_mix": {
@@ -3116,6 +3620,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Microsoft Rushes Out Emergency Mitigation For ‘YellowKey’ BitLocker Bypass Vulnerability - linkedin.com. Related coverage from Barracuda Networks Blog, BleepingComputer, CyberSe…",
     "narrative_zh": "Google News groups this under Technology: Microsoft Rushes Out Emergency Mitigation For ‘YellowKey’ BitLocker Bypass Vu…",
     "source_mix": {
@@ -3158,6 +3670,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: NBA star Victor Wembanyama and the San Antonio Spurs to play the New Orleans Pelicans in Paris, Manchester in 2027 - olympics.com. Related coverage from AOL.com, ESPN, HoopsHype, ke…",
     "narrative_zh": "Google News groups this under Sports: NBA star Victor Wembanyama and the San Antonio Spurs to play the New Orleans Peli…",
     "source_mix": {
@@ -3200,6 +3720,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: You can get $1,500 off Samsung's 85-inch Frame Pro TV - but hurry - ZDNET. Related coverage from AOL.com, OregonLive.com, SammyGuru, The Inventory centers on: You can get $1,500…",
     "narrative_zh": "Google News groups this under Technology: You can get $1,500 off Samsung's 85-inch Frame Pro TV - but hurry - ZDNET. Re…",
     "source_mix": {
@@ -3242,6 +3770,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Entertainment: Traces of AI embedded quotes found in famous fan-fiction writer’s book - The Indian Express. Related coverage from Kottke.org, The Daily Beast, The Indian Express, The New Yo…",
     "narrative_zh": "Google News groups this under Entertainment: Traces of AI embedded quotes found in famous fan-fiction writer’s book - T…",
     "source_mix": {
@@ -3284,6 +3820,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Top Stories: Own a piece of District transit history: Former DC Streetcars up on the auction block - WJLA. Related coverage from DC News Now, PoPville, WJLA, Yahoo Finance centers on: Own a…",
     "narrative_zh": "Google News groups this under Top Stories: Own a piece of District transit history: Former DC Streetcars up on the auct…",
     "source_mix": {
@@ -3326,6 +3870,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Sports: Trail Blazers lay off large number of business-side employees - ESPN Philippines. Related coverage from ESPN Philippines, HoopsHype, OregonLive.com, Yahoo Sports centers on: Trail B…",
     "narrative_zh": "Google News groups this under Sports: Trail Blazers lay off large number of business-side employees - ESPN Philippines.…",
     "source_mix": {
@@ -3368,6 +3920,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Novel CRISPR Technique Aims to Destroy Virus-Infected Cells - Labroots. Related coverage from Labroots, Nature, News-Medical, Technology Networks centers on: Novel CRISPR Technique…",
     "narrative_zh": "Google News groups this under Science: Novel CRISPR Technique Aims to Destroy Virus-Infected Cells - Labroots. Related…",
     "source_mix": {
@@ -3410,6 +3970,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: The World's Longest-Living Vertebrate Can Reach 400 Years Old. Scientists Just Found Two More Clues As To How - IFLScience. Related coverage from ECOticias.com, IFLScience, MSN, Sp…",
     "narrative_zh": "Google News groups this under Science: The World's Longest-Living Vertebrate Can Reach 400 Years Old. Scientists Just F…",
     "source_mix": {
@@ -3452,6 +4020,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Xbox hires game industry analyst Matthew Ball to lead strategy - The Verge. Related coverage from Pure Xbox, The Game Business, The Verge, Windows Central centers on: Xbox hires…",
     "narrative_zh": "Google News groups this under Technology: Xbox hires game industry analyst Matthew Ball to lead strategy - The Verge. R…",
     "source_mix": {
@@ -3494,6 +4070,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Science: Fused Silk Fibers Create Solid Materials Nearly As Tough As Kevlar - Technology Networks. Related coverage from MSN, Nature, Newswise, Technology Networks centers on: Fused Silk Fi…",
     "narrative_zh": "Google News groups this under Science: Fused Silk Fibers Create Solid Materials Nearly As Tough As Kevlar - Technology…",
     "source_mix": {
@@ -3536,6 +4120,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Technology: Plex appeal fades as Lifetime Pass jumps to $750 - The Register. Related coverage from Liliputing, Mashable, Men's Journal, Polygon.com centers on: Plex appeal fades as Lifetime…",
     "narrative_zh": "Google News groups this under Technology: Plex appeal fades as Lifetime Pass jumps to $750 - The Register. Related cove…",
     "source_mix": {
@@ -3578,6 +4170,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Kizilelma UCAV deal to advance Indonesia’s air power, says GlobalData - Airforce Technology. Related coverage from Airforce Technology, MILMAG, TURDEF, The Diplomat – Asia-Pacific Cu…",
     "narrative_zh": "Google News groups this under World: Kizilelma UCAV deal to advance Indonesia’s air power, says GlobalData - Airforce T…",
     "source_mix": {
@@ -3620,6 +4220,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under World: Ronald McDonald House New England Launches Brand Revitalization, Deepening its Mission to Keep Families Close - The Manila Times. Related coverage from Civil Society Media, NEWS10 AB…",
     "narrative_zh": "Google News groups this under World: Ronald McDonald House New England Launches Brand Revitalization, Deepening its Mis…",
     "source_mix": {
@@ -3662,6 +4270,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Local: Grand Lotto winner hits ₱115.36M jackpot May 20 - Inquirer.net. Related coverage from GMA Network, Inquirer.net, MSN, Mabumbe centers on: Grand Lotto winner hits ₱115.36M jackpot May…",
     "narrative_zh": "Google News groups this under Local: Grand Lotto winner hits ₱115.36M jackpot May 20 - Inquirer.net. Related coverage f…",
     "source_mix": {
@@ -3704,6 +4320,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Business: Economic Watch: Private firms power China's innovation drive - Xinhua. Related coverage from Alwihda Info, China Daily - Global Edition, Macau Business, Xinhua centers on: Economi…",
     "narrative_zh": "Google News groups this under Business: Economic Watch: Private firms power China's innovation drive - Xinhua. Related…",
     "source_mix": {
@@ -3746,6 +4370,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Local: New DBM chief vows no repeat of flood control scandal - Inquirer.net. Related coverage from Inquirer.net, Philippine News Agency, Rappler, The Manila Times centers on: New DBM chief…",
     "narrative_zh": "Google News groups this under Local: New DBM chief vows no repeat of flood control scandal - Inquirer.net. Related cove…",
     "source_mix": {
@@ -3788,6 +4420,14 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Google News groups this under Business: ICTSI lands AIIB’s first private Philippine loan for port expansion - Manila Bulletin. Related coverage from ABS-CBN, Inquirer.net, Manila Bulletin, Philippine News Agency centers…",
     "narrative_zh": "Google News groups this under Business: ICTSI lands AIIB’s first private Philippine loan for port expansion - Manila Bu…",
     "source_mix": {
@@ -3850,10 +4490,9 @@ function getDisposition(g) {
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
-  const da = getDisposition(a), db = getDisposition(b);
-  if (order[da] !== order[db]) return order[da] - order[db];
-  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+  const bdltDiff = bdltTotal(b) - bdltTotal(a);
+  if (bdltDiff !== 0) return bdltDiff;
+  return rstuhTotal(b) - rstuhTotal(a);
 });
 
 function renderCards(lang) {
@@ -3864,7 +4503,9 @@ function renderCards(lang) {
   sorted.forEach(g => {
     const disp = getDisposition(g);
     if (disp === "drop" && !showFiltered) return;
-    const total = g.R + g.S + g.T + g.U + g.H;
+    const total = rstuhTotal(g);
+    const bdlt = normalizeBDLT(g);
+    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
@@ -3905,13 +4546,33 @@ function renderCards(lang) {
         <div class="count">${densityCount}</div>
       </div>
 
-      <div class="rstuh">
-        ${["R","S","T","U","H"].map((l,i) => {
-          const s = [g.R,g.S,g.T,g.U,g.H][i];
-          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
-        }).join("")}
-        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
-      </div>
+      <details class="score-panel">
+        <summary>
+          <span class="score-totals">
+            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
+          </span>
+          <span class="score-expand">${t.expand_scores}</span>
+        </summary>
+        <div class="score-section">
+          <div class="score-label">${t.bdlt}</div>
+          <div class="rstuh">
+            ${["B","D","L","T"].map(l => {
+              const s = bdlt[l] || 0;
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+          </div>
+          <div class="score-label">${t.rstuh}</div>
+          <div class="rstuh">
+            ${["R","S","T","U","H"].map((l,i) => {
+              const s = [g.R,g.S,g.T,g.U,g.H][i];
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+          </div>
+        </div>
+      </details>
 
       ${g.bettable && question ? `
       <div class="question-box">
@@ -3933,6 +4594,25 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function rstuhTotal(g) {
+  return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
+}
+
+function normalizeBDLT(g) {
+  const bdlt = g.BDLT || {};
+  return {
+    B: Number.isInteger(bdlt.B) ? bdlt.B : 0,
+    D: Number.isInteger(bdlt.D) ? bdlt.D : 0,
+    L: Number.isInteger(bdlt.L) ? bdlt.L : 0,
+    T: Number.isInteger(bdlt.T) ? bdlt.T : 0,
+  };
+}
+
+function bdltTotal(g) {
+  const bdlt = normalizeBDLT(g);
+  return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
 }
 
 function shouldShowNarrative(g, disp, narr) {
