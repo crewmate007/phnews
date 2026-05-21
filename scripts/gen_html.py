@@ -65,6 +65,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .badge.drop      { background: #1f2937; color: #6b7280; }
 
   .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .source-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
+  .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
+  .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-item .source-name { font-weight: 700; color: #94a3b8; }
+  .source-item.x_grok .source-name { color: #c4b5fd; }
+  .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -146,6 +156,7 @@ const i18n = {
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
+    source_mix: "来源",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -157,6 +168,7 @@ const i18n = {
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
+    source_mix: "Sources",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
@@ -210,6 +222,16 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
     const densityCount = `${g.density} ${t.articles}`;
+    const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
+      `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
+    ).join("");
+    const sourceItems = (g.source_examples || []).slice(0, 4).map(item => {
+      const title = lang === "zh" ? (item.title_zh || item.title_en) : (item.title_en || item.title_zh);
+      return `<div class="source-item ${item.source}">
+        <span class="source-name">${sourceLabel(item.source)}</span>
+        <span class="source-title" title="${escapeAttr(title)}">${escapeHtml(title)}</span>
+      </div>`;
+    }).join("");
 
     const card = document.createElement("div");
     card.className = `card ${disp}`;
@@ -223,6 +245,9 @@ function renderCards(lang) {
       </div>
 
       <p class="narrative">${narr}</p>
+
+      ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
+      ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
 
       <div class="density-bar">
         <div class="label">${t.density}</div>
@@ -258,6 +283,27 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function sourceLabel(source) {
+  return {
+    google_news: "Google News",
+    x_grok: "Grok/X"
+  }[source] || source || "SourceIntel";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
 }
 
 function setLang(lang) {
@@ -306,6 +352,9 @@ def build_group(g: dict) -> dict:
         "H": g.get("H", 0),
         "narrative_en": narr,
         "narrative_zh": g.get("narrative_zh") or narr,
+        "source_mix": g.get("source_mix", {}),
+        "source_labels": g.get("source_labels", []),
+        "source_examples": g.get("source_examples", []),
         "bettable": bool(g.get("bettable")),
         "question": question_en,
         "question_en": question_en,

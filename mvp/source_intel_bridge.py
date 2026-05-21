@@ -169,32 +169,40 @@ def _resolve_report_path(*, region: str, source_intel_dir: Path,
 def _hotspot_to_cluster(index: int, item: dict[str, Any]) -> dict[str, Any]:
     evidence = item.get("evidence_urls", [])
     claims = item.get("claims_en") or item.get("claims_zh") or []
+    source_name = item.get("source", "source_intel")
     sub_articles = []
     for claim_index, claim in enumerate(claims):
         sub_articles.append({
             "title": claim,
-            "source": item.get("source", "source_intel"),
+            "source": source_name,
             "link": evidence[claim_index] if claim_index < len(evidence) else "",
         })
     if not sub_articles:
         sub_articles.append({
             "title": item.get("summary_en") or item.get("title_en", ""),
-            "source": item.get("source", "source_intel"),
+            "source": source_name,
             "link": evidence[0] if evidence else "",
         })
 
-    sources = item.get("entities") or [item.get("source", "source_intel")]
-    source_label = item.get("source", "unknown")
+    sources = item.get("entities") or [source_name]
+    source_label = source_name
     if item.get("source_section"):
         source_label = f"{source_label}:{item['source_section']}"
     return {
+        "id": index,
         "cluster_title": item.get("title_en") or item.get("title_zh") or f"SourceIntel hotspot {index}",
+        "title_zh": item.get("title_zh") or item.get("title_en") or "",
+        "source_name": source_name,
+        "source_lane": _source_lane(source_name),
+        "source_section": item.get("source_section", ""),
         "published": item.get("observed_at", ""),
         "link": evidence[0] if evidence else "",
+        "evidence_urls": evidence,
         "section": f"source_intel:{source_label}",
         "region": item.get("region", ""),
         "sub_articles": sub_articles,
         "source_count": max(len(evidence), len(sub_articles), 1),
+        "article_count": item.get("article_count"),
         "sources": sources,
         "summary": item.get("summary_en") or item.get("summary_zh") or "",
         "summary_zh": item.get("summary_zh") or item.get("summary_en") or "",
@@ -205,6 +213,14 @@ def _hotspot_to_cluster(index: int, item: dict[str, Any]) -> dict[str, Any]:
         "rank_score": item.get("rank_score"),
         "rank_reason": item.get("rank_reason", ""),
     }
+
+
+def _source_lane(source_name: str) -> str:
+    labels = {
+        "google_news": "Google News",
+        "x_grok": "Grok/X",
+    }
+    return labels.get(source_name, source_name or "SourceIntel")
 
 
 def _hotspot_to_article(item: dict[str, Any]) -> dict[str, str]:

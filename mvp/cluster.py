@@ -27,6 +27,19 @@ Below are {n} SourceIntel hotspots collected today for {country_adjective} cover
 Each entry has an ID, source label, source count, title, short summary, claims,
 entities/keywords, and a possible prediction angle.
 
+Source model:
+- Treat Google News and Grok/X as two parallel intelligence lanes.
+- Google News is stronger for publisher-confirmed coverage and cross-source
+  corroboration.
+- Grok/X is stronger for social heat, emerging controversy, rumor velocity,
+  on-the-ground reports, and topics that mainstream news has not yet clustered.
+- Do not treat Grok/X as a weak duplicate of Google News. If a Grok/X entry is
+  a distinct local political, legal, economic, disaster, security, or social
+  controversy topic, keep it visible as its own 1-entry cluster unless it truly
+  describes the same event/outcome as another entry.
+- If a cluster mixes both lanes, make the narrative explain the combined signal:
+  "publisher coverage + social discussion" or similar.
+
 YOUR TASK:
 Create broad coverage clusters before any final market selection.
 
@@ -64,6 +77,7 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
       "narrative": "1 concise sentence describing the common real-world topic",
       "narrative_zh": "中文摘要，1句",
       "topic_type": "politics|legal|economy|security|weather|health|infrastructure|technology|sports|entertainment|science|world|local|other",
+      "source_mix": {{"google_news": 2, "x_grok": 1}},
       "market_hint": "most natural future outcome, or null if mostly digest"
     }}
   ],
@@ -269,6 +283,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     result["clustered_at"] = dt.datetime.now().isoformat()
     result["cluster_pipeline"] = "broad_then_score"
     result["target_group_range"] = [min_groups, max_groups]
+    result["entries"] = [_compact_entry(i, cluster) for i, cluster in enumerate(clusters)]
 
     for group in result.get("groups", []):
         group["clusters"] = [clusters[i] for i in group.get("entry_ids", [])
@@ -315,6 +330,7 @@ def _build_broad_entries(clusters: List[Dict]) -> str:
         fields = [
             f"[{i}]",
             f"source={c.get('section', '')}",
+            f"lane={c.get('source_lane') or c.get('source_name') or ''}",
             f"source_count={c.get('source_count', 0)}",
             f"rank={c.get('rank_score', '')}",
             f"title={_clip(c.get('cluster_title', ''), 170)}",
@@ -446,11 +462,78 @@ def _merge_scored_groups(broad_result: Dict, score_result: Dict,
                 group[key] = scored[key]
         _fill_missing_scores(group)
         group["density"] = len(group.get("entry_ids", []))
+        _attach_source_metadata(group, clusters)
         groups.append(group)
     return {
         "groups": groups,
         "noise": broad_result.get("noise", []),
     }
+
+
+def _attach_source_metadata(group: Dict, clusters: List[Dict]) -> None:
+    entry_ids = [
+        entry_id for entry_id in group.get("entry_ids", [])
+        if isinstance(entry_id, int) and 0 <= entry_id < len(clusters)
+    ]
+    source_mix: Dict[str, int] = {}
+    for entry_id in entry_ids:
+        source = clusters[entry_id].get("source_name") or _source_from_section(
+            clusters[entry_id].get("section", "")
+        )
+        source_mix[source] = source_mix.get(source, 0) + 1
+    group["source_mix"] = {
+        source: source_mix[source]
+        for source in sorted(source_mix, key=lambda name: (name != "google_news", name))
+    }
+    group["source_labels"] = [
+        _source_label(source, count)
+        for source, count in group["source_mix"].items()
+    ]
+
+    ranked = sorted(
+        entry_ids,
+        key=lambda entry_id: (
+            0 if (clusters[entry_id].get("source_name") == "x_grok") else 1,
+            -(clusters[entry_id].get("rank_score") or 0),
+        ),
+    )
+    group["source_examples"] = [
+        _compact_entry(entry_id, clusters[entry_id])
+        for entry_id in ranked[:6]
+    ]
+
+
+def _compact_entry(entry_id: int, cluster: Dict) -> Dict:
+    return {
+        "id": entry_id,
+        "source": cluster.get("source_name") or _source_from_section(cluster.get("section", "")),
+        "source_label": cluster.get("source_lane") or cluster.get("section", ""),
+        "section": cluster.get("source_section") or cluster.get("section", ""),
+        "title_en": cluster.get("cluster_title", ""),
+        "title_zh": cluster.get("title_zh") or cluster.get("cluster_title", ""),
+        "summary_en": _clip(cluster.get("summary", ""), 240),
+        "summary_zh": _clip(cluster.get("summary_zh", ""), 180),
+        "link": cluster.get("link", ""),
+        "rank_score": cluster.get("rank_score"),
+        "social_heat": cluster.get("social_heat", ""),
+        "uncertainty": cluster.get("uncertainty", ""),
+    }
+
+
+def _source_from_section(section: str) -> str:
+    if "x_grok" in section:
+        return "x_grok"
+    if "google_news" in section:
+        return "google_news"
+    return "source_intel"
+
+
+def _source_label(source: str, count: int) -> str:
+    names = {
+        "google_news": "Google News",
+        "x_grok": "Grok/X",
+    }
+    return f"{names.get(source, source)} {count}"
 
 
 def _apply_region_relevance_guard(result: Dict, region: RegionConfig) -> None:
@@ -764,11 +847,14 @@ def save_cluster_result(result: Dict, output_dir: str,
     out_dir.mkdir(parents=True, exist_ok=True)
     today = dt.date.today().isoformat()
     path = out_dir / f"clusters_{today}.json"
+    entries = result.get("entries") or _entries_from_groups(result.get("groups", []))
+    source_counts = _source_counts(entries)
     # Don't serialize the full clusters list (too large); save summary
     summary = {
         "region": result.get("region", region_cfg.slug),
         "clustered_at": result["clustered_at"],
         "total_entries": result["total_entries"],
+        "source_counts": source_counts,
         "cluster_pipeline": result.get("cluster_pipeline", "legacy"),
         "target_group_range": result.get("target_group_range"),
         "noise_count": len(result.get("noise", [])),
@@ -780,4 +866,33 @@ def save_cluster_result(result: Dict, output_dir: str,
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
+
+    inputs_path = out_dir / f"source_intel_inputs_{today}.json"
+    inputs = {
+        "region": result.get("region", region_cfg.slug),
+        "date": today,
+        "total_entries": len(entries),
+        "source_counts": source_counts,
+        "entries": entries,
+    }
+    with open(inputs_path, "w", encoding="utf-8") as f:
+        json.dump(inputs, f, ensure_ascii=False, indent=2)
     return str(path)
+
+
+def _entries_from_groups(groups: List[Dict]) -> List[Dict]:
+    entries_by_id: dict[int, Dict] = {}
+    for group in groups:
+        for cluster in group.get("clusters", []):
+            entry_id = cluster.get("id")
+            if isinstance(entry_id, int):
+                entries_by_id[entry_id] = _compact_entry(entry_id, cluster)
+    return [entries_by_id[key] for key in sorted(entries_by_id)]
+
+
+def _source_counts(entries: List[Dict]) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for entry in entries:
+        source = entry.get("source") or "unknown"
+        counts[source] = counts.get(source, 0) + 1
+    return counts

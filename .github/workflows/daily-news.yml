@@ -94,6 +94,7 @@ jobs:
           git add "mvp/reports/cluster_${TODAY}.html" "mvp/reports/id/cluster_${TODAY}.html"
           git add "mvp/reports/id/clusters_${TODAY}.json"
           git add -f "mvp/reports/clusters_${TODAY}.json"
+          git add -f "mvp/reports/source_intel_inputs_${TODAY}.json" "mvp/reports/id/source_intel_inputs_${TODAY}.json"
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
           else

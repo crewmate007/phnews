@@ -44,6 +44,16 @@
   .badge.drop      { background: #1f2937; color: #6b7280; }
 
   .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .source-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
+  .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
+  .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-item .source-name { font-weight: 700; color: #94a3b8; }
+  .source-item.x_grok .source-name { color: #c4b5fd; }
+  .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -103,11 +113,11 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="val">25</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
-  <div class="stat"><div class="val" style="color:#4ade80">2</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
+  <div class="stat"><div class="val">21</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val" style="color:#4ade80">3</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
   <div class="stat"><div class="val" style="color:#fbbf24">1</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">6</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
-  <div class="stat"><div class="val" style="color:#64748b">28</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+  <div class="stat"><div class="val">4</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">0</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
 <div class="main" id="cards"></div>
@@ -125,6 +135,7 @@ const i18n = {
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
+    source_mix: "来源",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -136,302 +147,385 @@ const i18n = {
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
+    source_mix: "Sources",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
 
 const groups = [
   {
-    "name_en": "Philippine Vice President Impeachment Process",
-    "name_zh": "菲律宾副总统弹劾案进展",
-    "density": 3,
+    "name_en": "Sara Duterte Impeachment Trial",
+    "name_zh": "萨拉·杜特尔特弹劾案",
+    "density": 4,
     "R": 2,
     "S": 2,
     "T": 2,
     "U": 2,
     "H": 2,
-    "narrative_en": "Discussions and procedural updates regarding the Senate impeachment trial of Vice President Sara Duterte.",
-    "narrative_zh": "关于参议院对莎拉·杜特尔特副总统进行弹劾审判的讨论及程序性进展。",
+    "narrative_en": "Impeachment proceedings against VP Sara Duterte highlight deepening political polarization and potential for civil unrest.",
+    "narrative_zh": "针对副总统萨拉·杜特尔特的弹劾审理凸显了菲律宾政坛的深层极化以及潜在的社会动荡风险。",
+    "source_mix": {
+      "google_news": 1,
+      "x_grok": 3
+    },
+    "source_labels": [
+      "Google News 1",
+      "Grok/X 3"
+    ],
+    "source_examples": [
+      {
+        "id": 111,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Political Unrest and Protests Risk",
+        "title_zh": "政治动荡与抗议风险",
+        "summary_en": "Posts highlight warnings of potential unrest from impeachment politics and rising prices, with users expressing fears of chaos under current leadership.",
+        "summary_zh": "帖子强调弹劾政治和物价上涨可能引发动荡的警告，用户担心现任领导下出现混乱。",
+        "link": "https://cebudailynews.inquirer.net/729625/inflation-duterte-impeachment-spark-concerns-over-possible-ph-unrest",
+        "rank_score": 17.4,
+        "social_heat": "high",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 112,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Dynastic Polarization in Philippine Politics",
+        "title_zh": "菲律宾政治中的王朝两极分化",
+        "summary_en": "X users discuss deep societal divides along Marcos-Duterte lines, with AI and media amplifying corruption claims on both sides.",
+        "summary_zh": "X用户讨论Marcos-Duterte阵营的深刻社会分歧，AI与媒体放大双方腐败指控。",
+        "link": "",
+        "rank_score": 17.0,
+        "social_heat": "high",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 113,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Sara Duterte Impeachment Proceedings",
+        "title_zh": "Sara Duterte弹劾程序",
+        "summary_en": "X discussions center on ongoing impeachment trials against Sara Duterte with accusations of drug use, threats, and arrests reshaping alliances. Users debate dynastic power struggles between Marcos and Duterte factions.",
+        "summary_zh": "X讨论聚焦Sara Duterte持续弹劾审判，涉及吸毒指控、威胁和逮捕，重塑联盟。用户辩论Marcos与Duterte派系的王朝权力斗争。",
+        "link": "https://newsinfo.inquirer.net/2231018/rising-prices-impeachment-politics-risk-fueling-ph-unrest",
+        "rank_score": 16.9,
+        "social_heat": "high",
+        "uncertainty": "high"
+      },
+      {
+        "id": 11,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Sara Duterte’s impeachment trial to begin on July 6 - Rappler",
+        "title_zh": "Sara Duterte’s impeachment trial to begin on July 6 - Rappler",
+        "summary_en": "Google News groups this under Top Stories: Sara Duterte’s impeachment trial to begin on July 6 - Rappler. Related coverage from Inquirer.net, Philippine News Agency, Rappler, Senate of the Philippines centers on: Sara Duterte’s impeachment…",
+        "summary_zh": "Google News groups this under Top Stories: Sara Duterte’s impeachment trial to begin on July 6 - Rappler. Related coverage from Inquirer.net, Philippine News Agency, Rappler, Sena…",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPYXNsVmxZRVR3Y2Y5ZGFoRU9JZUFkcWdNbkp3ZmFaVEFoVFh5bGZMV0I0cFRTUFE5MmR5cHJLaVdRZlBIdUtMSHppVTY1Mi0tU1YzRXVlT3JOVlQzZF9QOFBKZ09yckh5c0wxYzQzSXVQMG9oeGVhV1RhTUV4MzdsdmtGbmVqdDA5RGNTXw?oc=5",
+        "rank_score": 25.145,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": true,
-    "question": "Will the Philippine Senate vote to convict Vice President Sara Duterte in her impeachment trial before January 1, 2027?",
-    "question_en": "Will the Philippine Senate vote to convict Vice President Sara Duterte in her impeachment trial before January 1, 2027?",
-    "question_zh": "菲律宾参议院是否会在2027年1月1日前投票通过对副总统莎拉·杜特尔特的弹劾定罪？",
-    "source": "Philippine Senate official website/Senate President announcements",
-    "prob": 25,
-    "prob_reason_zh": "政治门槛极高，且缺乏足够票数支持定罪。",
-    "prob_reason_en": "High political bar; lacks votes to convict."
-  },
-  {
-    "name_en": "Senate Mayhem and Security Inquiry",
-    "name_zh": "参议院骚乱及安全调查",
-    "density": 4,
-    "R": 1,
-    "S": 1,
-    "T": 1,
-    "U": 1,
-    "H": 2,
-    "narrative_en": "Legislative investigations and controversies surrounding the recent shooting and physical altercations at the Philippine Senate.",
-    "narrative_zh": "围绕菲律宾参议院近期发生的枪击及肢体冲突事件展开的调查与争议。",
-    "bettable": true,
-    "question": "Will the Philippine Senate implement new mandatory security or decorum protocols by December 31, 2026?",
-    "question_en": "Will the Philippine Senate implement new mandatory security or decorum protocols by December 31, 2026?",
-    "question_zh": "菲律宾参议院是否会在2026年12月31日前实施新的强制安全或会场礼仪协议？",
-    "source": "Senate of the Philippines official press releases",
-    "prob": 85,
-    "prob_reason_zh": "由于近期暴力事件，加强安保是必然程序。",
-    "prob_reason_en": "Stricter security is inevitable post-chaos."
-  },
-  {
-    "name_en": "ICC Arrest Warrant for Bato dela Rosa",
-    "name_zh": "对巴托·德拉罗萨的国际刑事法院逮捕令",
-    "density": 1,
-    "R": 2,
-    "S": 2,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Legal developments concerning the ICC arrest warrant for Senator Bato dela Rosa after the Supreme Court denied a TRO.",
-    "narrative_zh": "在最高法院否决临时限制令后，关于国际刑事法院对巴托·德拉罗萨参议员发出逮捕令的法律进展。",
-    "bettable": true,
-    "question": "Will an arrest warrant be served to Senator Bato dela Rosa by the end of 2026?",
-    "question_en": "Will an arrest warrant be served to Senator Bato dela Rosa by the end of 2026?",
-    "question_zh": "巴托·德拉罗萨参议员是否会在2026年底前被逮捕？",
-    "source": "Philippine National Police / Supreme Court records",
+    "question": "Will the Philippine Senate convict Vice President Sara Duterte in her impeachment trial before December 31, 2026?",
+    "question_en": "Will the Philippine Senate convict Vice President Sara Duterte in her impeachment trial before December 31, 2026?",
+    "question_zh": "菲律宾参议院是否会在2026年12月31日前弹劾副总统萨拉·杜特尔特？",
+    "source": "Senate of the Philippines",
     "prob": 15,
-    "prob_reason_zh": "政府目前无意配合国际刑事法院执行逮捕。",
-    "prob_reason_en": "Govt unlikely to enforce ICC warrants now."
+    "prob_reason_zh": "弹劾通过需要超级多数，政治阻力极大。",
+    "prob_reason_en": "Conviction requires supermajority; high hurdles."
   },
   {
-    "name_en": "Luzon and Visayas Power Grid Instability",
-    "name_zh": "吕宋与维萨亚斯电力供应不稳定",
-    "density": 1,
+    "name_en": "Senate Shooting Investigation",
+    "name_zh": "参议院枪击案调查",
+    "density": 5,
     "R": 1,
     "S": 1,
     "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Reports of frequent red and yellow energy grid alerts causing rotational blackouts across Luzon and Visayas.",
-    "narrative_zh": "关于能源电网频繁发布红黄预警并导致吕宋和维萨亚斯地区轮流停电的报告。",
-    "bettable": true,
-    "question": "Will there be more than 10 declared red grid alerts in the Luzon-Visayas power grid in Q4 2026?",
-    "question_en": "Will there be more than 10 declared red grid alerts in the Luzon-Visayas power grid in Q4 2026?",
-    "question_zh": "2026年第四季度吕宋-维萨亚斯电网公布的红色预警是否会超过10次？",
-    "source": "Philippine Department of Energy (DOE) official reports",
-    "prob": 65,
-    "prob_reason_zh": "Q4末期电力需求增加，基础设施依然脆弱。",
-    "prob_reason_en": "High Q4 demand; grid infrastructure fragile."
-  },
-  {
-    "name_en": "Marcos Military Loyalty and Neutrality",
-    "name_zh": "马科斯总统谈军队忠诚与中立",
-    "density": 2,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Debate over President Marcos' address to PMA graduates emphasizing constitutional loyalty over political partisan involvement.",
-    "narrative_zh": "围绕马科斯总统在PMA毕业典礼上强调效忠宪法而非政治派系发言所引发的辩论。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Mount Peak Securities Regulation",
-    "name_zh": "Mount Peak证券监管事件",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "The Philippine SEC has officially voided the broker-dealer registration of Mount Peak Securities.",
-    "narrative_zh": "菲律宾证券交易委员会正式撤销了Mount Peak证券的经纪交易商注册资格。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "ICTSI Port Expansion Financing",
-    "name_zh": "ICTSI港口扩建融资",
-    "density": 1,
-    "R": 1,
-    "S": 1,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "ICTSI secured a $300 million loan from the AIIB, marking the bank's first private sector loan in the Philippines.",
-    "narrative_zh": "ICTSI从亚洲基础设施投资银行（AIIB）获得了3亿美元贷款，这是该行在菲律宾的首笔私营部门贷款。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "PUV Service Contracting Termination",
-    "name_zh": "PUV服务合同终止",
-    "density": 1,
-    "R": 1,
-    "S": 1,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "The LTFRB announces the end of service contracting for public utility vehicles starting May 22.",
-    "narrative_zh": "陆路运输特许经营和监管委员会（LTFRB）宣布自5月22日起终止公共交通工具的服务合同。",
-    "bettable": true,
-    "question": "Will the LTFRB approve a base fare hike for public utility vehicles in Metro Manila before the end of 2026?",
-    "question_en": "Will the LTFRB approve a base fare hike for public utility vehicles in Metro Manila before the end of 2026?",
-    "question_zh": "LTFRB是否会在2026年底前批准马尼拉大都会公共交通工具的起步价上调？",
-    "source": "LTFRB official press releases",
-    "prob": 70,
-    "prob_reason_zh": "补贴终止后，运营商必然要求调涨票价。",
-    "prob_reason_en": "End of subsidies forces fare hike demand."
-  },
-  {
-    "name_en": "Cebu Ebola and Disease Preparedness",
-    "name_zh": "宿务埃博拉监测与防疫",
-    "density": 1,
-    "R": 1,
-    "S": 1,
-    "T": 0,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Cebu authorities are intensifying health screenings for international travelers due to a global Ebola outbreak alert.",
-    "narrative_zh": "受全球埃博拉疫情影响，宿务当局正在加强对国际旅客的健康筛查力度。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Dengue Alert in Sri Lanka",
-    "name_zh": "斯里兰卡登革热预警",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Rising dengue cases in Sri Lanka prompt the formation of local parish-based prevention committees.",
-    "narrative_zh": "斯里兰卡登革热病例上升，促使当地成立以教区为基础的防疫委员会。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "AI and Modern Research Integrity",
-    "name_zh": "人工智能与现代科研诚信",
-    "density": 2,
-    "R": 1,
-    "S": 1,
-    "T": 0,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Academic and tech institutions are taking punitive actions against AI-generated content in scientific research.",
-    "narrative_zh": "学术和科技机构正在采取惩罚措施，抵制科研论文中出现的人工智能生成内容。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Mars Exploration Updates",
-    "name_zh": "火星探索最新进展",
-    "density": 3,
-    "R": 2,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "New findings and progress updates from NASA missions including Perseverance and the Psyche spacecraft.",
-    "narrative_zh": "来自NASA“毅力号”火星车及“灵神号”航天器等任务的最新发现与进展。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Philippine Entertainment Trends",
-    "name_zh": "菲律宾娱乐动态",
-    "density": 9,
-    "R": 0,
-    "S": 0,
-    "T": 0,
     "U": 2,
     "H": 2,
-    "narrative_en": "Notable news involving celebrity engagements, film festivals, theater productions, and media relations in the Philippines.",
-    "narrative_zh": "涵盖菲律宾明星订婚、电影节、戏剧演出及媒体关系等一系列娱乐新闻。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "narrative_en": "DOJ and Senate probes continue amid conflicting accounts, internal Senate tensions, and public scrutiny regarding transparency.",
+    "narrative_zh": "司法部与参议院持续开展调查，各方说法不一，内部矛盾加剧，公众对事件透明度保持高度关注。",
+    "source_mix": {
+      "google_news": 5
+    },
+    "source_labels": [
+      "Google News 5"
+    ],
+    "source_examples": [
+      {
+        "id": 8,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "DOJ knows culprit in Senate shooting - The Manila Times",
+        "title_zh": "DOJ knows culprit in Senate shooting - The Manila Times",
+        "summary_en": "Google News groups this under Local: DOJ knows culprit in Senate shooting - The Manila Times. Related coverage from Foreign Policy, Inquirer.net, Manila Bulletin, Philippine News Agency centers on: DOJ knows culprit in Senate shooting; Und…",
+        "summary_zh": "Google News groups this under Local: DOJ knows culprit in Senate shooting - The Manila Times. Related coverage from Foreign Policy, Inquirer.net, Manila Bulletin, Philippine News…",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOX1o4TG9IYkx4SFE2LS1acWM2WTJXQVVtS1F5aWRYa0ttQS04M19BUDNZSWhuTHVVX2w4X09Gck9Zb090cUsxVTVaRmpJbFp4Qm55dzhEZTI1SUNsN2JkOUsxRGpEV0hNQzRlcDFqbE9hU0pNY25BN2dQZjVIUHRnNHRkVWNCY3BnR3BmNjB1ZDBZUdIBlwFBVV95cUxOdjZkenVubGdQUmhvWWRiS0N0dHlfNDd3SmhfZVhWT3Axd3NwOVFnYnV0c1Z1WDRyNDM2UXFkYnhvOWI0R0gtekFTczFrS0N0WU5wV2ptbUVwc0NTN3dsM2E1YkpGdkZRVFV5UEI1NVJVMjNkLXhydDlJSDROWnVrMG5mcWd3V29kTlFKUl9HR000TldGdEsw?oc=5",
+        "rank_score": 26.057,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 19,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "PNP denies manipulating Senate shooting footage - Inquirer.net",
+        "title_zh": "PNP denies manipulating Senate shooting footage - Inquirer.net",
+        "summary_en": "Google News groups this under Local: PNP denies manipulating Senate shooting footage - Inquirer.net. Related coverage from GMA Network, Inquirer.net, Manila Bulletin, Philippine News Agency centers on: PNP denies manipulating Senate shooti…",
+        "summary_zh": "Google News groups this under Local: PNP denies manipulating Senate shooting footage - Inquirer.net. Related coverage from GMA Network, Inquirer.net, Manila Bulletin, Philippine N…",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPLUdUUjhJV3VxVUZGUVBNZWRRSFRYb3NlX1VsckJoTDZKNWZwY3c5VjQ1b3YzNEd2MXJiY3pHUDJrTTVGai0xeW5qa3R1Z092bUNGR0s2Q3FleF9qbGxsR2VhVjhCTGthT3BZZjh3QUtfQ2Z3TlUyaWlZR2k5bzZrdUs4Zl8xOWlNLXJ4MlJR0gGTAUFVX3lxTE5CQlpReFB0VHNCODFEcExpRENIVWh4bE56dWhPRnlRQVRJbWVlLWhKRWJLV3ZiaC1HNm10Y0RPa0JsYWFEbHczbWp4QXYxano2OHE0aDVzSUVaMDNxY2UyT09LWmlqcG16RlNpeXozZmY3bE1LbEtyUTlrb0RZYXQ2TXZSSUd5MnN5ZnJhSzdWaVNSZw?oc=5",
+        "rank_score": 25.062,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 25,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Erwin Tulfo: Minority senators checked on majority after Senate shooting - Inquirer.net",
+        "title_zh": "Erwin Tulfo: Minority senators checked on majority after Senate shooting - Inquirer.net",
+        "summary_en": "Google News groups this under Top Stories: Erwin Tulfo: Minority senators checked on majority after Senate shooting - Inquirer.net. Related coverage from ABS-CBN, Inquirer.net, Manila Bulletin, Philippine News Agency centers on: Erwin Tulf…",
+        "summary_zh": "Google News groups this under Top Stories: Erwin Tulfo: Minority senators checked on majority after Senate shooting - Inquirer.net. Related coverage from ABS-CBN, Inquirer.net, Ma…",
+        "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNZVJhVlo0cnNVMnVJNGRlM3RZZTRwMVgtTDVUQjh1Yzk2NEp5Z0dzRlEwcEdHWV92OG91QW1SbXhZeGlYSFFOQjMtQ2g4TGZzMERibDhseUNIcE0yVGpJeG0xaE9SN29YZ1hNemhXcDRsZ2FEQ3FPNWl2c3JndVF6ZE1lWnhpX3pZek1pblNXN01Kem9kX3hwWDFRaGtyZlF1VUdWa1FERFYyVzRuLUHSAbMBQVVfeXFMT3pUWGJlLVJCYWluZ1N4bWEta0xNbV9aZ05EYkxJRllTZ21CSk54SElhV0tGaDFzdEU0OXFSb0NVV0ZVWUNCRURaLXhLSFFoMEUzelNITTJxTWs1NVRwa2MyNHAzMWd0bGJUM3QzZlZHNUhpeDJhdkFLREZfamhGTmNtWEM2bGc4QUV2eGpXTGs5WTk5RUNlT2lHUzVlcFhfb25mOVpRYVpQOXg0a0lMUlo5ZkE?oc=5",
+        "rank_score": 25.025,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 44,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Pia Cayetano breaks down after Hontiveros’ remark on shooting incident - Inquirer.net",
+        "title_zh": "Pia Cayetano breaks down after Hontiveros’ remark on shooting incident - Inquirer.net",
+        "summary_en": "Google News groups this under Local: Pia Cayetano breaks down after Hontiveros’ remark on shooting incident - Inquirer.net. Related coverage from Daily Tribune, Inquirer.net, MSN, Manila Standard centers on: Pia Cayetano breaks down after…",
+        "summary_zh": "Google News groups this under Local: Pia Cayetano breaks down after Hontiveros’ remark on shooting incident - Inquirer.net. Related coverage from Daily Tribune, Inquirer.net, MSN,…",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNUFY2WktSTW96TWpzRDYzbnozUlZmdC1LbW1ZVF91THNzYlVobTZvNmkzZG4xVmZ3dUxLNmpuUVBkVUlVaG9rLVlkejFXeVNpajczQ1pQNDNJVGlYd0Jsa2NpSk9NeVZCYXJQNkJVU2NrbUxpbEFHcFRCdWd0Z0psbWdqaERZb0I0M1l5MUIyMlFwaVRMRGZzd1BDYlY1ZXJiejNzbWZjUE1XaVHSAbABQVVfeXFMTktselN3NnM5cFVfNDBjNmhUZVhOQlQzMWM3V0lZTkp6WUxVVE9manRxdkQzT2RyLXVPempDMlZHZzRpamxjUm5FM0VYX016SlBiRmZFTldOcDFMTEtQamlTbkFvdG1oLUdlNmJzX1d5VHhKQzMzR2ZCUWphQzhVV3FmUENmZGhqNGktamw4d2lFcHhRdlkwZWNSdVNmeGpWOF9zaE40clZIbHh2MDVIS1c?oc=5",
+        "rank_score": 24.895,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 87,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "WHAT WE KNOW SO FAR: Where is Bato Dela Rosa? - GMA Network",
+        "title_zh": "WHAT WE KNOW SO FAR: Where is Bato Dela Rosa? - GMA Network",
+        "summary_en": "Google News groups this under Local: WHAT WE KNOW SO FAR: Where is Bato Dela Rosa? - GMA Network. Related coverage from Daily Tribune, GMA Network, Inquirer.net, Philippine News Agency centers on: WHAT WE KNOW SO FAR: Where is Bato Dela Ro…",
+        "summary_zh": "Google News groups this under Local: WHAT WE KNOW SO FAR: Where is Bato Dela Rosa? - GMA Network. Related coverage from Daily Tribune, GMA Network, Inquirer.net, Philippine News A…",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOdWswZ2VkS3NILTNFQTV3VTZiVjM0ZEhZOUE2VnlvYXFsUUhIN1J1YTFUU3VGYjFuU1plZFQtRV9Od1pqeGhhM2thTkZKLTFLMXpZMjFwT290TVM2dUg0R1BQRk15cUZ6dHYwa3p4a1AxdVc4UjN4VnlEdFplTl9xNmpOdHRNbklUZ3lDOHRqQzRBWUlxUDlSSm1nSWIyaTc1RXIxOVB4NWNjTWPSAbABQVVfeXFMTmRLUjZMWml6VWJnMXNRQXdKUjZjMkpLUGZFOEo1R0ZwNFp2aEVybkFiNW5YcTRNdE5WbWU5aE1SNXN0MGlZVmEwWE1BbXBFc2tiX2pPVUlWb2lwZmNCX1lkUkd5LXZHNHM5enZkMWFLR2E2dGM5eExqbDVPU3Y4VGp0WEkxZW5PTjFXR3ZvNTdsbENic1c4YWZTOEJTdTRKaXl4cmoyYXBma0IxMk82dGQ?oc=5",
+        "rank_score": 24.399,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": true,
+    "question": "Will the Department of Justice officially file charges against a suspect in the Senate shooting incident before August 31, 2026?",
+    "question_en": "Will the Department of Justice officially file charges against a suspect in the Senate shooting incident before August 31, 2026?",
+    "question_zh": "菲律宾司法部是否会在2026年8月31日前针对参议院枪击案正式起诉嫌疑人？",
+    "source": "Department of Justice (Philippines)",
+    "prob": 40,
+    "prob_reason_zh": "司法调查进度受政治干预影响，难以预料。",
+    "prob_reason_en": "Political interference slows down prosecution."
   },
   {
-    "name_en": "NBA Playoffs 2026",
-    "name_zh": "2026年NBA季后赛",
+    "name_en": "Economic Inflation and Peso Pressure",
+    "name_zh": "通货膨胀与比索压力",
     "density": 5,
     "R": 2,
     "S": 2,
     "T": 2,
     "U": 2,
     "H": 2,
-    "narrative_en": "Ongoing developments in the 2026 NBA playoffs including game updates, injury reports, and international expansion plans.",
-    "narrative_zh": "2026年NBA季后赛的持续动态，包括比赛更新、伤病报告及海外赛事拓展计划。",
+    "narrative_en": "Rising food and fuel prices, combined with currency volatility and political instability, impact consumer confidence and economic outlook.",
+    "narrative_zh": "食品与燃料价格上涨，叠加汇率波动及政局不稳，严重影响了消费者信心与经济前景。",
+    "source_mix": {
+      "google_news": 3,
+      "x_grok": 2
+    },
+    "source_labels": [
+      "Google News 3",
+      "Grok/X 2"
+    ],
+    "source_examples": [
+      {
+        "id": 114,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Peso Depreciation and Economic Pressure",
+        "title_zh": "比索贬值与经济压力",
+        "summary_en": "Users and posts note peso slide combined with political turmoil raising stagflation and debt concerns for the broader economy.",
+        "summary_zh": "用户与帖子指出比索贬值加上政治动荡引发滞胀与债务担忧。",
+        "link": "https://newsinfo.inquirer.net/2231533/debt-peso-slide-and-looming-super-el-nino-put-ph-food-security-at-risk",
+        "rank_score": 15.6,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 115,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Inflation and Consumer Confidence Decline",
+        "title_zh": "通胀与消费者信心下降",
+        "summary_en": "Business groups and economists on X warn of rising prices and political chaos further eroding business and consumer sentiment.",
+        "summary_zh": "X上商业团体与经济学家警告物价上涨和政治混乱进一步侵蚀商业与消费者信心。",
+        "link": "https://www.bworldonline.com/top-stories/2026/05/15/749801/senate-turmoil-seen-weighing-on-confidence-as-stagflation-risks-rise/",
+        "rank_score": 13.4,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 10,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "'Mahapdi na sa bulsa': Service contracting for PUVs ends May 22, LTFRB says - Manila Bulletin",
+        "title_zh": "'Mahapdi na sa bulsa': Service contracting for PUVs ends May 22, LTFRB says - Manila Bulletin",
+        "summary_en": "Google News groups this under Top Stories: 'Mahapdi na sa bulsa': Service contracting for PUVs ends May 22, LTFRB says - Manila Bulletin. Related coverage from ABS-CBN, Inquirer.net, Manila Bulletin, Philippine News Agency centers on: 'Mah…",
+        "summary_zh": "Google News groups this under Top Stories: 'Mahapdi na sa bulsa': Service contracting for PUVs ends May 22, LTFRB says - Manila Bulletin. Related coverage from ABS-CBN, Inquirer.n…",
+        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOQ0djUHpRSmN6VnB1Ul9FMTMwZXFNdmVFTXlpTHlsdHV1Q0dyTkxzUGRuMXNUWjNvM2JIREJVUThEN2psV20wTWN2MmdKaVJCZzhQOVJVTkIxLW9RRlk4cTRrMDBKZjZLUmJneFBZellCNWdRcS1GRVEydUxuMFZoVGFhUnJFb2FzTWl1YVdUbGJxb0lJdjR2RzNSTV80d0VwbHc?oc=5",
+        "rank_score": 25.155,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 42,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "DTI: Prices of some basic goods may rise - Inquirer.net",
+        "title_zh": "DTI: Prices of some basic goods may rise - Inquirer.net",
+        "summary_en": "Google News groups this under Top Stories: DTI: Prices of some basic goods may rise - Inquirer.net. Related coverage from Bombo Radyo Vigan, Inquirer.net, Manila Bulletin, Manila Standard centers on: DTI: Prices of some basic goods may ris…",
+        "summary_zh": "Google News groups this under Top Stories: DTI: Prices of some basic goods may rise - Inquirer.net. Related coverage from Bombo Radyo Vigan, Inquirer.net, Manila Bulletin, Manila…",
+        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQTkQyaFJucG9Jb2FsNi1USFZFUDV5aXd0T1VBN0s5akJWYk1JYnVMSVc2MXhjWFBwZlZyanVyeHdIRU9iVHNDSVRVX01iOHpfUVZiU0NDR2o2TVc1TFFFRVREa1A5cV9JbVNxdUdBbjRpTElKT2Y1RmJWbjVVSlY3WjJXb9IBiAFBVV95cUxOTEppdW13eXZHbmdJeGR5bTFSRGU3QUhCQlhYZGt5T1ptQ29pWUdkOHNGeGszWnc0MG0yYnY0bGViakF5WFc0SGdrMFhuckNkdVFsYlhJbzhtRmxqX0h6NWc3LUcxZFdONXNVMXRCVC1nVDFNbVVVQnBka3Q2d0pRSGdoQWF4eEtU?oc=5",
+        "rank_score": 24.903,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 79,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "PSEi shares retreat on stagflation, oil price jitters - Cebu Daily News",
+        "title_zh": "PSEi shares retreat on stagflation, oil price jitters - Cebu Daily News",
+        "summary_en": "Google News groups this under Top Stories: PSEi shares retreat on stagflation, oil price jitters - Cebu Daily News. Related coverage from ABS-CBN, BusinessWorld - BusinessWorld Online, Cebu Daily News, Inquirer.net centers on: PSEi shares…",
+        "summary_zh": "Google News groups this under Top Stories: PSEi shares retreat on stagflation, oil price jitters - Cebu Daily News. Related coverage from ABS-CBN, BusinessWorld - BusinessWorld On…",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOaldzbHk5OTB5Q2d5dTExZFAwYlBtWXg0NUsxMENUeXVFaHNqa3hKRUI4ZTN0SWVXR1pWOGNhQTFsUDlCSG5DcmRvR0tic0Nqem00YmNhTHpFR3FTR1hlby01Z1hneU9OcjA5V0lEQmlxeGpNZzZ0UmRVUTFKVktUS2lfYzJ5MERsMmpnUmFHb2FGQdIBlwFBVV95cUxQcko1aGNFMzBBdmt6dkJDSElIMnlMR1k5THZ2bFprVC03MUZ3cUZJU3U2Z2FOMHBRU0MtaE1kYnBuQ0l1dFBkTjFrVXQ0T0xGb3RTS0k0UUtzQl9IU0k3V0t5QUI5MEcxSWUxX3ViMmlzYmhpTUNPbFhONGNtWGdFT3lEUVRVNXlYTHRtUzFydkYxemN2TnJz?oc=5",
+        "rank_score": 24.452,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": true,
-    "question": "Which team will win the 2026 NBA Finals?",
-    "question_en": "Which team will win the 2026 NBA Finals?",
-    "question_zh": "哪支球队将赢得2026年NBA总冠军？",
-    "source": "NBA Official Results",
-    "prob": 0,
-    "prob_reason_zh": "该问题为开放式选择，非二元概率预测。",
-    "prob_reason_en": "Open-ended question, not a binary event."
+    "question": "Will the USD/PHP exchange rate close above 58.00 on December 31, 2026?",
+    "question_en": "Will the USD/PHP exchange rate close above 58.00 on December 31, 2026?",
+    "question_zh": "2026年12月31日美元兑菲律宾比索收盘价是否会超过58.00？",
+    "source": "Bangko Sentral ng Pilipinas",
+    "prob": 65,
+    "prob_reason_zh": "全球经济不确定性持续推高美元汇率。",
+    "prob_reason_en": "Global economic headwinds pressure the Peso."
   },
   {
-    "name_en": "Tech Product Launches and AI Integration",
-    "name_zh": "科技产品发布与AI集成",
-    "density": 9,
-    "R": 1,
-    "S": 1,
-    "T": 1,
+    "name_en": "Climate Change and Typhoon Preparedness",
+    "name_zh": "气候变化与台风防御",
+    "density": 2,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "PAGASA warns of severe typhoon season exacerbated by Super El Niño, requiring urgent agricultural mitigation measures.",
+    "narrative_zh": "气象局警告称受超级厄尔尼诺影响，台风季将更为剧烈，迫切需要采取农业缓解措施。",
+    "source_mix": {
+      "x_grok": 2
+    },
+    "source_labels": [
+      "Grok/X 2"
+    ],
+    "source_examples": [
+      {
+        "id": 116,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Super El Niño and Typhoon Season Impact",
+        "title_zh": "超级厄尔尼诺与台风季影响",
+        "summary_en": "PAGASA warnings on X about strong typhoons from June to August due to habagat and Super El Niño combination, with users discussing potential flooding and damage.",
+        "summary_zh": "PAGASA在X上警告6月至8月因季风与超级厄尔尼诺结合将出现强台风，用户讨论潜在洪水与破坏。",
+        "link": "https://tonite.abante.com.ph/pagasa-inalarma-malalakas-na-bagyo-pag-nagsanib-puwersa-ang-habagat-super-el-nino/news/",
+        "rank_score": 12.4,
+        "social_heat": "medium",
+        "uncertainty": "high"
+      },
+      {
+        "id": 118,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Agriculture Drought Mitigation Measures",
+        "title_zh": "农业干旱缓解措施",
+        "summary_en": "Department of Agriculture advisories shared on X urging farmers to adopt strategies against expected El Niño drought from June onward.",
+        "summary_zh": "农业部在X分享建议，敦促农民从6月起采取策略应对预期厄尔尼诺干旱。",
+        "link": "https://radyopilipinas1.com/content",
+        "rank_score": 8.4,
+        "social_heat": "low",
+        "uncertainty": "low"
+      }
+    ],
+    "bettable": true,
+    "question": "Will at least three tropical cyclones enter the Philippine Area of Responsibility (PAR) between June 1, 2026 and August 31, 2026?",
+    "question_en": "Will at least three tropical cyclones enter the Philippine Area of Responsibility (PAR) between June 1, 2026 and August 31, 2026?",
+    "question_zh": "2026年6月1日至8月31日期间，是否有至少三个热带气旋进入菲律宾责任区（PAR）？",
+    "source": "PAGASA",
+    "prob": 85,
+    "prob_reason_zh": "夏季至秋季是菲律宾台风活跃高发期。",
+    "prob_reason_en": "Peak typhoon season in PH makes this likely."
+  },
+  {
+    "name_en": "South China Sea Geopolitics",
+    "name_zh": "南中国海地缘政治",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
     "U": 1,
     "H": 1,
-    "narrative_en": "New consumer electronics launches from brands like Samsung, Honor, Infinix, and BenQ focusing on AI and high-end features.",
-    "narrative_zh": "三星、荣耀、Infinix和明基等品牌发布的注重人工智能与高端特性的消费电子新品。",
+    "narrative_en": "Domestic political instability is perceived to be affecting the Philippines' stance and response in South China Sea territorial disputes.",
+    "narrative_zh": "国内政局不稳被认为正在影响菲律宾在南中国海领土争端中的立场与应对措施。",
+    "source_mix": {
+      "x_grok": 1
+    },
+    "source_labels": [
+      "Grok/X 1"
+    ],
+    "source_examples": [
+      {
+        "id": 117,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "South China Sea Tensions Amid Domestic Politics",
+        "title_zh": "国内政治背景下的南海紧张",
+        "summary_en": "X commentary links Duterte-Marcos feud to potential shifts in South China Sea policy, with concerns over regional stability.",
+        "summary_zh": "X评论将Duterte-Marcos世仇与南海政策潜在转变联系起来，担忧地区稳定。",
+        "link": "",
+        "rank_score": 12.0,
+        "social_heat": "medium",
+        "uncertainty": "high"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -442,16 +536,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Global Geopolitical Tensions",
-    "name_zh": "全球地缘政治紧张局势",
-    "density": 8,
-    "R": 1,
-    "S": 1,
+    "name_en": "Philippine-Japan Diplomatic Relations",
+    "name_zh": "菲日外交关系",
+    "density": 1,
+    "R": 0,
+    "S": 0,
     "T": 0,
-    "U": 2,
-    "H": 2,
-    "narrative_en": "Updates on major geopolitical issues including US-Iran negotiations, Taiwan relations, Israel-Gaza conflicts, and Turkey-Indonesia defense deals.",
-    "narrative_zh": "涵盖美伊谈判、对台关系、以色列-加沙冲突以及土耳其-印尼防务协议等重大地缘政治问题。",
+    "U": 0,
+    "H": 0,
+    "narrative_en": "President Marcos and the First Lady highlight strengthening ties with Japan, specifically in defense exports and cultural friendship.",
+    "narrative_zh": "马科斯总统夫妇强调加强与日本的关系，特别是在防务出口与文化友好领域。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 91,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Marcos, First Lady celebrate Philippines-Japan friendship with 'Japanese sinigang' ahead of state visit - Manila Bulletin",
+        "title_zh": "Marcos, First Lady celebrate Philippines-Japan friendship with 'Japanese sinigang' ahead of state visit - Manila Bulletin",
+        "summary_en": "Google News groups this under Top Stories: Marcos, First Lady celebrate Philippines-Japan friendship with 'Japanese sinigang' ahead of state visit - Manila Bulletin. Related coverage from ABS-CBN, Inquirer.net, Manila Bulletin, Philippine…",
+        "summary_zh": "Google News groups this under Top Stories: Marcos, First Lady celebrate Philippines-Japan friendship with 'Japanese sinigang' ahead of state visit - Manila Bulletin. Related cover…",
+        "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNRHZJcFpYYXJHczB4OHJkcDMxRHk3QXkwaWpGVUhTRW5meTdvNWRJSk9NNlJGeVRLQXpBdUthbko0MEpta3hvbGp6SHppdS10djN4VGZvRVJ1UkFuVW9aMU9mdnBId0pySXVHOFFJRHpLOGF3RWxuMFVnUklycHNiUUE1d2ZsLUdZTUc0anlYVkhKSUpyeFBZMWRHSHpiSVQ3RTNJZVR0a1FHNk5Ja2lfM2Zsd0pIMFczNHBPY0IydGs2dVIxSTBxTQ?oc=5",
+        "rank_score": 24.307,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -462,16 +578,178 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Business and Corporate Expansion",
-    "name_zh": "商业与企业扩张",
+    "name_en": "Public Transportation and Infrastructure",
+    "name_zh": "公共交通与基础设施",
+    "density": 3,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Developments in retail infrastructure and logistics expansions at Clark, alongside support programs for PUV drivers.",
+    "narrative_zh": "零售基础设施更新、克拉克物流基地扩张，以及针对公用事业车辆司机的支持计划。",
+    "source_mix": {
+      "google_news": 3
+    },
+    "source_labels": [
+      "Google News 3"
+    ],
+    "source_examples": [
+      {
+        "id": 2,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Trinoma unveils a refreshed look - Manila Bulletin",
+        "title_zh": "Trinoma unveils a refreshed look - Manila Bulletin",
+        "summary_en": "Google News groups this under Local: Trinoma unveils a refreshed look - Manila Bulletin. Related coverage from ABS-CBN, Bilyonaryo Business News, BusinessWorld - BusinessWorld Online, Manila Bulletin centers on: Trinoma unveils a refreshed…",
+        "summary_zh": "Google News groups this under Local: Trinoma unveils a refreshed look - Manila Bulletin. Related coverage from ABS-CBN, Bilyonaryo Business News, BusinessWorld - BusinessWorld Onl…",
+        "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBtR05BTHZoTTlqZ21Hc0RqYk9fMFdOdzJTckNrbk5WMWx6dllDM3RoUXl6ME1iaU10bWxRTzRvenNjYjV4RFNaTWF1MXZWS0xHcFhoM3pZMk0wdFBfd1hMSy1COERaQUxFVFV0cDRR?oc=5",
+        "rank_score": 27.238,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 83,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Over 30K Lalamove drivers to receive DSWD aid - Philippine News Agency",
+        "title_zh": "Over 30K Lalamove drivers to receive DSWD aid - Philippine News Agency",
+        "summary_en": "Google News groups this under Local: Over 30K Lalamove drivers to receive DSWD aid - Philippine News Agency. Related coverage from ABS-CBN, Bombo Radyo Vigan, InsiderPH, Philippine News Agency centers on: Over 30K Lalamove drivers to recei…",
+        "summary_zh": "Google News groups this under Local: Over 30K Lalamove drivers to receive DSWD aid - Philippine News Agency. Related coverage from ABS-CBN, Bombo Radyo Vigan, InsiderPH, Philippin…",
+        "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFB2QTdSWTRaRXFlQ3Z2TEY4WGYwM0hVVkNYT1NOVElQZjhGVDJlanhoVVRURVBSQUVjT1VreHJvZzdMVjVzY3l3ckdBTGVHdFVf?oc=5",
+        "rank_score": 24.423,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 95,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "FedEx breaks ground on Clark facility expansion project - GMA Network",
+        "title_zh": "FedEx breaks ground on Clark facility expansion project - GMA Network",
+        "summary_en": "Google News groups this under Business: FedEx breaks ground on Clark facility expansion project - GMA Network. Related coverage from BusinessMirror, GMA Network, Inquirer.net, SunStar Publishing Inc. centers on: FedEx breaks ground on Clar…",
+        "summary_zh": "Google News groups this under Business: FedEx breaks ground on Clark facility expansion project - GMA Network. Related coverage from BusinessMirror, GMA Network, Inquirer.net, Sun…",
+        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOdXlEaWVEUHdJQnpndHM3ZDBFOHJ1TUZLTGgyVWJpSlFsc0hKMVFmQWoxeGpnTHhPXzNqMGhTdHg1M1hvQy1VbGZ0eS1vR3lWUXk4c2wtZEEzeUFSOXNraU5ISUh1OE1GOXRkbXV2cVZvN0lqSTZ6ZlFYSzdpdlc0R2RTQUFvd0dHRXlDdjljNGNtU0lEOS0tY2ZGaFpoOFdBNnlSVEdpWHlPY3g1RTJEUFB3alY2TU5a0gG-AUFVX3lxTFA1ZkZkcnRWUU5rNkpMRjJsSDdGM0F6QmZvcEF3SU1hZGd1MDRLNlRQSVY2Vng5UkxGMG1TMzVtU2dHdllOc1BYc21oT3lNcTRqU3hQaWd6M29zQWFCSzlZanQyT1p3bFdqb09KMl9tRnR6NnBSNVZLcHpmSmc0QUtvTDNsREVFN1dCQ3J6cEc5Z25mVlZZdHkwZ3UxRnFjU3NFUG12MGxwTEVURTZGb3o0bFVYTENXWk5zNXE4REE?oc=5",
+        "rank_score": 24.241,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "PBA and Sports Leagues",
+    "name_zh": "PBA与体育赛事",
     "density": 15,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 1,
-    "narrative_en": "Economic reports on Philippine retail, agriculture, transport, and corporate expansion, including lottery wins and import policy changes.",
-    "narrative_zh": "关于菲律宾零售、农业、交通及企业扩张的经济报告，包括彩票大奖及进口政策变动。",
+    "narrative_en": "High volume of coverage regarding local PBA semifinals and international basketball leagues and player movements.",
+    "narrative_zh": "关于PBA半决赛及国际篮球联赛和球员变动的大量报道。",
+    "source_mix": {
+      "google_news": 15
+    },
+    "source_labels": [
+      "Google News 15"
+    ],
+    "source_examples": [
+      {
+        "id": 1,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "NBA Playoffs: Shai Gilgeous-Alexander, Thunder top Spurs to tie series - Inquirer.net",
+        "title_zh": "NBA Playoffs: Shai Gilgeous-Alexander, Thunder top Spurs to tie series - Inquirer.net",
+        "summary_en": "Google News groups this under Local: NBA Playoffs: Shai Gilgeous-Alexander, Thunder top Spurs to tie series - Inquirer.net. Related coverage from ESPN, ESPN Philippines, Inquirer.net, Pounding The Rock centers on: NBA Playoffs: Shai Gilgeo…",
+        "summary_zh": "Google News groups this under Local: NBA Playoffs: Shai Gilgeous-Alexander, Thunder top Spurs to tie series - Inquirer.net. Related coverage from ESPN, ESPN Philippines, Inquirer.…",
+        "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPRXJJUXZsVF9WazdGWk9TVXltSGY1am5JU3pXcENmYUFvalhBamtkUnY3aU1KNXNQTFBpbDdIanNfU0VCZXA4dFIyQ3BtdWNEQzZONVdrcUlZS3VtbjcyczhuRlM2RlNidFI1emhGYVJlYXRNM3lPRDVyMUNWYXFtc2RKRjBlckw1WDhGM2hOazRHbHVkLUF0SDF5clY1cmZ2cXRydGxn0gGrAUFVX3lxTFAwSkhRYi0zWU12RElFSzRYZ3VwaFZ2Y2o4UllLWHNQMjdGc0RVeUZXa1pfYTBZbWJiMzNEczRUMF9fYVlpSnZkXzRCMXhRVTBpMXlZb1JiX05MTFpzazNyLTdoaFljN3F0aW9Sam5YNjluU211elVtdjA5QnU3d192M2JtZVBIVE1qX1VzUWhaNU51aVdPNkxwaV80dU85ZXU2X2tPX2o3Tjg5MA?oc=5",
+        "rank_score": 27.241,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 4,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Cleveland Cavaliers vs. New York Knicks Game 2 Preview, Picks & Odds for Thursday, May 21, 2026 - Lineups",
+        "title_zh": "Cleveland Cavaliers vs. New York Knicks Game 2 Preview, Picks & Odds for Thursday, May 21, 2026 - Lineups",
+        "summary_en": "Google News groups this under Top Stories: Cleveland Cavaliers vs. New York Knicks Game 2 Preview, Picks & Odds for Thursday, May 21, 2026 - Lineups. Related coverage from ABS-CBN, ESPN, Lineups, NBA centers on: Cleveland Cavaliers vs. New…",
+        "summary_zh": "Google News groups this under Top Stories: Cleveland Cavaliers vs. New York Knicks Game 2 Preview, Picks & Odds for Thursday, May 21, 2026 - Lineups. Related coverage from ABS-CBN…",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNN1hwM0tMR3UwM1VTY0JXdkFZX3dwTkJfUWRjbTZzUnVSNk5hcUkwUEV5VzdPZzQ4bllrb3oyU1pVZHJBV3JMN1A2Q00zVWxnMjE1Yjk5aVhEcnNRakNpQU9vMW1YYWwyTHdnNnczUlVxVGpSQi0xYWRvaWVrNnJfQXp4YnlxUkN2aFlvQTFwU19zdDh5NG1oREJFMzJyOXZ0b29ydjVRM1VLV3g4SVl4Mm1mbw?oc=5",
+        "rank_score": 27.065,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 16,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Thunder's Jalen Williams exits Game 2 with hamstring tightness - ESPN Philippines",
+        "title_zh": "Thunder's Jalen Williams exits Game 2 with hamstring tightness - ESPN Philippines",
+        "summary_en": "Google News groups this under Sports: Thunder's Jalen Williams exits Game 2 with hamstring tightness - ESPN Philippines. Related coverage from ESPN Philippines, HoopsHype, NBA, The Oklahoman centers on: Thunder's Jalen Williams exits Game…",
+        "summary_zh": "Google News groups this under Sports: Thunder's Jalen Williams exits Game 2 with hamstring tightness - ESPN Philippines. Related coverage from ESPN Philippines, HoopsHype, NBA, Th…",
+        "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOMTRMZkE4LTZQZzI3T295bER1Tm1uWUVCbzFiaUlaT3J5R0dvbWxrTmFRM05uUDRpdXg4YmN4WDQ2eEN5RGJVSDdmYWF1b2NCTzNCblJEUGVwb09Idi14RFJ2aTd0aHF6YjNWSnZqUzl6MnhQY2RrVXdPV1RNcnp1NzQ4U1gzMjRyMXF6bFNyMGQzTFV1TTU3RFkxUVRSUEdhWE5ieUgwa1lWWW52ZExucTU0YjE?oc=5",
+        "rank_score": 25.089,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 23,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Spurs guard De’Aaron Fox (ankle) out of Game 2 of West Finals - NBA",
+        "title_zh": "Spurs guard De’Aaron Fox (ankle) out of Game 2 of West Finals - NBA",
+        "summary_en": "Google News groups this under Sports: Spurs guard De’Aaron Fox (ankle) out of Game 2 of West Finals - NBA. Related coverage from HoopsHype, NBA, OKC Thunder Wire, San Antonio Express-News centers on: Spurs guard De’Aaron Fox (ankle) out of…",
+        "summary_zh": "Google News groups this under Sports: Spurs guard De’Aaron Fox (ankle) out of Game 2 of West Finals - NBA. Related coverage from HoopsHype, NBA, OKC Thunder Wire, San Antonio Expr…",
+        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaNGJmMXVZVWNRUEx1c0kzVWRvLVNKYklQSWtLY2JOUlNHTFVzSG5LalY4bDJyNkJPNkM5TGFwcTlwelRsaUZRbXVuSjBxaTNCNGE4MEp6Y0NmbW8?oc=5",
+        "rank_score": 25.027,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 33,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Arsenal to reward Mikel Arteta with huge pay rise and put Kroupi among transfer targets - The Guardian",
+        "title_zh": "Arsenal to reward Mikel Arteta with huge pay rise and put Kroupi among transfer targets - The Guardian",
+        "summary_en": "Google News groups this under Sports: Arsenal to reward Mikel Arteta with huge pay rise and put Kroupi among transfer targets - The Guardian. Related coverage from EPL Index, Read Arsenal, The Guardian, The Mirror centers on: Arsenal to re…",
+        "summary_zh": "Google News groups this under Sports: Arsenal to reward Mikel Arteta with huge pay rise and put Kroupi among transfer targets - The Guardian. Related coverage from EPL Index, Read…",
+        "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQNjNiNy1hNElvOGxwN05YR2hFblNGTzVyMmJKU0JfZGtfdW1BbTRqd3c3Rng5X2xJYWFEWS1mN0hmeDk2bm5qd3d2SDhUNTNvc0ZrQ3VHTUlISm81YUt1S2llSnlsa2tHUnZZNFgyRjUtS0dObFdfU1BSVXZCWU1jSVMxc0pjZkNkYkk4c3p2X0NYNjlxeFVOU2RzZjlNcGY0eHNiZzhocTI3a3FQZ29nc0dKdjJyYkN5WjFlSE9Bb0c?oc=5",
+        "rank_score": 24.934,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 35,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Can Jannik Sinner achieve a Career Grand Slam at the French Open 2026? Here’s who already has – complete list - olympics.com",
+        "title_zh": "Can Jannik Sinner achieve a Career Grand Slam at the French Open 2026? Here’s who already has – complete list - olympics.com",
+        "summary_en": "Google News groups this under Sports: Can Jannik Sinner achieve a Career Grand Slam at the French Open 2026? Here’s who already has – complete list - olympics.com. Related coverage from Inquirer.net, Punto de Break, Reuters, Yardbarker cen…",
+        "summary_zh": "Google News groups this under Sports: Can Jannik Sinner achieve a Career Grand Slam at the French Open 2026? Here’s who already has – complete list - olympics.com. Related coverag…",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQVXVOenhWRk1PczEtYzN6M0NYN3JQWGQtRFAxTlozeGdMMkJfc3A2TVlSSWwxUngyeExpLVB3R1hwQjNjazBzdG1YLWhfWC1pR2dJSC1ScFdqWllvR1pPZGN4Y1psVHE4SWtXNGpjdUFnZkJDcWVIUnZPMkNEQTM4aVlvVzlhX29nMm5jWkdB?oc=5",
+        "rank_score": 24.932,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -482,16 +760,334 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Scientific Discoveries and Climate Change",
-    "name_zh": "科学发现与气候变化",
-    "density": 10,
+    "name_en": "Corporate Finance and Regulatory Action",
+    "name_zh": "企业金融与监管行动",
+    "density": 6,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Regulatory crackdowns on securities, corporate loan agreements for expansion, and changes in banking dividend/deposit policies.",
+    "narrative_zh": "针对证券行业的监管打击、企业扩张贷款协议，以及银行红利与存款政策的变动。",
+    "source_mix": {
+      "google_news": 6
+    },
+    "source_labels": [
+      "Google News 6"
+    ],
+    "source_examples": [
+      {
+        "id": 5,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Regulator voids registration of Mount Peak Securities - The Manila Times",
+        "title_zh": "Regulator voids registration of Mount Peak Securities - The Manila Times",
+        "summary_en": "Google News groups this under Local: Regulator voids registration of Mount Peak Securities - The Manila Times. Related coverage from BusinessMirror, Inquirer.net, Philippine Information Agency, Philippine News Agency centers on: Regulator…",
+        "summary_zh": "Google News groups this under Local: Regulator voids registration of Mount Peak Securities - The Manila Times. Related coverage from BusinessMirror, Inquirer.net, Philippine Infor…",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOQ050U3RnemwtUWZxemNaV3RyVy1aTU5Pd2FXVGRKbW95eFlXMV9mWndlTzBOZ0ZETUV2QTVYejdQRGlCWmZhOVkxY2JUTjkyLTZJdFM3S055UmpxN1RsY1RyTEhaRjBYUDhMdVVQMEQ3RGxpTzlsclFRWjV1d3ZyMFNQekxNUnN3cDVMYjJjNnQzNEdhVmRoLWFfT2dWUXdablZGakRHcUw3eGhWTG45NzRLRW51cHhjQ3N2WXc4MNIBxAFBVV95cUxOd0ZPNjBGY05DUXNhOTRRQ3VpakVKeEV0STFSUE5TdnpjWDdvaWVhM0p5N0tzR3Q4a0tyYi16RHFWamMzSHFXNWhBOFFvaThrZnVacUg4WFVvdGxKbG51VEhEaHBsQ19RcHk1b0ZxZkgtdHJoNmEzRnNrRFViQUc2UUVoQlBmd1VZS2J3MW9hdFRzQTA1R3R5UEh1OUtVckVIRENyT0hmN3ZHMFhBNDB1aWtpUEwycGlZLWEybllQU01SZi1f?oc=5",
+        "rank_score": 26.765,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 28,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "The Swatch x AP Collection Sold for $8,000 on StockX Before Release - Yahoo",
+        "title_zh": "The Swatch x AP Collection Sold for $8,000 on StockX Before Release - Yahoo",
+        "summary_en": "Google News groups this under Business: The Swatch x AP Collection Sold for $8,000 on StockX Before Release - Yahoo. Related coverage from CNN, Lifestyle.INQ, The Guardian, The Manila Times centers on: The Swatch x AP Collection Sold for $…",
+        "summary_zh": "Google News groups this under Business: The Swatch x AP Collection Sold for $8,000 on StockX Before Release - Yahoo. Related coverage from CNN, Lifestyle.INQ, The Guardian, The Ma…",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZHR1bnhLSmFVWWNsSmZiWkF2Tzg2U2VSNS1oaTBYV05QaTdXV1o5cHZLdVJRWk9vekltR1RoLXRGQzdwMkxIQllrblpsdlZsRktRN1VQcndNczRWVXR4OVBaZWU3cXg5MHJoTUlVRlFZblhwaTVhVElIVDZiT3hWUzhQbGg4Y01aN3ZmdkF4Y2J0RWJqbnowRDlKQmZuZw?oc=5",
+        "rank_score": 25.007,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 82,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "ICTSI lands AIIB’s first private Philippine loan for port expansion - Manila Bulletin",
+        "title_zh": "ICTSI lands AIIB’s first private Philippine loan for port expansion - Manila Bulletin",
+        "summary_en": "Google News groups this under Business: ICTSI lands AIIB’s first private Philippine loan for port expansion - Manila Bulletin. Related coverage from ABS-CBN, Inquirer.net, Manila Bulletin, Philippine News Agency centers on: ICTSI lands AII…",
+        "summary_zh": "Google News groups this under Business: ICTSI lands AIIB’s first private Philippine loan for port expansion - Manila Bulletin. Related coverage from ABS-CBN, Inquirer.net, Manila…",
+        "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOT3lISDdXNG9qZ2YydEoyemRfX1BqNDBCMWJGbGhfRjRBZFJaN1R5Y2w1c1ZwRVpyajBQWnMyU042a3NPbFRiMndNOE4zbk5rWXRvSFFmcjN1bDJneUVQX1B0TFFHRjR5WVZGWHVzZm5lQXpodm9zemE5QXNKX3lkdE1LcGRzYzJBZGMwdzRtVkRTUlFhTzRncTNwaw?oc=5",
+        "rank_score": 24.426,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 89,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "SM Offices hit 100% occupancy in Clark ecozone complex - GMA Network",
+        "title_zh": "SM Offices hit 100% occupancy in Clark ecozone complex - GMA Network",
+        "summary_en": "Google News groups this under Business: SM Offices hit 100% occupancy in Clark ecozone complex - GMA Network. Related coverage from Daily Tribune, GMA Network, Inquirer.net, Manila Bulletin centers on: SM Offices hit 100% occupancy in Clar…",
+        "summary_zh": "Google News groups this under Business: SM Offices hit 100% occupancy in Clark ecozone complex - GMA Network. Related coverage from Daily Tribune, GMA Network, Inquirer.net, Manil…",
+        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPTmd0YkZVTG12NjJGT29TOXEwQzM3UmU1RmJndkxrbzFqODdZZlpGTHZ1RDMwTHJfcko5VXZDRS01SU8ybnV0eGZ4RFNKZVJUcF9TXzdMU2NmOG1rZl9EYWhXNHJLRi1rTG5tTjRsSTBFZHN2OE9FTEtXa2VDbkllMmJ5RjBhVEJyRWdibzVKWU9jTGpYOXdkLVR1dW3SAaIBQVVfeXFMT0FmSGJSVUdaQXU4QktEaHVaTkt0WmhiZEpNUXNFZTBtckZBenNKX2lxeGlQRkNrNkk4STlsTXpnSnFIb2dIczJFelNJMEI4T1kzaUI5eF9LMkdhbXhTTWFva2xfcDg4Uk5XVkwtOTNpSjFLU3lvcGRKRTR0QndDUGtheTFaNlI2alhtYldDRHhCT3VuR3hxeV83ZXpVTXVud2F3?oc=5",
+        "rank_score": 24.314,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 103,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "FARMERS AND MERCHANTS BANCSHARES, INC. INCREASES ITS CASH DIVIDEND BY 5.9% TO $0.36 PER SHARE - The Manila Times",
+        "title_zh": "FARMERS AND MERCHANTS BANCSHARES, INC. INCREASES ITS CASH DIVIDEND BY 5.9% TO $0.36 PER SHARE - The Manila Times",
+        "summary_en": "Google News groups this under Business: FARMERS AND MERCHANTS BANCSHARES, INC. INCREASES ITS CASH DIVIDEND BY 5.9% TO $0.36 PER SHARE - The Manila Times. Related coverage from Stock Titan, The Manila Times, TipRanks, TradingView centers on…",
+        "summary_zh": "Google News groups this under Business: FARMERS AND MERCHANTS BANCSHARES, INC. INCREASES ITS CASH DIVIDEND BY 5.9% TO $0.36 PER SHARE - The Manila Times. Related coverage from Sto…",
+        "link": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxQZVhHcHI0YkJGeF93V3huUGlQanFRampYak1PY2E0QVBieTZ5cVlTZEsxbGpWN3laT0NCaEhXRTlUTy0xekpaTGgwWWd1TVdHU0UxbXlESVBJOU1hVU9XeGhjdk1taVZaeUZsZWQxT2pwVHJienY5MlVWbHVYdTlaanNxVTlnQ3ZWM1ZNU25LWEVpYjVuYmFCbEtnTFJJdF9ROTBMZm5vMmctTE5RLWFjWFU3eFA3YlQ1TXhoX3FwUjZwdTVZWmM0b2ROeWpIVkhRR2dQbTUzaHFnRkQyeG95Z2tDbGJfVE1ZWW1BYUpCRXJqRnPSAfgBQVVfeXFMTmlTS2pleUZjTFUwMDZpUnV3SVhGWEV3dkN0ckd5WFBPWVpGS2JUZ2F6aGlzSERCcU5SQTR1MXdHQnhsLURLUURQbWZ1SS03SUZuYXJNWmxpV0p4b0t5T3kzOXRtQ3ZQdWhBcW5TWGc0S1VIRTZZVTdfOWJNUVNrSjVJOFA1LVBhUTdBYU1SWjN5Rm9LUHBNSWdwS2d3TDZKZndRUFEyeDNoWVN2RGxrSUQ1TE5qdDZ2Vkl5YjdHdmRldm9NQnl3bHFoQXJBUW96dDB6VWVYbTdRRDdBRVdpV0NRWV9LZk5id0t1cGZaLURuVHE0bk9XMDM?oc=5",
+        "rank_score": 23.875,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 106,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Metrobank raises online deposit returns - Daily Tribune",
+        "title_zh": "Metrobank raises online deposit returns - Daily Tribune",
+        "summary_en": "Google News groups this under Business: Metrobank raises online deposit returns - Daily Tribune. Related coverage from Bilyonaryo Business News, Daily Tribune, InsiderPH, Manila Bulletin centers on: Metrobank raises online deposit returns;…",
+        "summary_zh": "Google News groups this under Business: Metrobank raises online deposit returns - Daily Tribune. Related coverage from Bilyonaryo Business News, Daily Tribune, InsiderPH, Manila B…",
+        "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE00RHBlVmVjSTBtcjcyc09DeTRhTG5ydVliREdFR1FfUWY2UExVSGhPajh0cHc2U3NXNXI0WmlwTGl1OXlUZnJtNFZocVB4NmxKcWFKUW5KUFJQWDlpeGpzNl9GVU1KV1gwZ2gyMF9fdFA2N2E0YjhLd2dTR3FSQdIBiwFBVV95cUxOOTducnpITjBHXzhLMTYxTFFfSkRwQlhiRFJPN1lRbU9fZldNN0lya3lXZXJIeE03VGxRQk02SmxoQ3o3R3l6NmlmaHN5c2Y5TFpxVmtjb2hzbWlzSE9hMF9faS1PY1BIbVAwbjRRY0JiOG5Oc2lFaFpfQWRyQ3VINi1zTmQ1VEsxaWJr?oc=5",
+        "rank_score": 23.397,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Technological Product Launches",
+    "name_zh": "科技产品发布",
+    "density": 12,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "New consumer electronics (smartphones, AI laptops) and corporate hardware updates in the Philippine and global tech markets.",
+    "narrative_zh": "菲律宾及全球科技市场中的新消费电子产品（手机、AI笔记本）与硬件更新。",
+    "source_mix": {
+      "google_news": 12
+    },
+    "source_labels": [
+      "Google News 12"
+    ],
+    "source_examples": [
+      {
+        "id": 18,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "HONOR Philippines’ new smartphone with AI-powered creativity features launched - - PeopleAsia",
+        "title_zh": "HONOR Philippines’ new smartphone with AI-powered creativity features launched - - PeopleAsia",
+        "summary_en": "Google News groups this under Technology: HONOR Philippines’ new smartphone with AI-powered creativity features launched - - PeopleAsia. Related coverage from - PeopleAsia, Android Authority, Huawei Central, ManilaShaker Philippines center…",
+        "summary_zh": "Google News groups this under Technology: HONOR Philippines’ new smartphone with AI-powered creativity features launched - - PeopleAsia. Related coverage from - PeopleAsia, Androi…",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPNWs5Rm5Tc0Utc0hlOGhpdUNMa1JzOTFwd2s0T3NpZU91akZ6eUF1ZVFiNWtWZ3NrSDNlT21ZUEc5Z1FxMDhNczZrSEtrMFh3d1ZsWDVwTzQ5U2toenBibU9WSHROWEtRajYxdklkY1ZyRmVseGNNd191UUtFZFZnN2pFcGRFd2tDQ2t4cHY4UEtKQ1JSMXVsOHNVY3FqYnVhS3hTcg?oc=5",
+        "rank_score": 25.068,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 20,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "AMD’s Gorgon Halo is aimed at AI with 192GB of onboard memory. - The Verge",
+        "title_zh": "AMD’s Gorgon Halo is aimed at AI with 192GB of onboard memory. - The Verge",
+        "summary_en": "Google News groups this under Technology: AMD’s Gorgon Halo is aimed at AI with 192GB of onboard memory. - The Verge. Related coverage from Digital Trends, Engadget, Neowin, The Verge centers on: AMD’s Gorgon Halo is aimed at AI with 192GB…",
+        "summary_zh": "Google News groups this under Technology: AMD’s Gorgon Halo is aimed at AI with 192GB of onboard memory. - The Verge. Related coverage from Digital Trends, Engadget, Neowin, The V…",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPNWR1YTF3VzlOakU5VEhFdDNLODFRcEtNM21jdHBrOUVNb3NhUFZrcjF1aVBjZFZnb2dZcllWdFh4WE9QbXRDalJkSUFVQjNETHNCa3dSelFsTW5iNDhUY3ZNTEt0aTlscUVGV051LUk1R2FPczJ4UjB6ZVRwdUthd0dlZ2kzb1dsdS1JOGFVQjFRUGMzZlFBVEh2eVhHUQ?oc=5",
+        "rank_score": 25.043,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 26,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Google’s AI Glasses Go Fashion-First in Battle With Meta｜Daily News Digest｜2026-05-21｜web only - 天下雜誌",
+        "title_zh": "Google’s AI Glasses Go Fashion-First in Battle With Meta｜Daily News Digest｜2026-05-21｜web only - 天下雜誌",
+        "summary_en": "Google News groups this under Technology: Google’s AI Glasses Go Fashion-First in Battle With Meta｜Daily News Digest｜2026-05-21｜web only - 天下雜誌. Related coverage from ABS-CBN, BBC, blog.google, samsung.com centers on: Google’s AI Glasses G…",
+        "summary_zh": "Google News groups this under Technology: Google’s AI Glasses Go Fashion-First in Battle With Meta｜Daily News Digest｜2026-05-21｜web only - 天下雜誌. Related coverage from ABS-CBN, BBC…",
+        "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE91d0JxX0dFWjYxc1dtUWkzX3hOMEl6TlBhYzJlaUh6cjN6NEVuYjctSXhCNFNaZVF5d3JtTzBQZnVQU3RfWmpyOUNzRFBYMjVQcUJEejN3VXhLSDhhWi1vclNZcmZ0U0E?oc=5",
+        "rank_score": 25.019,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 32,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "realme P4 Series with up to a 10,001mAh Battery Set to Launch in the Philippines - Gadget Pilipinas",
+        "title_zh": "realme P4 Series with up to a 10,001mAh Battery Set to Launch in the Philippines - Gadget Pilipinas",
+        "summary_en": "Google News groups this under Top Stories: realme P4 Series with up to a 10,001mAh Battery Set to Launch in the Philippines - Gadget Pilipinas. Related coverage from Gadget Pilipinas, ManilaShaker Philippines, ProductNation, Technobaboy ce…",
+        "summary_zh": "Google News groups this under Top Stories: realme P4 Series with up to a 10,001mAh Battery Set to Launch in the Philippines - Gadget Pilipinas. Related coverage from Gadget Pilipi…",
+        "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE5kVkN4a2Q1djJWTm1tcDBsNFBSU2VMb1N6QmlkSzE5b2xNUmsybjIwMTVxdVRPNlJmRGJ3dnhWcDR5ZGdURUs2S0JMOE5GNmZkUXd4RlRNMHhFVjItTGRNZ1pKNmVOM0RnQUdSZWc0Y2JjVEtjMVB1dQ?oc=5",
+        "rank_score": 24.949,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 43,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Power Meets Brilliance: The New Infinix NOTE 60 Pro - Wazzup.PH",
+        "title_zh": "Power Meets Brilliance: The New Infinix NOTE 60 Pro - Wazzup.PH",
+        "summary_en": "Google News groups this under Technology: Power Meets Brilliance: The New Infinix NOTE 60 Pro - Wazzup.PH. Related coverage from Business News Nigeria, Creative Bloq, Inquirer Technology, Wazzup.PH centers on: Power Meets Brilliance: The N…",
+        "summary_zh": "Google News groups this under Technology: Power Meets Brilliance: The New Infinix NOTE 60 Pro - Wazzup.PH. Related coverage from Business News Nigeria, Creative Bloq, Inquirer Tec…",
+        "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE91cEFEbnlTOEJpNUxKT3lNRGt2VnlWcFhsemFmbkl6NWRjOXM5UHpxMXFpMWFwdGttdWQwODZoMHoyUzU3NUJjd185aE1QeVlqd3VHbXFDNjV2c0I2bGM1NHVmVDV2a3BfNUVRWl9qSElVQXNRLS1QdWptakxaZw?oc=5",
+        "rank_score": 24.898,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 51,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "BenQ Expands Mac Ecosystem with its Newest MA Series Monitors - Gadget Pilipinas",
+        "title_zh": "BenQ Expands Mac Ecosystem with its Newest MA Series Monitors - Gadget Pilipinas",
+        "summary_en": "Google News groups this under Technology: BenQ Expands Mac Ecosystem with its Newest MA Series Monitors - Gadget Pilipinas. Related coverage from Gadget Pilipinas, ManilaShaker Philippines, TechPorn, The Herald centers on: BenQ Expands Mac…",
+        "summary_zh": "Google News groups this under Technology: BenQ Expands Mac Ecosystem with its Newest MA Series Monitors - Gadget Pilipinas. Related coverage from Gadget Pilipinas, ManilaShaker Ph…",
+        "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1nazVXMzVmMmVOWDdLNlE0Mm1PbXpVU2VkMDRyaTlic05oZE1LcWJSQkp2bHJiUWd0TV9GZWpJN3pCajcyV05HcjBRQVBZTEt1WUJlLVZlSXRBTUllbVlIOFdmV25wTndiMkkyLThzZXh2dnlFRkVNVUVjbw?oc=5",
+        "rank_score": 24.834,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Entertainment and Celebrity News",
+    "name_zh": "娱乐与名人新闻",
+    "density": 15,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 1,
-    "narrative_en": "Reports on climate research, evolutionary biology, innovative materials, and space debris management.",
-    "narrative_zh": "关于气候研究、进化生物学、新型材料及太空垃圾管理的科学报告。",
+    "narrative_en": "Celebrity engagement announcements, group disbandments, concert ticket demand, and cultural project launches.",
+    "narrative_zh": "名人订婚消息、团体解散、演唱会门票需求以及文化项目发布。",
+    "source_mix": {
+      "google_news": 14,
+      "x_grok": 1
+    },
+    "source_labels": [
+      "Google News 14",
+      "Grok/X 1"
+    ],
+    "source_examples": [
+      {
+        "id": 119,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Daniel Caesar Manila Concert Ticket Demand",
+        "title_zh": "Daniel Caesar马尼拉演唱会门票需求",
+        "summary_en": "Local sellers on X posting last-minute availability for Daniel Caesar Son of Spergy tour dates in Manila, indicating ongoing fan interest.",
+        "summary_zh": "X上本地卖家发布Daniel Caesar Son of Spergy马尼拉巡演最后门票，显示粉丝持续兴趣。",
+        "link": "",
+        "rank_score": 8.0,
+        "social_heat": "low",
+        "uncertainty": "low"
+      },
+      {
+        "id": 6,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘Endgame unlocked’ - Inquirer.net",
+        "title_zh": "Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘Endgame unlocked’ - Inquirer.net",
+        "summary_en": "Google News groups this under Local: Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘Endgame unlocked’ - Inquirer.net. Related coverage from Daily Tribune, GMA Network, Inquirer.net, Manila Bulletin centers on: Cristine Reyes, ex-NY…",
+        "summary_zh": "Google News groups this under Local: Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘Endgame unlocked’ - Inquirer.net. Related coverage from Daily Tribune, GMA Network, Inq…",
+        "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPS0gtRjZyX3Jya2NZeFIzYkdoQS1hUGZNVmdmUEpLVTY5WWU1NVR2OU0zSkYzTEpXUHVfWWRlVTVtUDRqVkZ4bnJodjdwX1U0ZWVlTEthQV9id0FWMnNtTTNteFZvdngyRG1GTmgxTW9QeWtzZ1BiaXZwbExUcG1DVVlhRGcxOVpuTFl1MUI2UHk4ZnBINnp0aFJwUEhWb0FyamJJZ1U4Ukk2MGgxY2Mw0gG0AUFVX3lxTE9hZS1DMU5SZzBmVTk2QUdCZGhwbi1QU2s5Rk1rMTFNTVp1Y1lUM0FieVFSR2t1OWVHa0J5eV96VVB4dk5EeVZEbWRsMkpvXzdsTjlfaTNxWWpyVlRwdnZlaldDMjlxdXl4VERndVpLaWNiMzd6cEUwamNHdzZuSXNfWS1EdnNvT1dkVHhjTjVOWlJxOXVkUWdFaDltamhPSFE4enk1Zm9yOElKbVFWb3VpbEdhVg?oc=5",
+        "rank_score": 26.387,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 30,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "Filipino hospitality brands lean into local luxury appeal - InsiderPH",
+        "title_zh": "Filipino hospitality brands lean into local luxury appeal - InsiderPH",
+        "summary_en": "Google News groups this under Entertainment: Filipino hospitality brands lean into local luxury appeal - InsiderPH. Related coverage from Asian Journal News, Bold Outline, InsiderPH, Philstar Life centers on: Filipino hospitality brands le…",
+        "summary_zh": "Google News groups this under Entertainment: Filipino hospitality brands lean into local luxury appeal - InsiderPH. Related coverage from Asian Journal News, Bold Outline, Insider…",
+        "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOamJyWDdfc3FNMG9ROHEtSER6MFZkdG5qTDNKY1lwWlkzNU1uZjNUU01wOUhqSnZyV0xudFpIb3ZHc3V5amlENTJTMmVGbWtrNWp5SG9jbGZGVVF3cl9zR0lybC1lVl9sbWh5cjVvZzZZUVNZRkUtY2VLeTBQSm1MemtKdEJ0QQ?oc=5",
+        "rank_score": 24.97,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 50,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Thanks to MrBeast, the winner of 'Survivor' 50 takes home $2 million — letting the show finally keep up with inflation - Yahoo Finance",
+        "title_zh": "Thanks to MrBeast, the winner of 'Survivor' 50 takes home $2 million — letting the show finally keep up with inflation - Yahoo Finance",
+        "summary_en": "Google News groups this under Top Stories: Thanks to MrBeast, the winner of 'Survivor' 50 takes home $2 million — letting the show finally keep up with inflation - Yahoo Finance. Related coverage from Gold Derby, MassLive, Rolling Stone, T…",
+        "summary_zh": "Google News groups this under Top Stories: Thanks to MrBeast, the winner of 'Survivor' 50 takes home $2 million — letting the show finally keep up with inflation - Yahoo Finance.…",
+        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOOHBSdUFNN2VmNVpLb2tiQXNWWnFhdklfY29yaHYtdWwtZ2FhTGFadzNxLXpsdXdwc2VkQUFoczd3Z3huTzBhaDUyaHl2bWZCckRGVlc2VjNoY2VxZldUVS16emJyOU9TQ3loaUNsYU5iRFMzZnZjdzd6eHAyY0N3UGF5YWg5d0I0X0pVSWFSaVpwWDUwQmc?oc=5",
+        "rank_score": 24.845,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 58,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "Traces of AI embedded quotes found in famous fan-fiction writer’s book - The Indian Express",
+        "title_zh": "Traces of AI embedded quotes found in famous fan-fiction writer’s book - The Indian Express",
+        "summary_en": "Google News groups this under Entertainment: Traces of AI embedded quotes found in famous fan-fiction writer’s book - The Indian Express. Related coverage from Kottke.org, The Daily Beast, The Indian Express, The New York Times centers on:…",
+        "summary_zh": "Google News groups this under Entertainment: Traces of AI embedded quotes found in famous fan-fiction writer’s book - The Indian Express. Related coverage from Kottke.org, The Dai…",
+        "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPQW9XZjJOekwxYzFIOHdqaUtrc3cxM2FxcDB3SDJWSUxSV3JDS0xFOV9vWndUQkwtamJSREtHOWF5dDZRWEp1eHZyVV9veHJmVVNqWm5PTklFSzVfLXFhbXVPVVJWVmFGbEQ2ZUZEZ0hyR2JqSjFqSGRuZXgyMDNRNG5yR2pxejVKUzBZQXlCRFFiZGNGMEVQRnhmTlFjb0NfN0xaem9RMWhia3E2VTZHVGFfTloxWVhvRDhZ0gHCAUFVX3lxTFBDU1J5T2JKYUJzc0tKZ19PN0xkSGV1eGMwdTZiTkl1TXBaUWhRRUloNHd4eTBDbWtVSDY3LVZ1VWxoSjROVDZnVHVPa0lOSlJmUWpqbVVNUjhlSVJWb21Kb1U1enhTallrcG1GUk1xUno5Qi1UOVlEZUcxMk1UTmd4QkN2dnJXYzhoaHJMcEtRdjVfRWRIdWZ0SUhPNnhnWVBOazZWYk14MndUZXR2MFZ2MGx5Z0RDa2t5aFlsVDBJNmdn?oc=5",
+        "rank_score": 24.756,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 77,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "MNL48 to conclude activities this May - ABS-CBN",
+        "title_zh": "MNL48 to conclude activities this May - ABS-CBN",
+        "summary_en": "Google News groups this under Entertainment: MNL48 to conclude activities this May - ABS-CBN. Related coverage from ABS-CBN, GMA Network, Inquirer.net, Manila Standard centers on: MNL48 to conclude activities this May; MNL48 to disband aft…",
+        "summary_zh": "Google News groups this under Entertainment: MNL48 to conclude activities this May - ABS-CBN. Related coverage from ABS-CBN, GMA Network, Inquirer.net, Manila Standard centers on:…",
+        "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNYi1EZ09nQ1YxR2VYWDFxNUdQUUVBUldQX2hGb2xnR3kycEVfTWM4UDNZMUx0Q3kxeFJ0MmlQeXRpSlNMcU1pQmJwSjkyUU96ZjZESXdFNUhrNjRveFZWcG1uQm5HeTkxT0k5dzdMc1U1eFpWUU05SDBBS3dKWG1UalZ4Tjc0bXl6cVlscVZFOHRUc0Jua0pfYzBMRWVzX3lPajJ6T19WSQ?oc=5",
+        "rank_score": 24.494,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -502,16 +1098,332 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Public and Health Education",
-    "name_zh": "公共与健康教育",
-    "density": 9,
+    "name_en": "Global Health and Outbreaks",
+    "name_zh": "全球健康与疾病爆发",
+    "density": 15,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Updates on global infectious disease outbreaks (Ebola, Hantavirus, Dengue), medical research advancements, and health warnings.",
+    "narrative_zh": "全球传染病（埃博拉、汉坦病毒、登革热）的最新动态、医学研究进展及健康警示。",
+    "source_mix": {
+      "google_news": 15
+    },
+    "source_labels": [
+      "Google News 15"
+    ],
+    "source_examples": [
+      {
+        "id": 9,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Australia is battling its worst diphtheria outbreak in decades. But vaccines could curb it - The Conversation",
+        "title_zh": "Australia is battling its worst diphtheria outbreak in decades. But vaccines could curb it - The Conversation",
+        "summary_en": "Google News groups this under Health: Australia is battling its worst diphtheria outbreak in decades. But vaccines could curb it - The Conversation. Related coverage from Australian Broadcasting Corporation, Merimbula News Weekly, The Conv…",
+        "summary_zh": "Google News groups this under Health: Australia is battling its worst diphtheria outbreak in decades. But vaccines could curb it - The Conversation. Related coverage from Australi…",
+        "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPbDdzNjgtTlNqMUJjbmhkXzhJYVNrVjZNdDhzTUd3WFdTeUFKU0JYMTloNHNuSzM2UktBTjFSMkVDZ01IbVdyZGpxcXBZZXJvNV81OEVvUVJCb1JHdFNqX2hLbDJBMkdScTROS3BTd3Q2QmdnLTRsTDk5MkZkODBGRGVqUFpiSGtUYjVQNFNmNGNsWUZtZEVxaXBFODFSXzVlYzZUUmVGVDNWN252cG9QYU4xVk53S0x0N2pfQjJ6NVB1dw?oc=5",
+        "rank_score": 25.156,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 17,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "ChatCPR instructor delivers near-perfect CPR guidance in proof-of-concept study - News-Medical",
+        "title_zh": "ChatCPR instructor delivers near-perfect CPR guidance in proof-of-concept study - News-Medical",
+        "summary_en": "Google News groups this under Health: ChatCPR instructor delivers near-perfect CPR guidance in proof-of-concept study - News-Medical. Related coverage from MedCity News, MedicalResearch.com, News-Medical, TrendWatching centers on: ChatCPR…",
+        "summary_zh": "Google News groups this under Health: ChatCPR instructor delivers near-perfect CPR guidance in proof-of-concept study - News-Medical. Related coverage from MedCity News, MedicalRe…",
+        "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQZllZQW9UM21GTnBpUVhnUElFR0txTHdIcDBGcmlWZEVYbEpmV1hGRkdWOTBLUmNJUmxnV1lFV0ZMamlZdHdadFVRaWd3dEZnYXotNFRpajVUTXpIY3BnVnNYSkZLdzBTNnR3VFUwLXUtaGhpQS01ejBfNGRjak1OX0dNdGpIc1pzNlh3WjR2cDJkUU1HaFdyTzhGdHlxcnRpRGtEQUxwZTl3Q0VWaWxVa0NrdGdydTFQeGQzQnFyeGtXZnFFX2c?oc=5",
+        "rank_score": 25.07,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 31,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Study identifies new marker to find patients with advanced prostate cancer more likely to benefit from combination immunotherapy | Newswise - Newswise",
+        "title_zh": "Study identifies new marker to find patients with advanced prostate cancer more likely to benefit from combination immunotherapy | Newswise - Newswise",
+        "summary_en": "Google News groups this under Health: Study identifies new marker to find patients with advanced prostate cancer more likely to benefit from combination immunotherapy | Newswise - Newswise. Related coverage from Earth.com, News-Medical, Ne…",
+        "summary_zh": "Google News groups this under Health: Study identifies new marker to find patients with advanced prostate cancer more likely to benefit from combination immunotherapy | Newswise -…",
+        "link": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxQMDlDdmNiZGw2cURRbC0yRG9qZ2ZzXzRWQnVZNExCYXZCcE1HN1hBS3ZVbk83YzlCbXhFUkcyMUhpYW9vRmQ2dEFMWk5jTm02VFVUcldOT2NpbmI5MW5qUFlrMTEyeTEyUFRZNGxyRGVPQTczNVZ0RjhtWk9Obl9qWG84bGNERmtydEU1VVE1aTBrMGVBNlM2ZEYxUFQtT3VZUU5NVmUxOUhrTm4taXUxVDFoM3dCb0pxbWdMSFB0eUd2dnVPX3dkbS1uUmJFRUhQODF1OWNYWXBKbUp6czF3bVRIbDF4eW1ibFl5Y2RrVFFHajlI0gH0AUFVX3lxTFAwOUN2Y2JkbDZxRFFsLTJEb2pnZnNfNFZCdVk0TEJhdkJwTUc3WEFLdlVuTzdjOUJteEVSRzIxSGlhb29GZDZ0QUxaTmNObTZUVVRyV05PY2luYjkxbmpQWWsxMTJ5MTJQVFk0bHJEZU9BNzM1VnRGOG1aT05uX2pYbzhsY0RGa3J0RTVVUTVpMGswZUE2UzZkRjFQVC1PdVlRTk1WZTE5SGtObi1pdTFUMWgzd0JvSnFtZ0xIUHR5R3Z2dU9fd2RtLW5SYkVFSFA4MXU5Y1hZcEptSnpzMXdtVEhsMXh5bWJsWXljZGtUUUdqOUg?oc=5",
+        "rank_score": 24.959,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 41,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "China's cleaner air cuts PM2.5, but dementia deaths still rise with aging - Medical Xpress",
+        "title_zh": "China's cleaner air cuts PM2.5, but dementia deaths still rise with aging - Medical Xpress",
+        "summary_en": "Google News groups this under Health: China's cleaner air cuts PM2.5, but dementia deaths still rise with aging - Medical Xpress. Related coverage from Live Science, Medical Xpress, Nature, Technology Networks centers on: China's cleaner a…",
+        "summary_zh": "Google News groups this under Health: China's cleaner air cuts PM2.5, but dementia deaths still rise with aging - Medical Xpress. Related coverage from Live Science, Medical Xpres…",
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOR21OWDhxUERybDljWGdjWjlwX3hZcmI4dGlUNVJ0NzFuYjVfanNSNkFZQzNzbVFzY3FRU1VvTHVzRGdtcWxPendabnlETXZIczB6dm1KQUlhZGpSMDl5MXpSQjR0dVA1YTE0N05TMTh5R19VdjIwX0Y5MVpiTkxJWg?oc=5",
+        "rank_score": 24.914,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 46,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Study Questions Methods Used in Alzheimer's Drug Analysis - MedPage Today",
+        "title_zh": "Study Questions Methods Used in Alzheimer's Drug Analysis - MedPage Today",
+        "summary_en": "Google News groups this under Health: Study Questions Methods Used in Alzheimer's Drug Analysis - MedPage Today. Related coverage from Bioengineer.org, Findlay News, MedPage Today, Neuroscience News centers on: Study Questions Methods Used…",
+        "summary_zh": "Google News groups this under Health: Study Questions Methods Used in Alzheimer's Drug Analysis - MedPage Today. Related coverage from Bioengineer.org, Findlay News, MedPage Today…",
+        "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTFB2enJna2FwTVVRTUdKNmJvck1CS2tieVdqYXRmclFvN3lLUDFPc3lvS3B3REZCUFdBV3RFMFlpVWxzdWhTU0NDQk5QUzlpOEFtZzlUdVkwQS1XUkd5Z0dhMWdqQlNUb3hnaVNLR1Y0NjY?oc=5",
+        "rank_score": 24.888,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 47,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Ebola Crisis Sparks Debate Over Global Health Double Standards - The New York Times",
+        "title_zh": "Ebola Crisis Sparks Debate Over Global Health Double Standards - The New York Times",
+        "summary_en": "Google News groups this under Health: Ebola Crisis Sparks Debate Over Global Health Double Standards - The New York Times. Related coverage from Financial Times, PBS, The Guardian, The New York Times centers on: Ebola Crisis Sparks Debate…",
+        "summary_zh": "Google News groups this under Health: Ebola Crisis Sparks Debate Over Global Health Double Standards - The New York Times. Related coverage from Financial Times, PBS, The Guardian…",
+        "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQWVIwYzJlaVBTQ21XcGwtczRMbk9QcThmV0E3SGF6TDJKTm5QS0J6aFg2Q2JDeXBGYllOcUs5ODgyNGlMb003ZjQwSUtpcFYxbzdPMm92TGhXOG5TcFJxTzVmX09PT21qLUppc1IwZUtYY1JaSkhhVWx0MUxJSVdkLU5YVWV4T1U?oc=5",
+        "rank_score": 24.883,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Space and Science Discoveries",
+    "name_zh": "太空与科学发现",
+    "density": 13,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Discoveries regarding space debris, planetary moons, evolutionary biology, and the impact of AI in research.",
+    "narrative_zh": "关于太空碎片、行星卫星、进化生物学的发现，以及人工智能在科研领域的影响。",
+    "source_mix": {
+      "google_news": 13
+    },
+    "source_labels": [
+      "Google News 13"
+    ],
+    "source_examples": [
+      {
+        "id": 13,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "How an AI system learned to write expert-level scientific code - News-Medical",
+        "title_zh": "How an AI system learned to write expert-level scientific code - News-Medical",
+        "summary_en": "Google News groups this under Technology: How an AI system learned to write expert-level scientific code - News-Medical. Related coverage from Genetic Engineering and Biotechnology News, News-Medical, Research at Google, Tech Xplore center…",
+        "summary_zh": "Google News groups this under Technology: How an AI system learned to write expert-level scientific code - News-Medical. Related coverage from Genetic Engineering and Biotechnolog…",
+        "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPRFA5d3VDcl9PMkxDWG12NTRtNUZTaHdIYnJvT053ejZXVWhwdy1GcEc5QV9xUnRZTVg0d1BSRzEyN1ozTVd1bUFmYWU0TWZodWVOVGl2cFNfQmdWNUdQNEk0QjF4WVpKUEVkWGpzRzhwQTBsb2pDS1hlM1NhUVU0ZFZTcWFsendHdFl2VVRrS1BrYURHNDRtZlM3WFVTSjhBd1dDYXRYbGxIQjdSRkpz?oc=5",
+        "rank_score": 25.134,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 14,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "Perseverance Rover is ready to complete a Martian marathon - Dawn",
+        "title_zh": "Perseverance Rover is ready to complete a Martian marathon - Dawn",
+        "summary_en": "Google News groups this under Science: Perseverance Rover is ready to complete a Martian marathon - Dawn. Related coverage from Dawn, Devdiscourse, IFLScience, NASA (.gov) centers on: Perseverance Rover is ready to complete a Martian marat…",
+        "summary_zh": "Google News groups this under Science: Perseverance Rover is ready to complete a Martian marathon - Dawn. Related coverage from Dawn, Devdiscourse, IFLScience, NASA (.gov) centers…",
+        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNdktfNHQwRXlPb2VlTXpuaUtuSzk2SEEwSkZDclV2UjNoTElwZndXZngxcHNwa3oySWVKa3FHOTFFeWNkdUZGTE9na2x5SUVEV3k0YkZTQmxDNDNPeUVNaVNJNVBvT2Zyc0NoaGxnRTR3SzNCZHpoMi14QzZQOGoxUzJwR0c4UkRzaHczUUNDdU9YM3UzOGQ0?oc=5",
+        "rank_score": 25.123,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 15,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "Antarctic glacier collapses with astonishing speed, setting an ice-loss record that was captured by NASA satellites - Earth.com",
+        "title_zh": "Antarctic glacier collapses with astonishing speed, setting an ice-loss record that was captured by NASA satellites - Earth.com",
+        "summary_en": "Google News groups this under Science: Antarctic glacier collapses with astonishing speed, setting an ice-loss record that was captured by NASA satellites - Earth.com. Related coverage from Earth.com, Oceanographic Magazine, PreventionWeb.…",
+        "summary_zh": "Google News groups this under Science: Antarctic glacier collapses with astonishing speed, setting an ice-loss record that was captured by NASA satellites - Earth.com. Related cov…",
+        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNa0pCRm9YZV9fZmdrTTZhR2VYa0R4Wi1Jb1VkSDFzNHAzaEI2c0FjeGdEbGtRLTRpa05Fa1JlZUlGMjFyQWVfbDNtOGFQeGQwQkVuUVg4NlhVaHN0a0x6aktKYVI1MUd4OExUSVRSQzhiQ2YtSzhKSjg5aktxUlk1aVFpZmZ2VnBzNkxoZ0NVdlY1SE1hbnZTd081UGo2S0djQVBpYzY3dWZybHJMRVNNRkdsRF8xY05i?oc=5",
+        "rank_score": 25.091,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 21,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "Scientists Warn AI Slop Is Wreaking Havoc in the Research World - CNET",
+        "title_zh": "Scientists Warn AI Slop Is Wreaking Havoc in the Research World - CNET",
+        "summary_en": "Google News groups this under Science: Scientists Warn AI Slop Is Wreaking Havoc in the Research World - CNET. Related coverage from CNET, KuCoin, Phys.org, The Conversation centers on: Scientists Warn AI Slop Is Wreaking Havoc in the Rese…",
+        "summary_zh": "Google News groups this under Science: Scientists Warn AI Slop Is Wreaking Havoc in the Research World - CNET. Related coverage from CNET, KuCoin, Phys.org, The Conversation cente…",
+        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5OSjg2UlRQTFNqWGEtX1NvTkVMV3BFeXVPbXJ0SFR2Q09CY0FaZ3BYWVlLY28wX1h6Y1VvUjA3Q0VCYTZqcUV4MmRLUEJJa1I1T3RFYjhTaXdjdWd2Ty1nMHhUamZmakM2d2VfOFNlV0Fuamo2MGhXWk1R?oc=5",
+        "rank_score": 25.04,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 24,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "arXiv Imposes One-Year Ban for AI-Generated Content - 조선일보",
+        "title_zh": "arXiv Imposes One-Year Ban for AI-Generated Content - 조선일보",
+        "summary_en": "Google News groups this under Technology: arXiv Imposes One-Year Ban for AI-Generated Content - 조선일보. Related coverage from 404 Media, FlowingData, Newswise, Semafor centers on: arXiv Imposes One-Year Ban for AI-Generated Content; ArXiv to…",
+        "summary_zh": "Google News groups this under Technology: arXiv Imposes One-Year Ban for AI-Generated Content - 조선일보. Related coverage from 404 Media, FlowingData, Newswise, Semafor centers on: a…",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOeTNnT1V4ckJSTURPc090ZHhOWG1mT2ZGaktMUVpCZWV2QkVGNHRxWDVUUktPdjNJM1RyRm9QM1I4Uk1sMmt5WnBVOF9aQW5VZmJPLXNscHZHaDR6OUxyR3RVZTZBNkhuWkd1VVBydHg2RU8tSVNGMnF2U3J6NkhmOFhTb2tpMU1B?oc=5",
+        "rank_score": 25.027,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 27,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "Neptune’s mysterious moon Nereid may be an original, study shows - Cebu Daily News",
+        "title_zh": "Neptune’s mysterious moon Nereid may be an original, study shows - Cebu Daily News",
+        "summary_en": "Google News groups this under Science: Neptune’s mysterious moon Nereid may be an original, study shows - Cebu Daily News. Related coverage from CNN, Cebu Daily News, Science News, Space centers on: Neptune’s mysterious moon Nereid may be…",
+        "summary_zh": "Google News groups this under Science: Neptune’s mysterious moon Nereid may be an original, study shows - Cebu Daily News. Related coverage from CNN, Cebu Daily News, Science News…",
+        "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNaTJlY1RMWFRlZjdyNDU0b25hXzRwMG5FWmZRNXBfdWY2NDRnM0xENjZWbkh1QUxiZ2NkcnIzYl9vVkVucWRTREhublNOMFlqZmFfWjZkdFZ1YkNtU0pJNzJOV21fX08tdWVnbzlNRjVYeHpKekhHM1k3Z09admh5cmxYbEx0aG5id0VYeGZ3YU1jSlJfNDJndmlPVDlPSzF2cG9HbDdJSdIBrAFBVV95cUxQU2ZnanVPajk0UWpKM2dhN0tkZVJmN2VFZVVHMjVreDdkaURSbV9lSFJOQk4tRkNTQlo5VDc5MjhheHZZQ0xXWTJJZDllRnNNUU96UmU1ZzctalBoZzV2WHduSW1VdHhqSlRRTkoxdGk3b2JKUHI1bS1CYnV4UmNqOWRkT3FBaFdSdlIwUnl3Z25xX3A0dzVoT0tNMGV3TUloYkVkV3lsT2pRYzFs?oc=5",
+        "rank_score": 25.011,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Global Political and Economic Issues",
+    "name_zh": "全球政经议题",
+    "density": 16,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 1,
-    "narrative_en": "Health studies on disease, gut health, cancer screening, and emerging therapy treatments.",
-    "narrative_zh": "涵盖疾病研究、肠道健康、癌症筛查及新兴疗法的健康专题报告。",
+    "narrative_en": "International affairs involving Iran, China, Thailand's visa rules, and regional economic partnerships impacting the Philippines.",
+    "narrative_zh": "涉及伊朗、中国、泰国签证规则及影响菲律宾的区域经济伙伴关系的国际事务。",
+    "source_mix": {
+      "google_news": 16
+    },
+    "source_labels": [
+      "Google News 16"
+    ],
+    "source_examples": [
+      {
+        "id": 0,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Thailand tightens visa rules for tourists, citing crime by foreigners - The Guardian",
+        "title_zh": "Thailand tightens visa rules for tourists, citing crime by foreigners - The Guardian",
+        "summary_en": "Google News groups this under Top Stories: Thailand tightens visa rules for tourists, citing crime by foreigners - The Guardian. Related coverage from Al Jazeera, BBC, Thai Enquirer, The Guardian centers on: Thailand tightens visa rules fo…",
+        "summary_zh": "Google News groups this under Top Stories: Thailand tightens visa rules for tourists, citing crime by foreigners - The Guardian. Related coverage from Al Jazeera, BBC, Thai Enquir…",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPYWhCSEEwWm03am5HSVJOWlEyU0hPRlRTbkhEWWl6NUpFZXdTbzNpMlJRVjNqZl9BWUFxM1d0eWZ4enlQcE8wYmNjSDlrUW4yal82VFQ2UWdPUnZ4SFVMQmw3aUhpMEp5NEprRGM2ckJVbkhUZWN1NUlfOXZEQjI0Wl9CcXlQcGdFUHR0Ug?oc=5",
+        "rank_score": 27.246,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 3,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "US indicts former Cuban President Raúl Castro over 1996 downing of planes - Manila Bulletin",
+        "title_zh": "US indicts former Cuban President Raúl Castro over 1996 downing of planes - Manila Bulletin",
+        "summary_en": "Google News groups this under Top Stories: US indicts former Cuban President Raúl Castro over 1996 downing of planes - Manila Bulletin. Related coverage from AP News, BBC, CNN, Manila Bulletin centers on: US indicts former Cuban President…",
+        "summary_zh": "Google News groups this under Top Stories: US indicts former Cuban President Raúl Castro over 1996 downing of planes - Manila Bulletin. Related coverage from AP News, BBC, CNN, Ma…",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxORjFBbFpXVU1DSVN6UVBCWmEzZTRJNDJ2eXdNXzdFMExYNGFxMnVrQkJQWGx0eE0yWWNCRHVmTG1ab3JFdEw2Q01DVkdZNlhNNm10U3J1dGNrdWVGdnBBRndNYVVxSWZ1dTBXMXZwa3lBOGpMNlc3dnpTZlIxRzlJYnNyUnFMc3pqWE54S0ozb0tCc3pRdXB0eXFzcjN6SEJsazlfUA?oc=5",
+        "rank_score": 27.221,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 12,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Middle East war live: Trump says willing to wait 'a few days' for right answer on Iran peace deal - France 24",
+        "title_zh": "Middle East war live: Trump says willing to wait 'a few days' for right answer on Iran peace deal - France 24",
+        "summary_en": "Google News groups this under World: Middle East war live: Trump says willing to wait 'a few days' for right answer on Iran peace deal - France 24. Related coverage from Al Jazeera, CBS News, CNN, France 24 centers on: Middle East war live…",
+        "summary_zh": "Google News groups this under World: Middle East war live: Trump says willing to wait 'a few days' for right answer on Iran peace deal - France 24. Related coverage from Al Jazeer…",
+        "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNQ0dfYVA5bkR5ZUFGLWxCNWNYSWpObDBhTk9JS0Rub2JlUXN5c290YUNtRGxxSlhFaE9BX2hNUjkxZms2cnhwdjNjTEFqRm5JbHJNZFhxMl9sRjZoOGlpN2xfZ0tZOHl4UjdCejVCWHJEZUUyR1FrdkMxYnlnS3VCdUxtemRvOVpYUi1ZRmNzN21tOV9kUHozSnNmZXFTZHZWT3VmcG5qLXZ4WHpDdHlRY25nSkZpa1h2UndCdWY1SlAtdi16OF94ZHpKaGlVZjAtVzRrRjA4NGZKQXM?oc=5",
+        "rank_score": 25.142,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 22,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Trump claims he will speak to Taiwan’s president, departing from decades-long diplomatic norms - The Guardian",
+        "title_zh": "Trump claims he will speak to Taiwan’s president, departing from decades-long diplomatic norms - The Guardian",
+        "summary_en": "Google News groups this under World: Trump claims he will speak to Taiwan’s president, departing from decades-long diplomatic norms - The Guardian. Related coverage from Anadolu Ajansı, Eurasia Review, Financial Times, Taipei Times centers…",
+        "summary_zh": "Google News groups this under World: Trump claims he will speak to Taiwan’s president, departing from decades-long diplomatic norms - The Guardian. Related coverage from Anadolu A…",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPSU5tTE82eldZSld3Um5YMlBnaDBaWF9ueTZFYUpXbklKUTJCdXdnb2hqQ0QzYTBZS1ZqM2NMYXJ0OGV0cnN3SkFLUG03TjNFYzVGMHl1QTlWaXVaNjA1dmVFeEZwODhBbW1obUhfbERjcmdVcHQ0N09pMk5nTzBpYmJJN2l4cUdQZ1UtNg?oc=5",
+        "rank_score": 25.031,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 29,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists - BBC",
+        "title_zh": "Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists - BBC",
+        "summary_en": "Google News groups this under World: Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists - BBC. Related coverage from AP News, Anadolu Ajansı, BBC, CNN centers on: Far-right Israeli minister condemned for t…",
+        "summary_zh": "Google News groups this under World: Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists - BBC. Related coverage from AP News, Anadolu Ajansı, BBC…",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBsVllORHZldWQ4TzNHaUJlYXVMWnBUek92OXJrMTNmdlIwc1ZJOVpZRzBGX0lFQmxGbEpNWXVDQjhKS0tfTkpHbm1ZX2NOeTl4MGxHSjFSU2Jodw?oc=5",
+        "rank_score": 24.976,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 36,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Putin, Xi signal unity but fail to reach deal on pipeline sought by Russia - The Washington Post",
+        "title_zh": "Putin, Xi signal unity but fail to reach deal on pipeline sought by Russia - The Washington Post",
+        "summary_en": "Google News groups this under World: Putin, Xi signal unity but fail to reach deal on pipeline sought by Russia - The Washington Post. Related coverage from Al Jazeera, BBC, CNN, The Guardian centers on: Putin, Xi signal unity but fail to…",
+        "summary_zh": "Google News groups this under World: Putin, Xi signal unity but fail to reach deal on pipeline sought by Russia - The Washington Post. Related coverage from Al Jazeera, BBC, CNN,…",
+        "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNSEs4V1BwYkhWcFN3eVRSV1VteVNGcThtWUFZSjVwQ00zZHNneW1PUzJLajVwdVZReEI2SWNkWUJlT3I4LWVXelBUcjBKOGthQnBWVUtKaG5yZVB3WS02R0xuQUJLcGtPQWQzWWZWcUlqRUxQQkJ1VHZlbDhGUmx4S1JtUlo3VnpRanhWYlJDTEdkWWFITlczUW5IRDFCT21BbFZQU1dDOA?oc=5",
+        "rank_score": 24.93,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -522,16 +1434,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Thailand tightens visa rules for tourists, citing crime by fore…",
-    "name_zh": "Thailand tightens visa rules fo…",
+    "name_en": "Miscellaneous Lotto Winners",
+    "name_zh": "乐透头奖得主",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Google News groups this under Top Stories: Thailand tightens visa rules for tourists, citing crime by foreigners - The Guardian. Related coverage from Al Jazeera, BBC, The Guardian, The Japan Times centers on: Thailand…",
-    "narrative_zh": "Google News groups this under Top Stories: Thailand tightens visa rules for tourists, citing crime by foreigners - The…",
+    "narrative_en": "Local report of a Grand Lotto winner in Bataan.",
+    "narrative_zh": "关于巴丹省大乐透头奖得主的本地报道。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 74,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Grand Lotto winner hits ₱115.36M jackpot May 20 - Inquirer.net",
+        "title_zh": "Grand Lotto winner hits ₱115.36M jackpot May 20 - Inquirer.net",
+        "summary_en": "Google News groups this under Local: Grand Lotto winner hits ₱115.36M jackpot May 20 - Inquirer.net. Related coverage from GMA Network, Inquirer.net, MSN, Mabumbe centers on: Grand Lotto winner hits ₱115.36M jackpot May 20; Bettor from Mor…",
+        "summary_zh": "Google News groups this under Local: Grand Lotto winner hits ₱115.36M jackpot May 20 - Inquirer.net. Related coverage from GMA Network, Inquirer.net, MSN, Mabumbe centers on: Gran…",
+        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNb0dBU2xMbUE4UzJxZmI3ZHlZSDZFZ3FYd1NET2d0enZLdi1xNUZWQm0xa09HVkdpREl0OGcwbU9wakpvY2M2SEh0a2hHM0F3RE9ZNFlSenRReVFDalNhR00yMUpNVUpUX2ZDb1Itdk1FZzNTWlFvMjdsWnpwSVJEWUkxX241VzFVZkZsSHk1NXl4eFRQcnNxR9IBngFBVV95cUxOZ1hrNzZzb1Z1ZXA0eHJtOEpXYUM5b0MtaVJOd3h2YlotcFBZTlN5MXZyckxBb0MxRmJoakstV0x5aWpad2J2MEI1OThid2FNZU1BSUZWNk5zRlBNM0NlOWdWZm5WSTFtTmNyaTVncGU3c2ZqZk9mdjMwSHljQlVKenRlYlFBVHR6b2pEX3c3U1AzZGtvX3FvaHVMTmlPdw?oc=5",
+        "rank_score": 24.571,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -542,16 +1476,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "China may power Southeast Asia’s nuclear future - ThinkChina",
-    "name_zh": "China may power Southeast Asia’…",
+    "name_en": "Toyota adds more affordable Corolla Altis hybrid variants - Man…",
+    "name_zh": "Toyota adds more affordable Cor…",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Google News groups this under World: China may power Southeast Asia’s nuclear future - ThinkChina. Related coverage from China Daily, IndexBox, South China Morning Post, ThinkChina centers on: China may power Southeast…",
-    "narrative_zh": "Google News groups this under World: China may power Southeast Asia’s nuclear future - ThinkChina. Related coverage fro…",
+    "narrative_en": "Google News groups this under Local: Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin. Related coverage from AutoIndustriya, CarGuide.PH, Manila Bulletin, Top Gear Philippines centers on: Toyo…",
+    "narrative_zh": "Google News groups this under Local: Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin. Relat…",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 7,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin",
+        "title_zh": "Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin",
+        "summary_en": "Google News groups this under Local: Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin. Related coverage from AutoIndustriya, CarGuide.PH, Manila Bulletin, Top Gear Philippines centers on: Toyota adds more afforda…",
+        "summary_zh": "Google News groups this under Local: Toyota adds more affordable Corolla Altis hybrid variants - Manila Bulletin. Related coverage from AutoIndustriya, CarGuide.PH, Manila Bulleti…",
+        "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNRjlRWjhyWVI2XzBtU3ZKNmJOZU84RGlUQzlUMnV0VkJHLVBfMC1maWlmM2dnei1CMVVweEhrWFRiN25SemRWX0JXY3l4MmxOZG4yZ1Yyem8xcFg3UF9HaWZOdThYUGpTX2kzamhtYWZNbFhudVZGeEtmODJ3NFBsbUVhQTBkVEZVT3I0aExVRQ?oc=5",
+        "rank_score": 26.224,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -562,16 +1518,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Twitch tweaks monetization tools to try and help smaller creato…",
-    "name_zh": "Twitch tweaks monetization tool…",
+    "name_en": "Own a piece of District transit history: Former DC Streetcars u…",
+    "name_zh": "Own a piece of District transit…",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Google News groups this under Technology: Twitch tweaks monetization tools to try and help smaller creators build a following - Digiday. Related coverage from Digiday, Net Influencer, The Publish Press, Twitch Blog cent…",
-    "narrative_zh": "Google News groups this under Technology: Twitch tweaks monetization tools to try and help smaller creators build a fol…",
+    "narrative_en": "Google News groups this under Top Stories: Own a piece of District transit history: Former DC Streetcars up on the auction block - WJLA. Related coverage from DC News Now, PoPville, WJLA, Yahoo Finance centers on: Own a…",
+    "narrative_zh": "Google News groups this under Top Stories: Own a piece of District transit history: Former DC Streetcars up on the auct…",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 59,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Own a piece of District transit history: Former DC Streetcars up on the auction block - WJLA",
+        "title_zh": "Own a piece of District transit history: Former DC Streetcars up on the auction block - WJLA",
+        "summary_en": "Google News groups this under Top Stories: Own a piece of District transit history: Former DC Streetcars up on the auction block - WJLA. Related coverage from DC News Now, PoPville, WJLA, Yahoo Finance centers on: Own a piece of District t…",
+        "summary_zh": "Google News groups this under Top Stories: Own a piece of District transit history: Former DC Streetcars up on the auction block - WJLA. Related coverage from DC News Now, PoPvill…",
+        "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNSnk2YnR1N21wVmVoamFaTGstM0ZFZ2FXSW9PNG1iYU44dnA1bDUyLVRSYmhqcFMzd1hMZTlTUUlBZDVwaW5jNW44Rk5LWmpwa0V0Vk1sMFAtM1A3STk3bGprZmdBbXpoV1pxRFJ1NVppWlF2QzJHRDZ5QllQN1pyaERwbGk1QkhFS0tXVzB6WDc1dEJaRHZ2aUZtNktReDR5cVQ1ZFpDTm9Ndmo0RXkxMHJR?oc=5",
+        "rank_score": 24.755,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -582,16 +1560,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Ebola and hantavirus have Africa talking ‘health sovereignty’ a…",
-    "name_zh": "Ebola and hantavirus have Afric…",
+    "name_en": "New DBM chief vows no repeat of flood control scandal - Inquire…",
+    "name_zh": "New DBM chief vows no repeat of…",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Google News groups this under Health: Ebola and hantavirus have Africa talking ‘health sovereignty’ as donor support fades - New York Amsterdam News. Related coverage from Barron's, New York Amsterdam News, The New York…",
-    "narrative_zh": "Google News groups this under Health: Ebola and hantavirus have Africa talking ‘health sovereignty’ as donor support fa…",
+    "narrative_en": "Google News groups this under Local: New DBM chief vows no repeat of flood control scandal - Inquirer.net. Related coverage from Inquirer.net, Philippine News Agency, Rappler, The Manila Times centers on: New DBM chief…",
+    "narrative_zh": "Google News groups this under Local: New DBM chief vows no repeat of flood control scandal - Inquirer.net. Related cove…",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 81,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "New DBM chief vows no repeat of flood control scandal - Inquirer.net",
+        "title_zh": "New DBM chief vows no repeat of flood control scandal - Inquirer.net",
+        "summary_en": "Google News groups this under Local: New DBM chief vows no repeat of flood control scandal - Inquirer.net. Related coverage from Inquirer.net, Philippine News Agency, Rappler, The Manila Times centers on: New DBM chief vows no repeat of fl…",
+        "summary_zh": "Google News groups this under Local: New DBM chief vows no repeat of flood control scandal - Inquirer.net. Related coverage from Inquirer.net, Philippine News Agency, Rappler, The…",
+        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNQ1Y3YklyY21QcmwwM2V2MGx2QTZDbnd2MHdtRVlRb1MwcW8wcElPM1hKcjVMLV9UXzQxeUpidzVfMnFXX3NUZDdnMXYyWGN5SlNlMXNOSGY0NTFPMGRTTmd0RVM1dmtoY2FjLWQ1cDdRaW16d2xZVVdNXzBqMmRPck5Pd1pGWU9HZmRUem1TV1pPS3YwRkHSAZsBQVVfeXFMTkhBcGVLWTJndVUzLWh0eXEtdVgxcE5Cc2Q3VGNINUZXbFdzZ0FtTDQwSVREcEF2dGNGaER1WmhCNFZaU3QwQU5WRDFKUlVCdi00TWYyTFRIZU14a1JqeDd3aFFpM2RyVlRXeEVZRGVsZE1fZXItMGUyWGIzTUl4aVZ0OGRRdF9mMW1uYmtDWThqajJGa0lYcWNJMTA?oc=5",
+        "rank_score": 24.427,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -602,16 +1602,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "How an AI system learned to write expert-level scientific code…",
-    "name_zh": "How an AI system learned to wri…",
+    "name_en": "Marcos appoints Alvarez acting PNOC chief - Inquirer.net",
+    "name_zh": "Marcos appoints Alvarez acting…",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Google News groups this under Technology: How an AI system learned to write expert-level scientific code - News-Medical. Related coverage from Genetic Engineering and Biotechnology News, News-Medical, Research at Google…",
-    "narrative_zh": "Google News groups this under Technology: How an AI system learned to write expert-level scientific code - News-Medical…",
+    "narrative_en": "Google News groups this under Local: Marcos appoints Alvarez acting PNOC chief - Inquirer.net. Related coverage from GMA Network, Inquirer.net, Manila Standard, Philippine News Agency centers on: Marcos appoints Alvarez…",
+    "narrative_zh": "Google News groups this under Local: Marcos appoints Alvarez acting PNOC chief - Inquirer.net. Related coverage from GM…",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 85,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Marcos appoints Alvarez acting PNOC chief - Inquirer.net",
+        "title_zh": "Marcos appoints Alvarez acting PNOC chief - Inquirer.net",
+        "summary_en": "Google News groups this under Local: Marcos appoints Alvarez acting PNOC chief - Inquirer.net. Related coverage from GMA Network, Inquirer.net, Manila Standard, Philippine News Agency centers on: Marcos appoints Alvarez acting PNOC chief;…",
+        "summary_zh": "Google News groups this under Local: Marcos appoints Alvarez acting PNOC chief - Inquirer.net. Related coverage from GMA Network, Inquirer.net, Manila Standard, Philippine News Ag…",
+        "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE05cVpxdy0yYXhqdEhYdVViUUVYb2ZfWHJSWDJYXy1Qb215SHpST2Z0LWtWY0Zsanp5U3FtV1N5ajQ3X0toeWFjODFnR2N4MUx6Z1VVZk1WQlZXNnl4RnlJbFVtdVYxSHpHTEHSAW9BVV95cUxPNlpkQUhOQlE1Smc5U0hGLUpZR0o5WHpHTWhLajFNdkt3cUdvaXBCTTdkTGpWY2hCYkFZSW9uQ1pvMEFFTUxlVC1mWUprZDUxT2lrYy03SXU1NHNZR2oyRWhhTkJGT3cxcEtDV2k2ZG8?oc=5",
+        "rank_score": 24.418,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -622,16 +1644,80 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "‘Survivor’ Crowns Season 50 Winner and Launches ‘Season 51: The…",
-    "name_zh": "‘Survivor’ Crowns Season 50 Win…",
+    "name_en": "Meralco backs safe, responsible rooftop solar installations - D…",
+    "name_zh": "Meralco backs safe, responsible…",
     "density": 1,
-    "R": 2,
-    "S": 2,
-    "T": 2,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Google News groups this under Top Stories: ‘Survivor’ Crowns Season 50 Winner and Launches ‘Season 51: The Open Era’ - Variety. Related coverage from Entertainment Weekly, Gold Derby, TV Insider, Variety centers on: ‘Su…",
-    "narrative_zh": "Google News groups this under Top Stories: ‘Survivor’ Crowns Season 50 Winner and Launches ‘Season 51: The Open Era’ -…",
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Google News groups this under Business: Meralco backs safe, responsible rooftop solar installations - Daily Tribune. Related coverage from Daily Tribune, Khaleej Times, OpinYon News, Philippine News Agency centers on: M…",
+    "narrative_zh": "Google News groups this under Business: Meralco backs safe, responsible rooftop solar installations - Daily Tribune. Re…",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 97,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Meralco backs safe, responsible rooftop solar installations - Daily Tribune",
+        "title_zh": "Meralco backs safe, responsible rooftop solar installations - Daily Tribune",
+        "summary_en": "Google News groups this under Business: Meralco backs safe, responsible rooftop solar installations - Daily Tribune. Related coverage from Daily Tribune, Khaleej Times, OpinYon News, Philippine News Agency centers on: Meralco backs safe, r…",
+        "summary_zh": "Google News groups this under Business: Meralco backs safe, responsible rooftop solar installations - Daily Tribune. Related coverage from Daily Tribune, Khaleej Times, OpinYon Ne…",
+        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOTzFGVU5ucWJBdF9MenExM09TWHdyM1hibHJqZ1NCTlJFNUJ5dFJKM0dZSDlKcTVSdVFnWmxueTFXbVVvOXppanBVd3ZicUpTYzJrdEhrbWQwV2tpc1dWTllpbV9QRUtZLWZMM2Z3cWd0S05MbHhNRUVmR29wSG9kOWZnVDhjWUxDYnpGV3Y0UDFzNzB0UjZj0gGkAUFVX3lxTE5iTW56YlhHOEViQy1zMWNFb1RVS0tvU3VFY05GX1BtLTBCQ1NkZF94VXUwZFV4MDVrZUFfdE1Ca1I1czRhdlp0dGxyNHlwNjdoOTJmYnZWS3Fxd0p5cmM0SHhjVDRpM0ZjM2xGRkc5WDJEQUhUVjdUVXZqTF9Hc0dXMDBHZmpVNDlWU3RhYmxETTRtcDI5UlNXMzdIZzYtMUloOVJ0?oc=5",
+        "rank_score": 24.201,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Mobile Legend Game with Jollibee mascots - Daily Tribune",
+    "name_zh": "Mobile Legend Game with Jollibe…",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Google News groups this under Business: Mobile Legend Game with Jollibee mascots - Daily Tribune. Related coverage from Campaign Brief Asia, Daily Tribune, GadgetMatch, Manila Bulletin centers on: Mobile Legend Game wit…",
+    "narrative_zh": "Google News groups this under Business: Mobile Legend Game with Jollibee mascots - Daily Tribune. Related coverage from…",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 104,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Mobile Legend Game with Jollibee mascots - Daily Tribune",
+        "title_zh": "Mobile Legend Game with Jollibee mascots - Daily Tribune",
+        "summary_en": "Google News groups this under Business: Mobile Legend Game with Jollibee mascots - Daily Tribune. Related coverage from Campaign Brief Asia, Daily Tribune, GadgetMatch, Manila Bulletin centers on: Mobile Legend Game with Jollibee mascots;…",
+        "summary_zh": "Google News groups this under Business: Mobile Legend Game with Jollibee mascots - Daily Tribune. Related coverage from Campaign Brief Asia, Daily Tribune, GadgetMatch, Manila Bul…",
+        "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBSanR1MkVBTjRaQXYycno0RmdtczJXWmRjaGRPT0R4dkE0QjU4VWNvNzMtOXY5UVlJc0NEQmR3QkFWSWJfREpYQXo5dEpuVGhBUUdackpYSUFIYjhUY0hPRjl1QXkwbVBDX2NoWWxUSGQ3ejItTVkycnRiaUhVYW_SAYwBQVVfeXFMTVpKeU5jZWFzck5kXzN5X3QtVE5UMHo5VnFuamVPV2xaNDhzNjVpc1NPdlJCNExoNlFfcGtaQ0ltV25YVzN2cllNQkJTNHFNUmFGYXo2THp4TGlQREV6Vi1sV091cXFtLXpiRGtCOThiVk1DTmNpeGtmMVpDa3RfSndScmFreHpzdGI2d0s?oc=5",
+        "rank_score": 23.645,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -690,6 +1776,16 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
     const densityCount = `${g.density} ${t.articles}`;
+    const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
+      `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
+    ).join("");
+    const sourceItems = (g.source_examples || []).slice(0, 4).map(item => {
+      const title = lang === "zh" ? (item.title_zh || item.title_en) : (item.title_en || item.title_zh);
+      return `<div class="source-item ${item.source}">
+        <span class="source-name">${sourceLabel(item.source)}</span>
+        <span class="source-title" title="${escapeAttr(title)}">${escapeHtml(title)}</span>
+      </div>`;
+    }).join("");
 
     const card = document.createElement("div");
     card.className = `card ${disp}`;
@@ -703,6 +1799,9 @@ function renderCards(lang) {
       </div>
 
       <p class="narrative">${narr}</p>
+
+      ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
+      ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
 
       <div class="density-bar">
         <div class="label">${t.density}</div>
@@ -738,6 +1837,27 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function sourceLabel(source) {
+  return {
+    google_news: "Google News",
+    x_grok: "Grok/X"
+  }[source] || source || "SourceIntel";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
 }
 
 function setLang(lang) {

@@ -27,11 +27,21 @@ def main() -> int:
     args = parser.parse_args()
 
     checks = [
-        ("ph", Path("docs/index.html"), Path(f"mvp/reports/clusters_{args.date}.json")),
-        ("id", Path("docs/id/index.html"), Path(f"mvp/reports/id/clusters_{args.date}.json")),
+        (
+            "ph",
+            Path("docs/index.html"),
+            Path(f"mvp/reports/clusters_{args.date}.json"),
+            Path(f"mvp/reports/source_intel_inputs_{args.date}.json"),
+        ),
+        (
+            "id",
+            Path("docs/id/index.html"),
+            Path(f"mvp/reports/id/clusters_{args.date}.json"),
+            Path(f"mvp/reports/id/source_intel_inputs_{args.date}.json"),
+        ),
     ]
     failed = False
-    for region, html_path, json_path in checks:
+    for region, html_path, json_path, inputs_path in checks:
         if not html_path.exists():
             print(f"[ERR] Missing {html_path}", file=sys.stderr)
             failed = True
@@ -40,12 +50,23 @@ def main() -> int:
             print(f"[ERR] Missing {json_path}", file=sys.stderr)
             failed = True
             continue
+        if not inputs_path.exists():
+            print(f"[ERR] Missing {inputs_path}", file=sys.stderr)
+            failed = True
+            continue
 
         html = html_path.read_text(encoding="utf-8")
         groups = _extract_groups(html)
         summary = json.loads(json_path.read_text(encoding="utf-8"))
+        inputs = json.loads(inputs_path.read_text(encoding="utf-8"))
         if summary.get("total_entries") != 120:
             print(f"[ERR] {region}: expected 120 entries, got {summary.get('total_entries')}", file=sys.stderr)
+            failed = True
+        if inputs.get("source_counts", {}).get("x_grok", 0) == 0:
+            print(f"[ERR] {region}: expected at least one Grok/X input", file=sys.stderr)
+            failed = True
+        if not any(group.get("source_mix", {}).get("x_grok", 0) for group in groups):
+            print(f"[ERR] {region}: page has no visible Grok/X source mix", file=sys.stderr)
             failed = True
         if len(groups) == 0:
             print(f"[ERR] {region}: page contains no groups", file=sys.stderr)

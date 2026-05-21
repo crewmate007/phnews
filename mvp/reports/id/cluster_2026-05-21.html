@@ -44,6 +44,16 @@
   .badge.drop      { background: #1f2937; color: #6b7280; }
 
   .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .source-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
+  .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
+  .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-item .source-name { font-weight: 700; color: #94a3b8; }
+  .source-item.x_grok .source-name { color: #c4b5fd; }
+  .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -103,11 +113,11 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="val">57</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
-  <div class="stat"><div class="val" style="color:#4ade80">7</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
-  <div class="stat"><div class="val" style="color:#fbbf24">5</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">16</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
-  <div class="stat"><div class="val" style="color:#64748b">11</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
+  <div class="stat"><div class="val">40</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
+  <div class="stat"><div class="val" style="color:#4ade80">6</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
+  <div class="stat"><div class="val" style="color:#fbbf24">0</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
+  <div class="stat"><div class="val">7</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#64748b">8</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
 <div class="main" id="cards"></div>
@@ -125,6 +135,7 @@ const i18n = {
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
     no_bet: "不适合作为预测市场话题",
+    source_mix: "来源",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -136,102 +147,413 @@ const i18n = {
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
     no_bet: "Not suitable as a prediction market topic",
+    source_mix: "Sources",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
 
 const groups = [
   {
-    "name_en": "US-Iran-Israel Geopolitical Escalation",
-    "name_zh": "美伊以地缘冲突升级",
-    "density": 6,
-    "R": 2,
-    "S": 2,
-    "T": 2,
-    "U": 2,
-    "H": 2,
-    "narrative_en": "Tensions and potential peace proposals concerning US, Iran, and Israel, including conflicts involving drones and proxies.",
-    "narrative_zh": "关于美国、伊朗和以色列的紧张局势、和平提议及相关代理人冲突。",
-    "bettable": true,
-    "question": "Will the US announce a formal peace treaty between Iran and Israel by Dec 31, 2026?",
-    "question_en": "Will the US announce a formal peace treaty between Iran and Israel by Dec 31, 2026?",
-    "question_zh": "到2026年12月31日，美国是否会宣布伊朗与以色列之间的正式和平条约？",
-    "source": "US Department of State / Official White House Press Release",
-    "prob": 2,
-    "prob_reason_zh": "地缘政治冲突深度对立，和谈几无可能。",
-    "prob_reason_en": "Deep geopolitical rift makes peace unlikely."
+    "name_en": "Aston Villa Europa League Win",
+    "name_zh": "阿斯顿维拉欧联杯夺冠",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Aston Villa won the Europa League, positioning English football for a potential European treble.",
+    "narrative_zh": "阿斯顿维拉夺得欧联杯，助力英格兰足球冲击欧洲赛事三冠王。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 0,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Aston Villa Juara Liga Europa, Inggris Bisa 'Treble' di Kompetisi Eropa - detiksport",
+        "title_zh": "Aston Villa Juara Liga Europa, Inggris Bisa 'Treble' di Kompetisi Eropa - detiksport",
+        "summary_en": "Google News groups this under Top Stories: Aston Villa Juara Liga Europa, Inggris Bisa 'Treble' di Kompetisi Eropa - detiksport. Related coverage from CNN Indonesia, Kompas.com, PontianakPost, Tribrata News centers on: Aston Villa Juara Li…",
+        "summary_zh": "Google News groups this under Top Stories: Aston Villa Juara Liga Europa, Inggris Bisa 'Treble' di Kompetisi Eropa - detiksport. Related coverage from CNN Indonesia, Kompas.com, P…",
+        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQcF9GNjIyNjZKdXVaMElMWW9lTTUtRkhqN0xyT09DZEpSOXVNSUpld1pHck9WNXBpaDZJTlc2Z0kyb3kzblgyX01JZkwtaWd2V1YzRUVqMmJMSTN3aTZQQWpSLVZoMWdrNmhOejJCTDRJeDFSZUdCNXE0Ul91UkJUUE56NHhsbVlhXzY4aW8yRkhRcUV2b1B5M21wT1RMSzcwUGFoQzh0TExlMVJmQlRERlI3amZISko30gG-AUFVX3lxTE1KdXg1VXcwTmZGZjd3WV9wb1NvMEluaDFJc2NXd0kzVThjSzhBenBrWUNiMzlTanVJdTF0OXJyUEJaVzQ3cmpCMDBxMnpGYkFnazBPc3daOVY0eEJzY0k5bXE5WnpXMVc3VE9BWnIwT05vNUNmVERVR3BPM0VYZl8xOUhYSlM2NjI3SEVtb2ZDcjNqNjVwMzFXZUtoWjZTb2stMGRyWDRYNnpYcVVYd0dVdjZLcWdHTUZRMDRrQ1E?oc=5",
+        "rank_score": 27.223,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
   },
   {
-    "name_en": "IHSG Market Volatility",
-    "name_zh": "印尼综合指数(IHSG)市场波动",
-    "density": 4,
+    "name_en": "Iran and Middle East Conflict",
+    "name_zh": "伊朗与中东冲突局势",
+    "density": 8,
     "R": 2,
     "S": 2,
     "T": 2,
     "U": 2,
     "H": 2,
-    "narrative_en": "Significant downward pressure and institutional commentary regarding the performance of the Jakarta Composite Index.",
-    "narrative_zh": "雅加达综合指数表现低迷，面临重大下行压力及相关制度性评论。",
+    "narrative_en": "Escalating tensions between Iran, Israel, and the US impact global energy prices and regional security.",
+    "narrative_zh": "伊朗、以色列和美国之间的紧张局势升级，影响全球能源价格与地区安全。",
+    "source_mix": {
+      "google_news": 8
+    },
+    "source_labels": [
+      "Google News 8"
+    ],
+    "source_examples": [
+      {
+        "id": 1,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Iran Janji Perluas Perang ke Luar Kawasan Jika AS-Israel Luncurkan Agresi Lagi - SINDOnews Internasional",
+        "title_zh": "Iran Janji Perluas Perang ke Luar Kawasan Jika AS-Israel Luncurkan Agresi Lagi - SINDOnews Internasional",
+        "summary_en": "Google News groups this under Top Stories: Iran Janji Perluas Perang ke Luar Kawasan Jika AS-Israel Luncurkan Agresi Lagi - SINDOnews Internasional. Related coverage from ANTARA News Sulteng, CNN Indonesia, Kompas.com, Kompas.tv centers on…",
+        "summary_zh": "Google News groups this under Top Stories: Iran Janji Perluas Perang ke Luar Kawasan Jika AS-Israel Luncurkan Agresi Lagi - SINDOnews Internasional. Related coverage from ANTARA N…",
+        "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxQa2ZuSXNBWmtQNTVMYmNDbG4xampjNDJjOWxTT1l0ZVgxNW1FekJyZG82Qk5CQjZncDBOV1ZvYVhsdGg0bjg3VFJwVTMzeXVhTkMyZHdxdjhaS0liaWZQUVV3bG9kTHZXaFRHcVVuOG9qeGZyYmZPWHBUVDMxNjdYdUM5TjR5WTdWMG9BOU1uZ2twUlZqanNSZlBrTkkzeFJwU3lZT0Y5MEpqT01kbG13c0hSZ2ZyWm1IZUM2UWhwbzRFclhKd2x3Mm00ZGR0TFpvQ3pJRW0xOU7SAd4BQVVfeXFMTzdzNUluMllSN25VNjUwazR2ajZTSFJDMk1mR1RkejZWZlVGZFQ4Vm1nVEY4eGhGZmJ2ZERLeUZ5TVFTaVpqaExZTlF5a0pfSmxNV3dsVkRvbU5EUUM5SjV5U0tOZDNOam5GWXc3Nk5lQ2RBdlB0dTgxYjQtdzlPUlRLYU41bnVHTHBYaUV5dF92bVRzZFQteWYxUzZsaVlIcklGRVpMREM2VDlrNnNQMUZfdlVWVTlpUWlxeUhOWDhfSW1vOWVnRXBZR0ludmEzWXNtb2UyVjlndDkwMEZB?oc=5",
+        "rank_score": 27.148,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 6,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Bukan Iran, Drone dari Negara Teluk Ini Serang Pusat Nuklir Arab - CNBC Indonesia",
+        "title_zh": "Bukan Iran, Drone dari Negara Teluk Ini Serang Pusat Nuklir Arab - CNBC Indonesia",
+        "summary_en": "Google News groups this under Local: Bukan Iran, Drone dari Negara Teluk Ini Serang Pusat Nuklir Arab - CNBC Indonesia. Related coverage from ANTARA News, CNBC Indonesia, Kompas.com, Kompas.tv centers on: Bukan Iran, Drone dari Negara Telu…",
+        "summary_zh": "Google News groups this under Local: Bukan Iran, Drone dari Negara Teluk Ini Serang Pusat Nuklir Arab - CNBC Indonesia. Related coverage from ANTARA News, CNBC Indonesia, Kompas.c…",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOcHRnRXFvZTYzRXRzZzNVME5hQjUxY1hCTlFib0JrNEp3bFU0dklkQ0YtUTRtVlVGRFFPYk1kU2R2S3BIT2p0YkRhRC1iVVpHTll2clF6WlZ1Tk1lSEdYaUJITk1LSDFnU1dWdnpVTlNzM05fcHFlVXUzci1uUDAwZlU5d0FOb3dzUXBoVWp1SzRxQThfZm1BRTRNYW1zWTlDXzFnZW13VmItQ1BLbjdmR0EyWjhSRkxTWExjYjBLQdIBxAFBVV95cUxNa1MtdkJVZmFlNWRxVXBUNVNOY1BURnlYWGpBQTdUaElkN2gwbm01ekg0Q196eW0wRG1lemxEWld5cTZXb2JwSDlqX0dXSmtYZmJvdkNnYWthaFlORUducFFDOEI4NkFwSVpIWlRDWXI3WndfYWtHNzRGWjFpaGNxOGFwdGdlVG9abjI1aWVseGpJd2k0YmdERjE3cHg2OGpIaWo2RC1JMnp1bUFpYlpsWmxmUmZwN2tiZzB2UWF5Vm9qV0tD?oc=5",
+        "rank_score": 26.667,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 21,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Trump Sempat Siapkan Eks Presiden Ahmadinejad Jadi Pemimpin Iran - detikNews",
+        "title_zh": "Trump Sempat Siapkan Eks Presiden Ahmadinejad Jadi Pemimpin Iran - detikNews",
+        "summary_en": "Google News groups this under Local: Trump Sempat Siapkan Eks Presiden Ahmadinejad Jadi Pemimpin Iran - detikNews. Related coverage from Babel Insight, CNN Indonesia, Suara.com, detikNews centers on: Trump Sempat Siapkan Eks Presiden Ahmad…",
+        "summary_zh": "Google News groups this under Local: Trump Sempat Siapkan Eks Presiden Ahmadinejad Jadi Pemimpin Iran - detikNews. Related coverage from Babel Insight, CNN Indonesia, Suara.com, d…",
+        "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPZ3k4NDJfNTRvZEtJcndqWVZVck9VYnFMV1BRaWlkU0ZDSWZ3WjNaYWlzakNrU21ERUZsY1F6TW5rZ1pCQ1NRWmtfOE92OHR5bzBEUUxmQXIySWVVWDZzNGJXZ3UtdXdFdWk4aGVlcEVDbEhDSG42MWF2aERzWkh4TE1vaGcxdHlxbUlUTFFNWVduMmRQXzBlZ3A3bzN5R0xLb1pGbjQzU1N6X1ozRW9lZdIBtgFBVV95cUxQWUxaT3hIbm12Q0Y5TzZweGtqYXNLNFhuczYtdHhNNGhIX1pyVHpldHJTWld5OGlvZU53NFM2ai1uckM2b2Z0ZHluTnltUjdwaXUwU1pFUmt6d3dNdmdvSER2RzdPZ0lfa3ZoUzNZbmxmRkluSVA0VzVGWnhWZkVRdm80WEdBaWNXbnkyWVpCRklHNUZPcktNSnpoRFVvQmJwMDdITENvTkZqZmxXTnplU0QwdnRCdw?oc=5",
+        "rank_score": 25.691,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 39,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Harga Minyak Anjlok Usai Trump Klaim Negosiasi Iran Masuk Tahap Akhir - detikFinance",
+        "title_zh": "Harga Minyak Anjlok Usai Trump Klaim Negosiasi Iran Masuk Tahap Akhir - detikFinance",
+        "summary_en": "Google News groups this under Business: Harga Minyak Anjlok Usai Trump Klaim Negosiasi Iran Masuk Tahap Akhir - detikFinance. Related coverage from Beranda | BNI, CNBC Indonesia, CNN Indonesia, Suara.com centers on: Harga Minyak Anjlok Usa…",
+        "summary_zh": "Google News groups this under Business: Harga Minyak Anjlok Usai Trump Klaim Negosiasi Iran Masuk Tahap Akhir - detikFinance. Related coverage from Beranda | BNI, CNBC Indonesia,…",
+        "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPeFFuaUFueG5Zalo1TWZPWno0bUFWRWdQTlRfSWZUZnZrR0lJZWdpLWxyNEpNM0IzbW5PNm02SF81Wk1IY2VwaDdBcEI1YV83d2l2WV9yOTVXdFdLcXJtN0owOVkwV1ItclIwRi1IdUhyTDFnRzBKQ1RUdXBRNjRFQXRUWUtTcEdvZEFObkhWY2I3T1lNX1FXN2E4VkliZmRWZGZIZlNrTkdNZVJLZENCc1VR0gG3AUFVX3lxTE9HSTZmbHhrc25qd08yOU9sOHhsMmpKbkNwcGx1RzJwRTN2d2U4LUJ5WmczZFBXdmttUmhNZDF4MGhzakc2TmZWc3N6ZzdmQW1UbW5oSjJDcGxzM1RNbmtOMnRfYWplY2t5ZHk4dDVzTVVyUlBTVjhSMGx4d0tGSkpjUG5SOGd0bjVjNmZTQWlLdWRudjhsWnk4YXFEVjdXdHJnTzQwRXJEZ3lvREdZbzZwZzhiNVpzYw?oc=5",
+        "rank_score": 25.06,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 43,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Breaking News: Trump Umumkan Update Baru Proposal Damai Perang AS-Iran - CNBC Indonesia",
+        "title_zh": "Breaking News: Trump Umumkan Update Baru Proposal Damai Perang AS-Iran - CNBC Indonesia",
+        "summary_en": "Google News groups this under Top Stories: Breaking News: Trump Umumkan Update Baru Proposal Damai Perang AS-Iran - CNBC Indonesia. Related coverage from Antara News jatim, CNBC Indonesia, CNN Indonesia, IDNFinancials.com centers on: Break…",
+        "summary_zh": "Google News groups this under Top Stories: Breaking News: Trump Umumkan Update Baru Proposal Damai Perang AS-Iran - CNBC Indonesia. Related coverage from Antara News jatim, CNBC I…",
+        "link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQeFpzZGRtZEpONTQzYnZ1bVE3N2N6dWl5YlE0ZVVwb2d3VVZ5aXFQbzl1anNFelJFbU9qdjBaekRaLWprLVEtRndUdDk2SGgtcUkySU9MZ1oyeXNzMkJJQTRuaVZ1M1VWSERFRVJwbWV1RmpINmhpSWl2aGFGcEJfUGt2RUdGZjY0cTcwaU9NdnN6ekNIUTkwS3ZyMzhKbC1fNEpqMHlCNFE5ZEtVeFAweEllcnpFMFNNSDNPSTkwUzgzbUZLeHZj0gHMAUFVX3lxTE5UR1pUQTBvRlpyYTE1OGk5Y19JUlc5cnJuMm1rQ210QktFTms3RS05YVVGbVFSc2JBZVN5Qk5IVzNXazlmMEhibXhGWEZCcktFcnE0aFNOampfR2UzQ19hS2lHVDZoMTY2Q0thaWVpVHAzZXZya1MyTUw4MWh0NjJ5bm9oeDBBNE84dXNicVZGTW5fLTJmRFpQN1A2alZXMXRUOW1Ta1JuckF6aEctUkZpNlpLalc1ZkRuUzhueU1kRG9fVW5vaURMNFVzRw?oc=5",
+        "rank_score": 25.043,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 66,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Pedih! Surga di Jantung Arab Terseret Neraka Perang Timur Tengah - CNBC Indonesia",
+        "title_zh": "Pedih! Surga di Jantung Arab Terseret Neraka Perang Timur Tengah - CNBC Indonesia",
+        "summary_en": "Google News groups this under World: Pedih! Surga di Jantung Arab Terseret Neraka Perang Timur Tengah - CNBC Indonesia. Related coverage from CNBC Indonesia, CNN Indonesia, MSN, Tempo.co centers on: Pedih! Surga di Jantung Arab Terseret Ne…",
+        "summary_zh": "Google News groups this under World: Pedih! Surga di Jantung Arab Terseret Neraka Perang Timur Tengah - CNBC Indonesia. Related coverage from CNBC Indonesia, CNN Indonesia, MSN, T…",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNNWdBU1Q4TUlqUUIwTlpxSU9kQk5Na1R5eTd4ZGR2Qm9GRTdTejI2OENwbDljMHZLMnpkejhCX2M2bmN4bXpkWGl6N1FIMGpoRnhiQko0UVRBSUFQSkxXSTZBRWNxZWRMcm8wdExjRklXNGJpLWtoMVk5OHRGTFNJeGhERUtpWVd6dzlIOWtIeFcyMUs5c3p3NDQ4ZzMwbHhQVWtUUkZtb1lpeERvRnFaaVg3ekN5aC1raVVTbnhRZ9IBxAFBVV95cUxNS3dxYlB5RjlHeFhWdDFZR1ZUalJJa1lOWGY4dC1DLW51eUtxTUZ5QU9acEpJNDlKdDJTc2E0dWFsRXVKTnUzUWZFcWhLZDFxZllTbzdVMjNSeXZtX0NNWklMZUp6bHRZSXNrUHoyWlZNeG81d0tvU2F3Z1VoeGJxUGdzLVl2OVBCTlJVWlhUZTBPV015M3hDdnpTSDFPU0R3azF2bWZVODZWWjZwV2dTTFo0bEJlUU02NFFfVENnemlDbm9Y?oc=5",
+        "rank_score": 24.621,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": true,
-    "question": "Will the IHSG index close above 6,500 on December 31, 2026?",
-    "question_en": "Will the IHSG index close above 6,500 on December 31, 2026?",
-    "question_zh": "印尼综合指数(IHSG)在2026年12月31日收盘时会否高于6500点？",
-    "source": "Indonesia Stock Exchange (IDX)",
+    "question": "Will crude oil prices (Brent) exceed $100/barrel before Dec 31, 2026?",
+    "question_en": "Will crude oil prices (Brent) exceed $100/barrel before Dec 31, 2026?",
+    "question_zh": "布伦特原油价格是否会在2026年12月31日前超过每桶100美元？",
+    "source": "ICE Futures Europe",
+    "prob": 35,
+    "prob_reason_zh": "地缘冲突常态化，但油价受供需制约。",
+    "prob_reason_en": "Geopolitical risk priced in, supply caps."
+  },
+  {
+    "name_en": "Indonesian Monetary Policy and Rupiah",
+    "name_zh": "印尼货币政策与汇率波动",
+    "density": 7,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "BI interest rate hikes and Rupiah weakness are sparking domestic economic debate and criticism of central bank leadership.",
+    "narrative_zh": "印尼央行加息及印尼盾走弱引发国内经济辩论，并导致对央行领导层的批评。",
+    "source_mix": {
+      "google_news": 5,
+      "x_grok": 2
+    },
+    "source_labels": [
+      "Google News 5",
+      "Grok/X 2"
+    ],
+    "source_examples": [
+      {
+        "id": 100,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Rupiah Weakening Amid Global Pressures",
+        "title_zh": "印尼盾在全球压力下走弱",
+        "summary_en": "X users and opposition figures like Anies Baswedan highlight Rupiah hitting historic lows with rising import costs and inflation. Discussions focus on government response and potential policy shifts under Prabowo.",
+        "summary_zh": "X用户和反对派人物如阿尼斯·巴斯韦丹强调印尼盾创历史新低，进口成本上升和通胀加剧。讨论聚焦于普拉博沃政府的应对措施和潜在政策转变。",
+        "link": "",
+        "rank_score": 16.5,
+        "social_heat": "high",
+        "uncertainty": "high"
+      },
+      {
+        "id": 105,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Calls to Replace Bank Indonesia Governor",
+        "title_zh": "要求更换印尼央行行长呼声",
+        "summary_en": "Economists and users urge Prabowo to replace Perry Warjiyo for better Rupiah management. Debate centers on competence versus continuity.",
+        "summary_zh": "经济学家和用户敦促普拉博沃更换佩里·瓦尔吉约以更好管理印尼盾。辩论焦点在于能力与连续性。",
+        "link": "",
+        "rank_score": 12.0,
+        "social_heat": "medium",
+        "uncertainty": "high"
+      },
+      {
+        "id": 2,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "BI Rate Naik, Ini Dampaknya ke Pasar Keuangan Indonesia - Kompas.com",
+        "title_zh": "BI Rate Naik, Ini Dampaknya ke Pasar Keuangan Indonesia - Kompas.com",
+        "summary_en": "Google News groups this under Business: BI Rate Naik, Ini Dampaknya ke Pasar Keuangan Indonesia - Kompas.com. Related coverage from Bareksa.com, CNBC Indonesia, Kompas.com, Kompas.id centers on: BI Rate Naik, Ini Dampaknya ke Pasar Keuanga…",
+        "summary_zh": "Google News groups this under Business: BI Rate Naik, Ini Dampaknya ke Pasar Keuangan Indonesia - Kompas.com. Related coverage from Bareksa.com, CNBC Indonesia, Kompas.com, Kompas…",
+        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQbU1TdV9QcTRmeGNVQWdYT29JNFBzcVA1QnpBbXA5a09PQTBvemxPMTh6WlhNcWowSmVrMmhqSzBjYV9SRFNwclRydnhpYldHRkhMdVdrSVZkOEVxM2lzbDBMR1pnckFTWmNVODN2QnlrR2hkd29GbkhQMk5NdzFDWC02bFByZEZBalNqdExCOGozTUpTUk9CdkJmVVR5amxLSUM3SExEY3M?oc=5",
+        "rank_score": 27.126,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 5,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Efek Dolar AS Mahal Sudah Menjalar ke Mal - detikFinance",
+        "title_zh": "Efek Dolar AS Mahal Sudah Menjalar ke Mal - detikFinance",
+        "summary_en": "Google News groups this under Business: Efek Dolar AS Mahal Sudah Menjalar ke Mal - detikFinance. Related coverage from Bloomberg Technoz, MSN, Selular.ID, Wartakotalive.com centers on: Efek Dolar AS Mahal Sudah Menjalar ke Mal; Rupiah anj…",
+        "summary_zh": "Google News groups this under Business: Efek Dolar AS Mahal Sudah Menjalar ke Mal - detikFinance. Related coverage from Bloomberg Technoz, MSN, Selular.ID, Wartakotalive.com cente…",
+        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOTVQ1cC1FVFRNTjNRZFdmRmtOdHJhV09GcUl0cEptTlpaSmpRN0lfS21taVdjQm5oZm1BNUxRWlFKd1QtNEVjbFhkcWh4YzJwWndWNGNTVURBdlhzYkVLd1dQX055MjdUcGFpeW01bG55aTJVdFRuZXFQUGFWR3hlSlFVMl9aLXVpZU1zaHdRajB1YTgyTEQzUtIBngFBVV95cUxQdVpselhqb2FVM09XQnNncURuSjNiTG1BN01kS2pfaUZGOXZOWnZWd1J5MnFsbTd0X2JmSXpDYXFfZDB6NmREaVdZdkpuOHR1NnZLc0dUOHliZDNIMGY2SENnVnF1aGJvNzg5c2JsdWc3UlpzMnVBdUREUnh4dXlqd3VuaDZjcFg0UzdUM0paSTlOeVZud2Y5UG80bVlwZw?oc=5",
+        "rank_score": 27.077,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 15,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Amran Ungkap Efek Positif Rupiah Tembus Rp17.700 per Dolar ke Petani - CNN Indonesia",
+        "title_zh": "Amran Ungkap Efek Positif Rupiah Tembus Rp17.700 per Dolar ke Petani - CNN Indonesia",
+        "summary_en": "Google News groups this under Local: Amran Ungkap Efek Positif Rupiah Tembus Rp17.700 per Dolar ke Petani - CNN Indonesia. Related coverage from ANTARA News Gorontalo, CNBC Indonesia, CNN Indonesia, Kompas.com centers on: Amran Ungkap Efek…",
+        "summary_zh": "Google News groups this under Local: Amran Ungkap Efek Positif Rupiah Tembus Rp17.700 per Dolar ke Petani - CNN Indonesia. Related coverage from ANTARA News Gorontalo, CNBC Indone…",
+        "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPQmFLZWZhOUZ6U0l1TmFLSDBxclRuQmFNVXVvbUNlOVBzVWdQQll0dzRJaFJIQmZ0emZWVEVjUVNVdWRLS0dPOEE1VmNDZ2w0T2JHWVIzQkk1T2pjYS1nWUw3X1VHR2JGNmxwMU9fVlR3cHBIWnUyTXpDY0U0MHpoaU5oTW5hX2N0dWt2TzVJRUNoYUZTNjhubUJLU3VPQ05LbW1ZaHh6VHI3cjZKVndsSzdmc2tvRlNOc0JCMW1LSzRxYlV5VVl1Zk530gHPAUFVX3lxTE1hZWd5MkpOTXBwMlkzQURLbW8zRU4ybVBabThwRHRBU2FQdnJMNnRkbVdLYThYRzBzNUJVREljNG8wLWJxa09rMmRBYUFDR2NzZkFJQWdPU1l3NFl3TWRDLURMREZCXzVCQkh1bU0tb0tjWW40N1lQR25SY0ZDb0tzX0R1QWt6Vy1PdTNaQnloRTdmejJqUVl1Rk00cWlsby00aWdlT1Fld3p4LVdIUmhBVXRDVWlidWxwcnY1cU1FcFczbkdOT3FYMGw1dk1WSQ?oc=5",
+        "rank_score": 26.186,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 35,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Nilai Tukar Rupiah Hari Ini, Kamis 21 Mei 2026: Menguat Perkasa - investor.id",
+        "title_zh": "Nilai Tukar Rupiah Hari Ini, Kamis 21 Mei 2026: Menguat Perkasa - investor.id",
+        "summary_en": "Google News groups this under Top Stories: Nilai Tukar Rupiah Hari Ini, Kamis 21 Mei 2026: Menguat Perkasa - investor.id. Related coverage from ANTARA News Jambi, Antara News jatim, Kompas.com, MetroTVNews.com centers on: Nilai Tukar Rupia…",
+        "summary_zh": "Google News groups this under Top Stories: Nilai Tukar Rupiah Hari Ini, Kamis 21 Mei 2026: Menguat Perkasa - investor.id. Related coverage from ANTARA News Jambi, Antara News jati…",
+        "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQVVBBekxKX0dKTFhld19MZFd3Wnc3dWEwMDgxT0RpRVJidHdsdlgwUTlFVHl0U0V4M0EyMXlLSEx3UlJkRElXYXRjLWd5Y09mcjlGbTJmbGJxQUx6Ql80TXNsdE1Qb0xsUElRMlZsa2RDVENpanN0bi1tMXNzSEIyS0VsTXRhZE03VWEyUUdzZjNaZG55Rk1yd0kycw?oc=5",
+        "rank_score": 25.091,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": true,
+    "question": "Will Bank Indonesia lower the BI-Rate by the end of Q3 2026?",
+    "question_en": "Will Bank Indonesia lower the BI-Rate by the end of Q3 2026?",
+    "question_zh": "印尼央行是否会在2026年第三季度末之前下调基准利率？",
+    "source": "Bank Indonesia (bi.go.id)",
     "prob": 65,
-    "prob_reason_zh": "印尼基本面稳健，指数具备长期反弹支撑。",
-    "prob_reason_en": "Stable fundamentals support index recovery."
+    "prob_reason_zh": "通胀趋稳，为支持增长降息概率大。",
+    "prob_reason_en": "Inflation stability favors easing policy."
   },
   {
-    "name_en": "Prabowo Subianto Economic and Policy Agenda",
-    "name_zh": "普拉博沃政府经济与政策议程",
+    "name_en": "IHSG Market Performance",
+    "name_zh": "印尼综合指数市场表现",
     "density": 4,
-    "R": 1,
+    "R": 2,
     "S": 2,
-    "T": 1,
+    "T": 2,
     "U": 2,
     "H": 2,
-    "narrative_en": "Discussions surrounding Prabowo's economic targets, corruption policies, and the viability of the free lunch program.",
-    "narrative_zh": "围绕普拉博沃的经济目标、反腐政策及免费午餐计划的可持续性进行讨论。",
+    "narrative_en": "The Indonesian Stock Exchange (IHSG) has reached lows, triggering investor concern and political speculation regarding market recovery.",
+    "narrative_zh": "印尼综合指数跌至低位，引发投资者焦虑以及关于市场复苏的政治猜测。",
+    "source_mix": {
+      "google_news": 4
+    },
+    "source_labels": [
+      "Google News 4"
+    ],
+    "source_examples": [
+      {
+        "id": 3,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Saham Ini Jadi Incaran Asing Saat IHSG Sentuh All Time Low Setahun - CNBC Indonesia",
+        "title_zh": "Saham Ini Jadi Incaran Asing Saat IHSG Sentuh All Time Low Setahun - CNBC Indonesia",
+        "summary_en": "Google News groups this under Local: Saham Ini Jadi Incaran Asing Saat IHSG Sentuh All Time Low Setahun - CNBC Indonesia. Related coverage from Bloomberg Technoz, CNBC Indonesia, IDNFinancials.com, Kompas.com centers on: Saham Ini Jadi Inc…",
+        "summary_zh": "Google News groups this under Local: Saham Ini Jadi Incaran Asing Saat IHSG Sentuh All Time Low Setahun - CNBC Indonesia. Related coverage from Bloomberg Technoz, CNBC Indonesia,…",
+        "link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNa1gzdWZzTXBNX2FSUmJaaUZiTjJNQkR6dWh3NjZXd0g0OXJqeTBNMUl3RWxOZV9NNEVkVi1MbTNKSEZYN0tpUGd6OXZVN1lrVGN5RzUxQ0tXWFhPY3NNZ1FpUzlOajNzUS1lYkM3MGw2bGpuMFVuY09QOWxISnZrOVBwR0hBNDNoY2pCbTJ4WmZTY1ozWmRYSE1EXzBQRUdMbGFuaUJlUlFmYkVtZERvNmxvcldLOGs5aUNOQzFQV09QWU1TRi1F0gHMAUFVX3lxTE51QnJhdGtnY2ZTcWU0bDlnSU5YRVpnUFlpbjhCSERLMmVFem1PaWEyYXo1bjdwempPYVV3aFc5TXBNTmFsRmtEaU5xR3NCVzdvSlZLcFFsQWR3SG1udTd4VWtzNjRLa28zcjZSa1IwTDc4ejFJaEVjbnMtdmd3MGJ4MVFCUUdfbi1Ud282ak1HS1lOSWRWRWdhaUVVSTQwb2EyYmlTd2QtY2xwZlBORzBZTjdUOWVRWDNFTGRVdzFKMnZtUHFvcFNzU29GbA?oc=5",
+        "rank_score": 27.119,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 14,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Breaking! Sempat Naik Tinggi, IHSG Kembali Longsor Nyaris 2% - CNBC Indonesia",
+        "title_zh": "Breaking! Sempat Naik Tinggi, IHSG Kembali Longsor Nyaris 2% - CNBC Indonesia",
+        "summary_en": "Google News groups this under Local: Breaking! Sempat Naik Tinggi, IHSG Kembali Longsor Nyaris 2% - CNBC Indonesia. Related coverage from Bareksa.com, CNBC Indonesia, IDNFinancials.com, KONTAN centers on: Breaking! Sempat Naik Tinggi, IHSG…",
+        "summary_zh": "Google News groups this under Local: Breaking! Sempat Naik Tinggi, IHSG Kembali Longsor Nyaris 2% - CNBC Indonesia. Related coverage from Bareksa.com, CNBC Indonesia, IDNFinancial…",
+        "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNYnMwM055R2hWZlVLRFYyZWU4Zmhoa1pydGZTYXRKX3lhXy1JTTBJV1lrSWtsR0Yyd25Eek1mMUJKQ2pPZmtJcGpSOGx2akdibGNyNEFfZm9BaGx2RW4yWXhtUGQ3M0VYYzdQS0pDWlhqQ3R2cEUwVGdBeFhobF9qaUd0MTBjRl9pOS1PRzJuNFM2RFVoTEo0aDVHNjZ6QlR6REdvb24wcE05RHNIYlJiUE9zaER3amNYOUpB0gHAAUFVX3lxTE4xSVVvRWJySTRyOWdPUWo4eWhrMmhEUVo2TnR6czl5SVFQSmxxUVRvNVR0eXg2bGF0OXpKQVlPVXhXZHJLYUI3SHUtRDdEQ0h5ek1TNTdnczI5YmhRUXFZYnhTNUFjaVZ4QVFiV2o2eVpxb1ZJOEw2Y2Rwd1N3ZkpWYzRuTXVuUnR2QVdScXFkUkVuc0VCb1lDclZVcnJpcEdudW50MWk0MGQ4Q0U1WHZUTFIxaGdZWkVVZDNTaWpCbg?oc=5",
+        "rank_score": 26.277,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 16,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Dasco Beri Kode Soal Pasar Saham RI: Lihat Setelah 29 Mei! - CNBC Indonesia",
+        "title_zh": "Dasco Beri Kode Soal Pasar Saham RI: Lihat Setelah 29 Mei! - CNBC Indonesia",
+        "summary_en": "Google News groups this under Local: Dasco Beri Kode Soal Pasar Saham RI: Lihat Setelah 29 Mei! - CNBC Indonesia. Related coverage from ANTARA News, CNBC Indonesia, CNN Indonesia, JPNN.com centers on: Dasco Beri Kode Soal Pasar Saham RI: L…",
+        "summary_zh": "Google News groups this under Local: Dasco Beri Kode Soal Pasar Saham RI: Lihat Setelah 29 Mei! - CNBC Indonesia. Related coverage from ANTARA News, CNBC Indonesia, CNN Indonesia,…",
+        "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOcFoxOHVNSUwtRVBsRlN4Vlo4SzUtTmN6LVIyZ2VDQ1dScTV3RmRyakdra2owaEV0d1cwaGp4bXd0ck1lWndIWVBNRkJPMFRMTzBfVmJYRTN0NjZGMzMzUmdsTXhoUUphREF3MUZhV05rcHUydFhidE41Tm53Z3g2UkktUlVpWm9VZU1Fak5iRVlhM3l1d3NRcTg3aUU0UFBKSnhIN3ZYdmtsX2FJSmdnTURsVnBQeDZTMlHSAb8BQVVfeXFMTlRQSnotRjhucHNqSG4zSkgwTHBsZkYzOF9IWFFlQzB3OHRxQXRENTJzbW9CRTRhVHNCaTRFNnJYYTRKMEF1aFpUYUFFY3pxSV8xTno4Mzc4SkhyUWFiaVdNQ0wzYWNnX3d3bC1LT0M1UkJtakJReTE3anYxVHIxckNMOHNTZVBZVUV0N3M3dDdvYXZaQ1pXSlpLejhycG42YjJydGQ3N1VkTGNZNHBNcXlYQk4wQWczTEtfbnpXeHc?oc=5",
+        "rank_score": 26.167,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 29,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Analisis Penyebab IHSG Turun 2% Hari Ini, Sentuh Level 6.100-an - CNBC Indonesia",
+        "title_zh": "Analisis Penyebab IHSG Turun 2% Hari Ini, Sentuh Level 6.100-an - CNBC Indonesia",
+        "summary_en": "Google News groups this under Local: Analisis Penyebab IHSG Turun 2% Hari Ini, Sentuh Level 6.100-an - CNBC Indonesia. Related coverage from ANTARA News Jambi, Bareksa.com, CNBC Indonesia, IDNFinancials.com centers on: Analisis Penyebab IH…",
+        "summary_zh": "Google News groups this under Local: Analisis Penyebab IHSG Turun 2% Hari Ini, Sentuh Level 6.100-an - CNBC Indonesia. Related coverage from ANTARA News Jambi, Bareksa.com, CNBC I…",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPRWYzQmRvSjNVQ2VIdm5lYlJLLVFSaFVLbkVaYlVtUDhIcDdCS0tUUWFpSWdNcnJGb3NlVHNhSTU1VEVHYzgzbGZVYllMWWtBb1BkRGYxc2t4TDhpUUQ3aHB1X1c0X210RElwQlgwQndJbzJSaFVheWZzbVpKemxTUjcyNUNmTlRsd3lKUXlBVllMVWQ1ajdHVW9qRXJNTmw5UnZObkdNREVHVnpaOENwNkVhNF9zaVh6d3ZSRnNkRQ?oc=5",
+        "rank_score": 25.13,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": true,
-    "question": "Will the Prabowo government pass a dedicated budget exceeding 100 trillion IDR for the Free School Lunch Program in the 2027 State Budget?",
-    "question_en": "Will the Prabowo government pass a dedicated budget exceeding 100 trillion IDR for the Free School Lunch Program in the 2027 State Budget?",
-    "question_zh": "普拉博沃政府在2027年国家预算中是否会批准超过100万亿印尼盾的免费午餐计划资金？",
-    "source": "Ministry of Finance of Indonesia",
-    "prob": 80,
-    "prob_reason_zh": "免费午餐是其核心竞选承诺，预算优先级高。",
-    "prob_reason_en": "Core campaign promise with high priority."
+    "question": "Will the IHSG close above 6,500 on June 30, 2026?",
+    "question_en": "Will the IHSG close above 6,500 on June 30, 2026?",
+    "question_zh": "印尼综合指数（IHSG）在2026年6月30日收盘时是否会高于6500点？",
+    "source": "IDX (idx.co.id)",
+    "prob": 70,
+    "prob_reason_zh": "基本面支撑，6500点属合理修复区间。",
+    "prob_reason_en": "Fundamentals support recovery above 6500."
   },
   {
-    "name_en": "Ebola and Hantavirus Health Concerns",
-    "name_zh": "埃博拉与汉坦病毒卫生担忧",
+    "name_en": "Tech Sector Layoffs and Shifts",
+    "name_zh": "科技行业裁员与变动",
     "density": 2,
-    "R": 2,
-    "S": 2,
+    "R": 1,
+    "S": 1,
     "T": 2,
     "U": 2,
     "H": 1,
-    "narrative_en": "Public health warnings regarding potential pandemic risks from Ebola in Congo and Hantavirus in Indonesia.",
-    "narrative_zh": "关于刚果埃博拉疫情及印尼汉坦病毒潜在流行风险的公共卫生预警。",
-    "bettable": true,
-    "question": "Will the WHO declare Hantavirus an international public health emergency by end of 2026?",
-    "question_en": "Will the WHO declare Hantavirus an international public health emergency by end of 2026?",
-    "question_zh": "到2026年底，世界卫生组织(WHO)是否会将汉坦病毒列为国际突发公共卫生事件？",
-    "source": "World Health Organization (WHO)",
-    "prob": 5,
-    "prob_reason_zh": "流行病宣布为PHEIC的标准极高且严苛。",
-    "prob_reason_en": "High threshold for PHEIC declaration."
-  },
-  {
-    "name_en": "Meta Global Workforce Reduction",
-    "name_zh": "Meta全球大规模裁员",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Meta's mass layoff impacting employees in Singapore and restructuring for AI focus.",
-    "narrative_zh": "Meta大规模裁员影响新加坡员工并转向人工智能研发。",
+    "narrative_en": "Mass layoffs at Meta and warnings of manufacturing job losses reflect wider economic pressures on the labor market.",
+    "narrative_zh": "Meta的裁员潮与制造业裁员警告反映了劳动力市场面临的广泛经济压力。",
+    "source_mix": {
+      "google_news": 1,
+      "x_grok": 1
+    },
+    "source_labels": [
+      "Google News 1",
+      "Grok/X 1"
+    ],
+    "source_examples": [
+      {
+        "id": 104,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Mass Layoffs Loom in Manufacturing Sector",
+        "title_zh": "制造业大规模裁员迫在眉睫",
+        "summary_en": "Industry minister signals PHK wave; users tie it to Rupiah, import costs, and weak demand. Focus on UMKM impact.",
+        "summary_zh": "工业部长暗示裁员浪潮；用户将其与印尼盾、进口成本和需求疲软联系起来。聚焦中小企业影响。",
+        "link": "",
+        "rank_score": 12.0,
+        "social_heat": "medium",
+        "uncertainty": "high"
+      },
+      {
+        "id": 4,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Meta PHK Massal, Karyawan di Singapura Dapat E-mail Pemecatan Pukul 04.00 Pagi - Kompas.com",
+        "title_zh": "Meta PHK Massal, Karyawan di Singapura Dapat E-mail Pemecatan Pukul 04.00 Pagi - Kompas.com",
+        "summary_en": "Google News groups this under Business: Meta PHK Massal, Karyawan di Singapura Dapat E-mail Pemecatan Pukul 04.00 Pagi - Kompas.com. Related coverage from ANTARA News, CNBC Indonesia, Investing.com Indonesia, Kompas.com centers on: Meta PH…",
+        "summary_zh": "Google News groups this under Business: Meta PHK Massal, Karyawan di Singapura Dapat E-mail Pemecatan Pukul 04.00 Pagi - Kompas.com. Related coverage from ANTARA News, CNBC Indone…",
+        "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNcnlaU0M4bjk1NmZxT1JLeW5rcHNoOGZNeV9jY2JtU3AtLWhHOFJlbmppd1pzd0lGMDl4LUEzRnhJMzV6MWpGTXlCT0NQU0dPNmo4M0dJRmp1aGp4T2NteGpmM1RZakFGb3QtSEVuQTRUOXlpM0FURUoyeU1YdndZSTYxTzh5MXFNSTR0djNuYkVZSmJLNFNraHFzXzVQVU0wUEE2LVJ3bjl5a1ZVNURieHlSR0NhaklJRzgyXzFOSHJiTU9q?oc=5",
+        "rank_score": 27.079,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -242,16 +564,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "US Dollar Impact on Local Retail",
-    "name_zh": "美元走强对本地零售的影响",
+    "name_en": "Arsenal Premier League Title",
+    "name_zh": "阿森纳英超夺冠",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Negative impact of the strong USD on Indonesian mall visit rates and retail prices.",
-    "narrative_zh": "美元走强对印尼商场客流量和零售价格的负面影响。",
+    "narrative_en": "Thierry Henry acknowledged the Arsenal squad for ending a 22-year title drought.",
+    "narrative_zh": "亨利公开向打破22年冠军荒的阿森纳队表示致敬。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 7,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Thierry Henry menyampaikan \"ucapan terima kasih khusus\" kepada skuad Arsenal asuhan Mikel Arteta atas keberhasilan mengakhiri penantian gelar Liga Premier selama 22 tahun - Goal.com",
+        "title_zh": "Thierry Henry menyampaikan \"ucapan terima kasih khusus\" kepada skuad Arsenal asuhan Mikel Arteta atas keberhasilan mengakhiri penantian gelar Liga Premier selama 22 tahun - Goal.com",
+        "summary_en": "Google News groups this under Top Stories: Thierry Henry menyampaikan \"ucapan terima kasih khusus\" kepada skuad Arsenal asuhan Mikel Arteta atas keberhasilan mengakhiri penantian gelar Liga Premier selama 22 tahun - Goal.com. Related cover…",
+        "summary_zh": "Google News groups this under Top Stories: Thierry Henry menyampaikan \"ucapan terima kasih khusus\" kepada skuad Arsenal asuhan Mikel Arteta atas keberhasilan mengakhiri penantian…",
+        "link": "https://news.google.com/rss/articles/CBMiwAJBVV95cUxQN0k0a0dhMnVoSlVvSVE1RTU3SUkzQi04ZlpRYWVaeE15bUR4Z3hMcnpxakdYaVdCcWNlRlhkSG5XS3c4bjFMQlUxVktXWjVvZkR2MHhFeHBFTjRUNG4xSW5oTmNZZnFCd2xXNEhWOHJ2eENjQlROa2FJQkVkTU80UWFKQ1dhSl80RWhPM0pYTTM0cDktVWlGOGY1X0t1RXp1YmdHRjROTFdCdnB0NnRhSmNDRVF1b3FXcldhNVAwb3dicmctdkFydVJDcHBRai1zd2pIbWF2LWYxLXU5RE9RQm9CX0NiVjVKRTd5TTBuYXZPcWljLUJhUUZHYm5mdmFLbFN6c0cxZGJxdHRrUXpvV2ZPaWhNV2VZNE5ScVBuQVVNblNBU0tfdXZLZjlwRGwyWHpJeTBJYmljQ1FMZ2FRUw?oc=5",
+        "rank_score": 26.665,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -262,101 +606,395 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Arsenal and Aston Villa Football Success",
-    "name_zh": "阿森纳与阿斯顿维拉足球表现",
-    "density": 2,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Coverage of major European league successes for Arsenal and Aston Villa.",
-    "narrative_zh": "关于阿森纳和阿斯顿维拉在欧洲联赛取得的重大成就报道。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Regional Anti-Missile Defense Systems",
-    "name_zh": "区域反导系统",
-    "density": 2,
-    "R": 2,
-    "S": 2,
-    "T": 2,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Russia and China opposing the US-led Golden Dome anti-missile system.",
-    "narrative_zh": "俄罗斯和中国反对美国主导的“金穹”反导系统。",
-    "bettable": true,
-    "question": "Will the 'Golden Dome' anti-missile system reach initial operational capability by the end of 2026?",
-    "question_en": "Will the 'Golden Dome' anti-missile system reach initial operational capability by the end of 2026?",
-    "question_zh": "到2026年底，“金穹”反导系统是否会达到初步作战能力？",
-    "source": "US Department of Defense",
-    "prob": 25,
-    "prob_reason_zh": "技术整合与地缘抗力导致进展缓慢。",
-    "prob_reason_en": "Tech integration and opposition delay plans."
-  },
-  {
-    "name_en": "Piala Dunia 2026 Broadcasting",
-    "name_zh": "2026年世界杯直播权",
-    "density": 1,
-    "R": 2,
-    "S": 2,
-    "T": 2,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Partnership for the official broadcast of the 2026 World Cup in Indonesia.",
-    "narrative_zh": "关于2026年世界杯在印尼官方转播权的合作报道。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "FIFA / TVRI",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Tottenham Hotspur Relegation Struggle",
-    "name_zh": "托特纳姆热刺降级压力",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Roberto De Zerbi's comments on the priority of avoiding relegation over European final success.",
-    "narrative_zh": "罗伯托·德泽尔比评论认为避免降级比赢得欧洲赛事决赛更重要。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Indonesia U19 National Team Diaspora",
-    "name_zh": "印尼U19国家队海外球员",
+    "name_en": "Russia-China Gas Pipeline",
+    "name_zh": "俄中天然气管道规划",
     "density": 1,
     "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
+    "S": 1,
+    "T": 2,
+    "U": 2,
     "H": 1,
-    "narrative_en": "Integration of diaspora players into the Indonesian U19 national team framework.",
-    "narrative_zh": "海外球员融入印尼U19国家队框架的相关情况。",
+    "narrative_en": "Renewed plans for the Russia-China gas pipeline reflect shifting geopolitical energy alignments.",
+    "narrative_zh": "恢复俄中天然气管道计划反映了地缘政治能源布局的变动。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 8,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Hidup Lagi Rencana Pipa Gas Rusia ke China - detikNews",
+        "title_zh": "Hidup Lagi Rencana Pipa Gas Rusia ke China - detikNews",
+        "summary_en": "Google News groups this under World: Hidup Lagi Rencana Pipa Gas Rusia ke China - detikNews. Related coverage from ANTARA News Gorontalo, CNBC Indonesia, Kompas.id, SINDOnews Internasional centers on: Hidup Lagi Rencana Pipa Gas Rusia ke C…",
+        "summary_zh": "Google News groups this under World: Hidup Lagi Rencana Pipa Gas Rusia ke China - detikNews. Related coverage from ANTARA News Gorontalo, CNBC Indonesia, Kompas.id, SINDOnews Inte…",
+        "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNckdJT3o1TnFtZ1hfeEFiUERxT1lxLXB1dWVaRFlPVDBERGJYNWVxNjR4bVVJNlpXbjdJNWdKOHUwaHdYVUZTYU5mX1ZpWm8zaDRLNnB0SHk5cG5TaGh3aGlOcjJNTlZud2ZtRDBGZnVTQURUSjJUb2c3T3Z2QUhaVVdRcmFLUFF0TU5sOWJIT2Y2NTDSAZgBQVVfeXFMUE5Ia0NEbW1QbU0wSUJrTEpFelVPWjM4ckpjenJZSGxBUG5DV2RvRVBzZHREeW83MHIwVnRGRlZyN2E3SThnUFdZNGstU0ZTdS02T1lXd0JndGZrQ1pIZ3duelgxOFIzUFNHV2lvUmxPRGRVSEdjajJtdkJNOEVLYW01MC1xXzhtMl9lakVtaERadm50QUNPMEE?oc=5",
+        "rank_score": 26.651,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "PSSI",
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Ride-Hailing Policy and Industry",
+    "name_zh": "网约车政策与行业动态",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "Gojek and Grab have discontinued premium savings programs for drivers, raising questions about commission schemes.",
+    "narrative_zh": "Gojek与Grab取消了司机付费节省计划，引发了关于佣金机制的质疑。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 9,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Gojek dan Grab Cabut Program Hemat Berbayar untuk Mitra Driver - Kompas.com",
+        "title_zh": "Gojek dan Grab Cabut Program Hemat Berbayar untuk Mitra Driver - Kompas.com",
+        "summary_en": "Google News groups this under Local: Gojek dan Grab Cabut Program Hemat Berbayar untuk Mitra Driver - Kompas.com. Related coverage from ANTARA News, Bareksa.com, CNN Indonesia, Kompas.com centers on: Gojek dan Grab Cabut Program Hemat Berb…",
+        "summary_zh": "Google News groups this under Local: Gojek dan Grab Cabut Program Hemat Berbayar untuk Mitra Driver - Kompas.com. Related coverage from ANTARA News, Bareksa.com, CNN Indonesia, Ko…",
+        "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOcFZTbEVfcjJQRnpOZ1RHMVZyNng5SFFOamhFZndYSl84WEtUY29FQ2dPcWM4MVlLY3dMOHZ3Ujk4OW5tb1plbWMyT2s0NkNKNVVnakFUSzRRTjBIcE9iVE1jVzZhLTNGRmRNdjdYWEZ2Mmp5bVFQOFVscFRnVXhLVjBreHNZWllrOVJHZ25HbUpSWTZBSEhVUWZmQWYxLWk3d3FmekZaallwOTVJOHNkaFNR?oc=5",
+        "rank_score": 26.568,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "World Cup 2026 Broadcasting",
+    "name_zh": "2026年世界杯转播",
+    "density": 1,
+    "R": 2,
+    "S": 2,
+    "T": 0,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "TVRI, Folago, and Surge have collaborated to broadcast the 2026 World Cup in Indonesia.",
+    "narrative_zh": "TVRI、Folago和Surge合作，将转播2026年世界杯。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 10,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "TVRI, Folago (IRSX), Surge (WIFI) Kolaborasi Tayangkan Piala Dunia 2026 - Bisnis.com",
+        "title_zh": "TVRI, Folago (IRSX), Surge (WIFI) Kolaborasi Tayangkan Piala Dunia 2026 - Bisnis.com",
+        "summary_en": "Google News groups this under Sports: TVRI, Folago (IRSX), Surge (WIFI) Kolaborasi Tayangkan Piala Dunia 2026 - Bisnis.com. Related coverage from ANTARA News Gorontalo, Bisnis.com, Enamplus, Goal.com centers on: TVRI, Folago (IRSX), Surge…",
+        "summary_zh": "Google News groups this under Sports: TVRI, Folago (IRSX), Surge (WIFI) Kolaborasi Tayangkan Piala Dunia 2026 - Bisnis.com. Related coverage from ANTARA News Gorontalo, Bisnis.com…",
+        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPSUxaVGQ5RnBpajc5cE1yTnRwZjBLdUZaMG81Z3hlT1dGZ05oVzlOWTZiQzRUdzhTeFlHR21yMGdUTXdaZDlrME8tV29PNHZtNGt2ei1ZOUFRc003bVlTcVlkNEdjWGwybzVVYno1c0xzN2VqUjM4MTVqalVJX3dwWlE5RWlTZXFPcWFFMzY3TjBSNVZmLXMxbE50bkxEN2dwSzhuTzhPS1huSVdjcHNseG1abkNsVk1D?oc=5",
+        "rank_score": 26.501,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Prabowo Economic Agenda",
+    "name_zh": "普拉博沃经济议程",
+    "density": 5,
+    "R": 1,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "President Prabowo's economic policies, including commodity export controls and human resource programs, face both praise and scrutiny.",
+    "narrative_zh": "普拉博沃总统的经济政策，包括大宗商品出口管制和人力资源项目，面临着赞誉与审视。",
+    "source_mix": {
+      "google_news": 2,
+      "x_grok": 3
+    },
+    "source_labels": [
+      "Google News 2",
+      "Grok/X 3"
+    ],
+    "source_examples": [
+      {
+        "id": 99,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Anies Baswedan Economic Criticism Gains Traction",
+        "title_zh": "阿尼斯·巴斯韦丹经济批评获得关注",
+        "summary_en": "Videos of Anies critiquing Rupiah, policy uncertainty, and lack of transparency circulate widely. Supporters contrast with government messaging.",
+        "summary_zh": "阿尼斯批评印尼盾、政策不确定性和缺乏透明度的视频广泛传播。支持者与政府信息形成对比。",
+        "link": "",
+        "rank_score": 17.0,
+        "social_heat": "high",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 101,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "New Export Commodity Governance Regulation",
+        "title_zh": "新出口商品治理条例",
+        "summary_en": "Debate over PP on export rules to curb transfer pricing and under-invoicing. Supporters see anti-oligarch move; critics call it theater.",
+        "summary_zh": "关于遏制转移定价和低报发票的出口规则PP辩论。支持者视为反寡头举措；批评者称其为作秀。",
+        "link": "",
+        "rank_score": 13.0,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 102,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Prabowo's Sekolah Rakyat Education Expansion",
+        "title_zh": "普拉博沃人民学校教育扩张",
+        "summary_en": "Government-aligned posts promote Sekolah Rakyat for better access and job creation. Critics question implementation speed and funding.",
+        "summary_zh": "亲政府帖子推广人民学校以改善教育机会和创造就业。批评者质疑实施速度和资金。",
+        "link": "",
+        "rank_score": 13.0,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 11,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Lengkap! Poin Penting Pidato Prabowo di DPR: Target Ekonomi - Tambang - CNBC Indonesia",
+        "title_zh": "Lengkap! Poin Penting Pidato Prabowo di DPR: Target Ekonomi - Tambang - CNBC Indonesia",
+        "summary_en": "Google News groups this under Top Stories: Lengkap! Poin Penting Pidato Prabowo di DPR: Target Ekonomi - Tambang - CNBC Indonesia. Related coverage from CNBC Indonesia, CNN Indonesia, DPR RI, Kementerian Pemuda dan Olahraga centers on: Len…",
+        "summary_zh": "Google News groups this under Top Stories: Lengkap! Poin Penting Pidato Prabowo di DPR: Target Ekonomi - Tambang - CNBC Indonesia. Related coverage from CNBC Indonesia, CNN Indone…",
+        "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxPQk5rd0o2Sm9NekJmNHBuMDktWDdYQ1poTlVaVG53MWY5SEdtWU9WaVhqLTZCUVlHNng2WXhwUk5ILVVnUEhHRzh0RjhCb0lLQlRVbDhOVXpHRHE0QldBQ3RDLUVfNmRIS05qMG1DSUtCSTJJNEJwc0FpWVQ5bkp3RXZzQ1g0bmJsQ25oYmMtN0c5Zzg5RlhZcEdhdWM5M0JYam1BSTU0cGdydHE5eWdwRG1Kck1JRDZhTDl4X0dJTTFFMUVWNE9SOWpUSQ?oc=5",
+        "rank_score": 26.455,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 55,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Media AS-Singapura Sorot Prabowo Kontrol Ekspor Komoditas, Sebut Ini - CNBC Indonesia",
+        "title_zh": "Media AS-Singapura Sorot Prabowo Kontrol Ekspor Komoditas, Sebut Ini - CNBC Indonesia",
+        "summary_en": "Google News groups this under Top Stories: Media AS-Singapura Sorot Prabowo Kontrol Ekspor Komoditas, Sebut Ini - CNBC Indonesia. Related coverage from CNBC Indonesia, CNN Indonesia, DDTCNews, Kompas.com centers on: Media AS-Singapura Soro…",
+        "summary_zh": "Google News groups this under Top Stories: Media AS-Singapura Sorot Prabowo Kontrol Ekspor Komoditas, Sebut Ini - CNBC Indonesia. Related coverage from CNBC Indonesia, CNN Indones…",
+        "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPcGpBa3RjcDVUa09hNjd3bHFhalMwdllHTHVnSnBZRVgwaFM0bERmQ0VVMXpEb0J5VkZZMEVSZ0hQUnU3VTU5VFJNNFBrWTU5TzJiVWdzSTZEVDVsaUlmdWZEYjdvQzR6ZVQ4YzdEMlZsZUp6SkNmV1hIQ0w3VkdaV2dObWxQengtRmtYN3ljSTNPQkZuTFpTc21DYmRyWHRvd21yeFZDVC1peU1hNDgzYmxJand0Wm1PdzRyYlkxbXR1bkc10gHKAUFVX3lxTE03RjN6eDl2OWhkSl9VdzBoZjd5NlhJMm8tVTl3b1Z5RHBMODdBbXBzemJyUXB1cXhKV2F2eTQ4ZWwxZ2ZmTTFuUXlzU3kxOVh6bGczeG42VFZaaFVLbEVfd1U2NldBRmwya3RmUHVwSnRHMjd1R3dvWXJZaXFwMkNTb09BcnhBLUt4NjNUT1FkODFKZ2hFbkFiMGpSZmw4a3FpTi1Ld1JKeHFIOHZoaVJsV09jaHVnZm9XQWhydUw3NlE0QlFFcGlkdkE?oc=5",
+        "rank_score": 24.963,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": true,
+    "question": "Will the Indonesian government pass a formal regulation to ban exports of a specific raw commodity before 2027?",
+    "question_en": "Will the Indonesian government pass a formal regulation to ban exports of a specific raw commodity before 2027?",
+    "question_zh": "印尼政府是否会在2027年前通过正式法规禁止特定原材料的出口？",
+    "source": "State Gazette of the Republic of Indonesia",
+    "prob": 80,
+    "prob_reason_zh": "资源民族主义是其核心政策逻辑。",
+    "prob_reason_en": "Resource nationalism is his core policy."
+  },
+  {
+    "name_en": "Stock Market Corporate Volatility",
+    "name_zh": "企业股价动荡",
+    "density": 2,
+    "R": 2,
+    "S": 2,
+    "T": 0,
+    "U": 1,
+    "H": 1,
+    "narrative_en": "Companies like TPIA and CUAN are facing significant stock price drops, with some placed under Unusual Market Activity (UMA) status.",
+    "narrative_zh": "TPIA和CUAN等公司的股价大幅下跌，部分已被列入异常市场活动（UMA）观察名单。",
+    "source_mix": {
+      "google_news": 2
+    },
+    "source_labels": [
+      "Google News 2"
+    ],
+    "source_examples": [
+      {
+        "id": 12,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Bisa Bagi Dividen Tapi Saham Ambruk 62%, Ini Alasan TPIA Dihukum MSCI - Emitennews.com",
+        "title_zh": "Bisa Bagi Dividen Tapi Saham Ambruk 62%, Ini Alasan TPIA Dihukum MSCI - Emitennews.com",
+        "summary_en": "Google News groups this under Local: Bisa Bagi Dividen Tapi Saham Ambruk 62%, Ini Alasan TPIA Dihukum MSCI - Emitennews.com. Related coverage from Bareksa.com, Emitennews.com, IDX Channel, Liputan6.com centers on: Bisa Bagi Dividen Tapi Sa…",
+        "summary_zh": "Google News groups this under Local: Bisa Bagi Dividen Tapi Saham Ambruk 62%, Ini Alasan TPIA Dihukum MSCI - Emitennews.com. Related coverage from Bareksa.com, Emitennews.com, IDX…",
+        "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQT0l2TkFKNFhEYnhMaXliMEFuQVd2cnBHTlBtVS14cldVME1ZZEw2NjBlbWpUNXEzaE9OUE9HZkYzemVadW01UmdjUkc0dUJZd2JHWW9pOE9jaEc0ek44Ylcwb2JtaW1UVFNqOFdZdGEyUGs4amxSWFE4dkZ2TVppZ2xzSERxY3hEbFNUU2RLcnBHSk9lWWF1Tk1Rcw?oc=5",
+        "rank_score": 26.326,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 13,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "5 Saham Didapuk UMA: TPIA, CUAN, hingga PACK Ambruk Berjamaah - Emitennews.com",
+        "title_zh": "5 Saham Didapuk UMA: TPIA, CUAN, hingga PACK Ambruk Berjamaah - Emitennews.com",
+        "summary_en": "Google News groups this under Local: 5 Saham Didapuk UMA: TPIA, CUAN, hingga PACK Ambruk Berjamaah - Emitennews.com. Related coverage from CNBC Indonesia, Emitennews.com, IDNFinancials.com, investor.id centers on: 5 Saham Didapuk UMA: TPIA…",
+        "summary_zh": "Google News groups this under Local: 5 Saham Didapuk UMA: TPIA, CUAN, hingga PACK Ambruk Berjamaah - Emitennews.com. Related coverage from CNBC Indonesia, Emitennews.com, IDNFinan…",
+        "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNcnJpTjVKaWdSSGpnMkdoeHNKV0ZPdkZiT0M2Q0lLMk1OWWpnYzJMbE51Rk5vdlpjU2RJb1J3czVwX3RNVktLOWV5aU5MaUF6Q1U0UHl2SGtyUThHcmRXejlyVEgtYmVxaGFiNzd6eHYxMHZVNmdVX0xmOHlBeThmOXZZdFY2Mjh4NkhzT25mNGE2eWdU?oc=5",
+        "rank_score": 26.311,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Science and Space Exploration",
+    "name_zh": "科技与空间探索",
+    "density": 7,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "Significant developments in NASA missions, space imagery, and astronomical discoveries are expanding our understanding of the universe.",
+    "narrative_zh": "NASA任务、空间成像及天文发现的重大进展正在拓宽我们对宇宙的认知。",
+    "source_mix": {
+      "google_news": 7
+    },
+    "source_labels": [
+      "Google News 7"
+    ],
+    "source_examples": [
+      {
+        "id": 17,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa - Media Indonesia",
+        "title_zh": "NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa - Media Indonesia",
+        "summary_en": "Google News groups this under Science: NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa - Media Indonesia. Related coverage from Babel Insight, Media Indonesia, MediaKompeten, Qoo Media centers on: NASA Luncurkan LOXSAT Juli 2026…",
+        "summary_zh": "Google News groups this under Science: NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa - Media Indonesia. Related coverage from Babel Insight, Media Indonesia, MediaKom…",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOcW9jN3V0T3ZCS1JuVEs4TE5takllYm13bmdMUEcxMWZKR2FDMUwydzJnWGktQ3JJcG0ySGdZcTJlcHhXNnlTZUhEdDY3c3puR1NNdS00a3ViXy1HT3pNRmdUNDFBVFVLb0NPR3I5UEQwd0pZZ1R1QmZCR1FtWlNsVFJxby15M1R3aTB4MEdyWE9WNlYyVE4wd2N6SXJsdUowb21vRw?oc=5",
+        "rank_score": 26.13,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 34,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Hajar Aswad Dipotret Super Detail, Keajaibannya Terungkap - detikInet",
+        "title_zh": "Hajar Aswad Dipotret Super Detail, Keajaibannya Terungkap - detikInet",
+        "summary_en": "Google News groups this under World: Hajar Aswad Dipotret Super Detail, Keajaibannya Terungkap - detikInet. Related coverage from MediaKompeten, Pojok Papua, Radar Banyuwangi, detikInet centers on: Hajar Aswad Dipotret Super Detail, Keajai…",
+        "summary_zh": "Google News groups this under World: Hajar Aswad Dipotret Super Detail, Keajaibannya Terungkap - detikInet. Related coverage from MediaKompeten, Pojok Papua, Radar Banyuwangi, det…",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPQUtaMHFDbkZoZmVVRmpURHcwd3hCUlAxaHZLSjg2aW9BelZlbE9CY2FpRFZvV2NTaXBCclFOT3czdFJ6UXRuR1pOM0wwMGdEb0ZzY2s1YUVKeVVJWGVGZmxhUWN2MkE3Y0p5TG1reFdlbm82N19uWHlsTHdrLW1tSTRwSVRBTHVYR3JMcmZlbU1fZnNYUGYyd2JzbXlyZ9IBowFBVV95cUxQaXpSWXVJWU92R1U3YU5EbzN6OW9feGVsVmpXbFBmOXZ4VThsYVJob0dMQzNkQWw3UVNVYTdoZDZIU1BXbDNuZk1OQXdfT3M3aERSdUhBUFpjdm9DbVdRcXFVSFR2VFl2X3NFRVUwMkxMQVhaSlROYlM5QXpqOEJYV2VmTy03bGFETWRZOWFlMWt5WkVENjhucWJPeDZUTUNhTW1n?oc=5",
+        "rank_score": 25.091,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 98,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi - AsatuNews.co.id",
+        "title_zh": "NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi - AsatuNews.co.id",
+        "summary_en": "Google News groups this under Science: NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Katakini.com, MSN, Media Indonesia centers on: NASA Pastikan Asteroid 2026 JH2 Melint…",
+        "summary_zh": "Google News groups this under Science: NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Katakini.com, MSN, Media…",
+        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5aeXVTVVlPQkNnbFNnRzlfZE1PQXFIaGoycDB6aWpzRGtuNnR6cGxZM1ZTcXUzZmF1TUw0NWpRSWgteDlYb3Z3SVBoTnlSeGlaOTJleVctTHc0bmtKU2pHZnJDcVpfWHZiZzM4?oc=5",
+        "rank_score": 23.421,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 110,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026 - Kompas.com",
+        "title_zh": "NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026 - Kompas.com",
+        "summary_en": "Google News groups this under Science: NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026 - Kompas.com. Related coverage from Kompas.com centers on: NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026.",
+        "summary_zh": "Google News groups this under Science: NASA Percepat Peluncuran Teleskop Antariksa Roman ke September 2026 - Kompas.com. Related coverage from Kompas.com centers on: NASA Percepat…",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxON3VYal9vT194dE9ENFpBTWpmdl9UZ0gwZ1FSOVVBOVV3OHVJZVJWUW85MENRRkhiSzFvdWVvVFp6czFoUktPSmdnb0xzLVFzS1BlTEhSc1lldFFSU0tSZ0h2RHpqUUNpQ1lNamN5VG1NMWxCeHpEWnh3Q0lub0hkMWwxOVFMWUNCSmItVVZUNXRmMmFncm9SaWhCN2xpaWd6ZjdQaUdWY28zbnA5N0F3bGoydFVicTBodFpzTm1pMA?oc=5",
+        "rank_score": 10.587,
+        "social_heat": "low",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 111,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - Mudanesia - Mudanesia",
+        "title_zh": "Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - Mudanesia - Mudanesia",
+        "summary_en": "Google News groups this under Science: Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - Mudanesia - Mudanesia. Related coverage from Mudanesia centers on: Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - M…",
+        "summary_zh": "Google News groups this under Science: Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima Sakti - Mudanesia - Mudanesia. Related coverage from Mudanesia centers on: Fakta!…",
+        "link": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOVk9xQzFTMFNDQjA1TlloY1JRZ2oxRU1wMkgtMnVocF9sN1pxM215M2dWWEtFd2p6QkhTZS0wUmNab1RVVXlKbTJWc2c1Y0t0Sklja0JTdkVaUk5GdEpTek41d1ZFNm4yWjgxS1pNMFljVTVPczM0Z0hXZFhaOGRjcHJQeWdHOTNHUkRzNTRDTERWUmViN0RocEc5ZmN6SDZnY00tcmpSbVdKaml4MWszbUFwUXRYZDdwOThTQ1gwd1FsU2E5Wm9MX3NhNGvSAdIBQVVfeXFMTnZaTUtiRWo4VmxoR3NudGxPNUU1NHVqeW4xTGlLX0QxQ1NVLW4zcWlZdWgxVlZJRUpEWGhJbElVVkRXWDVrQTFmV0l0RTRrekhuTEZwVVpYQVBXT0VEVnIzaGlxdnJEaHp4aW4xR05MdHJuNGd3aTJMVEs4V0ptYTRYamYtSkNSeW5QQnZDTTNDcTJmNGpNN1M5dGktaWZtam1NcS1VbWRneUFDYnpEMndrVERoMjJBcGFNUzFPM3h3U2tzM1FNYTc5dFlzOEtkb0Vn?oc=5",
+        "rank_score": 10.531,
+        "social_heat": "low",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 112,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Science",
+        "title_en": "Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta dan Rahasia Kematian Galaksi - Media Indonesia",
+        "title_zh": "Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta dan Rahasia Kematian Galaksi - Media Indonesia",
+        "summary_en": "Google News groups this under Science: Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta dan Rahasia Kematian Galaksi - Media Indonesia. Related coverage from Media Indonesia centers on: Teleskop James Webb Berhasil Petakan \"Skeletal…",
+        "summary_zh": "Google News groups this under Science: Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta dan Rahasia Kematian Galaksi - Media Indonesia. Related coverage from Media Indonesi…",
+        "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOa09BWHlHeUpjaHAwVC16dnFwOTh2R2pMVC1fazFEYjV0RVdHQzJIazZaTlUwZ3IyTmcxMlZKSUY1dngyclI0UmRzcG82VGI2Y0NoanBfUWktYmozNUpHekhDVmFVamJqQWpUT0xHbkt6SXFHaWZXQkU2T3N6ZzFPbld0X2tLOWlmMEgzWERZaHdZVU05V1VEZ0FDM1ZDMl84elhvWUdhMHk0M1FVd0k1OWFrY0UyWGRMVWRiUXd5X2s5dE5I?oc=5",
+        "rank_score": 10.173,
+        "social_heat": "low",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
     "prob": null,
     "prob_reason_zh": "",
     "prob_reason_en": ""
@@ -370,8 +1008,30 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Regional and national commemorations of Indonesia's 118th National Awakening Day.",
-    "narrative_zh": "印尼第118届民族觉醒日的地区及全国性纪念活动。",
+    "narrative_en": "Indonesia commemorates the 118th National Awakening Day (Harkitnas) with various regional ceremonies.",
+    "narrative_zh": "印尼各地通过不同仪式纪念第118个民族觉醒日。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 18,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Kumpulan Ucapan Harkitnas 2026 Penuh Semangat dan Inspiratif - RRI.co.id",
+        "title_zh": "Kumpulan Ucapan Harkitnas 2026 Penuh Semangat dan Inspiratif - RRI.co.id",
+        "summary_en": "Google News groups this under Top Stories: Kumpulan Ucapan Harkitnas 2026 Penuh Semangat dan Inspiratif - RRI.co.id. Related coverage from Bawaslu Depok, Humas Provinsi Jawa Tengah, RRI.co.id, sulselprov.go.id centers on: Kumpulan Ucapan H…",
+        "summary_zh": "Google News groups this under Top Stories: Kumpulan Ucapan Harkitnas 2026 Penuh Semangat dan Inspiratif - RRI.co.id. Related coverage from Bawaslu Depok, Humas Provinsi Jawa Tenga…",
+        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOSTZWUUQ2NFdvNWM4cEZRZE5LaUUxYkF2TDFObGxFOXc2dnEtUHVOTnE0a09RNXFfNHhxTFlOYWgwTFVndi1KNlBsSHNNMTNwc09hVEpaeVpISGJXT0phMTNIUVBXOUgxODNZS2NhWjRiZkJNRU1ZcGUwelROczgzUE1uQ1pnaFFaS2ZGemhZYnlaMGpneTduNXNyYXVKOEU?oc=5",
+        "rank_score": 26.077,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -382,16 +1042,108 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Ardi Bakrie's Leadership at VKTR",
-    "name_zh": "Ardi Bakrie执掌VKTR",
+    "name_en": "National Football Team Updates",
+    "name_zh": "印尼国家足球队动态",
+    "density": 3,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 1,
+    "H": 2,
+    "narrative_en": "Updates on player development, international tournament schedules, and naturalization efforts for the Indonesian national team.",
+    "narrative_zh": "关于印尼国家队球员发展、国际赛事日程及归化工作的最新消息。",
+    "source_mix": {
+      "google_news": 3
+    },
+    "source_labels": [
+      "Google News 3"
+    ],
+    "source_examples": [
+      {
+        "id": 19,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Amar Brkic, Putra Kebumen Akhirnya Comeback ke Timnas Indonesia Kelompok Umur setelah 3 Tahun dan Kini Main di Posisi Baru - Bolasport.com",
+        "title_zh": "Amar Brkic, Putra Kebumen Akhirnya Comeback ke Timnas Indonesia Kelompok Umur setelah 3 Tahun dan Kini Main di Posisi Baru - Bolasport.com",
+        "summary_en": "Google News groups this under Local: Amar Brkic, Putra Kebumen Akhirnya Comeback ke Timnas Indonesia Kelompok Umur setelah 3 Tahun dan Kini Main di Posisi Baru - Bolasport.com. Related coverage from Bolasport.com, CNN Indonesia, Kompas.com…",
+        "summary_zh": "Google News groups this under Local: Amar Brkic, Putra Kebumen Akhirnya Comeback ke Timnas Indonesia Kelompok Umur setelah 3 Tahun dan Kini Main di Posisi Baru - Bolasport.com. Re…",
+        "link": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxQcmNtQWFwOE92ektJNUk1Q1I5YlRyUW51VUdmY2RoWTRGY085WVBTSFQ0aXVCU1pOVkhyaWJ1Ry05ejZicjhWSjlvZ01QdDZVTXlYdXg5QnJaREhTMTlXX2J5YklXZDZvVTZYYTdxQ3Q2Vnh1ZXg2cEVMNEo2QkNmd1BrX3RHd0x3TkNrakoyVk1lYmJjSkxTb2s4cW1pYnplNUN4RGRwVDlNZXg3UUVWXzJMLVdiMGNOMzYxakhseTA5dWZKeVI4N3o2cXBLeFlyNWRUTmJVMTZjeUN2RnhtMDdmMW12OXg3TjJwcS03Y1FTVGlB0gH6AUFVX3lxTFB4eTM3cVdCQ0t5RE5kZ20xdkVVM05RRl9HNFF4bVVKVnFuZEdXRGtFODF5TTAxUEtoRmZtZG9Delo0VU1ERmwtTDVSbnpCOTUxT1Z0UDU1Z1B4TjFJR1E0RGFZbDd6dzBLTzgyeHFhdFRWMDZaU05HSkt1dDdTRl95OFByNWhJbjg0NlhWZ0tnajlkZUNpUTBsSGZiUVBNNU5oci1jOWlzUTVhdEZOQklnemUyWHA3d2NkS05sa0tpYUc4bnNKZWFBY2RhMkRMVHIxQnBwQmZXYjd5RFFSbWdSTW0xaTlKNzQwLVFMM1h3eVRldXlDYk9yV2c?oc=5",
+        "rank_score": 25.809,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 50,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Jadwal 7 Wakil Indonesia di 16 Besar Malaysia Masters - CNN Indonesia",
+        "title_zh": "Jadwal 7 Wakil Indonesia di 16 Besar Malaysia Masters - CNN Indonesia",
+        "summary_en": "Google News groups this under Local: Jadwal 7 Wakil Indonesia di 16 Besar Malaysia Masters - CNN Indonesia. Related coverage from ANTARA News, CNN Indonesia, Kompas.tv, Suara.com centers on: Jadwal 7 Wakil Indonesia di 16 Besar Malaysia Ma…",
+        "summary_zh": "Google News groups this under Local: Jadwal 7 Wakil Indonesia di 16 Besar Malaysia Masters - CNN Indonesia. Related coverage from ANTARA News, CNN Indonesia, Kompas.tv, Suara.com…",
+        "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQRURMVzN4ZnJGckdwV21wNVh1Z290clJ3dHNqYm5rcGVCYWpiMllBd3RIYVVTaV9fZzF0eDlwUzZvV0VIRmxRbzR5MkJXcV95c05VVm1NaGZ2S3Rtb2FwZnA4OWNTd3BfNm9pLWxpd2pZbjdYX01kZWllTC00XzU2eHVjOEx6eWFJSURfYzd0bE9aOWxsYVl4NkZoS0FITUY1LWdVNHdEbU9WQy1WZDdTUWdieWJnNkw1R1HSAb8BQVVfeXFMTkN4b01odnBqbW1nRTZVZUt1d1g1d3VGTlBCNjZoTkxaR01vdzFVcktOT2tyejFma2g3UHBGZ203RVcwUWloRjMxNTFsOVVLYVJvdVdWSzdEOTB0X0hhSlNrdUhDNTdkdVZJOEh6eEE2MGlCLWFnSlF5aTFpMDFnd24yVE9UWXZCeTJwR1VzaDRSSlVxUUw0MVg5eDl3TGZrNXRrU1FEY2ZhMU03RDR6Vm02dGd6akhldlZ0NTZVYVE?oc=5",
+        "rank_score": 24.998,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 93,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Daftar Terbaru Pemain Keturunan yang Sudah Dihubungi PSSI untuk Dinaturalisasi, John Herdman Tertarik Panggil ke Timnas Indonesia di FIFA Matchday Juni? - tvOneNews",
+        "title_zh": "Daftar Terbaru Pemain Keturunan yang Sudah Dihubungi PSSI untuk Dinaturalisasi, John Herdman Tertarik Panggil ke Timnas Indonesia di FIFA Matchday Juni? - tvOneNews",
+        "summary_en": "Google News groups this under Sports: Daftar Terbaru Pemain Keturunan yang Sudah Dihubungi PSSI untuk Dinaturalisasi, John Herdman Tertarik Panggil ke Timnas Indonesia di FIFA Matchday Juni? - tvOneNews. Related coverage from ANTARA News,…",
+        "summary_zh": "Google News groups this under Sports: Daftar Terbaru Pemain Keturunan yang Sudah Dihubungi PSSI untuk Dinaturalisasi, John Herdman Tertarik Panggil ke Timnas Indonesia di FIFA Mat…",
+        "link": "https://news.google.com/rss/articles/CBMioAJBVV95cUxQU2RVYzNJSDdVUXlZRGZkeFJ1U005OEs3Q3dXaXJwTk5ZZU1iaEZYVTEwVDZrZmRUQjNZYUsxRnkxdU9NSTdjLXJPaTM2VUlndkZicVRDcjd2cWg2dEd3VUQ3RGpBXzU4eDJTbjlYVmlSVlo3ZFdoT0pGc2hRZFNZVFc4TGhFMjg4Z0pxTTJLaldMN1hyeEZnWEJzODFfTzNtaGJ5UnZYSjktWEhfQ1pNVGVub0h2WkY0ZGtYVktwaWEzY1h2RHhqTUVHSTdTSjdXcV9zR2staVNqSW5NMEdRdnlTSVZuNFFDYlFhMzJ5VVFwYmljNG40c3N5dEFfZmNTVkcwTDNuQnhhcDAyU3MyOFpiVlJFOTUyNGtnNWhhLXrSAaYCQVVfeXFMTUwzaEctMlFXY2N3eUhDN3ktNVc2cDlXS3d0TE5KZFpjSkV6eUVJQnJWRjVQckwzNkhESVNmNjBoMmNrWVhFdWxEc01UWlJyTVpfV0pJRC1nV1pBNHBGcFRiTU1tbnRLc1d3VlRybXNfZnRGRkhhNnJhTUZhTXNmelRRQ1BpWVFfbUc0X3k0UkNnVXVvWlVEdFBZWFJtbG1ueUhNQ25oZzR4bzMxSWNLTkxpWWtqSHlxYnotUWdIYVNlWFdFemQyV1VETk56TzlJaTlDZ2FJNFNFSWozM1lNdUZyVHJrSVlKUnBjOUhCems5c3FGUVNZSTFoTklra3Q1UWNyalFzWUw1Rkp1NktZalpKZ0pkREFrNkEtb1NUaG1MS0NGVTZR?oc=5",
+        "rank_score": 24.276,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Bakrie Group Corporate Leadership",
+    "name_zh": "Bakrie集团企业管理",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Appointment of Ardi Bakrie as CEO of EV company VKTR.",
-    "narrative_zh": "Ardi Bakrie被任命为电动汽车公司VKTR首席执行官。",
+    "narrative_en": "Ardi Bakrie has been appointed as the President Director of VKTR, signaling strategic shifts within the Bakrie EV business.",
+    "narrative_zh": "Ardi Bakrie被任命为VKTR的总裁董事，标志着Bakrie电动汽车业务的战略转型。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 20,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Local",
+        "title_en": "Suami Nia Ramadhani, Ardi Bakrie Resmi Jadi Dirut VKTR - Emitennews.com",
+        "title_zh": "Suami Nia Ramadhani, Ardi Bakrie Resmi Jadi Dirut VKTR - Emitennews.com",
+        "summary_en": "Google News groups this under Local: Suami Nia Ramadhani, Ardi Bakrie Resmi Jadi Dirut VKTR - Emitennews.com. Related coverage from ANTARA News, CNBC Indonesia, Emitennews.com, IDNFinancials.com centers on: Suami Nia Ramadhani, Ardi Bakrie…",
+        "summary_zh": "Google News groups this under Local: Suami Nia Ramadhani, Ardi Bakrie Resmi Jadi Dirut VKTR - Emitennews.com. Related coverage from ANTARA News, CNBC Indonesia, Emitennews.com, ID…",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOcVpfWDJ6MWdfUG5aSHF4Yk9uOXBMSS1xWW5ITTJpc3JZWjhkSGVxbmhCUm9PelRlZVhQckVtVUVzY09yMlNEMHFMZloxWnNzUGpvQkU5TUE2aWFkRVJqNmtJRE1rdWpSaExHTVB4b0E1aXcxM2pHdnJLTXEyb2xWdDJnZWZpeWd6MXh6Njl3?oc=5",
+        "rank_score": 25.692,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -402,16 +1154,220 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "iPhone and Apple Tech Developments",
-    "name_zh": "iPhone与苹果技术发展",
-    "density": 2,
+    "name_en": "Tech Consumer Electronics Updates",
+    "name_zh": "消费电子产品更新",
+    "density": 12,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "Global and local tech releases including smartphones, laptops, and consoles indicate aggressive competition in AI-integrated hardware.",
+    "narrative_zh": "全球及当地的科技发布会（包括智能手机、笔记本电脑和游戏机）显示了在人工智能集成硬件领域的激烈竞争。",
+    "source_mix": {
+      "google_news": 12
+    },
+    "source_labels": [
+      "Google News 12"
+    ],
+    "source_examples": [
+      {
+        "id": 22,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ada di Pixel 6 Pro - Media Kampung",
+        "title_zh": "Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ada di Pixel 6 Pro - Media Kampung",
+        "summary_en": "Google News groups this under Technology: Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ada di Pixel 6 Pro - Media Kampung. Related coverage from Butota.id, Disway Malang, Media Kampung, Qoo Media centers on: Google Tingkatkan Fit…",
+        "summary_zh": "Google News groups this under Technology: Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ada di Pixel 6 Pro - Media Kampung. Related coverage from Butota.id, Disway Malang…",
+        "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNU05VaXVNLWsyeU90ZDB3LVc3R1M2Qy1wNWQwWnMyYjBjbHNpV3hBaWxFZV9wenFCVjZseFJjTExiTjR5ZlNJNUdjMzdMMXg3ZE9XTVp1RXItTUZrb2ZhSmFWLWRnUm5wU0lzVzcyM1pZWTdtd3NBOFY0d3JHaTNaREdobzIxNGNVRkgyRlEyVWotelQwaUtMY0JsSUVZcHQ3SEQyclVuRjZPV1puM0dLcThYdzI2Y2NJb3JXRndRUDFxMW5DTmE5MDZVTkp5YV9ia1E?oc=5",
+        "rank_score": 25.159,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 25,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy - AsatuNews.co.id",
+        "title_zh": "Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy - AsatuNews.co.id",
+        "summary_en": "Google News groups this under Technology: Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Medcom.id, Media Kampung, Qoo Media centers on: Samsung Gulirkan Update Keamanan…",
+        "summary_zh": "Google News groups this under Technology: Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy - AsatuNews.co.id. Related coverage from AsatuNews.co.id, Medcom.id, Media Kamp…",
+        "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9UX0hMTl9aRTF2MXdpZ0pyOEpibDcxYktqdkNyZGhYQTJmQVhQVFVVV0gzaXQ2WjRScFFZdTVoWGo5QVRaTXNtVXFTZUF5Qll6ZlZ2amRralFkclpMNmd2R3JwWm1mRGdTRDBkRkdRaG0zTlVPR3UtNA?oc=5",
+        "rank_score": 25.147,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 27,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 24 Jam - Bloomberg Technoz",
+        "title_zh": "Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 24 Jam - Bloomberg Technoz",
+        "summary_en": "Google News groups this under Technology: Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 24 Jam - Bloomberg Technoz. Related coverage from Bloomberg Technoz, Kumparan.com, Medcom.id, detikInet centers on: Google Perkenalkan Gemini…",
+        "summary_zh": "Google News groups this under Technology: Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 24 Jam - Bloomberg Technoz. Related coverage from Bloomberg Technoz, Kumparan.com…",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQbTNwT2VHblNJWWhaY045UXVGbzIwUDFWalJZNG5hMlNfUHlERzlNWmwzc3JqdVh0cUNrbVl4SnNuMWJNNHBqTWNQUU9jcE5pUlRvT05uanpoclJFZUI1LXRQMmYzRDJrakM5TUNDdHQ0WjZZM3U1cmVBZlMxc2xFczZXNnhFQnQxczRfdkp3bTF2d01uUUlxNDNSYy1oOWVrYVVmazlBajlQeGQ0VTVqZFRGOA?oc=5",
+        "rank_score": 25.141,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 28,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan Performa Brutal dan Layar QHD+ Memukau - Liputan6.com",
+        "title_zh": "Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan Performa Brutal dan Layar QHD+ Memukau - Liputan6.com",
+        "summary_en": "Google News groups this under Technology: Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan Performa Brutal dan Layar QHD+ Memukau - Liputan6.com. Related coverage from Butota.id, Liputan6.com, Pelantar.id, Qoo Media centers on: Har…",
+        "summary_zh": "Google News groups this under Technology: Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan Performa Brutal dan Layar QHD+ Memukau - Liputan6.com. Related coverage from But…",
+        "link": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxNZERMX1F3VjBuT2J4VmZ6MGp6QUxkZ1UzaWc5Nlg5UHdaenlUMGNabWRKZ0xqRzVTVUxrMkNVT0NNeDV5OGNoOEdEVDlMLVZtYW9IYk80WGJaYlFuT250NGJ0VnhBYzN3OEwxRWhyQzA1dXlmdDR6U0tEbmNZTExlMVhmWUZuYUMzdHpWZ3lYenhldjZxLUV0LXc4RUhraVpqb0tkcE5meHBXVTBUc0x5QVFiXzJqNjhpcE1qR2JpN0hQZDdBNml2MFlnTURRcmhxa3hj?oc=5",
+        "rank_score": 25.14,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 30,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung Galaxy S26 Series - yangcanggih.com",
+        "title_zh": "Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung Galaxy S26 Series - yangcanggih.com",
+        "summary_en": "Google News groups this under Technology: Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung Galaxy S26 Series - yangcanggih.com. Related coverage from IDN Times, Qoo Media, Samsung magazín, VIVA Gadget centers on: Fitur One UI 9 Beta…",
+        "summary_zh": "Google News groups this under Technology: Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung Galaxy S26 Series - yangcanggih.com. Related coverage from IDN Times, Qoo Media,…",
+        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBVeHlINHFJYjZidUJiU0xkTkNTZEtuVnVwdGVtamdSbWFvVzFENVdOWVYzWlppYkJSTTFidWs1aVh0RVRYeWotdnBBbEZSWlJsbk42dGg4cjA2QzVxY1g2RW92ejZfRk00YXYw?oc=5",
+        "rank_score": 25.122,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 32,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary Edition Rilis di India - Gamebrott.com",
+        "title_zh": "Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary Edition Rilis di India - Gamebrott.com",
+        "summary_en": "Google News groups this under Technology: Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary Edition Rilis di India - Gamebrott.com. Related coverage from Batuah News, Gamebrott.com, Inikata.co.id, Media Kampung centers on: Prosesor…",
+        "summary_zh": "Google News groups this under Technology: Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary Edition Rilis di India - Gamebrott.com. Related coverage from Batuah News, Gameb…",
+        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9Xd3RZVmJSS2NoMlJ1Y3h4cUQ2LTRnWHVYT21oeEpnenRndUJpRFM2T01VdDBmR093MmhTMlJsTTc0WUg4QVVzd0FSSk9nLUJDQW5KcnJ4bUVmMFpmZjdTcTZrRVRFdlBLZFR1bkFWWmVVcC1SQjhjOXdn?oc=5",
+        "rank_score": 25.109,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Hantavirus and Disease Prevention",
+    "name_zh": "汉坦病毒与疾病预防",
+    "density": 3,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Rising awareness regarding Hantavirus outbreaks and associated public health risks is prompting local and global preventative measures.",
+    "narrative_zh": "公众对汉坦病毒爆发及相关健康风险的认识正在提高，并促使当地和全球采取预防措施。",
+    "source_mix": {
+      "google_news": 3
+    },
+    "source_labels": [
+      "Google News 3"
+    ],
+    "source_examples": [
+      {
+        "id": 23,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Waspada Penyakit dari Tikus, Akademisi Kedokteran UMM Ungkap Gejala dan Pencegahan Hantavirus - Universitas Muhammadiyah Malang",
+        "title_zh": "Waspada Penyakit dari Tikus, Akademisi Kedokteran UMM Ungkap Gejala dan Pencegahan Hantavirus - Universitas Muhammadiyah Malang",
+        "summary_en": "Google News groups this under Top Stories: Waspada Penyakit dari Tikus, Akademisi Kedokteran UMM Ungkap Gejala dan Pencegahan Hantavirus - Universitas Muhammadiyah Malang. Related coverage from DPR RI, Kompas.com, Pemerintah Provinsi Jawa…",
+        "summary_zh": "Google News groups this under Top Stories: Waspada Penyakit dari Tikus, Akademisi Kedokteran UMM Ungkap Gejala dan Pencegahan Hantavirus - Universitas Muhammadiyah Malang. Related…",
+        "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOVWh6VlJEYUJhcVZ6cHp1b0YxWC1nUGxuOHdUUzhGckNHZWVJX3RHVzk5dHFfRU5CZnpaYWc1cUlyNUY1NUNyVm9CalUwSnlobS1BanlqTlppdUFXb29Jc2ZIUW1PazhUNVMwSUpsMnVXY20tSUR0bzV3dzYyVGEtSnU1T0dHeDQwT25YZlBYMGpCX3JRdmpQNExNd2g1d05PQXpiRE9RTWZqaEJ2Ulc2UA?oc=5",
+        "rank_score": 25.155,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 54,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Wabah Hantavirus di Kapal Pesiar Mengejutkan Dunia, Ini Dampak Perubahan Iklim 2026 - Inikata.co.id",
+        "title_zh": "Wabah Hantavirus di Kapal Pesiar Mengejutkan Dunia, Ini Dampak Perubahan Iklim 2026 - Inikata.co.id",
+        "summary_en": "Google News groups this under Health: Wabah Hantavirus di Kapal Pesiar Mengejutkan Dunia, Ini Dampak Perubahan Iklim 2026 - Inikata.co.id. Related coverage from ANTARA News, Inikata.co.id, Kompas.id, RRI.co.id centers on: Wabah Hantavirus…",
+        "summary_zh": "Google News groups this under Health: Wabah Hantavirus di Kapal Pesiar Mengejutkan Dunia, Ini Dampak Perubahan Iklim 2026 - Inikata.co.id. Related coverage from ANTARA News, Inika…",
+        "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQQkJnN1pBYVdiZDY3dkhkak5tOGVQSlZ6U1RTaWRyQkdNZHNrY3c5bmV4dGNrSVBabkZwSDd6dHRIdUR2QXRLamhuajJBTW00U3hqUDRyQUF3S1Y5UE9zSVhwZUFMY1BWWjRwQ1dFeDVBTy1EQ0tOaVlMcjNQWERsU0NXWkRhcVdreWw2OUxaSEROcENuUTlxY2xZLU5JVzdHdnM5Z1FRcw?oc=5",
+        "rank_score": 24.966,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 118,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Virus Hanta Menular dari Tikus ke Manusia, Kenali Gejala dan Penanganannya - Infobanknews",
+        "title_zh": "Virus Hanta Menular dari Tikus ke Manusia, Kenali Gejala dan Penanganannya - Infobanknews",
+        "summary_en": "Google News groups this under Health: Virus Hanta Menular dari Tikus ke Manusia, Kenali Gejala dan Penanganannya - Infobanknews. Related coverage from Infobanknews centers on: Virus Hanta Menular dari Tikus ke Manusia, Kenali Gejala dan Pe…",
+        "summary_zh": "Google News groups this under Health: Virus Hanta Menular dari Tikus ke Manusia, Kenali Gejala dan Penanganannya - Infobanknews. Related coverage from Infobanknews centers on: Vir…",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNc2NtRndHWmFvdHZOTzRMUlVRWUl2ZGlKQWpvdm4tUGJTMklvT292OG5aUU1sZGREYkJ0WVR4YzBUQ0UzMzRXRTNjc01UMHliUVZLN19KXzVIRDUtbGMxeUduWTlRTHJHbUctM1AtX3ZNcEhqM1psWmFpcmprZTl4VktSV3V6WkMwZ2dCdzEyLUZPRllERThYRzl6cnlzUXN0LUo3Sw?oc=5",
+        "rank_score": 9.489,
+        "social_heat": "low",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Software and Productivity Tools",
+    "name_zh": "软件与生产力工具",
+    "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
     "H": 0,
-    "narrative_en": "Production challenges for foldable iPhones and organizational shifts in Apple's hardware division.",
-    "narrative_zh": "折叠屏iPhone的生产挑战以及苹果硬件部门的组织架构调整。",
+    "narrative_en": "Canva has introduced offline features in Indonesia to support productivity without internet reliance.",
+    "narrative_zh": "Canva在印尼引入离线功能，支持在无互联网连接时的生产力工作。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 24,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Technology",
+        "title_en": "Canva Offline Rilis di Indonesia, Edit Desain Tetap Jalan Gak Pake Internet - Medcom.id",
+        "title_zh": "Canva Offline Rilis di Indonesia, Edit Desain Tetap Jalan Gak Pake Internet - Medcom.id",
+        "summary_en": "Google News groups this under Technology: Canva Offline Rilis di Indonesia, Edit Desain Tetap Jalan Gak Pake Internet - Medcom.id. Related coverage from GadgetDIVA, Koran Manado, Medcom.id, Selular.ID centers on: Canva Offline Rilis di Ind…",
+        "summary_zh": "Google News groups this under Technology: Canva Offline Rilis di Indonesia, Edit Desain Tetap Jalan Gak Pake Internet - Medcom.id. Related coverage from GadgetDIVA, Koran Manado,…",
+        "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNLW1lcV9Hd3NmYjhtaVFZNXFkNVBDcEltM3lwSGNtaHgtREpqTlltcXNaUVFfMkhzR2xRUVFxU0c2VG9rTzNJUzZaSk5rUmk3UHlQODI0amlheXFCdHRaWVRwdXNCajZRVkJ0Y1ltUDg5MkJqazBrV2p1bHZXdGhIbHFLRDltQ3o3WEtNNHRZNFV2emZyX0VYS3Y4YVRZU2taNUdJVi1YWmJTYnRyb0ZXbjBtV0pSMEJFVkR4alpaemZ4VXBzWG1GZk9n?oc=5",
+        "rank_score": 25.155,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -422,16 +1378,262 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Gaming Showcases and Hardware",
-    "name_zh": "游戏展会与硬件",
-    "density": 2,
+    "name_en": "Coal Industry Policies",
+    "name_zh": "煤炭行业政策",
+    "density": 1,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Falling coal prices and Indonesian export policies are attracting significant global attention.",
+    "narrative_zh": "煤炭价格下跌及印尼出口政策正引发全球关注。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 26,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Harga Batu Bara Ambruk, Kebijakan Indonesia Jadi Sorotan Dunia - CNBC Indonesia",
+        "title_zh": "Harga Batu Bara Ambruk, Kebijakan Indonesia Jadi Sorotan Dunia - CNBC Indonesia",
+        "summary_en": "Google News groups this under Business: Harga Batu Bara Ambruk, Kebijakan Indonesia Jadi Sorotan Dunia - CNBC Indonesia. Related coverage from CNBC Indonesia, KabarBursa.com, MediaKompeten, fxstreet-id.com centers on: Harga Batu Bara Ambru…",
+        "summary_zh": "Google News groups this under Business: Harga Batu Bara Ambruk, Kebijakan Indonesia Jadi Sorotan Dunia - CNBC Indonesia. Related coverage from CNBC Indonesia, KabarBursa.com, Medi…",
+        "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQTXpMWUZNX2pKeUcwRW5QNUw1SjFUSWY0T25MbW9YT3pXOGxfZXZkOVJ0M3IxZ3d3Q2VVaDJENWhzNmd5aTFURF9pSEFidDFSeHhLQU5mR1RYT2hRRExTcUNwZ1JtYy1oOVRnSjJNWkkyUEZKbmxoNUo5RE9SeUhNT0pLUFVxem10S2doM21xRmdFYVRLYkZ0YUtlRnVHT0dNS3BtajlVSDVWZndYQ25GRUhvem1fdWxNS3JQS3lFaHNMMGdG?oc=5",
+        "rank_score": 25.144,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Automotive Sector News",
+    "name_zh": "汽车行业新闻",
+    "density": 3,
+    "R": 1,
+    "S": 1,
+    "T": 1,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Market fluctuations and strategic shifts at major automakers like BYD, Honda, and Daihatsu underscore a changing automotive landscape.",
+    "narrative_zh": "比亚迪、本田和大发等主要汽车制造商的市场波动和战略转型突显了不断变化的汽车市场格局。",
+    "source_mix": {
+      "google_news": 3
+    },
+    "source_labels": [
+      "Google News 3"
+    ],
+    "source_examples": [
+      {
+        "id": 31,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "BYD Indonesia Jawab Rumor Harga M6 DM Rp 300 Jutaan - detikoto",
+        "title_zh": "BYD Indonesia Jawab Rumor Harga M6 DM Rp 300 Jutaan - detikoto",
+        "summary_en": "Google News groups this under Business: BYD Indonesia Jawab Rumor Harga M6 DM Rp 300 Jutaan - detikoto. Related coverage from ANTARA News Gorontalo, Bisnis.com, Kompas.com, Oto centers on: BYD Indonesia Jawab Rumor Harga M6 DM Rp 300 Jutaa…",
+        "summary_zh": "Google News groups this under Business: BYD Indonesia Jawab Rumor Harga M6 DM Rp 300 Jutaan - detikoto. Related coverage from ANTARA News Gorontalo, Bisnis.com, Kompas.com, Oto ce…",
+        "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPQ2xzT3F2emlQOEdRcUZJb0NaVXhOeVo1bjdNbTFwakJnS1lnZGxNaUZDQjFzMGE5ZENocHdXQVdWVGlIQzdrNEZWQll3WnBjWE5zbGRfV0dGYU9ORGo0T3pOUHpnUzZuMW5PQkFqajZUd0RvemkyWDl5dThObGJ1UlNpZ3RRV2g2WFBrSjliNWlDRnc40gGaAUFVX3lxTE5XTklUdnZRUWh4WkYwLUJ1dzRDcWZ4NTF6UXAxeWhDV0wtb3oxU2ZIc1NGRDNCWmk5ZEd3YVJid0xtRVhpc1dJUElsNzVqTFp6dUtfMzlJMm9qb3lvVjRYX1MtV05CNm1CdVRJekplSW5sTG4zNkNkTzNNQURPZ2NIWlBOWjVYc21ScGRhR0JQREVLMmptQnNLd1E?oc=5",
+        "rank_score": 25.112,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 47,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Pertama dalam 70 Tahun Rugi Besar-besaran, Bos Honda Bilang Begini - detikoto",
+        "title_zh": "Pertama dalam 70 Tahun Rugi Besar-besaran, Bos Honda Bilang Begini - detikoto",
+        "summary_en": "Google News groups this under Business: Pertama dalam 70 Tahun Rugi Besar-besaran, Bos Honda Bilang Begini - detikoto. Related coverage from Bisnis.com, Liputan6.com, Medcom.id, RiderTua.com centers on: Pertama dalam 70 Tahun Rugi Besar-be…",
+        "summary_zh": "Google News groups this under Business: Pertama dalam 70 Tahun Rugi Besar-besaran, Bos Honda Bilang Begini - detikoto. Related coverage from Bisnis.com, Liputan6.com, Medcom.id, R…",
+        "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNaXJGNUMydjZZeUdGcHV3RkgxMTVlTnZkdXpRYnRIdWwzRHoxV1Nuc1BON1JpbVhjMGtBRnBISmM4bzVGQVE0aGFrNTQxd1JveVZBYU9ndVlxa2FUdHh4OTJVV29lT0dZcDY4WmE1SE0yaHpQNU5iekpMampkUlhzTFVsdHdWWGZlMFNOVW1weWlHaU16eG5qWV9uYXZXUU0xdWxXX1p30gGrAUFVX3lxTE4yMzNvenBqVGpVVUxvSzlOci1JVG54NXhvMkVTWnp6M0o5STQwYnVxdkVwbXJGQlJTNGt6WVdMUWdHUDM4TmpnU01yNk04Skl2SlRvUHRwMlEtbHJ0Vnl3UEEybDJCU1BMNTRlZmc3Ykt0a1h6cW9IOXBvMkN6NkdxNE1SOUVraDF4aVB1aWxVdVRIZkRBMm1TUTBLZnRNVnQ1MTcyRVMxNXhzOA?oc=5",
+        "rank_score": 25.005,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 71,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Daihatsu Kuasai Pasar Mobil di Bawah Rp 300 Juta, Ini Model Terlarisnya - detikoto",
+        "title_zh": "Daihatsu Kuasai Pasar Mobil di Bawah Rp 300 Juta, Ini Model Terlarisnya - detikoto",
+        "summary_en": "Google News groups this under Business: Daihatsu Kuasai Pasar Mobil di Bawah Rp 300 Juta, Ini Model Terlarisnya - detikoto. Related coverage from CNBC Indonesia, CNN Indonesia, Kompas.com, Liputan6.com centers on: Daihatsu Kuasai Pasar Mob…",
+        "summary_zh": "Google News groups this under Business: Daihatsu Kuasai Pasar Mobil di Bawah Rp 300 Juta, Ini Model Terlarisnya - detikoto. Related coverage from CNBC Indonesia, CNN Indonesia, Ko…",
+        "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPbS1Dd0FpWDlmTmtMRWRHejdTRGxldFY5TW5YN3otTzlRNVUtcUVROXdCLWRmZmtubjVUcTJWdjA4ZTJiRU16YmJ3dWVsUk5HOXRrSEdWaFlrYjBTQXBtLW9CQXNVWi02U2VLTzRCRkhKNmViRV82UTNoTGp6Q2RBUTJwaVJSTHhhUFozdS1oSnNMMGlGczRoRTEzSHk3MFdTNWluaWNfSkZBODRp0gGyAUFVX3lxTE1QdjVsZl90c3FrRW9JRGcyeE5Kb0RDaTNFU01zUXp3NHppV2NpQ1Z6ME5QdS1yMmx4M002cmtDcDRPQmpHMTN5Q1VITXNyN1pkaVUxT1QzNXRmc2w4dHdXUURTR0JqaFZIbm45S1pSTTNvMUlCbjVYZHZsejIxel9ZUGVzeVlYZlR4T1c4aU5YckQ0elNfVVdIUkpNWmpCd2RXLTNoREM5NmVZOVVpREtvZFE?oc=5",
+        "rank_score": 24.547,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Gold Price Surge",
+    "name_zh": "金价飙升",
+    "density": 1,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Antam gold prices saw a sudden increase of Rp 35,000, reflecting market volatility.",
+    "narrative_zh": "Antam金价突然上涨35,000印尼盾，反映了市场波动性。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 33,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Harga Emas Antam Tiba-tiba Lompat Rp 35 Ribu - detikFinance",
+        "title_zh": "Harga Emas Antam Tiba-tiba Lompat Rp 35 Ribu - detikFinance",
+        "summary_en": "Google News groups this under Top Stories: Harga Emas Antam Tiba-tiba Lompat Rp 35 Ribu - detikFinance. Related coverage from ANTARA News Jambi, ANTARA News Megapolitan, CNBC Indonesia, detikFinance centers on: Harga Emas Antam Tiba-tiba L…",
+        "summary_zh": "Google News groups this under Top Stories: Harga Emas Antam Tiba-tiba Lompat Rp 35 Ribu - detikFinance. Related coverage from ANTARA News Jambi, ANTARA News Megapolitan, CNBC Indo…",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPbS1IRFVxSkVyMEVpOFN0QjR2bjVBU1IyeUxVcjV6ZnFZVW5rcnNjU0Z0SEhvMzFPMVBQSUotUlczVnBxdzlYVWhyY3l6T0c5c2owbFVjaHpSbkd1YUtmQW45NmJuZ1l1WDczRlFqUXpQMW84ZkJJaDJJa0pOX1Q5VTlDSTB1dldxZUQ1N1ZsMEZkNUgyT1d3bWV0bVF2clZzYnhmZNIBqgFBVV95cUxPelFQSkVFQjNBV3cxZFNxclBoeHlaX1I1aTNxSDR2WDJqRjhQOVdTMDNTN1JTUlJhakcySGZyTkItMk14VWV1TnB5NVFUVzJHb3VnX0lnZ2QzaVItanc2WDVfYnlUek1BNHZsZjkxMlNHVkFodzdzenFyeXNSckIxblpSWHlWc3htYlpnX2tJczB6RW9jbll4ZHcyM3hrb21LNnloZ0FwWnFIdw?oc=5",
+        "rank_score": 25.099,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": true,
+    "question": "Will the price of Antam gold exceed Rp 1,500,000 per gram by year-end 2026?",
+    "question_en": "Will the price of Antam gold exceed Rp 1,500,000 per gram by year-end 2026?",
+    "question_zh": "Antam黄金价格是否会在2026年底前超过每克150万印尼盾？",
+    "source": "logammulia.com",
+    "prob": 45,
+    "prob_reason_zh": "涨势依赖避险需求，持续性存疑。",
+    "prob_reason_en": "Reliant on safe-haven demand, uncertain."
+  },
+  {
+    "name_en": "Personal Legal and Celebrity Issues",
+    "name_zh": "个人法律与名人事件",
+    "density": 12,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
-    "H": 0,
-    "narrative_en": "Schedules for upcoming gaming showcases and new processor launches.",
-    "narrative_zh": "近期游戏展会时间表及新处理器发布情况。",
+    "H": 2,
+    "narrative_en": "Celebrity controversies and legal disputes, including labor issues and defamation, continue to generate significant social and media interest.",
+    "narrative_zh": "名人争议与法律纠纷（包括劳工问题和诽谤）持续吸引大量的社交和媒体关注。",
+    "source_mix": {
+      "google_news": 12
+    },
+    "source_labels": [
+      "Google News 12"
+    ],
+    "source_examples": [
+      {
+        "id": 42,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sudah Rusak! - detikHOT",
+        "title_zh": "Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sudah Rusak! - detikHOT",
+        "summary_en": "Google News groups this under Top Stories: Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sudah Rusak! - detikHOT. Related coverage from ANTARA News, CNN Indonesia, JPNN.com, Kompas.com centers on: Erin Tutup Pintu Damai dengan Eks…",
+        "summary_zh": "Google News groups this under Top Stories: Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sudah Rusak! - detikHOT. Related coverage from ANTARA News, CNN Indonesia, JPNN.co…",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQSExlcE41ZUxzendneUJJQ0I3UUlUNEdjSTMwVnRmUU1Da2RkalBmWUU4bW10NnFkQlNRMWtBdno3RzNKaVlOa0F3VjQyV2lwZ3U4b1d4M2xGZll2c2M0MU1oLUdBdUFrbEdLSFdfemFCdGhnLVVmSFVjTzB1bjZkZU5ZOC15SVlMT1hvLTU4YmhKbTVta3cyZjVlQlFGNDZvaWw0btIBqgFBVV95cUxQZzlmTUJMamF4SGZ5UTBfaElpOUNybTRFRzB3QjZXaUprbUtyYllDVVdBZ3R0aW94bEpoa0w0amd4UllQbkY2bDJzX1R1YjBTNlZTTm1CblV0SnYtM0RTMmpNQ21RYUMwdjlxaDc5ZVFIcThBdXo5VGJqSUVuUVJtTURiTkZFOXBlLW9EbHVnMU8zQ24tVUsweHo4Z0w5X3Y0V0VLQkNMVDFZUQ?oc=5",
+        "rank_score": 25.043,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 48,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi ke Acara Keluarga - detikHOT",
+        "title_zh": "Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi ke Acara Keluarga - detikHOT",
+        "summary_en": "Google News groups this under Entertainment: Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi ke Acara Keluarga - detikHOT. Related coverage from CNN Indonesia, Medcom.id, Media Indonesia, celebrity.okezone.com centers on: Diduga…",
+        "summary_zh": "Google News groups this under Entertainment: Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi ke Acara Keluarga - detikHOT. Related coverage from CNN Indonesia, Medcom.id…",
+        "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOZEplSDJTaDJDTlE1aTJHRFg3RmVJRHRJS1paQXdVcFRYYkNjdlQ4VEZjX1dUbzZOR3o5dXp3UnpjUWNaOVFEa3F0S0EyNjBqZ01WY3AxdUNkTHlhTHpmb3JUUS03QkdZVU5SdHdIX01pbUljVXVRVl93cUgyMzh0LXMyXzRob1U2alF4M0t3amR4cmlxQmxvOVBWMWppSU15dUxLbGZuRFpWQUR6Zm1fSU5B0gG3AUFVX3lxTFBtZWZQdVV0NlIyU0MydlpNMHJVT1I3dVlneTNKODR3bXR5WFFWSGZ2MVh4T090bjlmcHRwZmtndC1WRmdsZ2w1ZzFmZFlUS2NuWU5SWFJQLUtZN0lWLVZSS3RtY3JWazBQMmZGUkVxdWVHQlY1cGgzMVBXTHlGWjZONFFGTW5hVXNUOEZseUo0YWFVNEZFWEdGekZOd1UzMEVFTGpTYjJIdXJwalo4ZldrcF96UEVoZw?oc=5",
+        "rank_score": 25.001,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 49,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "John Travolta Tak Menua di Usia 72, Dokter Prediksi Perawatan Anti Aging-nya - Wolipop",
+        "title_zh": "John Travolta Tak Menua di Usia 72, Dokter Prediksi Perawatan Anti Aging-nya - Wolipop",
+        "summary_en": "Google News groups this under Entertainment: John Travolta Tak Menua di Usia 72, Dokter Prediksi Perawatan Anti Aging-nya - Wolipop. Related coverage from Babel Insight, HARIAN DISWAY, Kompas.id, Wolipop centers on: John Travolta Tak Menua…",
+        "summary_zh": "Google News groups this under Entertainment: John Travolta Tak Menua di Usia 72, Dokter Prediksi Perawatan Anti Aging-nya - Wolipop. Related coverage from Babel Insight, HARIAN DI…",
+        "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxPYUZLbjBmRUdSZnNpUzduVGdsQ1poQW9Vd3o4MGdGUG9xekt3cEVzZ0NhSEx2VTBWbjBLcVd1VjMtNW5ZelRhQ0JKUm82QWVSWEtQb0Q4OUJjUXUwbW5iUHV0SUxuTzhrRlh5dExtMm9KV0tDSFNyN2QxNkYxTzg0eUVKdzdSMUVFeGcwc1piMDJsSmVRdjNPZnJaYUtXdFR3dTVpUVFpTkhnR2J1aXF1bFZ0WFNISnVaRHlfSnhheFYyN2xwYTVJSDlkY9IB0AFBVV95cUxOQ09PTHAtRTJzM0RCZWdUTmFReUloUzhocXJxc1Z4cHZVT3E5WkYyN2REeXdSWDBYcWo4clItSHl6ckNVX0JBalZadDYzWmJhWTBnMTJCTngtMGpkR3lCNFRNUlh2a2NaSmNtSGJNTHNJWXFwQV90VVlURmZGM0F5LU5LUGpaQnhWRWJCeFFQN3hjd3FKLS10bWVQbDVPNVRRM1pCNVlCVHBDMW9YRkJHYS0ycGFZTmpyRGc3TVFwdmNNRUVfekFrR0hGam1RRGdy?oc=5",
+        "rank_score": 24.998,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 57,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "Momen Pratama Arhan dan Inka Andestha Liburan Bareng Keluarga - detikHOT",
+        "title_zh": "Momen Pratama Arhan dan Inka Andestha Liburan Bareng Keluarga - detikHOT",
+        "summary_en": "Google News groups this under Entertainment: Momen Pratama Arhan dan Inka Andestha Liburan Bareng Keluarga - detikHOT. Related coverage from ANTARA News, IDN Times, RCTI+, RRI.co.id centers on: Momen Pratama Arhan dan Inka Andestha Liburan…",
+        "summary_zh": "Google News groups this under Entertainment: Momen Pratama Arhan dan Inka Andestha Liburan Bareng Keluarga - detikHOT. Related coverage from ANTARA News, IDN Times, RCTI+, RRI.co.…",
+        "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPR2JUZzJIX3dTMWxNd1hjcG5KbXFsUXdLVHI2bTAtUk5pU1gyZFFweHNWRXhGeHFQVFhJVGE2WWNMTEhVelB4RkNHNTZMYnhTTzFTbllJS0o0Q3phOVY2ZGc1eThzclFRR2lBemZIRWN3V1JNSTUwN0d2N1hPVjRmTnFEeGtBYVdmdEJ0ZmgwZHlEVWU2a055UFREZTdyUVZM0gGmAUFVX3lxTE0tTmhVU004U3JCR1VpUUV5RjNXeHUxMHRUODJQdG9Bc3N2anVZM2JUczdKdURWQnVFc0EwRkU0MFNzUUhQTEt5VF9BZGloRmJsMDAxLThKSEVkbXd2R3VDcng1VDFfMkc2QlBJeHJPdmhlN0p3OV9EbndRX1ZCR1gzdW15ZnI4VFJ0V0dZUWFGWHVKUGpvNFJkeV95VzFQLTlJZWRzNlE?oc=5",
+        "rank_score": 24.957,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 59,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugihan di Gunung Kawi - detikHOT",
+        "title_zh": "Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugihan di Gunung Kawi - detikHOT",
+        "summary_en": "Google News groups this under Entertainment: Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugihan di Gunung Kawi - detikHOT. Related coverage from CNN Indonesia, JPNN.com, Liputan6.com, Tabloidbintang.com centers on: Respons Jordi…",
+        "summary_zh": "Google News groups this under Entertainment: Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugihan di Gunung Kawi - detikHOT. Related coverage from CNN Indonesia, JPNN.com,…",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxORlJMYldLRWQ1dDlIWGJhSUN5TmZSa3pTTDRCR3hDUXg5eFI0NUhZLWZkY1JkZFVBN2xPTnA2UHE3ODdLVkhWWW1qUFo5dzRabVJPbmkwM2daZHZGRGxoX1dzcWhNaExwSVR6VGs4c19PTVZFQnI3ZWlrTzVPdHl1NkRIcllLRF9ndnpzQmRpNXh2RVhLZzAyYkxaZmJhS3ZQbXNnZFhzai1QQmN4eG9tdXhpY9IBuAFBVV95cUxOZ2xpN01KRV81V3dhcHFwYWU0cFJoT3FZNzF5c1BXamFjTHRzMWpmcnVWc1d3dG1HN3NJZUU5aXl1WUdadUNsZE84RDRYQTFyZHJBbUxDeVZ4TGhyNE5LX19CcGMzOU5MNHVNRFFEdEJSVG9DUGlLdzlQN0Nvd3I5aE5wOEpjdGZfaEdKTy1xZEp3azl3VGZyNVJRd2NfSUtkLUc0Rkx2enBSUFRFak94MEN2THdacnFE?oc=5",
+        "rank_score": 24.928,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 60,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Entertainment",
+        "title_en": "KPop Demon Hunters Pertahankan Posisi di Top 10 Billboard Global - CNN Indonesia",
+        "title_zh": "KPop Demon Hunters Pertahankan Posisi di Top 10 Billboard Global - CNN Indonesia",
+        "summary_en": "Google News groups this under Entertainment: KPop Demon Hunters Pertahankan Posisi di Top 10 Billboard Global - CNN Indonesia. Related coverage from CNN Indonesia, Inikata.co.id, Kompas.com, Kompas.tv centers on: KPop Demon Hunters Pertaha…",
+        "summary_zh": "Google News groups this under Entertainment: KPop Demon Hunters Pertahankan Posisi di Top 10 Billboard Global - CNN Indonesia. Related coverage from CNN Indonesia, Inikata.co.id,…",
+        "link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQdHcxZ2x4ZHNGSGlOTzZJVG5VZ19RTUFpODhlV3NaUzVqelJKNy1JcjNQTVloRTZOR2wxbUw1ZERkNmtfWGxXWHU0UlNrY0VHTVlCdFRnTDNUdmptSC1qREpvU2pNdkRZYTczQWpnWkpLdEhtQ0FTaTZvemp2bTRhR09qSWNkQ3F3dElRZXZDcGZLcjRHNF9CXzFJTVRmTVVqWjZUeXVsdGpZaGVDR0l6ZmhMUnZYakpUU1JkSzVfVGhMRS1uTjJr0gHMAUFVX3lxTE5oTkd1TUtzVmZQaV8tSkkzRWpuNi1lQ1g2YnZkYlFoaGUycmtWVEFYMVpROUZDbHZzdkNGWkZPc184czJ6clN0bGJLLThuZVNQbThmZlVtNlVTTGNNZHdNcWJpdUlVWEI4TTlpMHc2ZDhhX3J1MC0xX2pKRDlaZXZKSnRKVVJQNm5hOHNDaUxoWV9GNEdLS0RYRy1NMHVtUTIwazdtRTFETkpkd0JVYmt6dklPT0N4NF9IaUk4QV9ZcG1GTjJIWTVwTXZpUA?oc=5",
+        "rank_score": 24.914,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -442,236 +1644,192 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Mobile Device Market and Features",
-    "name_zh": "移动设备市场与功能",
+    "name_en": "Public Health Initiatives",
+    "name_zh": "公共卫生倡议",
     "density": 10,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Updates on mid-range and gaming mobile device specifications, AI integration, and software security.",
-    "narrative_zh": "中端及游戏移动设备规格更新、AI集成及软件安全性。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Gojek Revenue Sharing Model",
-    "name_zh": "Gojek收益分配模式",
-    "density": 1,
     "R": 1,
-    "S": 2,
-    "T": 1,
+    "S": 1,
+    "T": 0,
     "U": 1,
     "H": 1,
-    "narrative_en": "Implementation of a new revenue-sharing scheme between Gojek and its drivers.",
-    "narrative_zh": "Gojek与其司机之间实施新的收益分配模式。",
+    "narrative_en": "Focus on obesity treatments, malaria/AIDS/Rabies control, and immunization campaigns reflects ongoing public health efforts.",
+    "narrative_zh": "针对肥胖症治疗、疟疾/艾滋病/狂犬病控制以及免疫接种运动的关注，体现了持续的公共卫生努力。",
+    "source_mix": {
+      "google_news": 10
+    },
+    "source_labels": [
+      "Google News 10"
+    ],
+    "source_examples": [
+      {
+        "id": 44,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Top Stories",
+        "title_en": "Bedah bariatrik bantu tangani pasien obesitas dengan komplikasi - ANTARA News Sulteng",
+        "title_zh": "Bedah bariatrik bantu tangani pasien obesitas dengan komplikasi - ANTARA News Sulteng",
+        "summary_en": "Google News groups this under Top Stories: Bedah bariatrik bantu tangani pasien obesitas dengan komplikasi - ANTARA News Sulteng. Related coverage from ANTARA News Sulteng, Media Indonesia, RRI.co.id, Tribunnews.com centers on: Bedah baria…",
+        "summary_zh": "Google News groups this under Top Stories: Bedah bariatrik bantu tangani pasien obesitas dengan komplikasi - ANTARA News Sulteng. Related coverage from ANTARA News Sulteng, Media…",
+        "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPcGszUlJuZmlZbmFCN0ZKTXlCbnZEXzZWZC1NQzdoNnVzYk1PNFFOWmg2QkJPaUctemhfZm5oWk1FNGRhOEhvQnBrSUNoWmpDX1VWS082QkQ1R2pYUWZyQWVSLVkzc01GVU5WNkM1Q0QtQS0wd1NyZ0NKSzNJU0lzRVdKaVk0dVM3RFc5X281T3FNQWZvUTNlNTJZSVZJQmJEZldXX0k4czM4d0tw?oc=5",
+        "rank_score": 25.042,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 46,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Kasus Malaria Meningkat, Guru Besar UGM Soroti Faktor Lingkungan dan Ancaman Zoonosis - Universitas Gadjah Mada",
+        "title_zh": "Kasus Malaria Meningkat, Guru Besar UGM Soroti Faktor Lingkungan dan Ancaman Zoonosis - Universitas Gadjah Mada",
+        "summary_en": "Google News groups this under Health: Kasus Malaria Meningkat, Guru Besar UGM Soroti Faktor Lingkungan dan Ancaman Zoonosis - Universitas Gadjah Mada. Related coverage from Babel Insight, Kumparan.com, MetroTVNews.com, RRI.co.id centers on…",
+        "summary_zh": "Google News groups this under Health: Kasus Malaria Meningkat, Guru Besar UGM Soroti Faktor Lingkungan dan Ancaman Zoonosis - Universitas Gadjah Mada. Related coverage from Babel…",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNLXhjWWRnbFlkaEFhLTc2SjZZWWFqTFBoeGVpMXpyZGdhc0VRbFBla2ZBa3lDQ0ViYTFjTkwwNDFYbmVHMGVMcXRZcTJhbm1VeV9zZjcwTmZLLU9xMXFZUjVZcjVxWWdsczhYenp5REp3RXQzX1RMc3J1YVpIN3VSdlBVbENXZTMyYTVwTlFjY2FhcWpGQjNLV0VQZEFHWkRpNTk1Wjc3c0xGd1h1dDQ2WG1MWQ?oc=5",
+        "rank_score": 25.03,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 86,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "DIY Perkuat Kolaborasi Jaga Keberlanjutan Penanggulangan AIDS - RRI.co.id",
+        "title_zh": "DIY Perkuat Kolaborasi Jaga Keberlanjutan Penanggulangan AIDS - RRI.co.id",
+        "summary_en": "Google News groups this under Health: DIY Perkuat Kolaborasi Jaga Keberlanjutan Penanggulangan AIDS - RRI.co.id. Related coverage from Berita Jejak Fakta, Emitennews.com, Kantor Kementerian Agama Kota Yogyakarta, RRI.co.id centers on: DIY…",
+        "summary_zh": "Google News groups this under Health: DIY Perkuat Kolaborasi Jaga Keberlanjutan Penanggulangan AIDS - RRI.co.id. Related coverage from Berita Jejak Fakta, Emitennews.com, Kantor K…",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPZHQ5cXMwZHlwMm5DVG0wOHRzSG1EQzJ1QklfMEpfQnJRTmFoaURkbE1rck02VTRmTGxlWXpUOVFsZzRYZHFGYy1MXzRZaG40WlBrWFIyVUVJNlVKRDVYUFFhOEt3WlE1QlB1NVVOX1dyMml3ZHRhRmN6dzI4NkdESEZ6SW03RzFoRTFoYXlxOEMwbEFHZjB6U2VQRFNfLTFpd044VjdBWGZuWkU?oc=5",
+        "rank_score": 24.402,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 91,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Lawan Hoaks Imunisasi, Undip dan UNICEF Sasar Anak Zero Dose di Pekalongan - RRI.co.id",
+        "title_zh": "Lawan Hoaks Imunisasi, Undip dan UNICEF Sasar Anak Zero Dose di Pekalongan - RRI.co.id",
+        "summary_en": "Google News groups this under Health: Lawan Hoaks Imunisasi, Undip dan UNICEF Sasar Anak Zero Dose di Pekalongan - RRI.co.id. Related coverage from ANTARA Foto, Epaper Media Indonesia, MetroTVNews.com, RRI.co.id centers on: Lawan Hoaks Imu…",
+        "summary_zh": "Google News groups this under Health: Lawan Hoaks Imunisasi, Undip dan UNICEF Sasar Anak Zero Dose di Pekalongan - RRI.co.id. Related coverage from ANTARA Foto, Epaper Media Indon…",
+        "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNYURPbzQtaHdWbmk5NXVNT1Z1ekt2NTZvNTgxbjhncnVvWUNVUm9ZaE1zNHJJd1hTVk5OUThOY0dzM1FNQVRHU25Xa1ZVZU1kYVV4b3RyMTBBT25iSDN1U2stV3hfdFk1N3F4OHBieGh0QzRZTllLUWd2T2EwWWdULUExUzYzYTlWQ2xaaGdQbjdtbEVkbkQ1S0xJTmZiUUVIbXc5UXEtaVVwZnRrNnZraUpKT04zalE1aGc?oc=5",
+        "rank_score": 24.357,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 95,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Penyebaran HIV/AIDS “Siaga Satu”, Pemkot Perkuat Upaya Edukasi dan Pencegahan - Pemerintah Kota Pekalongan",
+        "title_zh": "Penyebaran HIV/AIDS “Siaga Satu”, Pemkot Perkuat Upaya Edukasi dan Pencegahan - Pemerintah Kota Pekalongan",
+        "summary_en": "Google News groups this under Health: Penyebaran HIV/AIDS “Siaga Satu”, Pemkot Perkuat Upaya Edukasi dan Pencegahan - Pemerintah Kota Pekalongan. Related coverage from Babel Insight, Kabar Tangsel, Kompas.com, Liputan6.com centers on: Peny…",
+        "summary_zh": "Google News groups this under Health: Penyebaran HIV/AIDS “Siaga Satu”, Pemkot Perkuat Upaya Edukasi dan Pencegahan - Pemerintah Kota Pekalongan. Related coverage from Babel Insig…",
+        "link": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOQnZoUEJiV3RVb09kUXRkRUQ2MzJHNWRpbGNnUW96OURSdndNM3RNSkh3QVpNWGx1V1BQUXJ1WGthbDdiZVhMS0xFcGZHME95bkZzMW5taWQtaDYwODRuOHhiN0t6eU85R2o2WS1TZWZGYWQ0NmpTQlNvQUN1SDFJVjhGU0E4cEs2Qm84ejFXMkYyRmVmS241b0hFMGtqYkFwN29KbVhPUFd4X2ZLYXJKbDhtX2JfZ1JPVkdlQXBOUUlFcGFxbkRILVFFLWQ?oc=5",
+        "rank_score": 24.182,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 96,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Health",
+        "title_en": "Hoaks: Vaksin Campak Sebabkan Autisme Anak - RRI.co.id",
+        "title_zh": "Hoaks: Vaksin Campak Sebabkan Autisme Anak - RRI.co.id",
+        "summary_en": "Google News groups this under Health: Hoaks: Vaksin Campak Sebabkan Autisme Anak - RRI.co.id. Related coverage from ANTARA News, Halodoc, PELITA KARAWANG, RRI.co.id centers on: Hoaks: Vaksin Campak Sebabkan Autisme Anak; [SALAH] Vaksin Cam…",
+        "summary_zh": "Google News groups this under Health: Hoaks: Vaksin Campak Sebabkan Autisme Anak - RRI.co.id. Related coverage from ANTARA News, Halodoc, PELITA KARAWANG, RRI.co.id centers on: Ho…",
+        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNdDluWTVxTUE1Vk42V0pTLTFMZDRVa0ZJLUhYZE53aWIzOGxUN2lpYVpTN0wtb3I2a1NWT1A2Um5LLVVpdXMxZlVxdlJrQzVwQUEwNGo1STFCWkYxRm9VZkRxaXdKS1lPNThsQXc2SmNhZVpfU2pKamJqeUVsTWtTeG9oSQ?oc=5",
+        "rank_score": 23.546,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Ministry of Transportation",
+    "source": null,
     "prob": null,
     "prob_reason_zh": "",
     "prob_reason_en": ""
   },
   {
-    "name_en": "Prajogo Pangestu Stock Performance",
-    "name_zh": "Prajogo Pangestu股票表现",
-    "density": 2,
-    "R": 1,
-    "S": 2,
-    "T": 2,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Significant losses and downward trends in the stock values of companies linked to Prajogo Pangestu.",
-    "narrative_zh": "Prajogo Pangestu相关企业股票市值大幅缩水及下跌趋势。",
-    "bettable": true,
-    "question": "Will Chandra Asri (TPIA) stock price rebound by at least 10% from its May 2026 low by the end of Q3 2026?",
-    "question_en": "Will Chandra Asri (TPIA) stock price rebound by at least 10% from its May 2026 low by the end of Q3 2026?",
-    "question_zh": "Chandra Asri (TPIA)的股价在2026年第三季度结束前是否会从2026年5月的低点回升至少10%？",
-    "source": "Indonesia Stock Exchange (IDX)",
-    "prob": 40,
-    "prob_reason_zh": "市场情绪疲软，短期强劲反弹难度大。",
-    "prob_reason_en": "Weak sentiment hinders sharp recovery."
-  },
-  {
-    "name_en": "Coal Price and Export Policy",
-    "name_zh": "煤炭价格与出口政策",
-    "density": 1,
-    "R": 2,
-    "S": 2,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Global focus on the decline in coal prices and the impact of Indonesia's export policy.",
-    "narrative_zh": "全球对煤炭价格下跌及印尼出口政策影响的关注。",
-    "bettable": true,
-    "question": "Will Indonesia restrict coal exports to below 500 million tons in 2026?",
-    "question_en": "Will Indonesia restrict coal exports to below 500 million tons in 2026?",
-    "question_zh": "印尼是否会将2026年的煤炭出口量限制在5亿吨以下？",
-    "source": "Ministry of Energy and Mineral Resources (ESDM)",
-    "prob": 35,
-    "prob_reason_zh": "煤炭仍是外汇支柱，过度限制出口阻力大。",
-    "prob_reason_en": "High export dependence limits restrictions."
-  },
-  {
-    "name_en": "Gold Price Movements",
-    "name_zh": "黄金价格走势",
-    "density": 2,
-    "R": 2,
-    "S": 2,
-    "T": 2,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Recent volatility and sharp price spikes in Indonesian gold markets.",
-    "narrative_zh": "印尼黄金市场的近期波动及价格大幅飙升。",
-    "bettable": true,
-    "question": "Will the price of 1 gram of Antam gold exceed 1.5 million IDR by December 31, 2026?",
-    "question_en": "Will the price of 1 gram of Antam gold exceed 1.5 million IDR by December 31, 2026?",
-    "question_zh": "到2026年12月31日，1克Antam黄金的价格是否会超过150万印尼盾？",
-    "source": "PT Aneka Tambang (Antam)",
-    "prob": 70,
-    "prob_reason_zh": "全球避险需求持续推高黄金价格。",
-    "prob_reason_en": "Global safe-haven demand boosts gold."
-  },
-  {
-    "name_en": "Hajj Pilgrimage Service Issues",
-    "name_zh": "朝觐服务问题",
-    "density": 2,
-    "R": 1,
-    "S": 1,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Reports of subpar accommodations and medical challenges faced by Indonesian pilgrims in Saudi Arabia.",
-    "narrative_zh": "关于印尼朝觐者在沙特所面临的住宿不佳和医疗挑战的报道。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Ministry of Religious Affairs",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Drone Attacks on NATO and Middle East",
-    "name_zh": "北约与中东无人机袭击",
-    "density": 3,
-    "R": 1,
-    "S": 1,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Ongoing drone-related security concerns across Europe (NATO) and the Middle East.",
-    "narrative_zh": "欧洲（北约）及中东地区持续不断的无人机相关安全担忧。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "NATO / Regional Defense Sources",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Rupiah Exchange Rate Performance",
-    "name_zh": "印尼盾汇率表现",
-    "density": 2,
-    "R": 2,
-    "S": 2,
-    "T": 2,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Fluctuations and concerns regarding the long-term stability of the Indonesian Rupiah against the US Dollar.",
-    "narrative_zh": "关于印尼盾对美元长期稳定性的波动及担忧。",
-    "bettable": true,
-    "question": "Will the USD/IDR exchange rate close above 16,500 on December 31, 2026?",
-    "question_en": "Will the USD/IDR exchange rate close above 16,500 on December 31, 2026?",
-    "question_zh": "到2026年12月31日，美元兑印尼盾汇率收盘价是否会高于16500？",
-    "source": "Bank Indonesia",
-    "prob": 60,
-    "prob_reason_zh": "强美元周期与经常账户压力维持高汇率。",
-    "prob_reason_en": "Strong USD and account pressure persist."
-  },
-  {
-    "name_en": "Trump Tax Audit Immunity",
-    "name_zh": "特朗普税收审计豁免权",
+    "name_en": "International Defense Intercepts",
+    "name_zh": "国际防务拦截事件",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
-    "H": 0,
-    "narrative_en": "Political controversy over lifetime tax audit immunity granted to Donald Trump.",
-    "narrative_zh": "关于唐纳德·特朗普被授予终身税收审计豁免权的政治争议。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Entertainment Industry Personal Disputes",
-    "name_zh": "娱乐业私人纠纷",
-    "density": 6,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "High-profile personal controversies and relationships involving Indonesian public figures.",
-    "narrative_zh": "印尼公众人物参与的各类高关注度个人争议与关系动态。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Hybrid and Electric Vehicle Market",
-    "name_zh": "混合动力与电动车市场",
-    "density": 3,
-    "R": 1,
-    "S": 1,
-    "T": 1,
-    "U": 1,
     "H": 1,
-    "narrative_en": "Market trends and consumer experiences regarding hybrid and electric vehicles in Indonesia.",
-    "narrative_zh": "印尼混合动力及电动汽车的市场趋势与消费者体验。",
-    "bettable": true,
-    "question": "Will the sales volume of hybrid and electric vehicles increase by 20% in Indonesia in 2026 compared to 2025?",
-    "question_en": "Will the sales volume of hybrid and electric vehicles increase by 20% in Indonesia in 2026 compared to 2025?",
-    "question_zh": "2026年印尼的混合动力和电动汽车销量是否会比2025年增长20%？",
-    "source": "GAIKINDO",
-    "prob": 75,
-    "prob_reason_zh": "政府激励政策正加速EV普及进程。",
-    "prob_reason_en": "Government incentives drive EV adoption."
+    "narrative_en": "A Russian jet nearly collided with a British spy plane, raising concerns over international military intercepts.",
+    "narrative_zh": "一架俄罗斯战机与一架英国侦察机发生近距离碰撞，引发对国际军事拦截行为的担忧。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 51,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Nyaris Tabrakan, Jet Tempur Rusia Cegat Pesawat Mata-mata Inggris dalam Jarak 6 Meter - SINDOnews Internasional",
+        "title_zh": "Nyaris Tabrakan, Jet Tempur Rusia Cegat Pesawat Mata-mata Inggris dalam Jarak 6 Meter - SINDOnews Internasional",
+        "summary_en": "Google News groups this under World: Nyaris Tabrakan, Jet Tempur Rusia Cegat Pesawat Mata-mata Inggris dalam Jarak 6 Meter - SINDOnews Internasional. Related coverage from BisnisUpdate.com, Inikata.co.id, Kompas.com, SINDOnews Internasiona…",
+        "summary_zh": "Google News groups this under World: Nyaris Tabrakan, Jet Tempur Rusia Cegat Pesawat Mata-mata Inggris dalam Jarak 6 Meter - SINDOnews Internasional. Related coverage from BisnisU…",
+        "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxObnRXQ0FkU2d4QW93clNwd25ieVI5SGdOOTRETmZsWm9XcTlxbWZZZ2xGUkoxSENFYm1rVnZUcmVzMzJoSDRWTHVSU3pXeV95M2thYjI3M1REN3otQk9HX29YVEtOalRiVC1BaFBqNllJZzR1WjBnRnJaMFVhd3Nud1hBdWJuZHF0MTlDLXFURU5lU0hwRzI3aHN6eGN0YVBiMG9YeVNUTTFtU3E3ZUZBMHkwVFV5LWZ2WHVWRFFLdVo5UWxrSzJZLWZXRmx0cGdQQmtGYWM4Q2dOcHJtUk8zRdIB5gFBVV95cUxQdExYelRSQTQ2N0NrWU5maDBLVjRSZXQ0R091OXFtRXBGQlRyaWM2cTJ3WkFyVmJERjhTWTB4bzJnLTU3WVZCbVdXRy14Mm01RU5hMkp0RlBDRzJIOVkzSWEwcnNjUWhCeUt4MW9NWHFIUWU0ei1UZWN6Qy00dzBvWFpWOExMUDk1TnZMcUZ4b0NwRnRvelVSbkdvd0RJeGhhQW1na0stb09KT3laQ3RSYmhSdWh3RzJGelRoUE9SVUNZMkdIVFVPYUl4NkNOaTk4V0gycjJrYzZmZW5vWU02Z0plRXpPUQ?oc=5",
+        "rank_score": 24.994,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
   },
   {
-    "name_en": "John Travolta Cannes Appearance",
-    "name_zh": "约翰·特拉沃尔塔戛纳亮相",
+    "name_en": "South-North Korea Sports Relations",
+    "name_zh": "朝韩体育关系",
     "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
-    "H": 0,
-    "narrative_en": "Discussion of John Travolta's appearance and anti-aging treatments at the Cannes Festival.",
-    "narrative_zh": "关于约翰·特拉沃尔塔在戛纳电影节上的外观及抗衰老保养的讨论。",
+    "H": 1,
+    "narrative_en": "The North Korean women's football team competing in South Korea brings attention to rare cross-border sporting events.",
+    "narrative_zh": "朝鲜女足在韩国参赛，引起了对罕见跨境体育赛事的关注。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 53,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Tim Sepak Bola Wanita Korut Tanding di Korsel, Gaya Rambut Sama Jadi Sorotan - Wolipop",
+        "title_zh": "Tim Sepak Bola Wanita Korut Tanding di Korsel, Gaya Rambut Sama Jadi Sorotan - Wolipop",
+        "summary_en": "Google News groups this under Sports: Tim Sepak Bola Wanita Korut Tanding di Korsel, Gaya Rambut Sama Jadi Sorotan - Wolipop. Related coverage from Bola.com, Enamplus, Kompas.com, Wolipop centers on: Tim Sepak Bola Wanita Korut Tanding di…",
+        "summary_zh": "Google News groups this under Sports: Tim Sepak Bola Wanita Korut Tanding di Korsel, Gaya Rambut Sama Jadi Sorotan - Wolipop. Related coverage from Bola.com, Enamplus, Kompas.com,…",
+        "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQSUVxWjJiWlZFVVhUMTNBYUNNdV95ZVVyLVhvTGQ1OTlKY3RtNS04dzZMZmg0NGJIQVpPc0ZzNDdDaWF1TjNNVVQ5TW1DNW1ZZmVwbnFEeHQxZk0wQm9PVjVBMFYwWDJDTG5qMl80YVJ3TER5T0E3V3FsbDIwWkVyZElWRmxrZTNyejVvS2hRLW5BSU9ScUo1aVE0enp0X09aU0xkQUcyZE1uT0R6Y0FzSldoTUI3cWdRaWxhRmhYY0fSAcYBQVVfeXFMTkVPQ3AtNnpzQVBBRUQzeFlERk9pcjViMmptSGo0Q2ZRVXdGRkMwaTZ5eFJzeU5xZ2JmdjBxZFJiTjEtWFFTUFBqSkNPM2RtR29mX0JqVmZ0VjFMcmFMcTdTd0c2d3B6cENWX3dEcWVvLVR0ZkkzeFRfSVU4dmFHV3ZrZ2pKMDJVSzFSR3UxUDZndmNNQlByVkpLN1AwSVpTMnBhNm5UdVo4c0t5ZlE2Q2tFLXg1VnUxZ0xMYjJ1NVdKNUxiV0ZB?oc=5",
+        "rank_score": 24.967,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -682,16 +1840,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Korean Peninsula Relations",
-    "name_zh": "朝鲜半岛关系",
-    "density": 2,
+    "name_en": "Taiwan's Political Stance",
+    "name_zh": "台湾政治立场",
+    "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
-    "H": 0,
-    "narrative_en": "Rare athletic interactions and ongoing geopolitical assertions regarding Korean sovereignty.",
-    "narrative_zh": "朝韩之间罕见的体育互动及关于朝鲜半岛主权的地缘政治主张。",
+    "H": 1,
+    "narrative_en": "Taiwan has reaffirmed its resistance to foreign interference amid changing regional dynamics.",
+    "narrative_zh": "台湾在不断变化的地区局势下，重申了抵制外部干涉的立场。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 56,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Penegasan Taiwan Ogah Disetir Kekuatan Asing - detikNews",
+        "title_zh": "Penegasan Taiwan Ogah Disetir Kekuatan Asing - detikNews",
+        "summary_en": "Google News groups this under World: Penegasan Taiwan Ogah Disetir Kekuatan Asing - detikNews. Related coverage from ANTARA News Gorontalo, CNN Indonesia, MetroTVNews.com, detikNews centers on: Penegasan Taiwan Ogah Disetir Kekuatan Asing;…",
+        "summary_zh": "Google News groups this under World: Penegasan Taiwan Ogah Disetir Kekuatan Asing - detikNews. Related coverage from ANTARA News Gorontalo, CNN Indonesia, MetroTVNews.com, detikNe…",
+        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPRndnTnl0Q1hhLUpxQ1ZadFhraDhIckg1VzkwSUs0dnZaZlNyUWNJVFI0RjJCd0pMcmVZbVY2MEVnNlRHVmstQVdsRGFaVEl2NDI0UUpsY0VneV9ETTRGYmxPYVBGS2l2WmNWeXh0TzNlTG5xY29ndEhMcFVMMFJ6bWQ0T3R2YzV0UzVnX1NlbUNyN0xoclHSAZsBQVVfeXFMT2ViVGFVT1JTTG01TWNVS0ZRWnh5Y3NwaDZXOW9WY0dRTk4xM2VzcDdpaVRyS3dYa0VCbDVaQUxndk9NU1V0emlZV2N1Tkc0ekFGNzExdUlaMDRlZV81V1RGQU9GRFVQaHVhM3kxX0NBV2NrZWdVazNGeDUzQjJQalRzSmRZZlZxUEVVcklvMlBQWHp2bzk2S25kTzQ?oc=5",
+        "rank_score": 24.958,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -702,56 +1882,38 @@ const groups = [
     "prob_reason_en": ""
   },
   {
-    "name_en": "Liverpool FC Branding and Personnel",
-    "name_zh": "利物浦俱乐部品牌与人员",
-    "density": 3,
+    "name_en": "Laser Weaponry Expansion",
+    "name_zh": "激光武器扩散",
+    "density": 1,
     "R": 0,
     "S": 0,
     "T": 0,
     "U": 0,
-    "H": 0,
-    "narrative_en": "Speculation and updates regarding Liverpool FC's jersey designs, managerial changes, and internal critiques.",
-    "narrative_zh": "关于利物浦足球俱乐部球衣设计、管理层变动及内部批评的传闻与更新。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "K-Pop Industry Global Presence",
-    "name_zh": "K-Pop全球影响力",
-    "density": 3,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Success, controversies, and global chart performance of Korean media content.",
-    "narrative_zh": "韩国媒体内容的成功、争议及全球榜单表现。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Real Madrid Internal Conflicts",
-    "name_zh": "皇家马德里内部冲突",
-    "density": 2,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Player and management disputes involving Real Madrid and Jose Mourinho's transfer interests.",
-    "narrative_zh": "涉及皇家马德里的球员管理争议及穆里尼奥的转会意向。",
+    "H": 1,
+    "narrative_en": "The proliferation of laser weaponry in the Middle East is viewed as a response to drone threats.",
+    "narrative_zh": "中东地区激光武器的扩散被视为对无人机威胁的回应。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 58,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Senjata Laser Makin Menjamur di Timur Tengah, Ini Alasannya - detikInet",
+        "title_zh": "Senjata Laser Makin Menjamur di Timur Tengah, Ini Alasannya - detikInet",
+        "summary_en": "Google News groups this under World: Senjata Laser Makin Menjamur di Timur Tengah, Ini Alasannya - detikInet. Related coverage from Babel Insight, CNBC Indonesia, Pojok Papua, Qoo Media centers on: Senjata Laser Makin Menjamur di Timur Ten…",
+        "summary_zh": "Google News groups this under World: Senjata Laser Makin Menjamur di Timur Tengah, Ini Alasannya - detikInet. Related coverage from Babel Insight, CNBC Indonesia, Pojok Papua, Qoo…",
+        "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNRW9qZV9Zb19iamtqbk4td1NrVGI0VG9nMzJnM2dPRU40MjdraUdQcDlST3FHVjcxTS1zb2NTOGJDRTIxMGtiZnV5Q3FkaXQ4WkQ1N1JOSmlwX0dwVHZHUUVNN0VQRThobDgyR0tjbF9jbFZNN0ttWS01ZFBxQ0pHOUcxMmFZbW5OcHZ1VS1QUU04Wk44NmZ0YW9xVXBfc0Nw0gGmAUFVX3lxTE84RjJuRlVuTEs0djdrc2tTRXJ4ODRkcW9fWlo2UGtrbWxYa2dHR1A3VWdjUkhfc1owWkNVSDRvR2xOUGswRU9PZzZrcm1XbWhxMDRMS0lfZ3hDaXZRdmxpekdNV05RY19hWi1vVE9BeXBBbHFDZFBVUU1ISTV6QzhfQTdEX3JQRzdyX3lFZklzQ0t4ZzB4UTY2MFU1bHQ0TmVDZ3N0Q2c?oc=5",
+        "rank_score": 24.946,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
@@ -765,521 +1927,645 @@ const groups = [
     "name_en": "CPO Market Stagnation",
     "name_zh": "毛棕榈油市场停滞",
     "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Stagnation in CPO trading and market reaction to export policy concerns.",
-    "narrative_zh": "毛棕榈油交易停滞及市场对出口政策担忧的反应。",
-    "bettable": true,
-    "question": "Will CPO price rebound above 4,000 MYR/ton by end of 2026?",
-    "question_en": "Will CPO price rebound above 4,000 MYR/ton by end of 2026?",
-    "question_zh": "到2026年底，毛棕榈油(CPO)价格是否会回升至每吨4000林吉特以上？",
-    "source": "Bursa Malaysia",
-    "prob": 45,
-    "prob_reason_zh": "受替代油品竞争及出口政策波动制约。",
-    "prob_reason_en": "Competition and policy volatility impact."
-  },
-  {
-    "name_en": "BPN Corruption in Serang",
-    "name_zh": "实兰市BPN腐败案",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Corruption and bribery allegations involving National Land Agency (BPN) officials in Serang.",
-    "narrative_zh": "涉及实兰市国家土地局（BPN）官员的腐败与贿赂指控。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "District Court (Pengadilan Negeri) Serang",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Kemendag Clarification with Shopee",
-    "name_zh": "贸易部对Shopee的问询",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Indonesian Trade Ministry inquiries into consumer complaints regarding Shopee.",
-    "narrative_zh": "印尼贸易部关于Shopee消费者投诉的调查问询。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Ministry of Trade",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "MK Corruption Ruling Impact",
-    "name_zh": "宪法法院裁定对腐败案影响",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Public and institutional reaction to the Constitutional Court's ruling on defining state financial losses.",
-    "narrative_zh": "舆论及机构对宪法法院关于界定国家财政损失裁定的反应。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Constitutional Court of Indonesia (MK)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Global Subsidy Risks",
-    "name_zh": "全球补贴风险",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "IMF warnings on the risks associated with excessive energy and food subsidies.",
-    "narrative_zh": "国际货币基金组织对能源与粮食过度补贴相关风险的预警。",
-    "bettable": true,
-    "question": "Will the Indonesian government reduce fuel subsidies by more than 10% in the 2027 fiscal year?",
-    "question_en": "Will the Indonesian government reduce fuel subsidies by more than 10% in the 2027 fiscal year?",
-    "question_zh": "印尼政府在2027财年是否会将燃料补贴削减超过10%？",
-    "source": "Ministry of Finance",
-    "prob": 55,
-    "prob_reason_zh": "财政压力迫使政府削减部分补贴。",
-    "prob_reason_en": "Fiscal pressure necessitates subsidy cuts."
-  },
-  {
-    "name_en": "ICC Israel Arrest Warrant Rumors",
-    "name_zh": "国际刑事法院对以逮捕令传闻",
-    "density": 1,
-    "R": 2,
-    "S": 2,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Rumors regarding ICC arrest warrants for Israeli ministers.",
-    "narrative_zh": "关于国际刑事法院向以色列部长发布逮捕令的传闻。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "International Criminal Court",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Raffi Ahmad Pilgrimage",
-    "name_zh": "Raffi Ahmad朝觐",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Public figure Raffi Ahmad prepares for his Hajj pilgrimage.",
-    "narrative_zh": "公众人物Raffi Ahmad准备前往朝觐。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Nicolo Bulega MotoGP Ambitions",
-    "name_zh": "尼科洛·布莱加的MotoGP野心",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Nicolo Bulega's contract ultimatum regarding MotoGP future.",
-    "narrative_zh": "尼科洛·布莱加关于其MotoGP未来的合同通牒。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Jasa Marga Board Changes",
-    "name_zh": "Jasa Marga董事会变动",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Restructuring of the board of directors and commissioners at state-owned Jasa Marga.",
-    "narrative_zh": "国有企业Jasa Marga董事会及监事会的重组。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Veda Ega Honda Team Asia Performance",
-    "name_zh": "Veda Ega本田亚洲车队表现",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Performance analysis of Veda Ega's Moto3 debut.",
-    "narrative_zh": "Veda Ega在Moto3首秀中的表现分析。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Jay Idzes Sassuolo Defensive Role",
-    "name_zh": "Jay Idzes在萨索洛的防守作用",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Impact of Jay Idzes' absence on Sassuolo's defensive performance.",
-    "narrative_zh": "Jay Idzes缺席对萨索洛防守表现的影响。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Nathan Tjoe-A-On Promotion Efforts",
-    "name_zh": "Nathan Tjoe-A-On冲超努力",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Career progression of Nathan Tjoe-A-On towards promotion in the Netherlands.",
-    "narrative_zh": "Nathan Tjoe-A-On在荷兰联赛争取晋升的职业生涯进展。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Eerste Divisie (Netherlands)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Prilly Latuconsina Cannes Fashion",
-    "name_zh": "Prilly Latuconsina戛纳时尚",
-    "density": 2,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Fashion appearances and industry discussions surrounding the Cannes Film Festival.",
-    "narrative_zh": "戛纳电影节相关的时尚亮相及行业内讨论。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "HM Sampoerna Dividend Distribution",
-    "name_zh": "HM Sampoerna股息派发",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 0,
-    "H": 1,
-    "narrative_en": "Announcement of dividend payout plans by HM Sampoerna.",
-    "narrative_zh": "HM Sampoerna宣布股息发放计划。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "IDX",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Roy Suryo and Razman Nasution Conflict",
-    "name_zh": "Roy Suryo与Razman Nasution冲突",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Legal request for execution of sentence against Razman Nasution.",
-    "narrative_zh": "关于对Razman Nasution执行判决的法律请求。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Kejaksaan Agung RI",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Pertamina Oil Reserve Discovery",
-    "name_zh": "Pertamina油田发现",
-    "density": 1,
     "R": 2,
     "S": 2,
     "T": 2,
     "U": 2,
     "H": 1,
-    "narrative_en": "Pertamina's discovery of significant unconventional oil reserves.",
-    "narrative_zh": "Pertamina发现重大非常规石油储量。",
+    "narrative_en": "Palm oil trading has hit a stagnant phase in Malaysia while domestic Indonesian policy faces challenges.",
+    "narrative_zh": "马来西亚的棕榈油交易进入停滞期，而印尼国内政策面临挑战。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 61,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Harga CPO KPBN Inacom Withdraw Pada Rabu (20/5), Perdagangan CPO di Bursa Malaysia Cenderung Stagnan - InfoSAWIT",
+        "title_zh": "Harga CPO KPBN Inacom Withdraw Pada Rabu (20/5), Perdagangan CPO di Bursa Malaysia Cenderung Stagnan - InfoSAWIT",
+        "summary_en": "Google News groups this under Business: Harga CPO KPBN Inacom Withdraw Pada Rabu (20/5), Perdagangan CPO di Bursa Malaysia Cenderung Stagnan - InfoSAWIT. Related coverage from Databoks, InfoSAWIT, bisnissawit.com, investor.id centers on: H…",
+        "summary_zh": "Google News groups this under Business: Harga CPO KPBN Inacom Withdraw Pada Rabu (20/5), Perdagangan CPO di Bursa Malaysia Cenderung Stagnan - InfoSAWIT. Related coverage from Dat…",
+        "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQT09DZmlQY3U4ZUxScXlRYU9zQTBsZ3g5aWQ3Zmt0a3V4OHVBdzZyYW5iZnZBNkpFVGlpQ2lmTVkxVVc3dDJNU0ZlTWt6V3FpRV9xbG4tUFdtV3Y4SGM2X0l3ajl2UHlCaGY4R1c0RmN3LWNtSUs4Q01lSVZYaVA3SmVSVWVuaDR0a01zWWpTUzRHX1NwLWVWbnRZdWplU1NiQU1IUWF1MktmTE92b2hQUFBmWGpHbVhqdXVzTzNSZE9CcFBuUGh0Zktn0gHKAUFVX3lxTFBPT0NmaVBjdThlTFJxeVFhT3NBMGxneDlpZDdma3RrdXg4dUF3NnJhbmJmdkE2SkVUaWlDaWZNWTFVVzd0Mk1TRmVNa3pXcWlFX3Fsbi1QV21XdjhIYzZfSXdqOXZQeUJoZjhHVzRGY3ctY21JSzhDTWVJVlhpUDdKZVJVZW5oNHRrTXNZalNTNEdfU3AtZVZudFl1amVTU2JBTUhRYXUyS2ZMT3ZvaFBQUGZYakdtWGp1dXNPM1JkT0JwUG5QaHRmS2c?oc=5",
+        "rank_score": 24.72,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": true,
-    "question": "Will Pertamina confirm the 11 billion barrel unconventional reserve discovery by the end of 2026?",
-    "question_en": "Will Pertamina confirm the 11 billion barrel unconventional reserve discovery by the end of 2026?",
-    "question_zh": "到2026年底，Pertamina是否会确认那110亿桶非常规储量的发现？",
-    "source": "Ministry of Energy and Mineral Resources (ESDM)",
-    "prob": 15,
-    "prob_reason_zh": "非常规油藏开发极具挑战，确认期长。",
-    "prob_reason_en": "Unconventional exploration takes time."
+    "question": "Will CPO futures reach a new 52-week high in 2026?",
+    "question_en": "Will CPO futures reach a new 52-week high in 2026?",
+    "question_zh": "毛棕榈油（CPO）期货价格是否会在2026年创下52周新高？",
+    "source": "Bursa Malaysia Derivatives",
+    "prob": 30,
+    "prob_reason_zh": "供应充足且面临替代品竞争，难新高。",
+    "prob_reason_en": "Ample supply limits upside potential."
   },
   {
-    "name_en": "Telkom Subsidiary Consolidation",
-    "name_zh": "Telkom子公司整合",
-    "density": 1,
+    "name_en": "Corporate Regulatory Investigations",
+    "name_zh": "企业监管调查",
+    "density": 2,
     "R": 1,
     "S": 2,
-    "T": 1,
-    "U": 0,
-    "H": 1,
-    "narrative_en": "Telkom's strategy to close underperforming subsidiaries.",
-    "narrative_zh": "Telkom关闭业绩不佳子公司的策略。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Telkom Indonesia",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Megawati Effect in Korean Volleyball",
-    "name_zh": "韩国排球界的“Megawati效应”",
-    "density": 1,
-    "R": 0,
-    "S": 0,
     "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Increased interest and broadcasting competition due to Indonesian volleyball player Megawati Hangestri.",
-    "narrative_zh": "因印尼排球运动员Megawati Hangestri而引发的关注度提升及转播竞争。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Telkom faces SEC investigation while Shopee is being probed by the Indonesian government regarding consumer complaints.",
+    "narrative_zh": "Telkom面临SEC调查，Shopee正受到印尼政府关于消费者投诉的审查。",
+    "source_mix": {
+      "google_news": 2
+    },
+    "source_labels": [
+      "Google News 2"
+    ],
+    "source_examples": [
+      {
+        "id": 62,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Investigasi SEC: Telkom Sebut Warisan Masalah, Mungkin Ada Sanksi - detikInet",
+        "title_zh": "Investigasi SEC: Telkom Sebut Warisan Masalah, Mungkin Ada Sanksi - detikInet",
+        "summary_en": "Google News groups this under Business: Investigasi SEC: Telkom Sebut Warisan Masalah, Mungkin Ada Sanksi - detikInet. Related coverage from ANTARA News, Infobanknews, SWA.co.id, Tempo.co centers on: Investigasi SEC: Telkom Sebut Warisan M…",
+        "summary_zh": "Google News groups this under Business: Investigasi SEC: Telkom Sebut Warisan Masalah, Mungkin Ada Sanksi - detikInet. Related coverage from ANTARA News, Infobanknews, SWA.co.id,…",
+        "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPbkVJRkVMbDBYRFBQbkt1LUo0X3ZsaTdUZHhzanpXM0ZQSGpEMzJ4STR1NWJ4bWY0SmJKNW4waGV3UlRPeTFZYV8xMTJEcHdEbUtPSlB3amZEWVFVTWMxV0FNeW1WSkVkMjlsREVDaElfRGdMZ1BqTzQwRi1tTlAyQnoyRV9WMlFWeHJ3d0RKMldrTnNSVk9YQUNRQVY1VmN5bVBQWmdiVVAwOWhRcHBzNtIBtgFBVV95cUxOOHZJMW9BYUhzd3FObEhkVWFTUmQxbTd5YmpsdVZyME5pUUVVUE5NQm1YRUpXZFpsSnpJWExaZ2VCTjd1Q1QzMmdaRU1KSi1ablJpRmNnZDNialVHTVBHR0J0dkJoa1VMWHZ1cFlVZTJFMlBKV2ptOXhqdGlYVGU5MGt5eWJyWHBBTWZvTkJIS1I5bWZudHV6MVppb3lsdHNZR3VKbXp2OEc4V0tLMlY2T1dja1hYZw?oc=5",
+        "rank_score": 24.644,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 63,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Kemendag Minta Klarifikasi Shopee soal Aduan Konsumen, Ini Hasilnya - detikFinance",
+        "title_zh": "Kemendag Minta Klarifikasi Shopee soal Aduan Konsumen, Ini Hasilnya - detikFinance",
+        "summary_en": "Google News groups this under Business: Kemendag Minta Klarifikasi Shopee soal Aduan Konsumen, Ini Hasilnya - detikFinance. Related coverage from ANTARA News, Akurat Banten, Harian Jogja, Katadata.co.id centers on: Kemendag Minta Klarifika…",
+        "summary_zh": "Google News groups this under Business: Kemendag Minta Klarifikasi Shopee soal Aduan Konsumen, Ini Hasilnya - detikFinance. Related coverage from ANTARA News, Akurat Banten, Haria…",
+        "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQcjRFYjJ6SVptZzF3VW9ydzloMlhFWVc0cGpocGFhc1NPdmdsS2pFdUlmWXVEaWt3R3p3cGN0OUItcUk1V1JWRGozSEpxUnpEV1dtZVVtX3NXTlY4MGo3cmQzaU1wSUpRTzN2QTVGaW83ODhDSlYtZFFIOHRaSGd4amFndGhGNXNlemE3NVp5dER6clhWTDJvYXg2MjJ3ZFFRbFRsVXpEbGs5WWV3VU5TTlFUMlFnT2ZLV3BiYk9rY2pSd9IBxwFBVV95cUxQeXlUeGZGWnd6dU1BVUdnRFFzQXQ4WFg4R2lpNE50aWhiUFpsSmM5Q2xVM1ZGYjJjVXZTZmE3bTZsX01lQjhtaldLMzhpdkpYbG5Rcl9hZjd1NVFleFhoblZrWkliaFZwdzlCT2p5ajF2YTlqUEFmbUF5M0VERFh6MUM1aDBVeW42SzM2YUFvdk9MZHRKS21DQ3d6bkNGckszRjN5anVUbHZBNkh2QXU4c21udkViME5CVkIzNXRhVEZuZ3I0MmZj?oc=5",
+        "rank_score": 24.639,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": true,
+    "question": "Will Telkom receive an SEC fine regarding financial disclosures by end of 2026?",
+    "question_en": "Will Telkom receive an SEC fine regarding financial disclosures by end of 2026?",
+    "question_zh": "Telkom是否会在2026年底前因财务披露问题收到美国证券交易委员会（SEC）的罚款？",
+    "source": "SEC filings",
+    "prob": 25,
+    "prob_reason_zh": "SEC调查周期长，年内罚款可能性低。",
+    "prob_reason_en": "SEC probes are slow; fine unlikely soon."
   },
   {
-    "name_en": "Valentino Rossi and Moto3 Victory",
-    "name_zh": "瓦伦蒂诺·罗西与Moto3胜利",
-    "density": 1,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Valentino Rossi's mentorship role in recent Moto3 victories.",
-    "narrative_zh": "瓦伦蒂诺·罗西在近期Moto3胜利中的导师角色。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Scientific Space and Animal Discoveries",
-    "name_zh": "科学空间与物种发现",
-    "density": 8,
-    "R": 0,
-    "S": 0,
-    "T": 0,
-    "U": 0,
-    "H": 0,
-    "narrative_en": "Discoveries regarding space exploration, prehistoric species, and animal population recovery.",
-    "narrative_zh": "关于空间探测、史前物种及动物种群恢复的新发现。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Madrasah Teachers Salary Protest",
-    "name_zh": "伊斯兰学校教师薪资抗议",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Protests by honorary madrasah teachers regarding salary inequality.",
-    "narrative_zh": "荣誉伊斯兰学校教师就薪资不平等待遇进行的抗议。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "Ministry of Religious Affairs",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Tapanuli Tengah Flood Relief",
-    "name_zh": "中塔帕努利防洪救灾",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
-    "H": 1,
-    "narrative_en": "Concerns over slow disaster relief efforts in Tapanuli Tengah.",
-    "narrative_zh": "关于中塔帕努利救灾工作缓慢的担忧。",
-    "bettable": false,
-    "question": null,
-    "question_en": null,
-    "question_zh": null,
-    "source": "BNPB",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
-  },
-  {
-    "name_en": "Prabowo Political Reconciliation with PDIP",
-    "name_zh": "普拉博沃与PDIP政治和解",
+    "name_en": "Telkom Restructuring",
+    "name_zh": "Telkom业务重组",
     "density": 1,
     "R": 2,
     "S": 2,
-    "T": 1,
-    "U": 2,
-    "H": 1,
-    "narrative_en": "Signs of thawing relations between Prabowo's coalition and the opposition PDIP.",
-    "narrative_zh": "普拉博沃联盟与反对党PDIP之间关系回暖的迹象。",
-    "bettable": true,
-    "question": "Will PDIP formally join the Prabowo-led government coalition by the end of 2026?",
-    "question_en": "Will PDIP formally join the Prabowo-led government coalition by the end of 2026?",
-    "question_zh": "PDIP是否会在2026年底前正式加入普拉博沃领导的政府联盟？",
-    "source": "Official Political Party Press Releases",
-    "prob": 30,
-    "prob_reason_zh": "政党利益分歧仍存，完全结盟阻力大。",
-    "prob_reason_en": "Partisan rifts hinder full coalition."
-  },
-  {
-    "name_en": "Village Cooperative Economic Program",
-    "name_zh": "乡村合作社经济项目",
-    "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
+    "T": 2,
     "U": 1,
     "H": 1,
-    "narrative_en": "Launch and critique of the government's village cooperative development initiative.",
-    "narrative_zh": "政府乡村合作社发展倡议的启动及其相关评价。",
+    "narrative_en": "Telkom plans to close ten subsidiaries by June 2026 to optimize corporate structure.",
+    "narrative_zh": "Telkom计划在2026年6月底前关闭十家子公司，以优化公司结构。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 64,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "Siap-siap! Telkom Akan Tutup 10 Anak Usaha Akhir Juni 2026 - detikInet",
+        "title_zh": "Siap-siap! Telkom Akan Tutup 10 Anak Usaha Akhir Juni 2026 - detikInet",
+        "summary_en": "Google News groups this under Business: Siap-siap! Telkom Akan Tutup 10 Anak Usaha Akhir Juni 2026 - detikInet. Related coverage from ANTARA News Gorontalo, Bisnis.com, Bloomberg Technoz, MSN centers on: Siap-siap! Telkom Akan Tutup 10 Ana…",
+        "summary_zh": "Google News groups this under Business: Siap-siap! Telkom Akan Tutup 10 Anak Usaha Akhir Juni 2026 - detikInet. Related coverage from ANTARA News Gorontalo, Bisnis.com, Bloomberg…",
+        "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQOVhXbW82Y3MwVFJJeVlIQXc5N09Hclg1dUVCUnNzTGgxZU55b1JPeE5QcFc5cHFwbFhmUTZkcUR2VXMxc3psWUtoeEZ2bEZBX1Ftc1J6WmJ4TVZtMWtZQ2FkZXJTWG9vcVI0Xy1mbnp3LTRmTUVIcDBmMElNekxJYUJqSC15dHd2QU1rUzNLR05TblFCZHU1d0g4Tk9oS21j0gGmAUFVX3lxTFB2eW8zUy1uQnpEcGdiME05VjJmVmlwNXVtRlRMNlJueXdZWW03cDA5RklDWUxiUWNacHBOamFMRWRVUmtKNk5pTURHejVQdFdZaTNGZnl4TDB3QWRjaV80Uk9Nb3pnb0E1Si11amQ2amlJYnFGclRUVDFfbkh6TVh0Uk8xbDY5aFFpVmVBWTZzUml5WnlyaG5FQVliaEk4R0trODdkaVE?oc=5",
+        "rank_score": 24.623,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Ministry of Villages, Development of Disadvantaged Regions and Transmigration",
+    "source": null,
     "prob": null,
     "prob_reason_zh": "",
     "prob_reason_en": ""
   },
   {
-    "name_en": "Regional Hercules MRO Hub",
-    "name_zh": "区域Hercules维护中心",
+    "name_en": "IMF Energy/Food Subsidy Warning",
+    "name_zh": "IMF关于能源/食品补贴警告",
     "density": 1,
-    "R": 1,
-    "S": 2,
-    "T": 1,
-    "U": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
     "H": 1,
-    "narrative_en": "Indonesia's potential as a regional maintenance hub for military aircraft.",
-    "narrative_zh": "印尼作为军用飞机区域维护中心的潜力。",
-    "bettable": true,
-    "question": "Will PTDI be selected as the regional Hercules MRO hub by the end of 2026?",
-    "question_en": "Will PTDI be selected as the regional Hercules MRO hub by the end of 2026?",
-    "question_zh": "PTDI是否会在2026年底前被选为区域大力神(Hercules)飞机的维护、修理和大修(MRO)中心？",
-    "source": "Ministry of Defense",
-    "prob": 45,
-    "prob_reason_zh": "印尼具备地理优势，但竞争对手较强。",
-    "prob_reason_en": "Regional advantage, but facing competition."
+    "narrative_en": "The IMF warned that excessive energy and food subsidies pose significant economic risks.",
+    "narrative_zh": "国际货币基金组织警告称，过度的能源和食品补贴构成了巨大的经济风险。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 65,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Business",
+        "title_en": "IMF Ingatkan Risiko Subsidi Energi dan Pangan Berlebihan - Kompas.com",
+        "title_zh": "IMF Ingatkan Risiko Subsidi Energi dan Pangan Berlebihan - Kompas.com",
+        "summary_en": "Google News groups this under Business: IMF Ingatkan Risiko Subsidi Energi dan Pangan Berlebihan - Kompas.com. Related coverage from AsatuNews.co.id, Babel Insight, Kompas.com, Kompas.tv centers on: IMF Ingatkan Risiko Subsidi Energi dan P…",
+        "summary_zh": "Google News groups this under Business: IMF Ingatkan Risiko Subsidi Energi dan Pangan Berlebihan - Kompas.com. Related coverage from AsatuNews.co.id, Babel Insight, Kompas.com, Ko…",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOaFIzeVJ5YTRRZDBGblk1V0ZyTkhQNGhZRk1oRXcteTdnQm9JMnU2NnNnNFV4c0l5Y2VHRkdJd3JQaUF3UVlrQWxMUk9ZRjdOTm5vUDdEbVhxZ0xlRG1OdXZCRm9vZ0dVN3hMb1Rhdi1wZTJERTFRQXJ1bEVSdnJHYkRNWGxJQk9hb280a2xDZFFxV3c5OG96WjMyQVR0SERXVzFCWmJISGREd1U?oc=5",
+        "rank_score": 24.622,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
   },
   {
-    "name_en": "Sharia Capital Market Growth",
-    "name_zh": "伊斯兰资本市场增长",
+    "name_en": "US Defense System Global Tension",
+    "name_zh": "美国防御系统全球紧张",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "Russia and China are opposing US plans for a massive global defense system dubbed 'Golden Dome'.",
+    "narrative_zh": "俄罗斯和中国反对美国名为“金穹”（Golden Dome）的全球防御系统计划。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 67,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Rusia dan China Kompak Mengecam Rencana AS terkait Golden Dome - Kompas.com",
+        "title_zh": "Rusia dan China Kompak Mengecam Rencana AS terkait Golden Dome - Kompas.com",
+        "summary_en": "Google News groups this under World: Rusia dan China Kompak Mengecam Rencana AS terkait Golden Dome - Kompas.com. Related coverage from ANTARA News Gorontalo, Bloomberg Technoz, Kompas.com, Liputan6.com centers on: Rusia dan China Kompak M…",
+        "summary_zh": "Google News groups this under World: Rusia dan China Kompak Mengecam Rencana AS terkait Golden Dome - Kompas.com. Related coverage from ANTARA News Gorontalo, Bloomberg Technoz, K…",
+        "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOZGF2RFRwR2xzMGNxWnUtU3FGTmpNZVlzTmlYZ3NCMndTNGlpbDl4T3U1dGVSUjJKaVBQVTc2NndqWDhOUDNtTW8xUEhzU3p5Xy1JUW9oU1ZmTklRaHlIY2FUaGQ2QjIyWW52MEh4Z2dhSHZyQWt2TkdaNndGNlZFQm9Ja19IY1MtRGpwZVJxQWpveWhZcUJfQW5GN2hzVXVSYnpsWjNqMnZEUWhkVW9yMERQenVROENsVHp2TDl3?oc=5",
+        "rank_score": 24.602,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "International Legal Disputes (ICC)",
+    "name_zh": "国际法律纠纷 (ICC)",
     "density": 1,
     "R": 1,
     "S": 2,
-    "T": 1,
+    "T": 0,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "Speculation persists regarding potential ICC arrest warrants for Israeli ministers, inflaming regional rhetoric.",
+    "narrative_zh": "关于国际刑事法院可能对以色列部长发出逮捕令的猜测持续存在，引发了地区性的言论冲突。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 72,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "ICC Diduga Ajukan Surat Perintah Penangkapan untuk Menteri Israel, Smotrich Ancam Otoritas Palestina - SINDOnews Internasional",
+        "title_zh": "ICC Diduga Ajukan Surat Perintah Penangkapan untuk Menteri Israel, Smotrich Ancam Otoritas Palestina - SINDOnews Internasional",
+        "summary_en": "Google News groups this under World: ICC Diduga Ajukan Surat Perintah Penangkapan untuk Menteri Israel, Smotrich Ancam Otoritas Palestina - SINDOnews Internasional. Related coverage from CNN Indonesia, Merdeka.com, RCTI+, SINDOnews Interna…",
+        "summary_zh": "Google News groups this under World: ICC Diduga Ajukan Surat Perintah Penangkapan untuk Menteri Israel, Smotrich Ancam Otoritas Palestina - SINDOnews Internasional. Related covera…",
+        "link": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPbkx2Y2NqUExGVnVlb01CLUU0dlFhQjdXNngta3g1endjSkkwcmk5dUJfTWlUdzVhMjA1bElVcTN1eThBcmR4TXM0bVFudDBwb1VteWhYVXdVWnRJV0tfNmktdElPZVNnYS1XTFZCWDJkVTFFamdMRXJSVDhQeGhwbG9NeXE2eV9BS0M5dmtJWVdhRC0tdFlWZ1JadzBaNXk1OEcxbjNJTVB4c1paMnNKcXJ2WFI3MUstMF9sMk9wOFNlcVZFMlM3aFhVR21qU1hXUE5ucGRWYXdud2JWSGV6NVM5VFVLU1NLSGhWU2pfUzFkcjli0gH6AUFVX3lxTE9Xd1lCOGZ4UHJGMWRNbF9UWDM2akJGTUZNOHlTQVQwYXlnRUFzN2QtTEVfZDFjUUM0Slk0QTZTUEVEYlNBeDl1b2NMNTI4QlpBQmNmWG5hS1UwcVNMenRKc0J2a2Y3ZnpTYVNyOEpGWS1Pbk1sUGZ1Ml80OTZqVWRwQ3BNcENsaUlVWVhiUmxSR2IwTzFpMk4xYUJSSkFHUGhtWjAzT1hXclYyczhPRDU0dDVoaVNzRXdDN3B0cWlGc3htNFlzUUtDd3EyeFFSZW5tLXptUngzTzN1V3haa29FaFdOMC1sVkRsaktXMlhXVFJRRnNQMXE5OVE?oc=5",
+        "rank_score": 24.518,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "International Football Player Transfers",
+    "name_zh": "国际球员转会与变动",
+    "density": 5,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 2,
+    "H": 2,
+    "narrative_en": "High-profile football player and coach movements, transfers, and criticism are defining the current European season.",
+    "narrative_zh": "备受瞩目的足球球员与教练的动向、转会及批评正定义着当下的欧洲赛季。",
+    "source_mix": {
+      "google_news": 5
+    },
+    "source_labels": [
+      "Google News 5"
+    ],
+    "source_examples": [
+      {
+        "id": 73,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "\"Ini membuatku sedih\" - Antony, pemain Man Utd yang gagal bersinar, angkat bicara soal pencoretan dari skuad Piala Dunia Brasil meski tampil gemilang bersama Real Betis - Goal.com",
+        "title_zh": "\"Ini membuatku sedih\" - Antony, pemain Man Utd yang gagal bersinar, angkat bicara soal pencoretan dari skuad Piala Dunia Brasil meski tampil gemilang bersama Real Betis - Goal.com",
+        "summary_en": "Google News groups this under Sports: \"Ini membuatku sedih\" - Antony, pemain Man Utd yang gagal bersinar, angkat bicara soal pencoretan dari skuad Piala Dunia Brasil meski tampil gemilang bersama Real Betis - Goal.com. Related coverage fro…",
+        "summary_zh": "Google News groups this under Sports: \"Ini membuatku sedih\" - Antony, pemain Man Utd yang gagal bersinar, angkat bicara soal pencoretan dari skuad Piala Dunia Brasil meski tampil…",
+        "link": "https://news.google.com/rss/articles/CBMiuAJBVV95cUxQeVNzemI5TnhUNzJNTm45MmM1bXBNMkplZGRucHJDc0dNX0VCZ1VoODhFWHhpcHVHRE4wdEhtSmV2eHBjWXp6cDNuR29abVlmM3V6ZF81WkJtaUNXTko5TEZSSGh5TUM3UjQzczJleXZZaTRYaVEyamtvb2Iwc3dZMnNQeEVvQ1JmU3pEaUZoM1g0ZVRGcTVQTjV2bXc3TmhWUGRWNGR6WlFtNFNDRzdCQmdaVG56REJTX2FWZV8xX08tdE53WDF6QVBuY0MxZ1ZfNWtLSFJRLVMyMTNnRldCZkgwaFJZTlBKbmRSc1FXbmpuS1JPSkdVN3ZtVGdaOGJtY0h4VG5ab2NhV2hBeVEyVHladjlFVkZ4X05JekxXUEVpZzQ4bGlFaTNKZGVOaUJEbmg3ZE1wYTQ?oc=5",
+        "rank_score": 24.506,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 76,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Giliran John Arne Riise Kecam Mohamed Salah - detiksport",
+        "title_zh": "Giliran John Arne Riise Kecam Mohamed Salah - detiksport",
+        "summary_en": "Google News groups this under Sports: Giliran John Arne Riise Kecam Mohamed Salah - detiksport. Related coverage from Akurat Jateng, Goal.com, Kompas.com, PontianakPost centers on: Giliran John Arne Riise Kecam Mohamed Salah; Arne Slot har…",
+        "summary_zh": "Google News groups this under Sports: Giliran John Arne Riise Kecam Mohamed Salah - detiksport. Related coverage from Akurat Jateng, Goal.com, Kompas.com, PontianakPost centers on…",
+        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQOW1ldWdDU2NfeHJfeTllbzJVc285NFpPNm0xbGI5NkhZdkxFdUotYUFJVGl0UlkyaFpaSlZJVUUzaVU5ZTRhNTNKX2hLd3JMRnNHVE1sNlhSd0ZrVWhSelFUVm1ZOXhaZ3ZXQk51a1N6SFp6Z3E5a3E2c1p4QUZ6bkhmbUV0TDA4cTgwOWE2OFlONk53cnBGWFdHRHRNWkxwb1HSAacBQVVfeXFMTXg2ZW81dzkya3piaHd3azVRWDRfM1JETTdIbUJqbnAyeERpQTAxZ3lJVlYwcVpMX0hRNjBudThSSG5CNk56QzZpbC1RMmVjNk9DaFZjNEtGRHZxb3lyMUdSdE1oSS1kXzRuN25jb3BZYmVTekd1cGtsTHdBa0kwWTZTVUpMNzVRWmpITUpBWmxiQ1YxbjA1cE9DbFZ6RnRELTBJYXdhTEU?oc=5",
+        "rank_score": 24.498,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 87,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "\"Dia pasti senang!\" - Pep Guardiola dikabarkan akan pindah ke Liverpool secara mengejutkan untuk menggantikan Arne Slot menjelang kepergiannya dari Man City - Goal.com",
+        "title_zh": "\"Dia pasti senang!\" - Pep Guardiola dikabarkan akan pindah ke Liverpool secara mengejutkan untuk menggantikan Arne Slot menjelang kepergiannya dari Man City - Goal.com",
+        "summary_en": "Google News groups this under Sports: \"Dia pasti senang!\" - Pep Guardiola dikabarkan akan pindah ke Liverpool secara mengejutkan untuk menggantikan Arne Slot menjelang kepergiannya dari Man City - Goal.com. Related coverage from ANTARA New…",
+        "summary_zh": "Google News groups this under Sports: \"Dia pasti senang!\" - Pep Guardiola dikabarkan akan pindah ke Liverpool secara mengejutkan untuk menggantikan Arne Slot menjelang kepergianny…",
+        "link": "https://news.google.com/rss/articles/CBMiqgJBVV95cUxPTkx1RzV6MmxhZVhkNlp3VDU0enRDeFdtUFFzcWlzYzlldmFELXpreDZacFFQSE1mZ19CWGRGdk9ycV9wUXZCeVk4eHdNTy1DN2YzaVFpcHlMWUtEY1h2bG9FaEswNVg3WmRhNnItS1hBVUwzNVZFR2EweXlHRlpfRElock0zNkJzdHFZbTR3TTA2enRaT3pPN0ZjcE5ERnN3em9LWkJycGxrZmpoZGdYMXNORjUybFhDTGxSRTZwV0lQT3VpTF9FeDdvYnhoSFdvWXBRbVprdzlTanV3dTJXR01WclFqb2M2Nm5kWnRySnY2b2l4amcxeGFmN3hBdklHZ3FtT2FLTld2bjUzRm5fTkNFZnAwUHREN3FCVFd2Zl9DNW03M3F1Yml3?oc=5",
+        "rank_score": 24.393,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 88,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Jose Mourinho Incar Bintang Manchester United untuk Gantikan Dani Carvajal di Real Madrid - Bola.net",
+        "title_zh": "Jose Mourinho Incar Bintang Manchester United untuk Gantikan Dani Carvajal di Real Madrid - Bola.net",
+        "summary_en": "Google News groups this under Sports: Jose Mourinho Incar Bintang Manchester United untuk Gantikan Dani Carvajal di Real Madrid - Bola.net. Related coverage from Bola.com, Bola.net, Kompas.com, Liputan6.com centers on: Jose Mourinho Incar…",
+        "summary_zh": "Google News groups this under Sports: Jose Mourinho Incar Bintang Manchester United untuk Gantikan Dani Carvajal di Real Madrid - Bola.net. Related coverage from Bola.com, Bola.ne…",
+        "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQbTNyUHN0bDBydjVYbHJLZXJyVXVTT19ZMHZ1aGEwVXdraEZkeXltdG9CTVdidHVZWTQ4NHI1blRsNk9QSVFqQm9KZWZGa0ZELThKQjZERWI4R0FfMDRKRXZXakQ5eGlXRUtQSzNuWDR4UEl4Wlp3Q0RwRE9vNzE0VVUtN3hHa3V5YXM5QmFwMWR5ZHVfcFFpTUVUY2ZWU3N4OXVSMlpoUzJOZFNmNFFBNFl3RF82b2dRQmFCc0NVMlUtUFFrQW91bTVB?oc=5",
+        "rank_score": 24.373,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 90,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Valentino Rossi Bikin Kemenangan Di Giannantonio di MotoGP Catalunya 2026 Makin Istimewa - Juara.net",
+        "title_zh": "Valentino Rossi Bikin Kemenangan Di Giannantonio di MotoGP Catalunya 2026 Makin Istimewa - Juara.net",
+        "summary_en": "Google News groups this under Sports: Valentino Rossi Bikin Kemenangan Di Giannantonio di MotoGP Catalunya 2026 Makin Istimewa - Juara.net. Related coverage from ANTARA News, GridOto.com, Juara.net, Kompas.com centers on: Valentino Rossi B…",
+        "summary_zh": "Google News groups this under Sports: Valentino Rossi Bikin Kemenangan Di Giannantonio di MotoGP Catalunya 2026 Makin Istimewa - Juara.net. Related coverage from ANTARA News, Grid…",
+        "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQcGxRRFNobzBIaWFIQ3QyOFVrTzRaZGVsaHJPei1PQ05wbFh1TGpzMEdVdnpBYzZwcUtfLXItMUs4NldKZTRWOXVMOG1JRFNIN2tGT3RVVTR5X2NTa1FKdUx4d2pNVm04VDNnSm1pQl8zU0FDamZOUm11SzdfMFpKTGlNX296NFpES19lbExLUlVtbkZTLW01ZDJUVGtIaENhYlJIRlpsdy1fbXpXWTlVVldIUmZIcGIzSjg4cFRjT3haLUXSAcgBQVVfeXFMUFFvb2htOWgzUjZOaXM1WHVkNG1qaFVwa3BCbTZBWXZ4c1FLaEY0Q2Fhd29pdDRkckxnVC1NVHc2NnN4blR0Q3BNdWMwbi1HaWRyMXRwY1JXb1hOZEtZYXFuRFhkRFNUbzdUTW1BSFV0MUVsVXlnUHlrY1FLR01hNm9aQlplTVdxRWNlUHZjM2tQd0JaY0pydURJZTlQb2Z5LW9LMGdaeG8wLWwyTHFaUjlIOWNUcXEyNVYyQ0dLTzd6RkxwaFo3ckM?oc=5",
+        "rank_score": 24.361,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Motorcycle Racing Success",
+    "name_zh": "摩托车赛车成功",
+    "density": 2,
+    "R": 1,
+    "S": 1,
+    "T": 0,
     "U": 1,
     "H": 1,
-    "narrative_en": "Milestones and progress of Indonesia's Sharia-compliant capital markets.",
-    "narrative_zh": "印尼伊斯兰合规资本市场的里程碑及进展。",
-    "bettable": true,
-    "question": "Will total assets in Indonesia's Sharia-compliant capital market exceed 1,500 trillion IDR by end of 2026?",
-    "question_en": "Will total assets in Indonesia's Sharia-compliant capital market exceed 1,500 trillion IDR by end of 2026?",
-    "question_zh": "到2026年底，印尼符合伊斯兰教法的资本市场总资产是否会超过1500万亿印尼盾？",
-    "source": "OJK",
-    "prob": 60,
-    "prob_reason_zh": "伊斯兰金融在印尼渗透率持续稳步提升。",
-    "prob_reason_en": "Islamic finance market share growing."
+    "narrative_en": "Indonesian riders show promise in Moto3 and World Supersport racing, garnering international attention.",
+    "narrative_zh": "印尼赛车手在Moto3和世界超级摩托车锦标赛中表现出色，获得国际关注。",
+    "source_mix": {
+      "google_news": 2
+    },
+    "source_labels": [
+      "Google News 2"
+    ],
+    "source_examples": [
+      {
+        "id": 75,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Nicolo Bulega Ancam Tinggalkan Ducati jika Tak Mengaspal di MotoGP 2027, Bagaimana Valentino Rossi? - sports.okezone.com",
+        "title_zh": "Nicolo Bulega Ancam Tinggalkan Ducati jika Tak Mengaspal di MotoGP 2027, Bagaimana Valentino Rossi? - sports.okezone.com",
+        "summary_en": "Google News groups this under Sports: Nicolo Bulega Ancam Tinggalkan Ducati jika Tak Mengaspal di MotoGP 2027, Bagaimana Valentino Rossi? - sports.okezone.com. Related coverage from MSN, Prokal, Radar Palu, motor Yamaha centers on: Nicolo…",
+        "summary_zh": "Google News groups this under Sports: Nicolo Bulega Ancam Tinggalkan Ducati jika Tak Mengaspal di MotoGP 2027, Bagaimana Valentino Rossi? - sports.okezone.com. Related coverage fr…",
+        "link": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxOaDdjVFNRQTBxZWRMYU5NU1lhZ0RrMmFBY091TlUtNHhoRVF5bURoNHAteVEwbkNFTDJEelJ5b2VFLU9WRENBRXpYMXJyN21qdHNlYTd2S2VqZFFpZE5MUFFwUFMydFY1U2lsTzRmRUJlQlNOZzBjZEZhVF8wR043bjd1ejNRUU9icDlTTDFUa0huY0FYak5ZZ1AwWHA0ZFNOb3pSX2NsYXI1clZWTlJoVVN1bGdRZnF0cFF5MWZ1TTJNb0JmVGxpd1FHdW9DcVhHYUZfbVZ0dFFicmdCaUc0cGxfdnZZQQ?oc=5",
+        "rank_score": 24.501,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      },
+      {
+        "id": 77,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "Sports",
+        "title_en": "Honda Team Asia Ungkap Start Gokil Veda Ega di Moto3 Catalunya - detiksport",
+        "title_zh": "Honda Team Asia Ungkap Start Gokil Veda Ega di Moto3 Catalunya - detiksport",
+        "summary_en": "Google News groups this under Sports: Honda Team Asia Ungkap Start Gokil Veda Ega di Moto3 Catalunya - detiksport. Related coverage from Bolasport.com, CNN Indonesia, Jawa Pos, MSN centers on: Honda Team Asia Ungkap Start Gokil Veda Ega di…",
+        "summary_zh": "Google News groups this under Sports: Honda Team Asia Ungkap Start Gokil Veda Ega di Moto3 Catalunya - detiksport. Related coverage from Bolasport.com, CNN Indonesia, Jawa Pos, MS…",
+        "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOUGxrYVFDbFB5Ykh0NUNGTF84amh6ZmVaSnpSNjRuT2VFWjFjSlBhNGZ3cVV0V2tlZnZJQWlPZFBhdHRrYkI4S1hLZWFMVFlVUlFkX09hYThGVXI1Q0pYd0tHc1EyZTJyRTZjVmhjU3pUQjc0cXh1dllJaGk4TFhBa05NaTBla1VJTXlpdktneUdGMDNoVTFNdG9JTmpNQmc0anZQNVN2VdIBrAFBVV95cUxNc2ZaYmtTdndaMEctODFZQ05PNmtOLS10aGZPNTl0WDY2cWw4UzI5OG5md1QwT3dHakNVMjJPUXdLYWNHQ1pVTlZOcXE3UHZLS1UzOHAxcFdKbUU1SzNsTmkxcTd2TW4wSlNNclhPWWdfMnl1MHZGSm1EOWZFSFdWS0o0Q01nSXRSXzlmXzkyMXlkcldMZl9DcFhOb2NUTEFIbGhoWWJvLVN3OFA0?oc=5",
+        "rank_score": 24.491,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Social Movements in India",
+    "name_zh": "印度的社会运动",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "A viral 'Cockroach Party' movement in India has attracted thousands of disenchanted youth.",
+    "narrative_zh": "印度一个病毒式的“蟑螂党”运动吸引了成千上万感到幻灭的青年。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 78,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Partai Kecoa Viral di India, 350.000 Orang Sudah Mendaftar, Syarat Anggota: Pengangguran dan Malas - SINDOnews Internasional",
+        "title_zh": "Partai Kecoa Viral di India, 350.000 Orang Sudah Mendaftar, Syarat Anggota: Pengangguran dan Malas - SINDOnews Internasional",
+        "summary_en": "Google News groups this under World: Partai Kecoa Viral di India, 350.000 Orang Sudah Mendaftar, Syarat Anggota: Pengangguran dan Malas - SINDOnews Internasional. Related coverage from BisnisUpdate.com, CNBC Indonesia, Konteks.co.id, SINDO…",
+        "summary_zh": "Google News groups this under World: Partai Kecoa Viral di India, 350.000 Orang Sudah Mendaftar, Syarat Anggota: Pengangguran dan Malas - SINDOnews Internasional. Related coverage…",
+        "link": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxOajVaNlE3cDEzZGpORlJfc2luVDBUX3BDLVpJZlV3Uk1WMkpIcnZ2aTBmS1J0UDFxaEd2dFNBdVU1YXVfWUMxQzNUcmJKWmpPX3VYeS1PUzB6dnJXY01lMUdiU1B6UHpsaXRuZ0NaWmFkamxkOEY5cEREZG9TcUpXTVhBWi14S2FnaDB1SHM3QklIczlIS1E1UlRMWmlWaTlPd3BoSEFQZ3FnYjFZYzBYWlc0MUx6Sk5hRERvZ2FNRGNRWGNTMFlreGd4OWV3NjdxLVM1YjVkVU9MS2txbW42eFdWOV9BbWRLay1vSDF30gHzAUFVX3lxTE5VYjZmTTNJcW9GSTFneDJmYkpieTdmSkpUWmttNGRmSDdUelFDT1ZkSE9fWDFOUVNHQ0tDeTNZcEc4alAwTHZyYXF3dVNEX2o3UkZHWUp3MkFUZUJpbnQxSDRHcDFycFpEYzctN0RqRmxHbUZXSWFYNGw3VFY2RmJxb3VtQ05wWnJxdW5EX1ctTmt0STVfU19aN1dHZWtVYTg5ZGRad3d5Rm5CVkZ4dFIxRlJmZU14bFNnRDI0MDFEZzgxeEdiS2xnSUZsbmwwZmdGbTg5TGp1MGVNczMyUUZfV0h3Vy1PSmxoQmNFTk5fcktZZw?oc=5",
+        "rank_score": 24.483,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Hajj Pilgrimage Challenges",
+    "name_zh": "朝觐挑战",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Stories of resilience emerge from Indonesian Hajj pilgrims facing health crises during their journey.",
+    "narrative_zh": "关于印尼朝觐者在旅途中面对健康危机展现韧性的故事不断出现。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 84,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Senyum Damiri Tetap Lebar, Meski Kehilangan Jempol Kaki saat Jalani Haji di Tanah Suci - MUI - Majelis Ulama Indonesia",
+        "title_zh": "Senyum Damiri Tetap Lebar, Meski Kehilangan Jempol Kaki saat Jalani Haji di Tanah Suci - MUI - Majelis Ulama Indonesia",
+        "summary_en": "Google News groups this under World: Senyum Damiri Tetap Lebar, Meski Kehilangan Jempol Kaki saat Jalani Haji di Tanah Suci - MUI - Majelis Ulama Indonesia. Related coverage from Babel Insight, Harian Jogja, MUI - Majelis Ulama Indonesia,…",
+        "summary_zh": "Google News groups this under World: Senyum Damiri Tetap Lebar, Meski Kehilangan Jempol Kaki saat Jalani Haji di Tanah Suci - MUI - Majelis Ulama Indonesia. Related coverage from…",
+        "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNTFNmUXhXT2FfS0VkNHYtbjFUYjRSN1NWcG9rLThJcHNKY3A4RTdyelA0RldHWDZjQkxjT0Ntamt3Tl83MllIMXNnRkFKUEJzUkdyYlV5N3pqQ19ENVRnY3MwNUoycmE0ZnBwYTlReVN0a1hwN3FjNWNYZGxfcXh5TnI5NU1IMG9hUWxtNkJJQ0pJa1JJcEtqV0ZVLUpUX2d3eS1HeGJ5Zmt3T0xkYmY2SlBDUjNQUQ?oc=5",
+        "rank_score": 24.418,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Gaza Humanitarian Conditions",
+    "name_zh": "加沙人道主义状况",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 1,
+    "narrative_en": "Humanitarian struggle in Gaza highlighted by survivors' reliance on repurposed wedding attire.",
+    "narrative_zh": "加沙的人道主义斗争通过幸存者依赖改装的婚礼服装得到体现。",
+    "source_mix": {
+      "google_news": 1
+    },
+    "source_labels": [
+      "Google News 1"
+    ],
+    "source_examples": [
+      {
+        "id": 89,
+        "source": "google_news",
+        "source_label": "Google News",
+        "section": "World",
+        "title_en": "Foto: Pengantin Gaza Andalkan Gaun Bekas untuk Menikah di Tengah Perang - Wolipop",
+        "title_zh": "Foto: Pengantin Gaza Andalkan Gaun Bekas untuk Menikah di Tengah Perang - Wolipop",
+        "summary_en": "Google News groups this under World: Foto: Pengantin Gaza Andalkan Gaun Bekas untuk Menikah di Tengah Perang - Wolipop. Related coverage from Babel Insight, BeritaSatu.com, CNN Indonesia, Kumparan.com centers on: Foto: Pengantin Gaza Andal…",
+        "summary_zh": "Google News groups this under World: Foto: Pengantin Gaza Andalkan Gaun Bekas untuk Menikah di Tengah Perang - Wolipop. Related coverage from Babel Insight, BeritaSatu.com, CNN In…",
+        "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQSTFXbkl3UHVLeXU4dlczdFJBYXRwcmlOLVFQR2tpTnFDMFZleU5JZjZlaHYzT2xpYUViVmFERklMNDlNMlRhb3gwd2h5WTZKaWRtVE44a3cwbERMcnN1ampjRGc3M3dZbko3dmp3b0QtY0paWUVmYnFTWGhIUHVFZjNIdnRTNk9oalA5bElxOFNtcHpFVTJwZ3Fwb3dfbVRncDNNSzNMSnVubVh0d2phZmItMW55cHdQUnp30gHAAUFVX3lxTE1zS3o3VUwwMU55LU5zV210bXhzbHZ3TFRDckxrVVVMa2FucDIyTjBqbExiWmhfeFNyNmlNWUVMc3VoRkt4Z3pNM3JidVVBZVR2WjQ4Um5YR0ZJMFo0Z1Z1aXhRc3hIVllRMDJmZUllb1lFNUdQaHlLUVZmaTNMTk9RNGsyRXdKSXZ0ekFQRkRWUk5sR2s2clVrcVEtQUUyd2REeFFJbTRDcnVfWEV4Skd1c1lIQ3k2RW9vekZQMnlDdg?oc=5",
+        "rank_score": 24.373,
+        "social_heat": "medium",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Regional Disaster and Aid Recovery",
+    "name_zh": "区域灾害与援助恢复",
+    "density": 2,
+    "R": 1,
+    "S": 1,
+    "T": 0,
+    "U": 2,
+    "H": 1,
+    "narrative_en": "Complaints regarding slow disaster relief and recovery aid in Tapanuli and Aceh are intensifying.",
+    "narrative_zh": "关于塔帕努利和亚齐灾后救援与恢复援助进展缓慢的投诉日益增加。",
+    "source_mix": {
+      "x_grok": 2
+    },
+    "source_labels": [
+      "Grok/X 2"
+    ],
+    "source_examples": [
+      {
+        "id": 107,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Flood Relief and Regional Aid in Tapanuli",
+        "title_zh": "塔帕努利地区洪水救济与援助",
+        "summary_en": "Local posts discuss repeated flooding in Tapanuli Tengah and calls for Prabowo-era aid disbursement. Eyewitness reports emphasize economic stimulus needs.",
+        "summary_zh": "当地帖子讨论塔帕努利中部反复洪水，并呼吁普拉博沃时代援助发放。目击者报告强调经济刺激需求。",
+        "link": "",
+        "rank_score": 11.0,
+        "social_heat": "medium",
+        "uncertainty": "low"
+      },
+      {
+        "id": 119,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Aceh Flood Recovery Delays",
+        "title_zh": "亚齐洪水恢复延迟",
+        "summary_en": "Ongoing complaints about half-year unresolved Aceh floods amid broader disaster reports. Links drawn to government priorities.",
+        "summary_zh": "关于亚齐洪水半年未解决的持续抱怨，与更广泛灾害报告相连。指向政府优先事项。",
+        "link": "",
+        "rank_score": 8.0,
+        "social_heat": "low",
+        "uncertainty": "low"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
+  },
+  {
+    "name_en": "Papua Land Exploitation Concerns",
+    "name_zh": "巴布亚土地开发担忧",
+    "density": 1,
+    "R": 0,
+    "S": 0,
+    "T": 0,
+    "U": 0,
+    "H": 0,
+    "narrative_en": "Niche reports continue to highlight concerns over land exploitation and project impacts in the Papua region.",
+    "narrative_zh": "利基报道持续凸显对巴布亚地区土地开发和项目影响的担忧。",
+    "source_mix": {
+      "x_grok": 1
+    },
+    "source_labels": [
+      "Grok/X 1"
+    ],
+    "source_examples": [
+      {
+        "id": 113,
+        "source": "x_grok",
+        "source_label": "Grok/X",
+        "section": "source_intel:x_grok",
+        "title_en": "Papua Land Exploitation Protests",
+        "title_zh": "巴布亚土地开发抗议",
+        "summary_en": "Niche posts highlight ongoing Papua land issues tied to national projects. Concerns over environment, health, and local rights.",
+        "summary_zh": "小众帖子突出与国家项目相关的巴布亚土地问题。对环境、健康和当地权利的担忧。",
+        "link": "",
+        "rank_score": 10.0,
+        "social_heat": "low",
+        "uncertainty": "medium"
+      }
+    ],
+    "bettable": false,
+    "question": null,
+    "question_en": null,
+    "question_zh": null,
+    "source": null,
+    "prob": null,
+    "prob_reason_zh": "",
+    "prob_reason_en": ""
   }
 ];
 
@@ -1330,6 +2616,16 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
     const densityCount = `${g.density} ${t.articles}`;
+    const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
+      `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
+    ).join("");
+    const sourceItems = (g.source_examples || []).slice(0, 4).map(item => {
+      const title = lang === "zh" ? (item.title_zh || item.title_en) : (item.title_en || item.title_zh);
+      return `<div class="source-item ${item.source}">
+        <span class="source-name">${sourceLabel(item.source)}</span>
+        <span class="source-title" title="${escapeAttr(title)}">${escapeHtml(title)}</span>
+      </div>`;
+    }).join("");
 
     const card = document.createElement("div");
     card.className = `card ${disp}`;
@@ -1343,6 +2639,9 @@ function renderCards(lang) {
       </div>
 
       <p class="narrative">${narr}</p>
+
+      ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
+      ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
 
       <div class="density-bar">
         <div class="label">${t.density}</div>
@@ -1378,6 +2677,27 @@ function renderCards(lang) {
     `;
     container.appendChild(card);
   });
+}
+
+function sourceLabel(source) {
+  return {
+    google_news: "Google News",
+    x_grok: "Grok/X"
+  }[source] || source || "SourceIntel";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
 }
 
 function setLang(lang) {
