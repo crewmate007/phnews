@@ -130,7 +130,7 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
       "U_reason": "how uncertain is the outcome (0=decided, 2=genuinely uncertain)",
       "H": <0|1|2>,
       "H_reason": "how much public attention / discussion",
-      "BDLT": {
+      "BDLT": {{
         "B": <0|1|2>,
         "B_reason": "bet demand: would local DigiPlus-style users want to take a side?",
         "D": <0|1|2>,
@@ -139,7 +139,7 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
         "L_reason": "local hook: is this familiar and emotionally relevant to local users?",
         "T": <0|1|2>,
         "T_reason": "timeliness: is settlement soon enough to feel playable?"
-      },
+      }},
       "why_users_bet": "1 short reason this might attract real-money local bettors",
       "bettable": <true|false>,
       "suggested_question": "Will ... by ...? (null if not bettable)",
