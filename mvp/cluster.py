@@ -9,6 +9,7 @@ Flow:
 """
 from __future__ import annotations
 import json
+import re
 import datetime as dt
 import time
 from typing import List, Dict, Optional
@@ -398,15 +399,25 @@ def _build_score_groups(groups: List[Dict], clusters: List[Dict]) -> str:
     return "\n\n".join(blocks)
 
 
+_TRAILING_COMMA_RE = re.compile(r",(\s*[}\]])")
+
+
 def _parse_json_response(text: str) -> Dict:
     text = text.strip()
     if text.startswith("```"):
-        parts = text.split("```")
-        text = parts[1]
-        if text.startswith("json"):
+        text = text[3:]
+        if text[:4].lower() == "json":
             text = text[4:]
+        text = text.lstrip("\r\n")
+        end = text.rfind("```")
+        if end != -1:
+            text = text[:end]
         text = text.strip()
-    return json.loads(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        # Gemini occasionally emits trailing commas before } or ]; clean once and retry.
+        return json.loads(_TRAILING_COMMA_RE.sub(r"\1", text))
 
 
 def _normalize_broad_result(result: Dict, clusters: List[Dict]) -> Dict:
