@@ -77,7 +77,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }

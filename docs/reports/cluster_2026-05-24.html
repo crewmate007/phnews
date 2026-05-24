@@ -55,7 +55,8 @@
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -250,10 +251,7 @@ const groups = [
     "question": "Will Barangay Ginebra advance to the finals of the 2026 PBA Commissioner's Cup?",
     "question_en": "Will Barangay Ginebra advance to the finals of the 2026 PBA Commissioner's Cup?",
     "question_zh": "巴朗加国王队（Barangay Ginebra）能晋级2026年PBA专员杯决赛吗？",
-    "source": "PBA Official Website",
-    "prob": 55,
-    "prob_reason_zh": "贾内布拉实力强劲但季后赛充满变数。",
-    "prob_reason_en": "Ginebra is strong but playoffs vary."
+    "source": "PBA Official Website"
   },
   {
     "name_en": "Senate leadership disputes and Charter Change debates",
@@ -342,10 +340,7 @@ const groups = [
     "question": "Will Alan Peter Cayetano be elected as the next Senate President of the Philippines by August 31, 2026?",
     "question_en": "Will Alan Peter Cayetano be elected as the next Senate President of the Philippines by August 31, 2026?",
     "question_zh": "阿兰·彼得·卡耶塔诺（Alan Peter Cayetano）会在2026年8月31日之前当选下一任菲律宾参议院议长吗？",
-    "source": "Senate of the Philippines Official Journal",
-    "prob": 25,
-    "prob_reason_zh": "卡耶塔诺面临激烈的议长职位竞争。",
-    "prob_reason_en": "Cayetano faces tough competition."
+    "source": "Senate of the Philippines Official Journal"
   },
   {
     "name_en": "Duterte drug war legacy and political survival",
@@ -450,10 +445,7 @@ const groups = [
     "question": "Will the International Criminal Court (ICC) issue a public arrest warrant for Rodrigo Duterte by December 31, 2026?",
     "question_en": "Will the International Criminal Court (ICC) issue a public arrest warrant for Rodrigo Duterte by December 31, 2026?",
     "question_zh": "国际刑事法院（ICC）会在2026年12月31日之前对罗德里戈·杜特尔特发出公开逮捕令吗？",
-    "source": "International Criminal Court (ICC) Case Database",
-    "prob": 35,
-    "prob_reason_zh": "国际刑事法院程序漫长且面临政治阻力。",
-    "prob_reason_en": "ICC processes are slow and political."
+    "source": "International Criminal Court (ICC) Case Database"
   },
   {
     "name_en": "Pampanga building collapse search and rescue",
@@ -514,10 +506,7 @@ const groups = [
     "question": "Will the Philippine Department of Justice (DOJ) file formal criminal charges against the owner or developer of the collapsed Angeles City building by September 30, 2026?",
     "question_en": "Will the Philippine Department of Justice (DOJ) file formal criminal charges against the owner or developer of the collapsed Angeles City building by September 30, 2026?",
     "question_zh": "菲律宾司法部（DOJ）会在2026年9月30日之前对安赫勒斯市倒塌大楼的所有者或开发商提起正式刑事指控吗？",
-    "source": "Philippine Department of Justice (DOJ) official press statements",
-    "prob": 80,
-    "prob_reason_zh": "倒塌事故发生后预计将迅速提起诉讼。",
-    "prob_reason_en": "Legal action expected after collapse."
+    "source": "Philippine Department of Justice (DOJ) official press statements"
   },
   {
     "name_en": "Global Ebola monitoring and laboratory prevention",
@@ -592,10 +581,7 @@ const groups = [
     "question": "Will the World Health Organization (WHO) declare the Bundibugyo Ebola outbreak a Public Health Emergency of International Concern (PHEIC) by December 31, 2026?",
     "question_en": "Will the World Health Organization (WHO) declare the Bundibugyo Ebola outbreak a Public Health Emergency of International Concern (PHEIC) by December 31, 2026?",
     "question_zh": "世界卫生组织（WHO）会在2026年12月31日之前宣布本迪布焦埃博拉疫情为国际关注的突发公共卫生事件（PHEIC）吗？",
-    "source": "World Health Organization (WHO) Official Press Releases",
-    "prob": 15,
-    "prob_reason_zh": "宣布全球紧急状态需要极其严重的威胁。",
-    "prob_reason_en": "PHEIC requires extreme global threat."
+    "source": "World Health Organization (WHO) Official Press Releases"
   },
   {
     "name_en": "US-Iran negotiations and Strait of Hormuz",
@@ -656,10 +642,7 @@ const groups = [
     "question": "Will the United States and Iran sign a formal agreement to ease maritime sanctions in the Strait of Hormuz by December 31, 2026?",
     "question_en": "Will the United States and Iran sign a formal agreement to ease maritime sanctions in the Strait of Hormuz by December 31, 2026?",
     "question_zh": "美国和伊朗会在2026年12月31日之前签署正式协议以放宽霍尔木兹海峡的海事制裁吗？",
-    "source": "US Department of State Press Releases",
-    "prob": 30,
-    "prob_reason_zh": "双方强硬立场使正式协议难以达成。",
-    "prob_reason_en": "Hardline stances make deal unlikely."
+    "source": "US Department of State Press Releases"
   },
   {
     "name_en": "Formula 1 Canadian Grand Prix",
@@ -734,10 +717,7 @@ const groups = [
     "question": "Will George Russell win the 2026 Canadian Grand Prix?",
     "question_en": "Will George Russell win the 2026 Canadian Grand Prix?",
     "question_zh": "乔治·拉塞尔（George Russell）能赢得2026年一级方程式加拿大大奖赛吗？",
-    "source": "Formula 1 Official Race Results (formula1.com)",
-    "prob": 35,
-    "prob_reason_zh": "杆位有优势但正赛竞争依然激烈。",
-    "prob_reason_en": "Pole helps but race is competitive."
+    "source": "Formula 1 Official Race Results (formula1.com)"
   },
   {
     "name_en": "IIHF Ice Hockey World Championship",
@@ -798,10 +778,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "IIHF Official Site",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "IIHF Official Site"
   },
   {
     "name_en": "Vatican Pope Leo XIV policy and Synod",
@@ -890,10 +867,7 @@ const groups = [
     "question": "Will the Vatican officially publish Pope Leo XIV's first encyclical focusing on Artificial Intelligence on May 25, 2026?",
     "question_en": "Will the Vatican officially publish Pope Leo XIV's first encyclical focusing on Artificial Intelligence on May 25, 2026?",
     "question_zh": "梵蒂冈会在2026年5月25日正式发布教宗利奥十四世首部关于人工智能的通谕吗？",
-    "source": "Vatican Holy See Press Office (press.vatican.va)",
-    "prob": 75,
-    "prob_reason_zh": "圣谕即将发布但具体日期可能调整。",
-    "prob_reason_en": "Publication is close but may delay."
+    "source": "Vatican Holy See Press Office (press.vatican.va)"
   },
   {
     "name_en": "Cannes Film Festival selections and awards",
@@ -954,10 +928,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Cannes Film Festival Official Site",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Cannes Film Festival Official Site"
   },
   {
     "name_en": "Diet, cardiovascular health, and perimenopause research",
@@ -1032,10 +1003,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Major medical journals or WHO health updates",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Major medical journals or WHO health updates"
   },
   {
     "name_en": "Prehistoric life and paleontology discoveries",
@@ -1110,10 +1078,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Scientific peer-reviewed journals",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Scientific peer-reviewed journals"
   },
   {
     "name_en": "Visayas/Bohol power grid and rate adjustments",
@@ -1174,10 +1139,7 @@ const groups = [
     "question": "Will the National Grid Corporation of the Philippines (NGCP) issue any Red or Yellow Alerts for the Visayas grid in June 2026?",
     "question_en": "Will the National Grid Corporation of the Philippines (NGCP) issue any Red or Yellow Alerts for the Visayas grid in June 2026?",
     "question_zh": "国家电网公司（NGCP）会在2026年6月期间对米沙鄢（Visayas）电网发布任何红色或黄色预警吗？",
-    "source": "National Grid Corporation of the Philippines (NGCP) daily system updates",
-    "prob": 85,
-    "prob_reason_zh": "高用电需求及枯水期使警报极易发生。",
-    "prob_reason_en": "Dry season demand makes alerts likely."
+    "source": "National Grid Corporation of the Philippines (NGCP) daily system updates"
   },
   {
     "name_en": "PH AI policy and Pax Silica hub",
@@ -1238,10 +1200,7 @@ const groups = [
     "question": "Will the Bases Conversion and Development Authority (BCDA) break ground on the Pax Silica hub at New Clark City by December 31, 2026?",
     "question_en": "Will the Bases Conversion and Development Authority (BCDA) break ground on the Pax Silica hub at New Clark City by December 31, 2026?",
     "question_zh": "基地转换和发展署（BCDA）会在2026年12月31日之前在新克拉克城破土动工Pax Silica产业园吗？",
-    "source": "BCDA Official Press Releases",
-    "prob": 55,
-    "prob_reason_zh": "美方支持有利但菲律宾项目常面临延期。",
-    "prob_reason_en": "US backing helps but delays are common."
+    "source": "BCDA Official Press Releases"
   },
   {
     "name_en": "Palarong Pambansa youth sports preparations",
@@ -1288,10 +1247,7 @@ const groups = [
     "question": "Will the 2026 Palarong Pambansa official opening ceremony in Agusan del Sur take place as scheduled on or before July 31, 2026?",
     "question_en": "Will the 2026 Palarong Pambansa official opening ceremony in Agusan del Sur take place as scheduled on or before July 31, 2026?",
     "question_zh": "2026年全国运动会（Palarong Pambansa）在阿古桑阿苏尔省的官方开幕式会按计划在2026年7月31日或之前举行吗？",
-    "source": "Department of Education (DepEd) official announcements",
-    "prob": 90,
-    "prob_reason_zh": "筹备工作已完成，预计将按期举行。",
-    "prob_reason_en": "Preparations are complete and on track."
+    "source": "Department of Education (DepEd) official announcements"
   },
   {
     "name_en": "Philippine Lotto jackpot winners",
@@ -1338,10 +1294,7 @@ const groups = [
     "question": "Will the PCSO Grand Lotto 6/55 jackpot reach or exceed ₱200 million before being won next?",
     "question_en": "Will the PCSO Grand Lotto 6/55 jackpot reach or exceed ₱200 million before being won next?",
     "question_zh": "PCSO大乐透 6/55 的奖池在下一次被中出之前会达到或超过2亿比索吗？",
-    "source": "Philippine Charity Sweepstakes Office (PCSO) official results",
-    "prob": 40,
-    "prob_reason_zh": "累积至高额奖金需要多次无中奖。",
-    "prob_reason_en": "High jackpots require many rollovers."
+    "source": "Philippine Charity Sweepstakes Office (PCSO) official results"
   },
   {
     "name_en": "Sara Duterte impeachment trial and disinformation battle",
@@ -1388,10 +1341,7 @@ const groups = [
     "question": "Will the House of Representatives of the Philippines vote to impeach Vice President Sara Duterte by December 31, 2026?",
     "question_en": "Will the House of Representatives of the Philippines vote to impeach Vice President Sara Duterte by December 31, 2026?",
     "question_zh": "菲律宾众议院会在2026年12月31日之前投票通过弹劾副总统莎拉·杜特尔特吗？",
-    "source": "House of Representatives of the Philippines Official Journal",
-    "prob": 65,
-    "prob_reason_zh": "政治裂痕使众议院弹劾可能性较大。",
-    "prob_reason_en": "Rift makes House impeachment likely."
+    "source": "House of Representatives of the Philippines Official Journal"
   },
   {
     "name_en": "Financial aid for tricycle and PUJ transport workers",
@@ -1438,10 +1388,7 @@ const groups = [
     "question": "Will the LTFRB complete the distribution of the ₱305-M transport fuel subsidy in Western Visayas by September 30, 2026?",
     "question_en": "Will the LTFRB complete the distribution of the ₱305-M transport fuel subsidy in Western Visayas by September 30, 2026?",
     "question_zh": "陆路运输特许权和监管委员会（LTFRB）会在2026年9月30日之前完成西米沙鄢地区3.05亿比索交通燃油补贴的发放吗？",
-    "source": "Land Transportation Franchising and Regulatory Board (LTFRB) official statements",
-    "prob": 85,
-    "prob_reason_zh": "补贴发放已在进行中，预计按期完成。",
-    "prob_reason_en": "Distribution is active and on track."
+    "source": "Land Transportation Franchising and Regulatory Board (LTFRB) official statements"
   },
   {
     "name_en": "Philippine HIV daily infection rates",
@@ -1488,10 +1435,7 @@ const groups = [
     "question": "Will the Department of Health (DOH) report an average of 55 or more new daily HIV cases in its Q2 2026 HARP report?",
     "question_en": "Will the Department of Health (DOH) report an average of 55 or more new daily HIV cases in its Q2 2026 HARP report?",
     "question_zh": "菲律宾卫生部（DOH）在2026年第二季度的HARP报告中，会报告平均每日新增55例或更多艾滋病毒感染病例吗？",
-    "source": "DOH Epidemiology Bureau official quarterly report",
-    "prob": 45,
-    "prob_reason_zh": "目前为51例，升至55例存在不确定性。",
-    "prob_reason_en": "Rate is 51; a jump to 55 is uncertain."
+    "source": "DOH Epidemiology Bureau official quarterly report"
   },
   {
     "name_en": "Diesel and gas price hikes in the Philippines",
@@ -1538,10 +1482,7 @@ const groups = [
     "question": "Will the price of diesel in the Philippines increase by more than ₱1.20 per liter in the weekly adjustment on May 26, 2026?",
     "question_en": "Will the price of diesel in the Philippines increase by more than ₱1.20 per liter in the weekly adjustment on May 26, 2026?",
     "question_zh": "在2026年5月26日的每周调价中，菲律宾国内柴油零售价每升会增加超过1.20比索吗？",
-    "source": "Department of Energy (DOE) Fuel Price Monitoring announcements",
-    "prob": 60,
-    "prob_reason_zh": "预计涨幅超1比索，达到1.2极其可能。",
-    "prob_reason_en": "Hike is over 1 peso; 1.20 is possible."
+    "source": "Department of Energy (DOE) Fuel Price Monitoring announcements"
   },
   {
     "name_en": "Philippine disaster aid and generator shipments to Ukraine",
@@ -1588,10 +1529,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Philippine Department of Foreign Affairs (DFA)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Philippine Department of Foreign Affairs (DFA)"
   },
   {
     "name_en": "Barangay and Sangguniang Kabataan Elections voter registration",
@@ -1638,10 +1576,7 @@ const groups = [
     "question": "Will the Commission on Elections (Comelec) report a final total of over 5.5 million registered voter applications for the 2026 BSKE?",
     "question_en": "Will the Commission on Elections (Comelec) report a final total of over 5.5 million registered voter applications for the 2026 BSKE?",
     "question_zh": "选举委员会（Comelec）公布的2026年BSKE最终注册选民申请总数会超过550万份吗？",
-    "source": "Commission on Elections (Comelec) official statistical releases",
-    "prob": 75,
-    "prob_reason_zh": "选民常在最后关头涌现，有望超目标。",
-    "prob_reason_en": "Last-minute registration surges help."
+    "source": "Commission on Elections (Comelec) official statistical releases"
   },
   {
     "name_en": "PAGASA weather advisories and flood alerts",
@@ -1704,10 +1639,7 @@ const groups = [
     "question": "Will PAGASA declare a Red Rainfall Warning for Metro Manila at any point between June 1 and June 15, 2026?",
     "question_en": "Will PAGASA declare a Red Rainfall Warning for Metro Manila at any point between June 1 and June 15, 2026?",
     "question_zh": "菲律宾气象局（PAGASA）会在2026年6月1日至6月15日期间对大马尼拉地区发布红色降雨预警吗？",
-    "source": "PAGASA official severe weather bulletins",
-    "prob": 25,
-    "prob_reason_zh": "6月上旬出现红色暴雨预警的概率较低。",
-    "prob_reason_en": "Early June rarely sees red alerts."
+    "source": "PAGASA official severe weather bulletins"
   },
   {
     "name_en": "Marcos drug killings monitor",
@@ -1754,10 +1686,7 @@ const groups = [
     "question": "Will the Dahas Project report more than 20 drug-related fatalities in the Philippines for the month of May 2026?",
     "question_en": "Will the Dahas Project report more than 20 drug-related fatalities in the Philippines for the month of May 2026?",
     "question_zh": "达哈斯项目（Dahas Project）报告的2026年5月份菲律宾涉毒死亡人数会超过20人吗？",
-    "source": "Dahas Project (Third World Studies Center, UP Diliman) monthly reports",
-    "prob": 65,
-    "prob_reason_zh": "月均毒品相关死亡人数通常超过20人。",
-    "prob_reason_en": "Monthly average often exceeds 20 deaths."
+    "source": "Dahas Project (Third World Studies Center, UP Diliman) monthly reports"
   },
   {
     "name_en": "Jinggoy Estrada flood control corruption probe",
@@ -1804,10 +1733,7 @@ const groups = [
     "question": "Will the Office of the Ombudsman file formal graft charges against Senator Jinggoy Estrada in the Sandiganbayan by December 31, 2026?",
     "question_en": "Will the Office of the Ombudsman file formal graft charges against Senator Jinggoy Estrada in the Sandiganbayan by December 31, 2026?",
     "question_zh": "监察专员公署（Ombudsman）会在2026年12月31日之前在反贪法院（Sandiganbayan）对参议院金戈伊·埃斯特拉达（Jinggoy Estrada）提出正式贪污指控吗？",
-    "source": "Office of the Ombudsman or Sandiganbayan Case Filings database",
-    "prob": 70,
-    "prob_reason_zh": "司法部建议将加速监察专员的起诉。",
-    "prob_reason_en": "DOJ move speeds up Ombudsman action."
+    "source": "Office of the Ombudsman or Sandiganbayan Case Filings database"
   },
   {
     "name_en": "Anti-Political Dynasty Bill congressional progress",
@@ -1854,10 +1780,7 @@ const groups = [
     "question": "Will the Anti-Political Dynasty Bill pass its third and final reading in either chamber of the Philippine Congress by December 31, 2026?",
     "question_en": "Will the Anti-Political Dynasty Bill pass its third and final reading in either chamber of the Philippine Congress by December 31, 2026?",
     "question_zh": "反政治家族垄断法案会在2026年12月31日之前在菲律宾国会任何一院通过第三次也是最终读会吗？",
-    "source": "Senate or House of Representatives Bill Status Inquiry system",
-    "prob": 10,
-    "prob_reason_zh": "充满家族势力的国会历来阻挠此法案。",
-    "prob_reason_en": "Dynastic Congress blocks this bill."
+    "source": "Senate or House of Representatives Bill Status Inquiry system"
   },
   {
     "name_en": "Marcos economic performance criticism",
@@ -1904,10 +1827,7 @@ const groups = [
     "question": "Will the Philippine Statistics Authority (PSA) report the Q2 2026 Philippine GDP growth rate as above 6.0%?",
     "question_en": "Will the Philippine Statistics Authority (PSA) report the Q2 2026 Philippine GDP growth rate as above 6.0%?",
     "question_zh": "菲律宾统计局（PSA）公布的2026年第二季度菲律宾GDP年增长率会高于6.0%吗？",
-    "source": "Philippine Statistics Authority (PSA) National Accounts Press Release",
-    "prob": 45,
-    "prob_reason_zh": "通胀高企可能会将经济增速拖至6%以下。",
-    "prob_reason_en": "Inflation may drag growth below 6%."
+    "source": "Philippine Statistics Authority (PSA) National Accounts Press Release"
   },
   {
     "name_en": "Renewable energy expansion and finance",
@@ -1982,10 +1902,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Bloomberg Green or ASEAN Centre for Energy reports",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Bloomberg Green or ASEAN Centre for Energy reports"
   },
   {
     "name_en": "GLP-1 weight-loss drugs and health risks",
@@ -2046,10 +1963,7 @@ const groups = [
     "question": "Will the US FDA issue a safety communication or mandate a new label warning specifically citing 'muscle wasting' or 'sarcopenia' for semaglutide or tirzepatide products by December 31, 2026?",
     "question_en": "Will the US FDA issue a safety communication or mandate a new label warning specifically citing 'muscle wasting' or 'sarcopenia' for semaglutide or tirzepatide products by December 31, 2026?",
     "question_zh": "美国FDA会在2026年12月31日之前发布针对司美格鲁肽或替泽帕肽产品专门引用“肌肉流失”或“肌少症”的安全通讯或要求修改标签警告吗？",
-    "source": "US FDA Drug Safety Communications database",
-    "prob": 40,
-    "prob_reason_zh": "药监局审查耗时，且该症状与减肥相关。",
-    "prob_reason_en": "FDA reviews take time; link is general."
+    "source": "US FDA Drug Safety Communications database"
   },
   {
     "name_en": "Taiwan-Philippines smart healthcare collaboration",
@@ -2096,10 +2010,7 @@ const groups = [
     "question": "Will the Philippine Department of Health (DOH) sign a formal smart healthcare or digital health cooperation agreement with Taiwan's Ministry of Health and Welfare by December 31, 2026?",
     "question_en": "Will the Philippine Department of Health (DOH) sign a formal smart healthcare or digital health cooperation agreement with Taiwan's Ministry of Health and Welfare by December 31, 2026?",
     "question_zh": "菲律宾卫生部（DOH）会在2026年12月31日之前与台湾卫生福利部签署正式的智慧医疗或数字健康合作协议吗？",
-    "source": "DOH Philippines official website and news portal",
-    "prob": 15,
-    "prob_reason_zh": "“一个中国”政策限制了官方协议的签署。",
-    "prob_reason_en": "One-China policy limits formal deal."
+    "source": "DOH Philippines official website and news portal"
   },
   {
     "name_en": "NASA and international lunar exploration missions",
@@ -2216,10 +2127,7 @@ const groups = [
     "question": "Will China's Chang'e-7 lunar probe launch on or before December 31, 2026?",
     "question_en": "Will China's Chang'e-7 lunar probe launch on or before December 31, 2026?",
     "question_zh": "中国嫦娥七号探月探测器会在2026年12月31日或之前发射吗？",
-    "source": "China National Space Administration (CNSA) official launch notices",
-    "prob": 70,
-    "prob_reason_zh": "中国航天计划执行力强，按期概率高。",
-    "prob_reason_en": "China's space program is on schedule."
+    "source": "China National Space Administration (CNSA) official launch notices"
   },
   {
     "name_en": "European club football matches and team updates",
@@ -2294,10 +2202,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "La Liga official club records",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "La Liga official club records"
   },
   {
     "name_en": "Ditta Sandico fashion book and brand",
@@ -2344,10 +2249,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Ditta Sandico brand announcements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Ditta Sandico brand announcements"
   },
   {
     "name_en": "Flores de Mayo devotion",
@@ -2394,10 +2296,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Catholic Bishops' Conference of the Philippines (CBCP)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Catholic Bishops' Conference of the Philippines (CBCP)"
   },
   {
     "name_en": "PH public school students international science awards",
@@ -2444,10 +2343,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "DepEd Philippines / DOST website",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "DepEd Philippines / DOST website"
   },
   {
     "name_en": "Climate change and global climate diplomacy",
@@ -2522,10 +2418,7 @@ const groups = [
     "question": "Will the International Court of Justice (ICJ) deliver its final advisory opinion on states' obligations regarding climate change by December 31, 2026?",
     "question_en": "Will the International Court of Justice (ICJ) deliver its final advisory opinion on states' obligations regarding climate change by December 31, 2026?",
     "question_zh": "国际法院（ICJ）会在2026年12月31日之前就国家在气候变化方面的义务发表最终咨询意见吗？",
-    "source": "International Court of Justice (ICJ) Press Releases / Docket",
-    "prob": 75,
-    "prob_reason_zh": "预计海牙国际法院将在该期限内作出裁决。",
-    "prob_reason_en": "ICJ is expected to rule by late 2026."
+    "source": "International Court of Justice (ICJ) Press Releases / Docket"
   },
   {
     "name_en": "K-pop group BTS world tour",
@@ -2572,10 +2465,7 @@ const groups = [
     "question": "Will ticket sales for the BTS 2027 concert at the Philippine Sports Stadium officially launch to the public before December 31, 2026?",
     "question_en": "Will ticket sales for the BTS 2027 concert at the Philippine Sports Stadium officially launch to the public before December 31, 2026?",
     "question_zh": "防弹少年团（BTS）2027年菲律宾体育馆演唱会的门票销售会在2026年12月31日之前向公众公开销售吗？",
-    "source": "Live Nation Philippines or SM Tickets official announcements",
-    "prob": 80,
-    "prob_reason_zh": "2027年演唱会门票通常于2026年底开售。",
-    "prob_reason_en": "Tickets likely go on sale in late 2026."
+    "source": "Live Nation Philippines or SM Tickets official announcements"
   },
   {
     "name_en": "North Korea-Japan security tensions",
@@ -2622,10 +2512,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Japan Ministry of Defense",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Japan Ministry of Defense"
   },
   {
     "name_en": "White House checkpoint shooting",
@@ -2672,10 +2559,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "US Secret Service Official Press Statements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "US Secret Service Official Press Statements"
   },
   {
     "name_en": "Orange County chemical tank emergency",
@@ -2722,10 +2606,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "California Office of Emergency Services (Cal OES)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "California Office of Emergency Services (Cal OES)"
   },
   {
     "name_en": "Maldives cave diving tragedy",
@@ -2772,10 +2653,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Maldives National Defence Force (MNDF)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Maldives National Defence Force (MNDF)"
   },
   {
     "name_en": "China coal mine blast",
@@ -2822,10 +2700,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "National Mine Safety Administration of China",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "National Mine Safety Administration of China"
   },
   {
     "name_en": "Indonesia commodity exports monopoly plans",
@@ -2872,10 +2747,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "World Trade Organization (WTO) official case database",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "World Trade Organization (WTO) official case database"
   },
   {
     "name_en": "Japanese automaker rankings (Suzuki vs Honda)",
@@ -2922,10 +2794,7 @@ const groups = [
     "question": "Will Suzuki surpass Honda in total global unit sales for the calendar year 2026?",
     "question_en": "Will Suzuki surpass Honda in total global unit sales for the calendar year 2026?",
     "question_zh": "铃木（Suzuki）在2026日历年的全球整车销量会超过本田（Honda）吗？",
-    "source": "Japan Automobile Manufacturers Association (JAMA) annual industry data",
-    "prob": 20,
-    "prob_reason_zh": "本田在全球销量基数上仍保有明显优势。",
-    "prob_reason_en": "Honda's global sales remain superior."
+    "source": "Japan Automobile Manufacturers Association (JAMA) annual industry data"
   },
   {
     "name_en": "James Hardie earnings miss",
@@ -2972,10 +2841,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "ASX Company Announcements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "ASX Company Announcements"
   },
   {
     "name_en": "Cebu musical theater production",
@@ -3022,10 +2888,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Local Cebu lifestyle theater production press announcements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Local Cebu lifestyle theater production press announcements"
   },
   {
     "name_en": "WNBA Sabrina Ionescu season debut",
@@ -3072,10 +2935,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "WNBA Official Website",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "WNBA Official Website"
   },
   {
     "name_en": "Tennis French Open Djokovic challenge",
@@ -3122,10 +2982,7 @@ const groups = [
     "question": "Will Novak Djokovic win the 2026 French Open Men's Singles title?",
     "question_en": "Will Novak Djokovic win the 2026 French Open Men's Singles title?",
     "question_zh": "诺瓦克·德约科维奇（Novak Djokovic）能赢得2026年法国网球公开赛男子单打冠军吗？",
-    "source": "Official French Open (rolandgarros.com) results",
-    "prob": 20,
-    "prob_reason_zh": "年龄增大及新星崛起降低了其夺冠概率。",
-    "prob_reason_en": "Age and rivals reduce his win chance."
+    "source": "Official French Open (rolandgarros.com) results"
   },
   {
     "name_en": "NBA Playoffs predictions and results",
@@ -3186,10 +3043,7 @@ const groups = [
     "question": "Will the New York Knicks win the 2026 NBA Eastern Conference Finals?",
     "question_en": "Will the New York Knicks win the 2026 NBA Eastern Conference Finals?",
     "question_zh": "纽约尼克斯队能赢得2026年NBA东部决赛吗？",
-    "source": "NBA.com official playoff standings",
-    "prob": 35,
-    "prob_reason_zh": "尼克斯表现不俗但面临强敌阻击。",
-    "prob_reason_en": "Knicks face tough playoff opponents."
+    "source": "NBA.com official playoff standings"
   },
   {
     "name_en": "Miley Cyrus Walk of Fame star",
@@ -3236,10 +3090,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Hollywood Chamber of Commerce",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Hollywood Chamber of Commerce"
   },
   {
     "name_en": "Anker soundcore Liberty audio products launch in PH",
@@ -3286,10 +3137,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Anker Soundcore Philippines press portal",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Anker Soundcore Philippines press portal"
   },
   {
     "name_en": "Apple ecosystem and WWDC updates",
@@ -3364,10 +3212,7 @@ const groups = [
     "question": "Will Apple officially announce a dedicated generative AI application portal or store during the WWDC 2026 keynote on June 8, 2026?",
     "question_en": "Will Apple officially announce a dedicated generative AI application portal or store during the WWDC 2026 keynote on June 8, 2026?",
     "question_zh": "苹果会在2026年6月8日的WWDC 2026主题演讲中正式发布专门的生成式AI应用门户或应用商店吗？",
-    "source": "Apple Inc. Official WWDC 2026 Keynote Presentation and Apple Newsroom",
-    "prob": 70,
-    "prob_reason_zh": "开发者大会聚焦人工智能，发布概率高。",
-    "prob_reason_en": "WWDC AI focus makes launch likely."
+    "source": "Apple Inc. Official WWDC 2026 Keynote Presentation and Apple Newsroom"
   },
   {
     "name_en": "Martin Short, the comedian who triumphed despite everythi…",
@@ -3414,10 +3259,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "None"
   },
   {
     "name_en": "Novelty Cinema Collectibles",
@@ -3464,10 +3306,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "None"
   },
   {
     "name_en": "Wordle today: The answer and hints for May 23, 2026",
@@ -3514,10 +3353,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "None"
   },
   {
     "name_en": "NESDC maintains 2026 Thai growth forecast amid high uncer…",
@@ -3564,10 +3400,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Thailand NESDC official publications",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Thailand NESDC official publications"
   },
   {
     "name_en": "New James Bond game shows more vulnerable side to iconic…",
@@ -3614,10 +3447,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "None"
   },
   {
     "name_en": "Weekly poll results: Sony Xperia 1 VIII might be a hit, d…",
@@ -3664,10 +3494,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "GSMArena.com",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "GSMArena.com"
   },
   {
     "name_en": "Rico Verhoeven coach Peter Fury calls for Oleksandr Usyk…",
@@ -3714,10 +3541,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Official promotion announcements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Official promotion announcements"
   },
   {
     "name_en": "Webb just clocked nearly 9,000 young star clusters and fo…",
@@ -3764,10 +3588,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "STScI James Webb Database",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "STScI James Webb Database"
   },
   {
     "name_en": "Google's AI Glasses Threaten Meta's 80% Market Grip, Anal…",
@@ -3814,10 +3635,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "IDC Worldwide Quarterly Wearable Device Tracker",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "IDC Worldwide Quarterly Wearable Device Tracker"
   },
   {
     "name_en": "Love Kryzl, siblings, release new song",
@@ -3864,10 +3682,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Star Music Philippines official releases",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "Star Music Philippines official releases"
   },
   {
     "name_en": "3 must-have bags to redefine summer style",
@@ -3914,10 +3729,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "None"
   },
   {
     "name_en": "Mandarin Oriental Lutetia Joins ‘The White Lotus’ Season…",
@@ -3964,10 +3776,7 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "HBO Max official news releases",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "source": "HBO Max official news releases"
   }
 ];
 
