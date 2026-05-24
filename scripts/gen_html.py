@@ -111,6 +111,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -171,6 +175,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -188,6 +194,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -250,6 +258,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -329,6 +343,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });
@@ -463,6 +484,10 @@ def build_group(g: dict) -> dict:
         "question_en": question_en,
         "question_zh": question_zh,
         "source": g.get("resolution_source", ""),
+        "reddit_question_en": g.get("reddit_question"),
+        "reddit_question_zh": g.get("reddit_question_zh"),
+        "reddit_resolution_source": g.get("reddit_resolution_source"),
+        "reddit_resolution_url": g.get("reddit_resolution_url"),
     }
 
 

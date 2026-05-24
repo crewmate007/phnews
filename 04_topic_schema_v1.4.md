@@ -301,3 +301,44 @@ schema 定型了，可以开始码真东西。推荐顺序：
    - 反馈回路（市场结果回写）
 
 这三步走完，工具就从"文档"变成"产品"了。
+
+---
+
+## 附录 A：副菜市场 — Reddit Dry-Wit / 侧写视角（v1.4.1 增补）
+
+在主 `market_templates` 之外，每个 topic 可额外携带一道 **dry wit / 侧写观察** 风格的副菜市场，作为日报卡片上的"另一个角度"块并列展示。**严肃市场永不被替换**；副菜在找不到合规结算源时不渲染。
+
+### 字段（在 cluster JSON 的 group 对象上）
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `reddit_question` | string \| null | 英文侧写问题 |
+| `reddit_question_zh` | string \| null | 中文侧写问题 |
+| `reddit_resolution_source` | string \| null | 人类可读的源名称（如 "DOE Weekly Oil Monitor"） |
+| `reddit_resolution_url` | string \| null | 可点击的结算 URL，必须通过域名白名单（见下） |
+
+### Voice 约束（**比主市场更严**）
+
+- **允许**：数大家不会去数的东西（"X 已经多少天没回应 Y"）、横切的可观察量（X Trends 排名、官方账号发帖频率）、反复出现的微小信号
+- **禁止**：哈哈型段子、人身调侃、嘲讽、`笑死/笑点/绷不住` 之类语气、emoji-heavy framing
+- 口吻 = careful side-eye，**不是 roast**
+
+### 结算源约束（**比主市场更严**）
+
+- **必须**是可引用 URL：`.gov.ph` / `.gov.id` 机构页、公开统计页（trends.google.com、trends24.in/philippines）、或具体官方账号（x.com/dof_ph、facebook.com/DepartmentOfEducation.PH）
+- 主市场允许 "human-readable source name" 作为兜底；副菜不允许 —— 找不到合规 URL 就把整个角度返回 `null` 并设 `drop_reason`
+- LLM 返回的 URL 必须通过 `mvp/cluster.py:_REDDIT_URL_ALLOWLIST` 域名正则校验，否则降级为纯文本
+
+### 渲染规则（`scripts/gen_html.py`）
+
+- DOM 上是现有 `.question-box` 的兄弟节点，带 `.reddit-box` modifier（橙色左边框 `#ff4500`）
+- 渲染条件 **不**受 `g.bettable` 门控 —— `watching` / `drop` 卡只要 `reddit_question*` 存在就显示
+- `reddit_question*` 全空 → 整块不渲染，不留空容器
+- 标签文案：`另一个角度` / `Another angle`（避开"Reddit"字样，否则像分区标题）
+
+### 生成入口
+
+- 自动：`cluster_with_llm()` 在评分完成后调用 `generate_reddit_angles()`，try/except 包裹，失败不影响严肃题
+- 关闭开关：环境变量 `PHNEWS_REDDIT_ANGLES=0`
+- backfill：`scripts/add_reddit_angles.py YYYY-MM-DD --region ph`（仅当某日 JSON 在该 feature 上线前生成时使用）
+

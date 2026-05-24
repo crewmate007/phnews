@@ -9,7 +9,9 @@ Flow:
 """
 from __future__ import annotations
 import json
+import os
 import re
+import sys
 import datetime as dt
 import time
 from typing import List, Dict, Optional
@@ -254,6 +256,206 @@ SCORING GUIDE:
 """
 
 
+# ============================================================
+# Reddit-style dry-wit angle (secondary market question)
+# ============================================================
+
+REDDIT_ANGLE_PROMPT_TEMPLATE = """\
+You are a senior user of r/PredictionMarkets / Manifold reading today's
+{country_name} news. The serious analyst has already produced a primary market
+question for each topic. Your job: propose ONE SECOND market angle from a
+dry-wit / lateral-observation direction.
+
+Voice rules:
+- Allowed: counting things people forget to count ("days since X said Y"),
+  sideways measurables (Google/X trends rank, official handle posting cadence),
+  recurring small tells.
+- Forbidden: jokes, puns, 段子, 哈哈/笑死/绷不住/笑点, sarcasm at individuals,
+  emoji-heavy framing, snide tone.
+- Voice = careful side-eye, not a roast.
+
+Resolution-source rules (MANDATORY):
+- Must be a citable URL: a .gov.ph / .gov.id agency page, a public stat page
+  (trends.google.com, trends24.in/philippines), or a specific official handle
+  (x.com/dof_ph, facebook.com/DepartmentOfEducation.PH).
+- If no citable resolver exists for the topic, return null for the entire angle
+  and set `drop_reason`.
+- Do NOT invent URLs. If unsure, prefer null + drop_reason="uncertain resolver".
+
+Today is {date}.
+
+Worked examples:
+
+GOOD:
+  serious: "Will Marcos invoke emergency powers on rice prices by July?"
+  reddit:  "Will the DOE weekly oil bulletin show pump price >= PHP 70/L on any Friday in June?"
+  reddit_zh: "DOE 每周公告 6 月内是否任一周五汽油价格 >= ₱70/L？"
+  source: "DOE Weekly Oil Monitor"
+  url:    "https://www.doe.gov.ph/oilmonitor"
+
+GOOD:
+  serious: "Will Palarong Pambansa open on July 31 as planned?"
+  reddit:  "Will the DepEd official Facebook post anything containing 'postpone' or 'reschedule' in the 14 days before opening?"
+  reddit_zh: "DepEd 官方 Facebook 在开幕前 14 天内是否发布过含 'postpone' 或 'reschedule' 的声明？"
+  source: "DepEd Official Facebook"
+  url:    "https://www.facebook.com/DepartmentOfEducation.PH"
+
+REJECTED (return all-null + drop_reason):
+  "Will Marcos cry on camera this month? 哈哈"
+  -> joke voice, no resolver, personal jab.
+
+Topic groups:
+{groups}
+
+OUTPUT: strict JSON only, no markdown fences, no extra prose.
+
+{{
+  "groups": [
+    {{
+      "broad_index": <int, MUST match the input index>,
+      "reddit_question": "English question, or null",
+      "reddit_question_zh": "中文问题，or null",
+      "reddit_resolution_source": "Human-readable source name, or null",
+      "reddit_resolution_url": "https://... or null",
+      "drop_reason": "short reason when all null, otherwise null"
+    }}
+  ]
+}}
+"""
+
+
+_REDDIT_URL_ALLOWLIST = re.compile(
+    r"^https?://("
+    r"[a-z0-9-]+\.gov\.ph(?:/|$)"
+    r"|[a-z0-9-]+\.gov\.id(?:/|$)"
+    r"|(?:www\.)?bsp\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?doe\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?dof\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?dbm\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?neda\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?pagasa\.dost\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?phivolcs\.dost\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?comelec\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?dilg\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?congress\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?senate\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?dswd\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?dof\.gov\.ph(?:/|$)"
+    r"|(?:www\.)?meralco\.com\.ph(?:/|$)"
+    r"|(?:www\.)?ngcp\.ph(?:/|$)"
+    r"|(?:www\.)?pse\.com\.ph(?:/|$)"
+    r"|(?:www\.)?bi\.go\.id(?:/|$)"
+    r"|(?:www\.)?kemenkeu\.go\.id(?:/|$)"
+    r"|(?:www\.)?bps\.go\.id(?:/|$)"
+    r"|(?:www\.)?bmkg\.go\.id(?:/|$)"
+    r"|(?:www\.)?idx\.co\.id(?:/|$)"
+    r"|(?:www\.)?kpu\.go\.id(?:/|$)"
+    r"|(?:www\.)?x\.com/[A-Za-z0-9_]+"
+    r"|(?:www\.)?twitter\.com/[A-Za-z0-9_]+"
+    r"|(?:www\.)?facebook\.com/[A-Za-z0-9._-]+"
+    r"|(?:www\.)?youtube\.com/@[A-Za-z0-9._-]+"
+    r"|trends\.google\.com(?:/|$)"
+    r"|trends24\.in/(?:philippines|indonesia)"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def _build_reddit_input(groups: List[Dict]) -> str:
+    """Build the per-group input for the Reddit-angle prompt.
+
+    Reads group["clusters"] (full SourceIntel cluster dicts attached by
+    cluster_with_llm at line ~319), so this helper works both during the live
+    pipeline AND when loading a saved clusters_*.json for backfill.
+    """
+    blocks = []
+    for index, group in enumerate(groups):
+        group_clusters = group.get("clusters") or []
+        sample_titles = []
+        sample_summaries = []
+        keywords_set: List[str] = []
+        for c in group_clusters[:5]:
+            title = c.get("cluster_title") or ""
+            if title:
+                sample_titles.append(_clip(title, 120))
+        for c in group_clusters[:3]:
+            summary = c.get("summary") or ""
+            if summary:
+                sample_summaries.append(_clip(summary, 220))
+            for kw in (c.get("keywords") or [])[:2]:
+                if kw and str(kw) not in keywords_set:
+                    keywords_set.append(str(kw))
+            if len(keywords_set) >= 6:
+                break
+        block = "\n".join([
+            f"[{index}] {group.get('name', '')} / {group.get('name_zh', '')}",
+            f"narrative={_clip(group.get('narrative', ''), 220)}",
+            f"primary_question={_clip(str(group.get('suggested_question') or ''), 180)}",
+            f"market_hint={_clip(str(group.get('market_hint') or ''), 140)}",
+            "sample_titles=" + " | ".join(sample_titles),
+            "sample_summaries=" + " || ".join(sample_summaries),
+            "keywords=" + ", ".join(keywords_set[:6]),
+        ])
+        blocks.append(block)
+    return "\n\n".join(blocks)
+
+
+def generate_reddit_angles(
+    groups: List[Dict],
+    client,
+    model: str,
+    region_cfg: RegionConfig,
+) -> Dict[str, int]:
+    """Attach reddit_* fields to each group in-place via one batched Gemini call.
+
+    Returns {"attached": int, "total": int}. Never raises — on parse or API
+    failure the caller's groups are left untouched and stats reflect zero.
+    Hallucinated URLs are dropped via _REDDIT_URL_ALLOWLIST; source label is
+    preserved as plain text in that case.
+    """
+    stats = {"attached": 0, "total": len(groups)}
+    if not groups:
+        return stats
+
+    prompt = REDDIT_ANGLE_PROMPT_TEMPLATE.format(
+        date=dt.date.today().isoformat(),
+        country_name=region_cfg.country_name,
+        groups=_build_reddit_input(groups),
+    )
+    response = _generate_content_with_retry(client, model, prompt)
+    result = _parse_json_response(response.text)
+
+    by_index: Dict[int, Dict] = {}
+    for item in result.get("groups", []):
+        if not isinstance(item, dict):
+            continue
+        idx = item.get("broad_index")
+        if isinstance(idx, int):
+            by_index[idx] = item
+
+    for i, group in enumerate(groups):
+        item = by_index.get(i)
+        if not item:
+            continue
+        q_en = item.get("reddit_question")
+        q_zh = item.get("reddit_question_zh")
+        if not (q_en or q_zh):
+            continue  # legitimately empty angle; skip silently
+        src = item.get("reddit_resolution_source")
+        url = item.get("reddit_resolution_url")
+        if url and not _REDDIT_URL_ALLOWLIST.match(str(url).strip()):
+            url = None  # drop unsafe URL, keep source name as text
+        group["reddit_question"] = q_en
+        group["reddit_question_zh"] = q_zh
+        group["reddit_resolution_source"] = src
+        group["reddit_resolution_url"] = url
+        stats["attached"] += 1
+    return stats
+
+
+# ============================================================
+
+
 def cluster_with_llm(clusters: List[Dict], api_key: str,
                      region: RegionConfig | str | None = None,
                      model: str = "gemini-flash-latest") -> Dict:
@@ -319,6 +521,26 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     for group in result.get("groups", []):
         group["clusters"] = [clusters[i] for i in group.get("entry_ids", [])
                              if i < len(clusters)]
+
+    # Reddit-style dry-wit angle: best-effort, never blocks the serious pipeline.
+    # Toggle off in CI by setting PHNEWS_REDDIT_ANGLES=0.
+    if os.environ.get("PHNEWS_REDDIT_ANGLES", "1") != "0":
+        try:
+            stats = generate_reddit_angles(
+                result.get("groups", []),
+                client,
+                model,
+                region_cfg,
+            )
+            print(
+                f"[INFO] Reddit angles attached: {stats['attached']}/{stats['total']}",
+                file=sys.stderr,
+            )
+        except Exception as exc:
+            print(
+                f"[WARN] Reddit angles skipped: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
 
     return result
 

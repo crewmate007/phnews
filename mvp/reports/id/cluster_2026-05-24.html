@@ -89,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -149,6 +153,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -166,6 +172,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -267,7 +275,11 @@ const groups = [
     "question": "Will the Indonesian government officially implement a mandatory centralized export scheme for palm oil or coal via Danantara on or before December 31, 2026?",
     "question_en": "Will the Indonesian government officially implement a mandatory centralized export scheme for palm oil or coal via Danantara on or before December 31, 2026?",
     "question_zh": "印尼政府是否会在2026年12月31日或之前正式实施通过Danantara进行棕榈油或煤炭的强制性集中出口计划？",
-    "source": "Official announcements by Danantara, the Ministry of State-Owned Enterprises, or the Ministry of Finance."
+    "source": "Official announcements by Danantara, the Ministry of State-Owned Enterprises, or the Ministry of Finance.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Capital Markets and Policy Reactions",
@@ -344,7 +356,11 @@ const groups = [
     "question": "Will the Jakarta Composite Index (IHSG) close above 8,000 on or before December 31, 2026?",
     "question_en": "Will the Jakarta Composite Index (IHSG) close above 8,000 on or before December 31, 2026?",
     "question_zh": "雅加达综合指数（IHSG）会在2026年12月31日或之前收于8,000点以上吗？",
-    "source": "Indonesia Stock Exchange (IDX) official daily indices."
+    "source": "Indonesia Stock Exchange (IDX) official daily indices.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Public Criticism of Prabowo's Economic and Fiscal Policies",
@@ -419,7 +435,11 @@ const groups = [
     "question": "Will Indonesia's official year-on-year CPI inflation rate exceed 4.0% in any month before December 31, 2026?",
     "question_en": "Will Indonesia's official year-on-year CPI inflation rate exceed 4.0% in any month before December 31, 2026?",
     "question_zh": "在2026年12月31日之前，印尼官方的同比CPI通胀率是否会在任一月份超过4.0%？",
-    "source": "Badan Pusat Statistik (BPS) official monthly inflation release."
+    "source": "Badan Pusat Statistik (BPS) official monthly inflation release.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Conclusion of the 2025/2026 Indonesian Super League",
@@ -536,7 +556,11 @@ const groups = [
     "question": "Will the 2026/2027 Indonesian Super League (Liga 1) officially begin its first match of the regular season before September 1, 2026?",
     "question_en": "Will the 2026/2027 Indonesian Super League (Liga 1) officially begin its first match of the regular season before September 1, 2026?",
     "question_zh": "2026/2027赛季印尼超级联赛（Liga 1）是否会在2026年9月1日之前正式开始其常规赛的首场比赛？",
-    "source": "PT Liga Indonesia Baru (LIB) or PSSI official announcements."
+    "source": "PT Liga Indonesia Baru (LIB) or PSSI official announcements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "English Premier League and UK Soccer News",
@@ -653,7 +677,11 @@ const groups = [
     "question": "Will Pep Guardiola be the official manager of Manchester City for the first match of the 2026/2027 Premier League regular season?",
     "question_en": "Will Pep Guardiola be the official manager of Manchester City for the first match of the 2026/2027 Premier League regular season?",
     "question_zh": "瓜迪奥拉是否会在2026/2027赛季英超常规赛首场比赛中继续担任曼城官方主教练？",
-    "source": "Manchester City Football Club official announcements."
+    "source": "Manchester City Football Club official announcements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Continental European Football Developments",
@@ -728,7 +756,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Official club statements."
+    "source": "Official club statements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Football Developments",
@@ -789,7 +821,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "FIFA or Al Nassr FC official announcements."
+    "source": "FIFA or Al Nassr FC official announcements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Youth Motorcycle Racing Prospects",
@@ -850,7 +886,11 @@ const groups = [
     "question": "Will an Indonesian rider (Kiandra Ramadhipa or Veda Ega Pratama) secure a podium finish (top 3) in any official Moto3 Junior World Championship race in 2026?",
     "question_en": "Will an Indonesian rider (Kiandra Ramadhipa or Veda Ega Pratama) secure a podium finish (top 3) in any official Moto3 Junior World Championship race in 2026?",
     "question_zh": "印尼车手（Kiandra Ramadhipa或Veda Ega Pratama）是否会在2026年任何一场官方Moto3青少年世界锦标赛中进入前三名（登上领奖台）？",
-    "source": "FIM JuniorGP official championship standings or race classification reports."
+    "source": "FIM JuniorGP official championship standings or race classification reports.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesia EV Market Launches",
@@ -911,7 +951,11 @@ const groups = [
     "question": "Will GAIKINDO's official retail sales data show XPENG G6 sales in Indonesia exceeding 500 units by December 31, 2026?",
     "question_en": "Will GAIKINDO's official retail sales data show XPENG G6 sales in Indonesia exceeding 500 units by December 31, 2026?",
     "question_zh": "GAIKINDO官方零售数据显示，小鹏G6在印尼的销量是否会在2026年12月31日之前超过500辆？",
-    "source": "GAIKINDO official wholesale or retail vehicle data releases."
+    "source": "GAIKINDO official wholesale or retail vehicle data releases.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Automotive Market Updates",
@@ -972,7 +1016,11 @@ const groups = [
     "question": "Will PT Suzuki Indomobil Motor officially launch a new Hybrid version of the Suzuki Wagon R (Karimun) in Indonesia before December 31, 2026?",
     "question_en": "Will PT Suzuki Indomobil Motor officially launch a new Hybrid version of the Suzuki Wagon R (Karimun) in Indonesia before December 31, 2026?",
     "question_zh": "PT Suzuki Indomobil Motor是否会在2026年12月31日之前在印尼正式推出全新混动版铃木Wagon R（Karimun）？",
-    "source": "PT Suzuki Indomobil Motor press room announcements."
+    "source": "PT Suzuki Indomobil Motor press room announcements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Smartphone Industry Leaks and Wearable Flagships",
@@ -1075,7 +1123,11 @@ const groups = [
     "question": "Will Apple officially announce an anniversary edition iPhone or a redesigned 'iPhone Slim/Air' before December 31, 2026?",
     "question_en": "Will Apple officially announce an anniversary edition iPhone or a redesigned 'iPhone Slim/Air' before December 31, 2026?",
     "question_zh": "苹果是否会在2026年12月31日之前正式发布纪念版iPhone或全新设计的'iPhone Slim/Air'？",
-    "source": "Apple Inc. official newsroom press releases."
+    "source": "Apple Inc. official newsroom press releases.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Laptop Terjangkau Apple MacBook Neo Resmi Hadir di Indone…",
@@ -1122,7 +1174,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Apple Inc. official press releases."
+    "source": "Apple Inc. official press releases.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "4 HP Terbaru 2026 Harga Rp2 Jutaan, Kamera Bagus dan Bate…",
@@ -1169,7 +1225,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Local technology blogs."
+    "source": "Local technology blogs.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Infinix Hot 70 Bawa Desain Nyentrik, Rilis Hari Ini di RI",
@@ -1216,7 +1276,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Infinix Indonesia official launch releases."
+    "source": "Infinix Indonesia official launch releases.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Realme 16T Resmi, HP Baterai Jumbo dengan Layar 144 Hz",
@@ -1263,7 +1327,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Realme Indonesia website."
+    "source": "Realme Indonesia website.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Xiaomi Redmi A5 jadi Salah Satu HP Terlaris Dunia, Hargan…",
@@ -1310,7 +1378,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Counterpoint Research tracker results."
+    "source": "Counterpoint Research tracker results.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bulan Bergerak Jauhi Bumi, Ini Dampaknya Bagi Manusia",
@@ -1357,7 +1429,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Academic space research publications."
+    "source": "Academic space research publications.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Temuan Mengejutkan, Radiasi Katai Merah Diduga Hanguskan…",
@@ -1404,7 +1480,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "NASA Exoplanet Science Institute."
+    "source": "NASA Exoplanet Science Institute.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mengejutkan, Teleskop James Webb Temukan Fenomena Hujan P…",
@@ -1451,7 +1531,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "NASA Space Telescope Science Institute reports."
+    "source": "NASA Space Telescope Science Institute reports.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Theoretical Physics and Space Mission Developments",
@@ -1512,7 +1596,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "NASA official mission updates."
+    "source": "NASA official mission updates.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Paleontology and Ancient Biological Discoveries",
@@ -1601,7 +1689,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Academic paleontology journals."
+    "source": "Academic paleontology journals.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Severe Measles Outbreaks and Public Health Responses",
@@ -1662,7 +1754,11 @@ const groups = [
     "question": "Will the Indonesian Ministry of Health (Kemenkes) officially declare an extraordinary health occurrence (KLB) for measles in any regency of East Java province before December 31, 2026?",
     "question_en": "Will the Indonesian Ministry of Health (Kemenkes) officially declare an extraordinary health occurrence (KLB) for measles in any regency of East Java province before December 31, 2026?",
     "question_zh": "印尼卫生部（Kemenkes）是否会在2026年12月31日之前正式宣布东爪哇省任何县爆发麻疹特别健康事件（KLB）？",
-    "source": "Kementerian Kesehatan RI official press releases or regional health office notifications."
+    "source": "Kementerian Kesehatan RI official press releases or regional health office notifications.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Local HIV and Tuberculosis Screening Campaigns",
@@ -1737,7 +1833,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Local Dinas Kesehatan reports."
+    "source": "Local Dinas Kesehatan reports.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Obesity Health Risks and Bariatric Surgery",
@@ -1798,7 +1898,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "RS Premier Bintaro corporate disclosures."
+    "source": "RS Premier Bintaro corporate disclosures.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Film Controversies and Censorship Cases",
@@ -1859,7 +1963,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Official production house announcements or state theatrical registers."
+    "source": "Official production house announcements or state theatrical registers.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Asian Female Stars and Celebrity Styling",
@@ -1920,7 +2028,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Brand PR reports."
+    "source": "Brand PR reports.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Celebrity Family and Financial Struggles",
@@ -1981,7 +2093,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Local entertainment news consensus."
+    "source": "Local entertainment news consensus.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Daily Astrological and Horoscope Predictions",
@@ -2042,7 +2158,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None"
+    "source": "None",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US-Iran Diplomatic Negotiations and Political Fallout",
@@ -2145,7 +2265,11 @@ const groups = [
     "question": "Will the US and Iran officially sign a bilateral peace agreement or joint diplomatic roadmap before December 31, 2026?",
     "question_en": "Will the US and Iran officially sign a bilateral peace agreement or joint diplomatic roadmap before December 31, 2026?",
     "question_zh": "美国和伊朗是否会在2026年12月31日之前正式签署双边和平协议或联合外交路线图？",
-    "source": "US Department of State or United Nations official communications."
+    "source": "US Department of State or United Nations official communications.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Strait of Hormuz Geopolitics and Military Threats",
@@ -2220,7 +2344,11 @@ const groups = [
     "question": "Will there be a confirmed military kinetic clash between US military forces and Iranian armed forces in the Strait of Hormuz before December 31, 2026?",
     "question_en": "Will there be a confirmed military kinetic clash between US military forces and Iranian armed forces in the Strait of Hormuz before December 31, 2026?",
     "question_zh": "在2026年12月31日之前，美国军队与伊朗武装力量是否会在霍尔木兹海峡发生经证实的军事武装冲突？",
-    "source": "US Department of Defense or United Kingdom Maritime Trade Operations (UKMTO) official situational updates."
+    "source": "US Department of Defense or United Kingdom Maritime Trade Operations (UKMTO) official situational updates.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Diplomatic Friction and Sovereign Decisions",
@@ -2309,7 +2437,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Official national court records or diplomatic statements."
+    "source": "Official national court records or diplomatic statements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Russia-Ukraine War Military Escalation",
@@ -2370,7 +2502,11 @@ const groups = [
     "question": "Will the UK or US government officially announce the delivery of additional Patriot air defense missile systems to Ukraine between May 24, 2026, and September 30, 2026?",
     "question_en": "Will the UK or US government officially announce the delivery of additional Patriot air defense missile systems to Ukraine between May 24, 2026, and September 30, 2026?",
     "question_zh": "英国或美国政府是否会在2026年5月24日至9月30日期间正式宣布向乌克兰交付额外的“爱国者”防空导弹系统？",
-    "source": "Official defense department press announcements (US DoD / UK Gov)."
+    "source": "Official defense department press announcements (US DoD / UK Gov).",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Papua Human Rights and Military Operations",
@@ -2431,7 +2567,11 @@ const groups = [
     "question": "Will Komnas HAM publish a formal investigation report detailing new allegations of human rights violations in Central Papua during 2026 before December 31, 2026?",
     "question_en": "Will Komnas HAM publish a formal investigation report detailing new allegations of human rights violations in Central Papua during 2026 before December 31, 2026?",
     "question_zh": "印尼国家人权委员会（Komnas HAM）是否会在2026年12月31日之前发布一份正式调查报告，详细说明2026年期间中巴布亚省的新人权侵犯指控？",
-    "source": "Komnas HAM official website and published press statements."
+    "source": "Komnas HAM official website and published press statements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Gold Market and Sharia Pawn",
@@ -2492,7 +2632,11 @@ const groups = [
     "question": "Will the official selling price of 1 gram of Antam gold at Pegadaian exceed IDR 1,600,000 at any point between June 1, 2026, and December 31, 2026?",
     "question_en": "Will the official selling price of 1 gram of Antam gold at Pegadaian exceed IDR 1,600,000 at any point between June 1, 2026, and December 31, 2026?",
     "question_zh": "在2026年6月1日至12月31日期间，Pegadaian每克Antam黄金的官方售价是否会在任何时间点超过1,600,000印尼盾？",
-    "source": "Official Pegadaian daily retail price list for 1 gram Antam Gold."
+    "source": "Official Pegadaian daily retail price list for 1 gram Antam Gold.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prabowo's Agricultural, Livestock, and Qurban Engagements",
@@ -2553,7 +2697,11 @@ const groups = [
     "question": "Will the draft 2027 State Budget (RAPBN 2027) submitted by President Prabowo to the DPR in August 2026 allocate over IDR 5 trillion specifically to the Ministry of Marine Affairs and Fisheries (KKP) for aquaculture development?",
     "question_en": "Will the draft 2027 State Budget (RAPBN 2027) submitted by President Prabowo to the DPR in August 2026 allocate over IDR 5 trillion specifically to the Ministry of Marine Affairs and Fisheries (KKP) for aquaculture development?",
     "question_zh": "普拉博沃总统于2026年8月向国会（DPR）提交的2027年国家预算草案（RAPBN 2027）中，是否会专门向海洋与渔业部（KKP）拨出超过5万亿印尼盾用于水产养殖发展？",
-    "source": "Official RAPBN 2027 financial notes published by the Ministry of Finance (Kementerian Keuangan RI)."
+    "source": "Official RAPBN 2027 financial notes published by the Ministry of Finance (Kementerian Keuangan RI).",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Hantavirus Outbreak Monitoring and Case Clarifications",
@@ -2614,7 +2762,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Ministry of Health RI."
+    "source": "Ministry of Health RI.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Video Game Releases and Showcase Events",
@@ -2675,7 +2827,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "PlayStation Blog official posts."
+    "source": "PlayStation Blog official posts.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "World Bank Emergency Crisis Loans",
@@ -2722,7 +2878,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "World Bank operational project approvals list."
+    "source": "World Bank operational project approvals list.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Malaysia Masters 2026 Badminton Tournament",
@@ -2769,7 +2929,11 @@ const groups = [
     "question": "Will an Indonesian badminton representative win at least one gold/first-place title at the Malaysia Masters 2026?",
     "question_en": "Will an Indonesian badminton representative win at least one gold/first-place title at the Malaysia Masters 2026?",
     "question_zh": "印尼羽毛球代表是否会在2026年马来西亚大师赛上获得至少一个冠军（金牌）？",
-    "source": "Badminton World Federation (BWF) official tournament matches and results portal."
+    "source": "Badminton World Federation (BWF) official tournament matches and results portal.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "TNI Jakarta Begal Hunting Controversy",
@@ -2816,7 +2980,11 @@ const groups = [
     "question": "Will the Jakarta Metropolitan Police (Polda Metro Jaya) and the Military Area Command (Kodam Jaya) officially launch a joint task force specifically to patrol and combat street crime (begal) in Jakarta by September 30, 2026?",
     "question_en": "Will the Jakarta Metropolitan Police (Polda Metro Jaya) and the Military Area Command (Kodam Jaya) officially launch a joint task force specifically to patrol and combat street crime (begal) in Jakarta by September 30, 2026?",
     "question_zh": "雅加达警察厅（Polda Metro Jaya）与大雅加达军区司令部（Kodam Jaya）是否会在2026年9月30日之前正式成立一个专门在雅加达巡逻并打击街头劫匪（begal）的联合特遣部队？",
-    "source": "Official press statements issued by Polda Metro Jaya or Kodam Jaya."
+    "source": "Official press statements issued by Polda Metro Jaya or Kodam Jaya.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Danantara Restructuring and PT INTI Closure",
@@ -2863,7 +3031,11 @@ const groups = [
     "question": "Will the Ministry of SOEs (BUMN) or Danantara officially complete the liquidation and legally close PT Industri Telekomunikasi Indonesia (PT INTI) by December 31, 2026?",
     "question_en": "Will the Ministry of SOEs (BUMN) or Danantara officially complete the liquidation and legally close PT Industri Telekomunikasi Indonesia (PT INTI) by December 31, 2026?",
     "question_zh": "印尼国有企业部（BUMN）或Danantara是否会在2026年12月31日之前正式完成清算并依法关闭PT Industri Telekomunikasi Indonesia（PT INTI）？",
-    "source": "Decree of the Minister of SOEs or official announcement in the State Gazette of the Republic of Indonesia."
+    "source": "Decree of the Minister of SOEs or official announcement in the State Gazette of the Republic of Indonesia.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "AMD Processor Bundles and PC Upgrades",
@@ -2910,7 +3082,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Official local hardware distributor listings."
+    "source": "Official local hardware distributor listings.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Dietary Carcinogens and Cancer Prevention",
@@ -2957,7 +3133,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "BPOM official gazette."
+    "source": "BPOM official gazette.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PCOS Renamed to PMOS Medical Update",
@@ -3004,7 +3184,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "IDI official clinical guidelines."
+    "source": "IDI official clinical guidelines.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cisauk Dating App Car Robbery Case",
@@ -3051,7 +3235,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "SIPP Pengadilan Negeri Tangerang."
+    "source": "SIPP Pengadilan Negeri Tangerang.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "India Satirical Cockroach Party Movement",
@@ -3098,7 +3286,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Election Commission of India registers."
+    "source": "Election Commission of India registers.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ratu Sofya Film Contract Somasi Dispute",
@@ -3145,7 +3337,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "District Court civil registries or official talent agency releases."
+    "source": "District Court civil registries or official talent agency releases.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BUMI Stock Foreign Investment Surge",
@@ -3192,7 +3388,11 @@ const groups = [
     "question": "Will foreign institutional investors record a net buying volume of PT Bumi Resources Tbk (BUMI) shares exceeding 1 billion shares on the Indonesia Stock Exchange during the third quarter of 2026 (July 1 to September 30, 2026)?",
     "question_en": "Will foreign institutional investors record a net buying volume of PT Bumi Resources Tbk (BUMI) shares exceeding 1 billion shares on the Indonesia Stock Exchange during the third quarter of 2026 (July 1 to September 30, 2026)?",
     "question_zh": "在2026年第三季度（7月1日至9月30日）期间，外国机构投资者在印尼证券交易所录得的PT Bumi Resources Tbk（BUMI）股票净买入量是否会超过10亿股？",
-    "source": "Indonesia Stock Exchange (IDX) official daily trading logs and broker summary reports."
+    "source": "Indonesia Stock Exchange (IDX) official daily trading logs and broker summary reports.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tol Paspro Fatal Accident Involving DPR Member",
@@ -3239,7 +3439,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Polda Jatim or relevant District Court case register."
+    "source": "Polda Jatim or relevant District Court case register.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cardiovascular Health: Heart Attacks and Chest Pain",
@@ -3286,7 +3490,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "PERKI clinical bulletins."
+    "source": "PERKI clinical bulletins.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "GoTo and Seskab Teddy Ojol Earnings Discussion",
@@ -3333,7 +3541,11 @@ const groups = [
     "question": "Will the Ministry of Transportation (Kemenhub) officially issue a new regulation revising the commission caps or minimum fares for ride-hailing drivers (ojol) in Indonesia on or before December 31, 2026?",
     "question_en": "Will the Ministry of Transportation (Kemenhub) officially issue a new regulation revising the commission caps or minimum fares for ride-hailing drivers (ojol) in Indonesia on or before December 31, 2026?",
     "question_zh": "印尼交通部（Kemenhub）是否会在2026年12月31日或之前正式出台新规，修改印尼网约车司机（ojol）的佣金上限或最低票价？",
-    "source": "Official decrees of the Ministry of Transportation of the Republic of Indonesia."
+    "source": "Official decrees of the Ministry of Transportation of the Republic of Indonesia.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kidney Disease Prevention and Detection",
@@ -3380,7 +3592,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Kementerian Kesehatan RI."
+    "source": "Kementerian Kesehatan RI.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bill Gates Cameo in Indian Serial",
@@ -3427,7 +3643,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Social media metrics."
+    "source": "Social media metrics.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gajah Tunggal Corporate Leadership Appointment",
@@ -3474,7 +3694,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "PT Gajah Tunggal Tbk corporate governance portal."
+    "source": "PT Gajah Tunggal Tbk corporate governance portal.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Harita Nickel Share Buyback Program",
@@ -3521,7 +3745,11 @@ const groups = [
     "question": "Will PT Trimegah Bangun Persada Tbk (NCKL) officially complete its announced Phase III share buyback program with an execution rate of 90% or higher of the allocated Rp1 trillion by December 31, 2026?",
     "question_en": "Will PT Trimegah Bangun Persada Tbk (NCKL) officially complete its announced Phase III share buyback program with an execution rate of 90% or higher of the allocated Rp1 trillion by December 31, 2026?",
     "question_zh": "PT Trimegah Bangun Persada Tbk（NCKL）是否会在2026年12月31日之前正式完成其公布的第三阶段股份回购计划，且执行率达到所分配的1万亿印尼盾的90%或以上？",
-    "source": "PT Trimegah Bangun Persada Tbk official information disclosure on the Indonesia Stock Exchange (IDX)."
+    "source": "PT Trimegah Bangun Persada Tbk official information disclosure on the Indonesia Stock Exchange (IDX).",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Semarang Economic Growth and Commercial Real Estate",
@@ -3568,7 +3796,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "PT Paradise Indonesia (INPP) public investor relation statements."
+    "source": "PT Paradise Indonesia (INPP) public investor relation statements.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gerindra Village Cinema Proposal for 2027 Budget",
@@ -3615,7 +3847,11 @@ const groups = [
     "question": "Will the finalized 2027 State Budget (APBN 2027) passed by the DPR contain a dedicated budget line for the '1,000 Bioskop Desa' (1,000 Village Cinemas) initiative or a program explicitly named as such by December 31, 2026?",
     "question_en": "Will the finalized 2027 State Budget (APBN 2027) passed by the DPR contain a dedicated budget line for the '1,000 Bioskop Desa' (1,000 Village Cinemas) initiative or a program explicitly named as such by December 31, 2026?",
     "question_zh": "印尼国会（DPR）通过的最终2027年国家预算（APBN 2027）中，是否会在2026年12月31日之前包含针对“1,000 Bioskop Desa”（1000个乡村影院）倡议或明确以此命名的项目的专门预算额度？",
-    "source": "Official APBN 2027 program budget catalogs published by the Ministry of Finance."
+    "source": "Official APBN 2027 program budget catalogs published by the Ministry of Finance.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Chef Juna Culinary Industry Controversy",
@@ -3662,7 +3898,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Local food media consensus."
+    "source": "Local food media consensus.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Westlife Jakarta 2027 Concert Ticket Sellout",
@@ -3709,7 +3949,11 @@ const groups = [
     "question": "Will the promoter of Westlife's concert in Jakarta officially announce a second or additional concert date in Indonesia for their 25th anniversary tour before September 30, 2026?",
     "question_en": "Will the promoter of Westlife's concert in Jakarta officially announce a second or additional concert date in Indonesia for their 25th anniversary tour before September 30, 2026?",
     "question_zh": "西城男孩雅加达演唱会的主办方是否会在2026年9月30日之前正式宣布在印尼为其25周年巡演增加第二场或额外的演唱会日期？",
-    "source": "Official social media channels or press statements of the local concert promoter."
+    "source": "Official social media channels or press statements of the local concert promoter.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sumatra Island-Wide Power Blackout",
@@ -3756,7 +4000,11 @@ const groups = [
     "question": "Will PT PLN (Persero) officially announce that full repairs and systemic stabilization of the 275kV transmission line in Sumatra are completed by June 15, 2026?",
     "question_en": "Will PT PLN (Persero) officially announce that full repairs and systemic stabilization of the 275kV transmission line in Sumatra are completed by June 15, 2026?",
     "question_zh": "PT PLN（Persero）是否会在2026年6月15日之前正式宣布苏门答腊275kV输电线路的全面修复和系统稳定已完成？",
-    "source": "PT PLN (Persero) official press releases or regional operational bulletins."
+    "source": "PT PLN (Persero) official press releases or regional operational bulletins.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Andrie Yunus Acid Attack Military Trial",
@@ -3803,7 +4051,11 @@ const groups = [
     "question": "Will the Military Court (Pengadilan Militer) deliver its final verdict and sentencing in the case of the four intelligence officers accused in the Andrie Yunus acid attack before November 30, 2026?",
     "question_en": "Will the Military Court (Pengadilan Militer) deliver its final verdict and sentencing in the case of the four intelligence officers accused in the Andrie Yunus acid attack before November 30, 2026?",
     "question_zh": "军事法庭（Pengadilan Militer）是否会在2026年11月30日之前对涉嫌在安德里·尤纳斯硫酸袭击案中被指控的四名情报官员做出最终判决和判刑？",
-    "source": "Official case tracking records (SIPP) of the relevant Military Court or Mahkamah Agung."
+    "source": "Official case tracking records (SIPP) of the relevant Military Court or Mahkamah Agung.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Stalled Election Law Revision",
@@ -3850,7 +4102,11 @@ const groups = [
     "question": "Will the House of Representatives (DPR) pass the draft revision of the Election Law (UU Pemilu) in a plenary session before December 31, 2026?",
     "question_en": "Will the House of Representatives (DPR) pass the draft revision of the Election Law (UU Pemilu) in a plenary session before December 31, 2026?",
     "question_zh": "印尼国会（DPR）是否会在2026年12月31日之前在全体会议上通过《选举法》（UU Pemilu）修订草案？",
-    "source": "DPR RI official parliamentary records or the State Secretariat (Setneg) official law publication."
+    "source": "DPR RI official parliamentary records or the State Secretariat (Setneg) official law publication.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Banjir Bandang Aceh and Sumatra Floods",
@@ -3897,7 +4153,11 @@ const groups = [
     "question": "Will the National Disaster Management Authority (BNPB) or Ministry of Finance officially allocate emergency reconstruction funds exceeding IDR 100 billion specifically for Aceh and North Sumatra flash flood recovery by September 30, 2026?",
     "question_en": "Will the National Disaster Management Authority (BNPB) or Ministry of Finance officially allocate emergency reconstruction funds exceeding IDR 100 billion specifically for Aceh and North Sumatra flash flood recovery by September 30, 2026?",
     "question_zh": "国家防灾减灾总局（BNPB）或财政部是否会在2026年9月30日之前正式拨出超过1000亿印尼盾的紧急重建资金，专门用于亚齐和北苏门答腊的山洪灾后恢复？",
-    "source": "Official press releases or budget circulars from BNPB or the Ministry of Finance."
+    "source": "Official press releases or budget circulars from BNPB or the Ministry of Finance.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ancient English History Manuscript Discovery",
@@ -3944,7 +4204,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "University archaeological team reports."
+    "source": "University archaeological team reports.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Jambi Community Forestry Management",
@@ -3991,7 +4255,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "KLHK official social forestry certificates."
+    "source": "KLHK official social forestry certificates.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Wayne Rooney and England World Cup Call-ups",
@@ -4038,7 +4306,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "The FA official website."
+    "source": "The FA official website.",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -4091,6 +4363,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4170,6 +4448,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });

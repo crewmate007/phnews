@@ -89,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -149,6 +153,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -166,6 +172,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -251,7 +259,11 @@ const groups = [
     "question": "Will Barangay Ginebra advance to the finals of the 2026 PBA Commissioner's Cup?",
     "question_en": "Will Barangay Ginebra advance to the finals of the 2026 PBA Commissioner's Cup?",
     "question_zh": "巴朗加国王队（Barangay Ginebra）能晋级2026年PBA专员杯决赛吗？",
-    "source": "PBA Official Website"
+    "source": "PBA Official Website",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Senate leadership disputes and Charter Change debates",
@@ -340,7 +352,11 @@ const groups = [
     "question": "Will Alan Peter Cayetano be elected as the next Senate President of the Philippines by August 31, 2026?",
     "question_en": "Will Alan Peter Cayetano be elected as the next Senate President of the Philippines by August 31, 2026?",
     "question_zh": "阿兰·彼得·卡耶塔诺（Alan Peter Cayetano）会在2026年8月31日之前当选下一任菲律宾参议院议长吗？",
-    "source": "Senate of the Philippines Official Journal"
+    "source": "Senate of the Philippines Official Journal",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Duterte drug war legacy and political survival",
@@ -445,7 +461,11 @@ const groups = [
     "question": "Will the International Criminal Court (ICC) issue a public arrest warrant for Rodrigo Duterte by December 31, 2026?",
     "question_en": "Will the International Criminal Court (ICC) issue a public arrest warrant for Rodrigo Duterte by December 31, 2026?",
     "question_zh": "国际刑事法院（ICC）会在2026年12月31日之前对罗德里戈·杜特尔特发出公开逮捕令吗？",
-    "source": "International Criminal Court (ICC) Case Database"
+    "source": "International Criminal Court (ICC) Case Database",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pampanga building collapse search and rescue",
@@ -506,7 +526,11 @@ const groups = [
     "question": "Will the Philippine Department of Justice (DOJ) file formal criminal charges against the owner or developer of the collapsed Angeles City building by September 30, 2026?",
     "question_en": "Will the Philippine Department of Justice (DOJ) file formal criminal charges against the owner or developer of the collapsed Angeles City building by September 30, 2026?",
     "question_zh": "菲律宾司法部（DOJ）会在2026年9月30日之前对安赫勒斯市倒塌大楼的所有者或开发商提起正式刑事指控吗？",
-    "source": "Philippine Department of Justice (DOJ) official press statements"
+    "source": "Philippine Department of Justice (DOJ) official press statements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Ebola monitoring and laboratory prevention",
@@ -581,7 +605,11 @@ const groups = [
     "question": "Will the World Health Organization (WHO) declare the Bundibugyo Ebola outbreak a Public Health Emergency of International Concern (PHEIC) by December 31, 2026?",
     "question_en": "Will the World Health Organization (WHO) declare the Bundibugyo Ebola outbreak a Public Health Emergency of International Concern (PHEIC) by December 31, 2026?",
     "question_zh": "世界卫生组织（WHO）会在2026年12月31日之前宣布本迪布焦埃博拉疫情为国际关注的突发公共卫生事件（PHEIC）吗？",
-    "source": "World Health Organization (WHO) Official Press Releases"
+    "source": "World Health Organization (WHO) Official Press Releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US-Iran negotiations and Strait of Hormuz",
@@ -642,7 +670,11 @@ const groups = [
     "question": "Will the United States and Iran sign a formal agreement to ease maritime sanctions in the Strait of Hormuz by December 31, 2026?",
     "question_en": "Will the United States and Iran sign a formal agreement to ease maritime sanctions in the Strait of Hormuz by December 31, 2026?",
     "question_zh": "美国和伊朗会在2026年12月31日之前签署正式协议以放宽霍尔木兹海峡的海事制裁吗？",
-    "source": "US Department of State Press Releases"
+    "source": "US Department of State Press Releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Formula 1 Canadian Grand Prix",
@@ -717,7 +749,11 @@ const groups = [
     "question": "Will George Russell win the 2026 Canadian Grand Prix?",
     "question_en": "Will George Russell win the 2026 Canadian Grand Prix?",
     "question_zh": "乔治·拉塞尔（George Russell）能赢得2026年一级方程式加拿大大奖赛吗？",
-    "source": "Formula 1 Official Race Results (formula1.com)"
+    "source": "Formula 1 Official Race Results (formula1.com)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "IIHF Ice Hockey World Championship",
@@ -778,7 +814,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "IIHF Official Site"
+    "source": "IIHF Official Site",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Vatican Pope Leo XIV policy and Synod",
@@ -867,7 +907,11 @@ const groups = [
     "question": "Will the Vatican officially publish Pope Leo XIV's first encyclical focusing on Artificial Intelligence on May 25, 2026?",
     "question_en": "Will the Vatican officially publish Pope Leo XIV's first encyclical focusing on Artificial Intelligence on May 25, 2026?",
     "question_zh": "梵蒂冈会在2026年5月25日正式发布教宗利奥十四世首部关于人工智能的通谕吗？",
-    "source": "Vatican Holy See Press Office (press.vatican.va)"
+    "source": "Vatican Holy See Press Office (press.vatican.va)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cannes Film Festival selections and awards",
@@ -928,7 +972,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Cannes Film Festival Official Site"
+    "source": "Cannes Film Festival Official Site",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Diet, cardiovascular health, and perimenopause research",
@@ -1003,7 +1051,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Major medical journals or WHO health updates"
+    "source": "Major medical journals or WHO health updates",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prehistoric life and paleontology discoveries",
@@ -1078,7 +1130,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Scientific peer-reviewed journals"
+    "source": "Scientific peer-reviewed journals",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Visayas/Bohol power grid and rate adjustments",
@@ -1139,7 +1195,11 @@ const groups = [
     "question": "Will the National Grid Corporation of the Philippines (NGCP) issue any Red or Yellow Alerts for the Visayas grid in June 2026?",
     "question_en": "Will the National Grid Corporation of the Philippines (NGCP) issue any Red or Yellow Alerts for the Visayas grid in June 2026?",
     "question_zh": "国家电网公司（NGCP）会在2026年6月期间对米沙鄢（Visayas）电网发布任何红色或黄色预警吗？",
-    "source": "National Grid Corporation of the Philippines (NGCP) daily system updates"
+    "source": "National Grid Corporation of the Philippines (NGCP) daily system updates",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PH AI policy and Pax Silica hub",
@@ -1200,7 +1260,11 @@ const groups = [
     "question": "Will the Bases Conversion and Development Authority (BCDA) break ground on the Pax Silica hub at New Clark City by December 31, 2026?",
     "question_en": "Will the Bases Conversion and Development Authority (BCDA) break ground on the Pax Silica hub at New Clark City by December 31, 2026?",
     "question_zh": "基地转换和发展署（BCDA）会在2026年12月31日之前在新克拉克城破土动工Pax Silica产业园吗？",
-    "source": "BCDA Official Press Releases"
+    "source": "BCDA Official Press Releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Palarong Pambansa youth sports preparations",
@@ -1247,7 +1311,11 @@ const groups = [
     "question": "Will the 2026 Palarong Pambansa official opening ceremony in Agusan del Sur take place as scheduled on or before July 31, 2026?",
     "question_en": "Will the 2026 Palarong Pambansa official opening ceremony in Agusan del Sur take place as scheduled on or before July 31, 2026?",
     "question_zh": "2026年全国运动会（Palarong Pambansa）在阿古桑阿苏尔省的官方开幕式会按计划在2026年7月31日或之前举行吗？",
-    "source": "Department of Education (DepEd) official announcements"
+    "source": "Department of Education (DepEd) official announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Lotto jackpot winners",
@@ -1294,7 +1362,11 @@ const groups = [
     "question": "Will the PCSO Grand Lotto 6/55 jackpot reach or exceed ₱200 million before being won next?",
     "question_en": "Will the PCSO Grand Lotto 6/55 jackpot reach or exceed ₱200 million before being won next?",
     "question_zh": "PCSO大乐透 6/55 的奖池在下一次被中出之前会达到或超过2亿比索吗？",
-    "source": "Philippine Charity Sweepstakes Office (PCSO) official results"
+    "source": "Philippine Charity Sweepstakes Office (PCSO) official results",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sara Duterte impeachment trial and disinformation battle",
@@ -1341,7 +1413,11 @@ const groups = [
     "question": "Will the House of Representatives of the Philippines vote to impeach Vice President Sara Duterte by December 31, 2026?",
     "question_en": "Will the House of Representatives of the Philippines vote to impeach Vice President Sara Duterte by December 31, 2026?",
     "question_zh": "菲律宾众议院会在2026年12月31日之前投票通过弹劾副总统莎拉·杜特尔特吗？",
-    "source": "House of Representatives of the Philippines Official Journal"
+    "source": "House of Representatives of the Philippines Official Journal",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Financial aid for tricycle and PUJ transport workers",
@@ -1388,7 +1464,11 @@ const groups = [
     "question": "Will the LTFRB complete the distribution of the ₱305-M transport fuel subsidy in Western Visayas by September 30, 2026?",
     "question_en": "Will the LTFRB complete the distribution of the ₱305-M transport fuel subsidy in Western Visayas by September 30, 2026?",
     "question_zh": "陆路运输特许权和监管委员会（LTFRB）会在2026年9月30日之前完成西米沙鄢地区3.05亿比索交通燃油补贴的发放吗？",
-    "source": "Land Transportation Franchising and Regulatory Board (LTFRB) official statements"
+    "source": "Land Transportation Franchising and Regulatory Board (LTFRB) official statements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine HIV daily infection rates",
@@ -1435,7 +1515,11 @@ const groups = [
     "question": "Will the Department of Health (DOH) report an average of 55 or more new daily HIV cases in its Q2 2026 HARP report?",
     "question_en": "Will the Department of Health (DOH) report an average of 55 or more new daily HIV cases in its Q2 2026 HARP report?",
     "question_zh": "菲律宾卫生部（DOH）在2026年第二季度的HARP报告中，会报告平均每日新增55例或更多艾滋病毒感染病例吗？",
-    "source": "DOH Epidemiology Bureau official quarterly report"
+    "source": "DOH Epidemiology Bureau official quarterly report",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Diesel and gas price hikes in the Philippines",
@@ -1482,7 +1566,11 @@ const groups = [
     "question": "Will the price of diesel in the Philippines increase by more than ₱1.20 per liter in the weekly adjustment on May 26, 2026?",
     "question_en": "Will the price of diesel in the Philippines increase by more than ₱1.20 per liter in the weekly adjustment on May 26, 2026?",
     "question_zh": "在2026年5月26日的每周调价中，菲律宾国内柴油零售价每升会增加超过1.20比索吗？",
-    "source": "Department of Energy (DOE) Fuel Price Monitoring announcements"
+    "source": "Department of Energy (DOE) Fuel Price Monitoring announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine disaster aid and generator shipments to Ukraine",
@@ -1529,7 +1617,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Philippine Department of Foreign Affairs (DFA)"
+    "source": "Philippine Department of Foreign Affairs (DFA)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Barangay and Sangguniang Kabataan Elections voter registration",
@@ -1576,7 +1668,11 @@ const groups = [
     "question": "Will the Commission on Elections (Comelec) report a final total of over 5.5 million registered voter applications for the 2026 BSKE?",
     "question_en": "Will the Commission on Elections (Comelec) report a final total of over 5.5 million registered voter applications for the 2026 BSKE?",
     "question_zh": "选举委员会（Comelec）公布的2026年BSKE最终注册选民申请总数会超过550万份吗？",
-    "source": "Commission on Elections (Comelec) official statistical releases"
+    "source": "Commission on Elections (Comelec) official statistical releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PAGASA weather advisories and flood alerts",
@@ -1639,7 +1735,11 @@ const groups = [
     "question": "Will PAGASA declare a Red Rainfall Warning for Metro Manila at any point between June 1 and June 15, 2026?",
     "question_en": "Will PAGASA declare a Red Rainfall Warning for Metro Manila at any point between June 1 and June 15, 2026?",
     "question_zh": "菲律宾气象局（PAGASA）会在2026年6月1日至6月15日期间对大马尼拉地区发布红色降雨预警吗？",
-    "source": "PAGASA official severe weather bulletins"
+    "source": "PAGASA official severe weather bulletins",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Marcos drug killings monitor",
@@ -1686,7 +1786,11 @@ const groups = [
     "question": "Will the Dahas Project report more than 20 drug-related fatalities in the Philippines for the month of May 2026?",
     "question_en": "Will the Dahas Project report more than 20 drug-related fatalities in the Philippines for the month of May 2026?",
     "question_zh": "达哈斯项目（Dahas Project）报告的2026年5月份菲律宾涉毒死亡人数会超过20人吗？",
-    "source": "Dahas Project (Third World Studies Center, UP Diliman) monthly reports"
+    "source": "Dahas Project (Third World Studies Center, UP Diliman) monthly reports",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Jinggoy Estrada flood control corruption probe",
@@ -1733,7 +1837,11 @@ const groups = [
     "question": "Will the Office of the Ombudsman file formal graft charges against Senator Jinggoy Estrada in the Sandiganbayan by December 31, 2026?",
     "question_en": "Will the Office of the Ombudsman file formal graft charges against Senator Jinggoy Estrada in the Sandiganbayan by December 31, 2026?",
     "question_zh": "监察专员公署（Ombudsman）会在2026年12月31日之前在反贪法院（Sandiganbayan）对参议院金戈伊·埃斯特拉达（Jinggoy Estrada）提出正式贪污指控吗？",
-    "source": "Office of the Ombudsman or Sandiganbayan Case Filings database"
+    "source": "Office of the Ombudsman or Sandiganbayan Case Filings database",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Anti-Political Dynasty Bill congressional progress",
@@ -1780,7 +1888,11 @@ const groups = [
     "question": "Will the Anti-Political Dynasty Bill pass its third and final reading in either chamber of the Philippine Congress by December 31, 2026?",
     "question_en": "Will the Anti-Political Dynasty Bill pass its third and final reading in either chamber of the Philippine Congress by December 31, 2026?",
     "question_zh": "反政治家族垄断法案会在2026年12月31日之前在菲律宾国会任何一院通过第三次也是最终读会吗？",
-    "source": "Senate or House of Representatives Bill Status Inquiry system"
+    "source": "Senate or House of Representatives Bill Status Inquiry system",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Marcos economic performance criticism",
@@ -1827,7 +1939,11 @@ const groups = [
     "question": "Will the Philippine Statistics Authority (PSA) report the Q2 2026 Philippine GDP growth rate as above 6.0%?",
     "question_en": "Will the Philippine Statistics Authority (PSA) report the Q2 2026 Philippine GDP growth rate as above 6.0%?",
     "question_zh": "菲律宾统计局（PSA）公布的2026年第二季度菲律宾GDP年增长率会高于6.0%吗？",
-    "source": "Philippine Statistics Authority (PSA) National Accounts Press Release"
+    "source": "Philippine Statistics Authority (PSA) National Accounts Press Release",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Renewable energy expansion and finance",
@@ -1902,7 +2018,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Bloomberg Green or ASEAN Centre for Energy reports"
+    "source": "Bloomberg Green or ASEAN Centre for Energy reports",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "GLP-1 weight-loss drugs and health risks",
@@ -1963,7 +2083,11 @@ const groups = [
     "question": "Will the US FDA issue a safety communication or mandate a new label warning specifically citing 'muscle wasting' or 'sarcopenia' for semaglutide or tirzepatide products by December 31, 2026?",
     "question_en": "Will the US FDA issue a safety communication or mandate a new label warning specifically citing 'muscle wasting' or 'sarcopenia' for semaglutide or tirzepatide products by December 31, 2026?",
     "question_zh": "美国FDA会在2026年12月31日之前发布针对司美格鲁肽或替泽帕肽产品专门引用“肌肉流失”或“肌少症”的安全通讯或要求修改标签警告吗？",
-    "source": "US FDA Drug Safety Communications database"
+    "source": "US FDA Drug Safety Communications database",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Taiwan-Philippines smart healthcare collaboration",
@@ -2010,7 +2134,11 @@ const groups = [
     "question": "Will the Philippine Department of Health (DOH) sign a formal smart healthcare or digital health cooperation agreement with Taiwan's Ministry of Health and Welfare by December 31, 2026?",
     "question_en": "Will the Philippine Department of Health (DOH) sign a formal smart healthcare or digital health cooperation agreement with Taiwan's Ministry of Health and Welfare by December 31, 2026?",
     "question_zh": "菲律宾卫生部（DOH）会在2026年12月31日之前与台湾卫生福利部签署正式的智慧医疗或数字健康合作协议吗？",
-    "source": "DOH Philippines official website and news portal"
+    "source": "DOH Philippines official website and news portal",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NASA and international lunar exploration missions",
@@ -2127,7 +2255,11 @@ const groups = [
     "question": "Will China's Chang'e-7 lunar probe launch on or before December 31, 2026?",
     "question_en": "Will China's Chang'e-7 lunar probe launch on or before December 31, 2026?",
     "question_zh": "中国嫦娥七号探月探测器会在2026年12月31日或之前发射吗？",
-    "source": "China National Space Administration (CNSA) official launch notices"
+    "source": "China National Space Administration (CNSA) official launch notices",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "European club football matches and team updates",
@@ -2202,7 +2334,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "La Liga official club records"
+    "source": "La Liga official club records",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ditta Sandico fashion book and brand",
@@ -2249,7 +2385,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Ditta Sandico brand announcements"
+    "source": "Ditta Sandico brand announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Flores de Mayo devotion",
@@ -2296,7 +2436,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Catholic Bishops' Conference of the Philippines (CBCP)"
+    "source": "Catholic Bishops' Conference of the Philippines (CBCP)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PH public school students international science awards",
@@ -2343,7 +2487,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "DepEd Philippines / DOST website"
+    "source": "DepEd Philippines / DOST website",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Climate change and global climate diplomacy",
@@ -2418,7 +2566,11 @@ const groups = [
     "question": "Will the International Court of Justice (ICJ) deliver its final advisory opinion on states' obligations regarding climate change by December 31, 2026?",
     "question_en": "Will the International Court of Justice (ICJ) deliver its final advisory opinion on states' obligations regarding climate change by December 31, 2026?",
     "question_zh": "国际法院（ICJ）会在2026年12月31日之前就国家在气候变化方面的义务发表最终咨询意见吗？",
-    "source": "International Court of Justice (ICJ) Press Releases / Docket"
+    "source": "International Court of Justice (ICJ) Press Releases / Docket",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "K-pop group BTS world tour",
@@ -2465,7 +2617,11 @@ const groups = [
     "question": "Will ticket sales for the BTS 2027 concert at the Philippine Sports Stadium officially launch to the public before December 31, 2026?",
     "question_en": "Will ticket sales for the BTS 2027 concert at the Philippine Sports Stadium officially launch to the public before December 31, 2026?",
     "question_zh": "防弹少年团（BTS）2027年菲律宾体育馆演唱会的门票销售会在2026年12月31日之前向公众公开销售吗？",
-    "source": "Live Nation Philippines or SM Tickets official announcements"
+    "source": "Live Nation Philippines or SM Tickets official announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "North Korea-Japan security tensions",
@@ -2512,7 +2668,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Japan Ministry of Defense"
+    "source": "Japan Ministry of Defense",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "White House checkpoint shooting",
@@ -2559,7 +2719,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "US Secret Service Official Press Statements"
+    "source": "US Secret Service Official Press Statements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Orange County chemical tank emergency",
@@ -2606,7 +2770,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "California Office of Emergency Services (Cal OES)"
+    "source": "California Office of Emergency Services (Cal OES)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Maldives cave diving tragedy",
@@ -2653,7 +2821,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Maldives National Defence Force (MNDF)"
+    "source": "Maldives National Defence Force (MNDF)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "China coal mine blast",
@@ -2700,7 +2872,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "National Mine Safety Administration of China"
+    "source": "National Mine Safety Administration of China",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesia commodity exports monopoly plans",
@@ -2747,7 +2923,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "World Trade Organization (WTO) official case database"
+    "source": "World Trade Organization (WTO) official case database",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Japanese automaker rankings (Suzuki vs Honda)",
@@ -2794,7 +2974,11 @@ const groups = [
     "question": "Will Suzuki surpass Honda in total global unit sales for the calendar year 2026?",
     "question_en": "Will Suzuki surpass Honda in total global unit sales for the calendar year 2026?",
     "question_zh": "铃木（Suzuki）在2026日历年的全球整车销量会超过本田（Honda）吗？",
-    "source": "Japan Automobile Manufacturers Association (JAMA) annual industry data"
+    "source": "Japan Automobile Manufacturers Association (JAMA) annual industry data",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "James Hardie earnings miss",
@@ -2841,7 +3025,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "ASX Company Announcements"
+    "source": "ASX Company Announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cebu musical theater production",
@@ -2888,7 +3076,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Local Cebu lifestyle theater production press announcements"
+    "source": "Local Cebu lifestyle theater production press announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WNBA Sabrina Ionescu season debut",
@@ -2935,7 +3127,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "WNBA Official Website"
+    "source": "WNBA Official Website",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tennis French Open Djokovic challenge",
@@ -2982,7 +3178,11 @@ const groups = [
     "question": "Will Novak Djokovic win the 2026 French Open Men's Singles title?",
     "question_en": "Will Novak Djokovic win the 2026 French Open Men's Singles title?",
     "question_zh": "诺瓦克·德约科维奇（Novak Djokovic）能赢得2026年法国网球公开赛男子单打冠军吗？",
-    "source": "Official French Open (rolandgarros.com) results"
+    "source": "Official French Open (rolandgarros.com) results",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA Playoffs predictions and results",
@@ -3043,7 +3243,11 @@ const groups = [
     "question": "Will the New York Knicks win the 2026 NBA Eastern Conference Finals?",
     "question_en": "Will the New York Knicks win the 2026 NBA Eastern Conference Finals?",
     "question_zh": "纽约尼克斯队能赢得2026年NBA东部决赛吗？",
-    "source": "NBA.com official playoff standings"
+    "source": "NBA.com official playoff standings",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Miley Cyrus Walk of Fame star",
@@ -3090,7 +3294,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Hollywood Chamber of Commerce"
+    "source": "Hollywood Chamber of Commerce",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Anker soundcore Liberty audio products launch in PH",
@@ -3137,7 +3345,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Anker Soundcore Philippines press portal"
+    "source": "Anker Soundcore Philippines press portal",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Apple ecosystem and WWDC updates",
@@ -3212,7 +3424,11 @@ const groups = [
     "question": "Will Apple officially announce a dedicated generative AI application portal or store during the WWDC 2026 keynote on June 8, 2026?",
     "question_en": "Will Apple officially announce a dedicated generative AI application portal or store during the WWDC 2026 keynote on June 8, 2026?",
     "question_zh": "苹果会在2026年6月8日的WWDC 2026主题演讲中正式发布专门的生成式AI应用门户或应用商店吗？",
-    "source": "Apple Inc. Official WWDC 2026 Keynote Presentation and Apple Newsroom"
+    "source": "Apple Inc. Official WWDC 2026 Keynote Presentation and Apple Newsroom",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Martin Short, the comedian who triumphed despite everythi…",
@@ -3259,7 +3475,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None"
+    "source": "None",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Novelty Cinema Collectibles",
@@ -3306,7 +3526,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None"
+    "source": "None",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Wordle today: The answer and hints for May 23, 2026",
@@ -3353,7 +3577,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None"
+    "source": "None",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NESDC maintains 2026 Thai growth forecast amid high uncer…",
@@ -3400,7 +3628,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Thailand NESDC official publications"
+    "source": "Thailand NESDC official publications",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "New James Bond game shows more vulnerable side to iconic…",
@@ -3447,7 +3679,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None"
+    "source": "None",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Weekly poll results: Sony Xperia 1 VIII might be a hit, d…",
@@ -3494,7 +3730,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "GSMArena.com"
+    "source": "GSMArena.com",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Rico Verhoeven coach Peter Fury calls for Oleksandr Usyk…",
@@ -3541,7 +3781,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Official promotion announcements"
+    "source": "Official promotion announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Webb just clocked nearly 9,000 young star clusters and fo…",
@@ -3588,7 +3832,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "STScI James Webb Database"
+    "source": "STScI James Webb Database",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google's AI Glasses Threaten Meta's 80% Market Grip, Anal…",
@@ -3635,7 +3883,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "IDC Worldwide Quarterly Wearable Device Tracker"
+    "source": "IDC Worldwide Quarterly Wearable Device Tracker",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Love Kryzl, siblings, release new song",
@@ -3682,7 +3934,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "Star Music Philippines official releases"
+    "source": "Star Music Philippines official releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "3 must-have bags to redefine summer style",
@@ -3729,7 +3985,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "None"
+    "source": "None",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mandarin Oriental Lutetia Joins ‘The White Lotus’ Season…",
@@ -3776,7 +4036,11 @@ const groups = [
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": "HBO Max official news releases"
+    "source": "HBO Max official news releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -3829,6 +4093,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -3908,6 +4178,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });
