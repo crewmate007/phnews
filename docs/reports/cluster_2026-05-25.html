@@ -55,7 +55,7 @@
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
   .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -291,10 +291,7 @@ const groups = [
     "reddit_question_en": "Will the monthly average Europe Brent Spot Price FOB (Dollars per Barrel) for July 2026 be lower than $75.00 according to the US Energy Information Administration?",
     "reddit_question_zh": "根据美国能源信息署（EIA）的数据，2026年7月的布伦特原油离岸现货月度平均价格是否会低于每桶75.00美元？",
     "reddit_resolution_source": "U.S. Energy Information Administration (EIA)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Roland Garros Tennis 2026 Tournament",
@@ -373,10 +370,7 @@ const groups = [
     "reddit_question_en": "Will the difference in ATP ranking points between the No. 1 and No. 2 ranked singles players in the official rankings published on June 8, 2026, be less than 500 points?",
     "reddit_question_zh": "在2026年6月8日公布的官方排名中，单打排名第一和第二的选手之间的ATP积分差距是否会少于500分？",
     "reddit_resolution_source": "ATP Tour Official Website",
-    "reddit_resolution_url": null,
-    "prob": 85,
-    "prob_reason_zh": "辛纳积分领先且近期状态出色。",
-    "prob_reason_en": "Sinner's strong form and points cushion."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Space Exploration and Lunar Projects",
@@ -483,10 +477,7 @@ const groups = [
     "reddit_question_en": "Will NASA publish an official press release on its newsroom portal between May 26, 2026, and December 31, 2026, announcing the selection or award of a contract for a lunar fission surface power system?",
     "reddit_question_zh": "NASA是否会在2026年5月26日至2026年12月31日期间在其新闻发布门户上发布官方新闻稿，宣布选择或授予月球表面裂变动力系统的合同？",
     "reddit_resolution_source": "NASA News Releases",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Supreme Court and Malacañang on ICC Warrants",
@@ -581,10 +572,7 @@ const groups = [
     "reddit_question_en": "Will the Supreme Court of the Philippines publish a full-text decision or resolution on the merits regarding Rodrigo Duterte's main petition challenging the ICC's jurisdiction on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾最高法院是否会在2026年12月31日或之前，就罗德里戈·杜特尔特挑战国际刑事法院（ICC）管辖权的主诉状发布全文判决或实体决议？",
     "reddit_resolution_source": "Supreme Court of the Philippines Decisions",
-    "reddit_resolution_url": null,
-    "prob": 30,
-    "prob_reason_zh": "政府不合作态度使暂缓令无紧迫性。",
-    "prob_reason_en": "Legal redundancy due to non-cooperation."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pampanga Building Collapse and Housing Policy Controversy",
@@ -651,10 +639,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Human Settlements and Urban Development (DHSUD) publish an official issuance (such as a Department Order or Memorandum Circular) on its website between May 26, 2026, and December 31, 2026, that explicitly references the 'Pampanga' building collapse?",
     "reddit_question_zh": "菲律宾人类住区与城市发展部（DHSUD）是否会在2026年5月26日至12月31日期间在其网站上发布明确提及“潘帕嘉（Pampanga）”大楼倒塌事故的官方文件（如部门令或备忘录通告）？",
     "reddit_resolution_source": "Department of Human Settlements and Urban Development (DHSUD)",
-    "reddit_resolution_url": "https://dhsud.gov.ph/",
-    "prob": 75,
-    "prob_reason_zh": "参议院对重大事故听证概率高。",
-    "prob_reason_en": "High base rate of Senate investigations."
+    "reddit_resolution_url": "https://dhsud.gov.ph/"
   },
   {
     "name_en": "Domestic Fuel Price Hikes and Economic Impact",
@@ -735,10 +720,7 @@ const groups = [
     "reddit_question_en": "Will the Land Transportation Franchising and Regulatory Board (LTFRB) approve a provisional fare increase for traditional or modern public utility jeepneys (PUJs) in Metro Manila on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾陆路交通特许权及监管局（LTFRB）是否会在2026年12月31日或之前，批准马尼拉大都会区传统或现代公共吉普尼（PUJ）的临时票价上涨？",
     "reddit_resolution_source": "Land Transportation Franchising and Regulatory Board (LTFRB)",
-    "reddit_resolution_url": "https://ltfrb.gov.ph/",
-    "prob": 35,
-    "prob_reason_zh": "时间较短且目前油价相对稳定。",
-    "prob_reason_en": "Short window and stable oil prices."
+    "reddit_resolution_url": "https://ltfrb.gov.ph/"
   },
   {
     "name_en": "Philippine Senate Leadership Changes and Committee Reorganization",
@@ -803,10 +785,7 @@ const groups = [
     "reddit_question_en": "Will the official committee list on the Philippine Senate website show a senator other than Senator Grace Poe as the Chairperson of the Committee on Finance on December 31, 2026?",
     "reddit_question_zh": "在2026年12月31日，菲律宾参议院网站上的官方委员会名单中，财政委员会主席一职是否会由格蕾丝·傅（Grace Poe）以外的参议员担任？",
     "reddit_resolution_source": "Senate of the Philippines",
-    "reddit_resolution_url": "https://senate.gov.ph/",
-    "prob": 15,
-    "prob_reason_zh": "现任议长地位稳固，改选概率低。",
-    "prob_reason_en": "Escudero holds strong Senate majority."
+    "reddit_resolution_url": "https://senate.gov.ph/"
   },
   {
     "name_en": "DSWD Cash Aid and Subsidies for Transport Workers",
@@ -871,10 +850,7 @@ const groups = [
     "reddit_question_en": "Will the DSWD publish a press release on its official portal during the third quarter of 2026 (July 1 to September 30, 2026) that contains both the term 'AKAP' and the word 'transport' or 'rider' in the text?",
     "reddit_question_zh": "菲律宾社会福利部（DSWD）是否会在2026年第三季度（7月1日至9月30日）在其官方门户发布同时包含“AKAP”与“transport”或“rider”字样的新闻稿？",
     "reddit_resolution_source": "Department of Social Welfare and Development (DSWD)",
-    "reddit_resolution_url": "https://www.dswd.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.dswd.gov.ph/"
   },
   {
     "name_en": "Duterte Faction Strategy and 2028 Presidential Bid Dynamics",
@@ -953,10 +929,7 @@ const groups = [
     "reddit_question_en": "Will the proposed FY 2027 budget allocation for the Office of the Vice President (OVP) in the National Expenditure Program (NEP) published by the DBM be lower than the OVP budget approved in the FY 2026 General Appropriations Act (GAA)?",
     "reddit_question_zh": "菲律宾预算与管理部（DBM）公布的2027财年《国家支出计划》（NEP）中，拟议给副总统办公室（OVP）的预算拨备是否会低于2026财年《通用拨款法案》（GAA）批准的副总统办公室预算？",
     "reddit_resolution_source": "Department of Budget and Management (DBM)",
-    "reddit_resolution_url": "https://www.dbm.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.dbm.gov.ph/"
   },
   {
     "name_en": "BSP Monetary Policy and Interest Rate Speculation",
@@ -1065,10 +1038,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine Peso (PHP) daily weighted average exchange rate against the US Dollar (USD), as published by the Bangko Sentral ng Pilipinas (BSP), close weaker than PHP 59.00 per USD on any trading day on or before October 31, 2026?",
     "reddit_question_zh": "菲律宾央行（BSP）公布的每日比索对美元加权平均汇率，在2026年10月31日或之前的任何交易日中，收盘价是否会跌破1美元兑59.00比索？",
     "reddit_resolution_source": "Bangko Sentral ng Pilipinas (BSP)",
-    "reddit_resolution_url": "https://www.bsp.gov.ph/",
-    "prob": 8,
-    "prob_reason_zh": "非例行加息极其罕见。",
-    "prob_reason_en": "Off-cycle hikes are extremely rare."
+    "reddit_resolution_url": "https://www.bsp.gov.ph/"
   },
   {
     "name_en": "Astronomical Discoveries and Stargazing Events",
@@ -1161,10 +1131,7 @@ const groups = [
     "reddit_question_en": "Will NASA publish an official press release on its portal between May 26, 2026, and September 30, 2026, that contains the word 'Ganymede' in the title or summary?",
     "reddit_question_zh": "NASA是否会在2026年5月26日至9月30日期间在其门户上发布标题或摘要中包含“Ganymede”（木卫三）字样的官方新闻稿？",
     "reddit_resolution_source": "NASA News Releases",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Scientists Just Found Evidence That Asteroids May Have He…",
@@ -1215,10 +1182,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Oxygenated Seas Hosted Early Complex Life-Findings Challe…",
@@ -1269,10 +1233,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine GDP Forecasts and Fiscal Outlook",
@@ -1339,10 +1300,7 @@ const groups = [
     "reddit_question_en": "Will the year-on-year GDP growth rate of the Philippines for the second quarter (Q2) of 2026 be reported by the Philippine Statistics Authority (PSA) as below 5.5% in its preliminary release?",
     "reddit_question_zh": "根据菲律宾国家统计局（PSA）发布的初步数据，2026年第二季度（Q2）菲律宾的GDP同比增长率是否会低于5.5%？",
     "reddit_resolution_source": "Philippine Statistics Authority (PSA)",
-    "reddit_resolution_url": "https://psa.gov.ph/",
-    "prob": 20,
-    "prob_reason_zh": "菲律宾宏观经济基本面保持稳健。",
-    "prob_reason_en": "Strong macro fundamentals persist."
+    "reddit_resolution_url": "https://psa.gov.ph/"
   },
   {
     "name_en": "Philippine Clean Energy and Conservation Initiatives",
@@ -1407,10 +1365,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine Department of Energy (DOE) officially issue an administrative order or circular on its website implementing mandatory energy conservation measures for commercial establishments on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾能源部（DOE）是否会在2026年12月31日或之前在其官方网站上发布行政令或通告，对商业机构实施强制性节能措施？",
     "reddit_resolution_source": "Department of Energy (DOE)",
-    "reddit_resolution_url": "https://www.doe.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.doe.gov.ph/"
   },
   {
     "name_en": "Philippine National Food and Rice Security Policies",
@@ -1475,10 +1430,7 @@ const groups = [
     "reddit_question_en": "Will the National Food Authority (NFA) publish a new public bidding or auction notice for the sale of aging or surplus rice stocks on its official website between June 1, 2026, and October 31, 2026?",
     "reddit_question_zh": "菲律宾国家粮食局（NFA）是否会在2026年6月1日至10月31日期间，在其官方网站上发布销售陈化或过剩大米库存的新公开招标或拍卖公告？",
     "reddit_resolution_source": "National Food Authority (NFA)",
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "稻米价格居高不下，降价空间有限。",
-    "prob_reason_en": "Stubbornly high rice prices globally."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA Playoffs 2026 Conference Finals",
@@ -1543,10 +1495,7 @@ const groups = [
     "reddit_question_en": "Will the 2026 Eastern Conference Finals series (Knicks vs. Cavaliers) be decided in exactly 7 games?",
     "reddit_question_zh": "2026年NBA东部决赛系列赛（尼克斯对阵骑士）是否会刚好打满7场决出胜负？",
     "reddit_resolution_source": "NBA Official Website",
-    "reddit_resolution_url": null,
-    "prob": 45,
-    "prob_reason_zh": "马刺在西部决赛中面临严峻挑战。",
-    "prob_reason_en": "Hard path in Western Conference Finals."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Youth Science Achievements",
@@ -1611,10 +1560,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine Space Agency (PhilSA) publish an announcement or press release regarding a student-led or school-led payload scheduled for launch to the International Space Station on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾航天局（PhilSA）是否会在2026年12月31日或之前，发布关于计划发射至国际空间站的学生或学校主导载荷的公告或新闻稿？",
     "reddit_resolution_source": "Philippine Space Agency (PhilSA)",
-    "reddit_resolution_url": "https://philsa.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://philsa.gov.ph/"
   },
   {
     "name_en": "Xiaomi and Redmi Smartphone Product Releases",
@@ -1679,10 +1625,7 @@ const groups = [
     "reddit_question_en": "Will the official online store of Xiaomi Philippines list the Redmi A7 Pro smartphone for commercial purchase under its catalog on or before December 31, 2026?",
     "reddit_question_zh": "小米菲律宾官方在线商城是否会在2026年12月31日或之前，将Redmi A7 Pro智能手机列入其在售产品目录？",
     "reddit_resolution_source": "Xiaomi Philippines",
-    "reddit_resolution_url": null,
-    "prob": 40,
-    "prob_reason_zh": "发布窗口通常在九月底至十月初。",
-    "prob_reason_en": "Tight launch window near September-end."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Theater Productions in 2026",
@@ -1761,10 +1704,7 @@ const groups = [
     "reddit_question_en": "Will the Cultural Center of the Philippines (CCP) officially list a play titled 'Hubo't Hubad' in the final program for the Virgin Labfest XXI on its website on or before August 31, 2026?",
     "reddit_question_zh": "菲律宾文化中心（CCP）是否会在2026年8月31日或之前，在其网站上将名为《Hubo't Hubad》的剧目正式列入第21届Virgin Labfest的最终节目单中？",
     "reddit_resolution_source": "Cultural Center of the Philippines (CCP)",
-    "reddit_resolution_url": "https://culturalcenter.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://culturalcenter.gov.ph/"
   },
   {
     "name_en": "Philippine Public Safety and Local Crime Rates",
@@ -1829,10 +1769,7 @@ const groups = [
     "reddit_question_en": "Will the Bureau of Immigration (BI) of the Philippines announce the establishment of a new office or dedicated immigration desk in Siargao (General Luna) on its official news portal on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾移民局（BI）是否会在2026年12月31日或之前在其官方新闻门户上宣布在锡亚高（普通卢纳镇）设立新办事处或专属移民窗口？",
     "reddit_resolution_source": "Bureau of Immigration (BI)",
-    "reddit_resolution_url": "https://immigration.gov.ph/",
-    "prob": 65,
-    "prob_reason_zh": "警方历史数据常呈现犯罪率下降。",
-    "prob_reason_en": "Consistent downward trends in PNP data."
+    "reddit_resolution_url": "https://immigration.gov.ph/"
   },
   {
     "name_en": "House of Representatives Legal and Impeachment Actions",
@@ -1897,10 +1834,7 @@ const groups = [
     "reddit_question_en": "Will the Office of the Ombudsman announce the filing of formal criminal charges against Representative Rodante Marcoleta before the Sandiganbayan on or before December 31, 2026, as published on its website?",
     "reddit_question_zh": "菲律宾监察专员署是否会在2026年12月31日或之前，在其网站上宣布正式向反贪法院（Sandiganbayan）对众议员罗丹特·马科莱塔（Rodante Marcoleta）提起刑事指控？",
     "reddit_resolution_source": "Office of the Ombudsman",
-    "reddit_resolution_url": null,
-    "prob": 60,
-    "prob_reason_zh": "政治盟友关系破裂，弹劾概率增加。",
-    "prob_reason_en": "Escalating political rift drives risk."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Automotive Market and New Vehicle Rollouts",
@@ -1965,10 +1899,7 @@ const groups = [
     "reddit_question_en": "Will Toyota Motor Philippines officially list the price or specifications of the 'Land Cruiser FJ' on its website on or before December 31, 2026?",
     "reddit_question_zh": "丰田菲律宾是否会在2026年12月31日或之前，在其官方网站上正式公布“Land Cruiser FJ”的价格或规格参数？",
     "reddit_resolution_source": "Toyota Motor Philippines",
-    "reddit_resolution_url": null,
-    "prob": 25,
-    "prob_reason_zh": "丰田在菲市场更倾向于推广混动车。",
-    "prob_reason_en": "Toyota prioritizes hybrids in PH."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Chinese Smartphone Innovators and New Releases",
@@ -2033,10 +1964,7 @@ const groups = [
     "reddit_question_en": "Will vivo Philippines officially launch a smartphone with a battery capacity of 9,000mAh or greater (as listed on its specs page) for commercial sale in the Philippines on or before December 31, 2026?",
     "reddit_question_zh": "vivo菲律宾是否会在2026年12月31日或之前，在菲律宾正式推出并销售电池容量不低于9000mAh（以官方规格页面为准）的智能手机？",
     "reddit_resolution_source": "vivo Philippines",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gaming Smartphone Launches in the Philippines",
@@ -2101,10 +2029,7 @@ const groups = [
     "reddit_question_en": "Will the official Infinix Philippines store list a smartphone model containing 'GT' in its model name with an official retail price under PHP 12,000 on or before December 31, 2026?",
     "reddit_question_zh": "传音Infinix菲律宾官方商城是否会在2026年12月31日或之前，上架一款型号名中带有“GT”且官方售价低于12000比索的智能手机？",
     "reddit_resolution_source": "Infinix Mobility Philippines",
-    "reddit_resolution_url": null,
-    "prob": 55,
-    "prob_reason_zh": "廉价电竞手机迭代周期较快。",
-    "prob_reason_en": "Rapid product cycle of budget brands."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Android OS Updates and Gmail App Bugs",
@@ -2169,10 +2094,7 @@ const groups = [
     "reddit_question_en": "Will the Google Workspace Updates blog publish an entry specifically detailing a fix or update for text-rendering or display bugs in Gmail for Android on or before September 30, 2026?",
     "reddit_question_zh": "Google Workspace更新博客是否会在2026年9月30日或之前，发布一篇专门详细说明解决Android版Gmail中文字渲染或显示漏洞的修复或更新日志？",
     "reddit_resolution_source": "Google Workspace Updates Blog",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Japanese Anime Industry and Theme Song Releases",
@@ -2237,10 +2159,7 @@ const groups = [
     "reddit_question_en": "Will the song 'Flashbulb' or 'Hanataba' by Omoinotake enter the top 20 of the Billboard Japan Hot 100 chart on or before September 30, 2026?",
     "reddit_question_zh": "Omoinotake乐队演唱的《Flashbulb》或《Hanataba》是否会在2026年9月30日或之前进入Billboard Japan Hot 100单曲榜前20名？",
     "reddit_resolution_source": "Billboard Japan",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Marawi Siege Rehabilitation and Housing Projects",
@@ -2291,10 +2210,7 @@ const groups = [
     "reddit_question_en": "Will the BARMM Government announce the completion and turnover of at least 500 permanent housing units in Marawi City on its official portal between June 1, 2026, and December 31, 2026?",
     "reddit_question_zh": "棉兰老穆斯林邦萨摩洛自治区（BARMM）政府是否会在2026年6月1日至12月31日期间在其官方门户上宣布，在马拉维市（Marawi）完成并移交至少500套永久性安置房？",
     "reddit_resolution_source": "Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)",
-    "reddit_resolution_url": "https://bangsamoro.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://bangsamoro.gov.ph/"
   },
   {
     "name_en": "National Grid Corporation of Philippines Sabotage Investigation",
@@ -2345,10 +2261,7 @@ const groups = [
     "reddit_question_en": "Will the NGCP announce a cash reward for information leading to the arrest of suspects behind the transmission line sabotage on its website on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾国家电网（NGCP）是否会在2026年12月31日或之前在其官网上宣布，为提供抓捕破坏输电线路幕后黑手线索的人员提供现金奖励？",
     "reddit_resolution_source": "National Grid Corporation of the Philippines (NGCP)",
-    "reddit_resolution_url": "https://www.ngcp.ph/",
-    "prob": 45,
-    "prob_reason_zh": "基础设施破坏案调查通常较为复杂。",
-    "prob_reason_en": "Complex investigation on critical infra."
+    "reddit_resolution_url": "https://www.ngcp.ph/"
   },
   {
     "name_en": "Mayon Volcano Seismic and Volcanic Activity",
@@ -2399,10 +2312,7 @@ const groups = [
     "reddit_question_en": "Will the daily number of volcanic earthquakes at Mayon Volcano, as reported in any official 24-hour bulletin by PHIVOLCS, exceed 100 in a single 24-hour period between June 1, 2026, and September 30, 2026?",
     "reddit_question_zh": "在2026年6月1日至9月30日期间，菲律宾火山地震研究所（PHIVOLCS）发布的任何官方24小时日报中，马荣火山（Mayon）单日监测到的火山地震次数是否会突破100次？",
     "reddit_resolution_source": "Philippine Institute of Volcanology and Seismology (PHIVOLCS)",
-    "reddit_resolution_url": "https://www.phivolcs.dost.gov.ph/",
-    "prob": 75,
-    "prob_reason_zh": "目前火山地震及熔岩流活动已活跃。",
-    "prob_reason_en": "Current activity levels are elevated."
+    "reddit_resolution_url": "https://www.phivolcs.dost.gov.ph/"
   },
   {
     "name_en": "Nintendo Authorized Store Opening in the Philippines",
@@ -2453,10 +2363,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Hantavirus Screening for MV Hondius Crew",
@@ -2507,10 +2414,7 @@ const groups = [
     "reddit_question_en": "Will the Bureau of Quarantine (BOQ) of the Philippines issue a public advisory or memorandum circular on its official site between May 26, 2026, and September 30, 2026, explicitly mentioning 'hantavirus' or 'MV Hondius'?",
     "reddit_question_zh": "菲律宾检疫局（BOQ）是否会在2026年5月26日至9月30日期间在其官方网站上发布明确提及“汉坦病毒”或“MV Hondius”轮的公共公告或备忘录通告？",
     "reddit_resolution_source": "Bureau of Quarantine (BOQ)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "President Marcos State Visit to Japan",
@@ -2561,10 +2465,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Foreign Affairs (DFA) publish a press release confirming the signing of an agreement regarding the 'Metro Manila Subway Project' during the state visit to Japan on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾外交部（DFA）是否会在2026年12月31日或之前发布新闻稿，确认在对日国事访问期间签署了关于“马尼拉大都会地铁项目”的相关协定？",
     "reddit_resolution_source": "Department of Foreign Affairs (DFA)",
-    "reddit_resolution_url": "https://dfa.gov.ph/",
-    "prob": 80,
-    "prob_reason_zh": "日菲防务合作关系持续快速升温。",
-    "prob_reason_en": "Strong Japan-PH defense ties."
+    "reddit_resolution_url": "https://dfa.gov.ph/"
   },
   {
     "name_en": "Palarong Pambansa Medalists Prize Fund",
@@ -2615,10 +2516,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine Sports Commission (PSC) publish a board resolution or announcement on its website allocating additional funding or cash rewards specifically for Palarong Pambansa medalists on or before December 31, 2026?",
     "reddit_question_zh": "菲律宾体育委员会（PSC）是否会在2026年12月31日或之前在其网站上发布董事会决议或公告，专门为全国青年运动会（Palarong Pambansa）奖牌获得者分配追加资金或现金奖励？",
     "reddit_resolution_source": "Philippine Sports Commission (PSC)",
-    "reddit_resolution_url": "https://psc.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://psc.gov.ph/"
   },
   {
     "name_en": "Ebola Outbreak in Democratic Republic of Congo",
@@ -2669,10 +2567,7 @@ const groups = [
     "reddit_question_en": "Will the World Health Organization (WHO) declare the Ebola outbreak in the Democratic Republic of the Congo a Public Health Emergency of International Concern (PHEIC) on or before December 31, 2026?",
     "reddit_question_zh": "世界卫生组织（WHO）是否会在2026年12月31日或之前，将刚果民主共和国的埃博拉疫情宣布为“国际关注的突发公共卫生事件”（PHEIC）？",
     "reddit_resolution_source": "World Health Organization (WHO)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Taiwan and China Coast Guard Maritime Standoff",
@@ -2723,10 +2618,7 @@ const groups = [
     "reddit_question_en": "Will Taiwan's Ministry of National Defense report a single-day count of Chinese People's Liberation Army Navy (PLAN) or Coast Guard vessels operating in the waters surrounding Taiwan exceeding 15 on or before December 31, 2026?",
     "reddit_question_zh": "台湾国防部是否会在2026年12月31日或之前，报告在台湾周边海域活动的中国人民解放军海军或海警舰船单日数量超过15艘？",
     "reddit_resolution_source": "Ministry of National Defense, R.O.C.",
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "两岸执法船通常极力避免直接碰撞。",
-    "prob_reason_en": "High restraint to avoid escalation."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ASEAN Defense Ministers Activities and Planning",
@@ -2777,10 +2669,7 @@ const groups = [
     "reddit_question_en": "Will the ASEAN Defense Ministers' Meeting (ADMM) joint declaration or official statement published on the ASEAN portal between May 26, 2026, and December 31, 2026, explicitly contain the term 'Code of Conduct' in the South China Sea?",
     "reddit_question_zh": "在2026年5月26日至12月31日期间，东盟门户网站上发布的东盟防长会议（ADMM）联合宣言或官方声明中，是否会明确包含南海“行为准则”（Code of Conduct）这一字眼？",
     "reddit_resolution_source": "ASEAN Secretariat Portal",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ASEAN Tourism and Philippine Visitor Flows",
@@ -2831,10 +2720,7 @@ const groups = [
     "reddit_question_en": "Will monthly tourist arrivals from South Korea exceed arrivals from the United States by a ratio of 2:1 or more in the official DOT report for any single month in 2026?",
     "reddit_question_zh": "根据菲律宾旅游部（DOT）2026年任何单月的官方报告，来自韩国的月度入境游客人数与来自美国的游客人数之比是否会达到或超过 2:1？",
     "reddit_resolution_source": "Department of Tourism (DOT)",
-    "reddit_resolution_url": "https://tourism.gov.ph/",
-    "prob": 85,
-    "prob_reason_zh": "疫情后旅游业持续稳步复苏。",
-    "prob_reason_en": "Post-pandemic tourism recovery."
+    "reddit_resolution_url": "https://tourism.gov.ph/"
   },
   {
     "name_en": "US Embassy Manila Memorial Day Ceremony",
@@ -2885,10 +2771,7 @@ const groups = [
     "reddit_question_en": "Will the US Embassy in the Philippines officially announce the arrival or credentials presentation of a new Senate-confirmed Ambassador to the Philippines on or before December 31, 2026?",
     "reddit_question_zh": "美国驻菲律宾大使馆是否会在2026年12月31日或之前，在其官网上正式宣布新任经参议院批准的驻菲大使抵菲或递交国书？",
     "reddit_resolution_source": "U.S. Embassy in the Philippines",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Lethal Shooting Incident Outside the White House",
@@ -2939,10 +2822,7 @@ const groups = [
     "reddit_question_en": "Will the US Secret Service publish an official incident review or final investigative report regarding the White House fence shooting on its press portal on or before December 31, 2026?",
     "reddit_question_zh": "美国特勤局是否会在2026年12月31日或之前，在其新闻门户上发布关于白宫围栏外枪击事件的官方事件审查或最终调查报告？",
     "reddit_resolution_source": "U.S. Secret Service",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "World Health Assembly and Polio Eradication",
@@ -2993,10 +2873,7 @@ const groups = [
     "reddit_question_en": "Will the Global Polio Eradication Initiative (GPEI) report a total of zero wild poliovirus type 1 (WPV1) cases globally for a consecutive 12-week period at any point between June 1, 2026, and December 31, 2026?",
     "reddit_question_zh": "在2026年6月1日至12月31日期间，全球消灭脊灰野病毒倡议（GPEI）是否会在其周报中连续12周报告全球范围内1型野生脊髓灰质炎病毒（WPV1）新增病例数为零？",
     "reddit_resolution_source": "Global Polio Eradication Initiative (GPEI)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Bureau of the Treasury Bill Auction",
@@ -3047,10 +2924,7 @@ const groups = [
     "reddit_question_en": "Will the Bureau of the Treasury completely reject all bids for either the 91-day, 182-day, or 364-day Treasury bills at any scheduled auction in June or July 2026?",
     "reddit_question_zh": "菲律宾国库署（BTr）是否会在2026年6月或7月的任何一次定期拍卖中，完全拒绝所有针对91天、182天或364天期短期国债的投标？",
     "reddit_resolution_source": "Bureau of the Treasury (BTr)",
-    "reddit_resolution_url": null,
-    "prob": 60,
-    "prob_reason_zh": "央行高利率政策支撑国债收益率。",
-    "prob_reason_en": "Elevated BSP policy rates lift yields."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Colliers Philippines Property and Retail Market Report",
@@ -3101,10 +2975,7 @@ const groups = [
     "reddit_question_en": "Will the year-on-year growth rate of the nationwide Residential Real Estate Price Index (RREPI) published by the BSP fall below 3.0% in any quarterly release for the year 2026?",
     "reddit_question_zh": "菲律宾央行（BSP）发布的2026年任一季度全国住宅房地产价格指数（RREPI）同比增长率是否会降至3.0%以下？",
     "reddit_resolution_source": "Bangko Sentral ng Pilipinas (BSP)",
-    "reddit_resolution_url": "https://www.bsp.gov.ph/",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.bsp.gov.ph/"
   },
   {
     "name_en": "RL Commercial REIT Retail Asset Expansion",
@@ -3155,10 +3026,7 @@ const groups = [
     "reddit_question_en": "Will RL Commercial REIT (RCR) submit an official disclosure on the PSE EDGE portal on or before December 31, 2026, announcing the acquisition of any commercial property located outside of Luzon?",
     "reddit_question_zh": "RL商用信托（RCR）是否会在2026年12月31日或之前，在菲律宾证券交易所（PSE）EDGE门户上提交官方披露，宣布收购位于吕宋岛以外的任何商业地产？",
     "reddit_resolution_source": "Philippine Stock Exchange EDGE",
-    "reddit_resolution_url": null,
-    "prob": 70,
-    "prob_reason_zh": "房托基金依靠母公司资产注入扩张。",
-    "prob_reason_en": "REIT growth strategy via parent assets."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Casino Plus One-Billion Peso Surety Bond",
@@ -3209,10 +3077,7 @@ const groups = [
     "reddit_question_en": "Will PAGCOR publish an official press release on its portal between May 26, 2026, and December 31, 2026, that mentions both 'Casino Plus' and 'surety bond'?",
     "reddit_question_zh": "菲律宾娱乐及博彩公司（PAGCOR）是否会在2026年5月26日至12月31日期间在其官网上发布同时提及“Casino Plus”和“surety bond”（履约担保/保函）的官方新闻稿？",
     "reddit_resolution_source": "Philippine Amusement and Gaming Corporation (PAGCOR)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google Search AI Integration and Publisher Impact",
@@ -3263,10 +3128,7 @@ const groups = [
     "reddit_question_en": "Will Google's search engine market share in the United States fall below 85.0% for any single monthly report in 2026 according to Statcounter Global Stats?",
     "reddit_question_zh": "根据Statcounter Global Stats的统计，2026年任一月度报告中，谷歌在美搜索引擎的市场份额是否会跌破85.0%？",
     "reddit_resolution_source": "Statcounter Global Stats",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ByteDance AI Films Cannes Film Festival Debut",
@@ -3317,10 +3179,7 @@ const groups = [
     "reddit_question_en": "Will the Cannes Film Festival officially announce a new dedicated category or competitive section for AI-generated or AI-assisted films/shorts for its 2027 edition on or before December 31, 2026?",
     "reddit_question_zh": "戛纳电影节是否会在2026年12月31日或之前，正式为其2027届赛事增设一个专门针对AI生成或AI辅助电影/短片的独立竞赛或展映单元？",
     "reddit_resolution_source": "Cannes Film Festival Official Website",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Donny Pangilinan and Belle Mariano Series Finale",
@@ -3371,10 +3230,7 @@ const groups = [
     "reddit_question_en": "Will the official ABS-CBN Corporate newsroom publish a press release announcing that the finale or final week of 'Tayo Sa Wakas' broke a concurrent online viewership record (e.g., exceeding 500,000 live concurrent viewers) on or before June 30, 2026?",
     "reddit_question_zh": "ABS-CBN官方企业新闻室是否会在2026年6月30日或之前发布新闻稿，宣布《Tayo Sa Wakas》大结局或最后一局打破了线上同时在线观看人数纪录（例如，超过50万同时在线观众）？",
     "reddit_resolution_source": "ABS-CBN Newsroom",
-    "reddit_resolution_url": null,
-    "prob": 30,
-    "prob_reason_zh": "数字化转型导致传统收视率破15%极难。",
-    "prob_reason_en": "Digital shift limits high TV ratings."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Filipina Singer Gwyn Dorado K-Drama OST",
@@ -3425,10 +3281,7 @@ const groups = [
     "reddit_question_en": "Will the official OST track performed by Gwyn Dorado for 'My Royal Nemesis' appear on the Billboard Philippines Hot 100 or Top Philippine Songs chart on or before December 31, 2026?",
     "reddit_question_zh": "由Gwyn Dorado为《My Royal Nemesis》演唱的官方韩剧主题曲，在2026年12月31日或之前是否会进入Billboard菲律宾Hot 100或菲律宾本土歌曲畅销榜？",
     "reddit_resolution_source": "Billboard Philippines",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Enhanced Games Multi-Sport Event Results",
@@ -3479,10 +3332,7 @@ const groups = [
     "reddit_question_en": "Will the World Anti-Doping Agency (WADA) issue an official statement or warning explicitly mentioning the 'Enhanced Games' on its website on or before December 31, 2026?",
     "reddit_question_zh": "世界反兴奋剂机构（WADA）是否会在2026年12月31日或之前，在其官网上发布明确提及“强化运动会（Enhanced Games）”的官方声明或警告？",
     "reddit_resolution_source": "World Anti-Doping Agency (WADA)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Isle of Man TT Crash and Cancellations",
@@ -3533,10 +3383,7 @@ const groups = [
     "reddit_question_en": "Will the Isle of Man Government's Department for Enterprise publish an official safety review or public consultation document regarding spectator safety zones or course speed limits on its portal on or before December 31, 2026?",
     "reddit_question_zh": "马恩岛政府企业部是否会在2026年12月31日或之前，在其门户网站上发布关于观众安全区或赛道限速的官方安全审查或公众咨询文件？",
     "reddit_resolution_source": "Isle of Man Government Portal",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Formula 1 Haas Team Canada Performance",
@@ -3587,10 +3434,7 @@ const groups = [
     "reddit_question_en": "Will MoneyGram Haas F1 Team be ranked higher than Alpine F1 Team in the official 2026 FIA Formula 1 World Constructors' Championship standings at the end of the season?",
     "reddit_question_zh": "在2026赛季结束时，哈斯车队（Haas F1 Team）在国际汽联官方的一级方程式车队积分榜上的排名是否会高于阿尔派车队（Alpine F1 Team）？",
     "reddit_resolution_source": "Formula 1 Official Standings",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Yomiuri Giants Manager Domestic Violence Arrest",
@@ -3641,10 +3485,7 @@ const groups = [
     "reddit_question_en": "Will the Yomiuri Giants official website announce the termination of Shinnosuke Abe's contract or his formal resignation as team manager on or before December 31, 2026?",
     "reddit_question_zh": "读卖巨人队官方网站是否会在2026年12月31日或之前，宣布终止与阿部慎之助的合同，或宣布其正式辞去球队监督（主教练）一职？",
     "reddit_resolution_source": "Yomiuri Giants Official Site",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BWF Singapore Open Badminton Tournament",
@@ -3695,10 +3536,7 @@ const groups = [
     "reddit_question_en": "Will the Men's Singles final match at the 2026 BWF Singapore Open exceed 60 minutes in length according to the official BWF match sheets?",
     "reddit_question_zh": "根据世界羽联（BWF）官方比赛记录，2026年新加坡羽毛球公开赛男子单打决赛的比赛时间是否会超过60分钟？",
     "reddit_resolution_source": "Badminton World Federation (BWF)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Superconductivity Mechanism Research by Chinese Scientists",
@@ -3749,10 +3587,7 @@ const groups = [
     "reddit_question_en": "Will the Chinese Academy of Sciences (CAS) announce the establishment of a new state-funded laboratory or national major science project focused on nickelate high-temperature superconductivity on its portal on or before December 31, 2026?",
     "reddit_question_zh": "中国科学院（CAS）是否会在2026年12月31日或之前，在其官网上宣布建立一个专门针对镍基高温超导的全新国家重点实验室或国家重大科技专项？",
     "reddit_resolution_source": "Chinese Academy of Sciences (CAS)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Microplastics Impact on Ocean Carbon Absorption",
@@ -3803,10 +3638,7 @@ const groups = [
     "reddit_question_en": "Will the United Nations Environment Programme (UNEP) publish a new scientific assessment report or policy brief on marine microplastics that explicitly cites the impact on ocean carbon sequestration or sink capacity on or before December 31, 2026?",
     "reddit_question_zh": "联合国环境规划署（UNEP）是否会在2026年12月31日或之前，发布一份明确提及微塑料对海洋碳汇或碳固存能力产生影响的新科学评估报告或政策简报？",
     "reddit_resolution_source": "United Nations Environment Programme (UNEP)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pope Leo's Encyclical on Artificial Intelligence",
@@ -3857,10 +3689,7 @@ const groups = [
     "reddit_question_en": "Will the Holy See publish an official papal encyclical (litterae encyclicae) concerning the ethics, challenges, or social impacts of artificial intelligence on its portal on or before December 31, 2026?",
     "reddit_question_zh": "梵蒂冈圣座是否会在2026年12月31日或之前，在其门户网站上发布一篇关于人工智能伦理、挑战或社会影响的官方教宗通谕？",
     "reddit_resolution_source": "The Holy See (Vatican)",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ASEAN-Japan Joint Cooperation Committee Meeting",
@@ -3911,10 +3740,7 @@ const groups = [
     "reddit_question_en": "Will the Ministry of Foreign Affairs of Japan (MOFA) publish an official press release between May 26, 2026, and December 31, 2026, announcing a new grant aid or technical assistance package specifically for ASEAN maritime safety and coast guard capacity building?",
     "reddit_question_zh": "日本外务省（MOFA）是否会在2026年5月26日至12月31日期间发布官方新闻稿，宣布一项专门针对东盟（ASEAN）海上安全及海警能力建设的新无偿资金援助或技术合作计划？",
     "reddit_resolution_source": "Ministry of Foreign Affairs of Japan",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BTS Arirang World Tour Asian and Australian Legs",
@@ -3965,10 +3791,7 @@ const groups = [
     "reddit_question_en": "Will the official tour schedule page on BigHit's site list at least three distinct city stops in Australia for the BTS 'ARIRANG' world tour on or before December 31, 2026?",
     "reddit_question_zh": "BigHit官方网站上的巡演日程页面是否会在2026年12月31日或之前，为BTS“ARIRANG”世界巡演列出至少三个不同的澳大利亚城市站点？",
     "reddit_resolution_source": "BigHit Music BTS Portal",
-    "reddit_resolution_url": null,
-    "prob": 80,
-    "prob_reason_zh": "马尼拉是K-pop世界巡演核心站点。",
-    "prob_reason_en": "Manila is a core stop for K-pop tours."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Weddings of Angelique Manto and David Guison",
@@ -4019,10 +3842,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "All the Angles: Fernandes' record-breaking 21st assist",
@@ -4073,10 +3893,7 @@ const groups = [
     "reddit_question_en": "Will Bruno Fernandes be officially recorded as having 21 or more assists in the single 2025/26 Premier League season on the official Premier League stats page?",
     "reddit_question_zh": "在英超官方统计页面上，布鲁诺·费尔南德斯在单一2025/26赛季中的助攻数最终是否会被录得21次或以上？",
     "reddit_resolution_source": "Premier League Official Stats",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "The M5 MacBook Air is finally under $900 for Memorial Day",
@@ -4127,10 +3944,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "REDBIRD CAPITAL PARTNERS OFFICIAL STATEMENT",
@@ -4181,10 +3995,7 @@ const groups = [
     "reddit_question_en": "Will RedBird Capital Partners publish an official statement or news release on AC Milan's website announcing a changes in the majority ownership or a new minority investor in the club on or before December 31, 2026?",
     "reddit_question_zh": "红鸟资本（RedBird Capital Partners）是否会在2026年12月31日或之前，在AC米兰官方网站上发表声明或新闻稿，宣布俱乐部的大股东变更或引入新的小股东？",
     "reddit_resolution_source": "AC Milan Official Website",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Hypershell unveils X Series exoskeletons with a huge AI a…",
@@ -4235,10 +4046,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   }
 ];
 
