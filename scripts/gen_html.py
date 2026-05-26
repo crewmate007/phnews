@@ -113,6 +113,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
   .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
   .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
@@ -258,12 +259,20 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_q = lang === "zh"
-      ? (g.reddit_question_zh || g.reddit_question_en)
-      : (g.reddit_question_en || g.reddit_question_zh);
-    const reddit_source_html = g.reddit_resolution_url
-      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
-      : escapeHtml(g.reddit_resolution_source || '');
+    const reddit_angles_html = (g.reddit_angles || []).map(a => {
+      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+      if (!q) return '';
+      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+      const sourceHtml = a.url
+        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+        : escapeHtml(a.source || '');
+      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
+      return `<div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}${subtopic}</div>
+        <div class="q-text">${q}</div>
+        ${sourceLine}
+      </div>`;
+    }).join("");
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -344,12 +353,7 @@ function renderCards(lang) {
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
-      ${reddit_q ? `
-      <div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}</div>
-        <div class="q-text">${reddit_q}</div>
-        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
-      </div>` : ''}
+      ${reddit_angles_html}
     `;
     container.appendChild(card);
   });
@@ -488,7 +492,47 @@ def build_group(g: dict) -> dict:
         "reddit_question_zh": g.get("reddit_question_zh"),
         "reddit_resolution_source": g.get("reddit_resolution_source"),
         "reddit_resolution_url": g.get("reddit_resolution_url"),
+        "reddit_angles": _build_reddit_angles_list(g),
     }
+
+
+def _build_reddit_angles_list(g: dict) -> list:
+    """Return reddit_angles as a list of dicts.
+
+    New-format JSON (post-Iteration 3): reads g["reddit_angles"] directly.
+    Legacy-format JSON (Iterations 1-2 with only flat reddit_question fields):
+    wraps the flat fields into a single-element list so the renderer can use
+    one code path.
+    """
+    angles = g.get("reddit_angles")
+    if isinstance(angles, list) and angles:
+        normalized = []
+        for a in angles:
+            if not isinstance(a, dict):
+                continue
+            q_en = a.get("question_en") or a.get("question")
+            q_zh = a.get("question_zh")
+            if not (q_en or q_zh):
+                continue
+            normalized.append({
+                "subtopic": a.get("subtopic"),
+                "question_en": q_en,
+                "question_zh": q_zh,
+                "source": a.get("source"),
+                "url": a.get("url"),
+            })
+        return normalized
+    legacy_q = g.get("reddit_question")
+    legacy_q_zh = g.get("reddit_question_zh")
+    if legacy_q or legacy_q_zh:
+        return [{
+            "subtopic": None,
+            "question_en": legacy_q,
+            "question_zh": legacy_q_zh,
+            "source": g.get("reddit_resolution_source"),
+            "url": g.get("reddit_resolution_url"),
+        }]
+    return []
 
 
 def clean_source_example(item: dict) -> dict:

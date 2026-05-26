@@ -91,19 +91,27 @@ def _extract_groups(html: str) -> list[dict]:
 def _has_foreign_bettable_question(region: str, groups: list[dict]) -> bool:
     terms = FOREIGN_TERMS.get(region, ())
     for group in groups:
+        reddit_angles = group.get("reddit_angles") or []
         # Reddit angle can appear on non-bettable cards too; check both blocks
         # whenever EITHER is present.
         has_reddit_angle = bool(
-            group.get("reddit_question_en")
+            reddit_angles
+            or group.get("reddit_question_en")
             or group.get("reddit_question_zh")
             or group.get("reddit_resolution_source")
         )
         if not group.get("bettable") and not has_reddit_angle:
             continue
-        text = " ".join(str(group.get(key) or "") for key in (
+        text_parts = [str(group.get(key) or "") for key in (
             "question", "question_en", "question_zh", "source",
             "reddit_question_en", "reddit_question_zh", "reddit_resolution_source",
-        )).lower()
+        )]
+        for angle in reddit_angles:
+            if not isinstance(angle, dict):
+                continue
+            for key in ("question_en", "question_zh", "source", "subtopic"):
+                text_parts.append(str(angle.get(key) or ""))
+        text = " ".join(text_parts).lower()
         if any(term in text for term in terms):
             print(f"[ERR] {region}: {group.get('name_en')} => {text}", file=sys.stderr)
             return True

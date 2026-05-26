@@ -270,11 +270,22 @@ nobody is bothering to track.
 Today is {date}. Country: {country_name}.
 
 The serious analyst has already produced a primary market question for each
-topic group below. Your job: for EACH group, propose ONE second market
-angle in your own voice -- a dry-wit, lateral, observational angle.
+topic group below. Your job: for EACH group, propose between ONE and THREE
+second-market angles in your own voice -- dry-wit, lateral, observational.
+
+How many angles per group?
+- Most groups are about one story being covered from several angles.
+  ONE angle is the right answer for those.
+- Some groups bundle DISTINCT sub-storylines under one umbrella name
+  (different actors, different legal cases, different events linked by
+  theme but not by causality -- e.g. "Senate plunder + ICC arrest +
+  gun-permit revocation against different senators"). For those, propose
+  ONE angle PER sub-storyline, up to 3 total. Give each angle a short
+  Chinese `subtopic` label naming which sub-storyline it covers.
+- HARD CAP: never exceed 3 angles per group.
 
 Approach each topic from scratch. Do NOT follow a template. For every
-group, ask yourself fresh:
+angle, ask yourself fresh:
 - What numeric or observable signal would catch this story from the side?
 - What is nobody bothering to count here?
 - Where is the gap between the official narrative and what you'd actually see?
@@ -284,9 +295,9 @@ group, ask yourself fresh:
   being used or avoided, a counter resetting, a comparison crossing over?
 
 You bet on the trace something leaves, not on the headline conclusion.
-Across the batch, vary your angles -- if two consecutive groups would
-naturally produce the same shape, force yourself to find a different
-shape for the second.
+Across the batch AND within a group's multi-angle list, vary your angle
+shapes -- if two angles would naturally produce the same shape, force
+yourself to find a different shape for the second.
 
 Voice rules (hard):
 - Allowed: any cool, observant angle. Counting, comparing, tracking a
@@ -299,16 +310,17 @@ Voice rules (hard):
 
 Resolution-source rules (hardest, this is what separates real markets
 from shower thoughts):
-- The reddit_resolution_url MUST point at a real, currently-existing
-  public resource. Acceptable shapes are: official government /
-  regulatory agency websites in the relevant country, public statistical
-  or trends services, and the verified official social-media accounts of
-  named agencies or organizations.
-- The reddit_resolution_source string must name that resource in a way a
-  reader can recognize.
-- No real resolver exists for this topic? Return null for the entire
-  angle and set drop_reason. NEVER invent URLs. Unsure whether a URL
-  truly exists? Return null + drop_reason="uncertain resolver".
+- Every angle's `url` MUST point at a real, currently-existing public
+  resource. Acceptable shapes: official government / regulatory agency
+  websites in the relevant country, public statistical or trends services,
+  and the verified official social-media accounts of named agencies or
+  organizations.
+- The `source` string must name that resource in a way a reader can
+  recognize.
+- No real resolver exists for an angle? Skip that angle (do NOT include
+  it in the array). If no resolver exists for ANY angle in the group,
+  emit an empty `angles` array and set `drop_reason`.
+- NEVER invent URLs. Unsure whether a URL truly exists? Skip that angle.
 
 Topic groups:
 {groups}
@@ -319,11 +331,16 @@ OUTPUT: strict JSON only, no markdown fences, no extra prose.
   "groups": [
     {{
       "broad_index": <int, MUST match the input index>,
-      "reddit_question": "English question, or null",
-      "reddit_question_zh": "中文问题，or null",
-      "reddit_resolution_source": "Human-readable source name, or null",
-      "reddit_resolution_url": "https://... or null",
-      "drop_reason": "short reason when all null, otherwise null"
+      "angles": [
+        {{
+          "subtopic": "短中文标签 naming which sub-storyline this angle covers, or null if the group is one unified story",
+          "question_en": "English question",
+          "question_zh": "中文问题",
+          "source": "Human-readable source name",
+          "url": "https://..."
+        }}
+      ],
+      "drop_reason": "short reason when angles array is empty, otherwise null"
     }}
   ]
 }}
@@ -406,20 +423,28 @@ def _build_reddit_input(groups: List[Dict]) -> str:
     return "\n\n".join(blocks)
 
 
+_REDDIT_ANGLE_CAP = 3
+
+
 def generate_reddit_angles(
     groups: List[Dict],
     client,
     model: str,
     region_cfg: RegionConfig,
 ) -> Dict[str, int]:
-    """Attach reddit_* fields to each group in-place via one batched Gemini call.
+    """Attach reddit_angles array (and legacy flat fields) to each group
+    in-place via one batched Gemini call.
 
-    Returns {"attached": int, "total": int}. Never raises — on parse or API
-    failure the caller's groups are left untouched and stats reflect zero.
-    Hallucinated URLs are dropped via _REDDIT_URL_ALLOWLIST; source label is
-    preserved as plain text in that case.
+    Returns {"attached": int, "total": int, "angle_count": int}. attached
+    counts groups with at least one valid angle; angle_count is the total
+    angle blocks across all groups (multi-angle groups contribute >1).
+
+    Never raises — on parse or API failure the caller's groups are left
+    untouched and stats reflect zero. Hallucinated URLs are dropped via
+    _REDDIT_URL_ALLOWLIST; source label is preserved as plain text in
+    that case. Each group is capped at _REDDIT_ANGLE_CAP angles.
     """
-    stats = {"attached": 0, "total": len(groups)}
+    stats = {"attached": 0, "total": len(groups), "angle_count": 0}
     if not groups:
         return stats
 
@@ -443,19 +468,45 @@ def generate_reddit_angles(
         item = by_index.get(i)
         if not item:
             continue
-        q_en = item.get("reddit_question")
-        q_zh = item.get("reddit_question_zh")
-        if not (q_en or q_zh):
-            continue  # legitimately empty angle; skip silently
-        src = item.get("reddit_resolution_source")
-        url = item.get("reddit_resolution_url")
-        if url and not _REDDIT_URL_ALLOWLIST.match(str(url).strip()):
-            url = None  # drop unsafe URL, keep source name as text
-        group["reddit_question"] = q_en
-        group["reddit_question_zh"] = q_zh
-        group["reddit_resolution_source"] = src
-        group["reddit_resolution_url"] = url
+        raw_angles = item.get("angles") or []
+        if not isinstance(raw_angles, list):
+            continue
+        clean_angles: List[Dict] = []
+        for ang in raw_angles[:_REDDIT_ANGLE_CAP]:
+            if not isinstance(ang, dict):
+                continue
+            q_en = ang.get("question_en") or ang.get("question")
+            q_zh = ang.get("question_zh")
+            if not (q_en or q_zh):
+                continue
+            src = ang.get("source") or ang.get("resolution_source")
+            url = ang.get("url") or ang.get("resolution_url")
+            if url and not _REDDIT_URL_ALLOWLIST.match(str(url).strip()):
+                url = None  # drop unsafe URL, keep source name as text
+            subtopic = ang.get("subtopic")
+            if isinstance(subtopic, str):
+                subtopic = subtopic.strip() or None
+            else:
+                subtopic = None
+            clean_angles.append({
+                "subtopic": subtopic,
+                "question_en": q_en,
+                "question_zh": q_zh,
+                "source": src,
+                "url": url,
+            })
+        if not clean_angles:
+            continue
+        group["reddit_angles"] = clean_angles
+        # Legacy flat fields: first angle, so old readers / archives keep
+        # rendering one angle even if they haven't picked up the array shape.
+        first = clean_angles[0]
+        group["reddit_question"] = first["question_en"]
+        group["reddit_question_zh"] = first["question_zh"]
+        group["reddit_resolution_source"] = first["source"]
+        group["reddit_resolution_url"] = first["url"]
         stats["attached"] += 1
+        stats["angle_count"] += len(clean_angles)
     return stats
 
 
@@ -539,7 +590,8 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
                 region_cfg,
             )
             print(
-                f"[INFO] Reddit angles attached: {stats['attached']}/{stats['total']}",
+                f"[INFO] Reddit angles attached: {stats['attached']}/{stats['total']} groups "
+                f"({stats.get('angle_count', stats['attached'])} angle blocks total)",
                 file=sys.stderr,
             )
         except Exception as exc:
