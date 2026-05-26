@@ -2,8 +2,8 @@ name: Daily News Automation
 
 on:
   schedule:
-    # 08:30 Asia/Shanghai / PHT / WIB+1
-    - cron: "30 0 * * *"
+    # 07:00 Asia/Manila (PHT, UTC+8) = 06:00 WIB = 07:00 Asia/Shanghai
+    - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
       days:
