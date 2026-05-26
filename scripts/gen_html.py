@@ -50,7 +50,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -72,8 +72,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }

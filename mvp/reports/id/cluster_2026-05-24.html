@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,12 +50,12 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
   .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -263,10 +263,7 @@ const groups = [
     "reddit_question_en": "Will the average weekly Google Trends search interest for 'Persib' in Indonesia be at least twice as high as 'IHSG' for the week of June 1 to June 7, 2026?",
     "reddit_question_zh": "在2026年6月1日至6月7日这一周内，印尼地区“Persib”的Google Trends平均周搜索热度是否会达到“IHSG”（印尼综合指数）的两倍以上？",
     "reddit_resolution_source": "Google Trends (Indonesia)",
-    "reddit_resolution_url": "https://trends.google.com/trends/explore?q=Persib,IHSG&geo=ID",
-    "prob": 15,
-    "prob_reason_zh": "签下五大联赛球星成本高且规则受限。",
-    "prob_reason_en": "High cost of marquee players."
+    "reddit_resolution_url": "https://trends.google.com/trends/explore?q=Persib,IHSG&geo=ID"
   },
   {
     "name_en": "Digital Driving License Launch by Korlantas",
@@ -317,10 +314,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of NTMC Polri (@NTMCLantasPolri) post at least 5 tweets containing the phrase 'SIM Digital' or 'SIM online' between June 1 and June 30, 2026?",
     "reddit_question_zh": "在2026年6月1日至6月30日期间，NTMC Polri官方X账号 (@NTMCLantasPolri) 是否会发布至少5条包含“SIM Digital”或“SIM online”字样的推文？",
     "reddit_resolution_source": "NTMC Polri Official X Account",
-    "reddit_resolution_url": "https://x.com/NTMCLantasPolri",
-    "prob": 70,
-    "prob_reason_zh": "基于应用的注册便于全国推广。",
-    "prob_reason_en": "App-based signup enables rapid rollout."
+    "reddit_resolution_url": "https://x.com/NTMCLantasPolri"
   },
   {
     "name_en": "TNI Security Operations and Civil Forgery Investigations",
@@ -401,10 +395,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of Puspen TNI (@Puspen_TNI) publish any post containing the words 'pelat' and 'palsu' between June 1 and June 30, 2026?",
     "reddit_question_zh": "在2026年6月1日至6月30日期间，印尼国军公关部官方X账号 (@Puspen_TNI) 是否会发布任何包含“pelat”（车牌）和“palsu”（伪造/假）词汇的推文？",
     "reddit_resolution_source": "Puspen TNI Official X Account",
-    "reddit_resolution_url": "https://x.com/Puspen_TNI",
-    "prob": 10,
-    "prob_reason_zh": "军警职能分离使成立联合工作组可能性低。",
-    "prob_reason_en": "Military-police division makes JT rare."
+    "reddit_resolution_url": "https://x.com/Puspen_TNI"
   },
   {
     "name_en": "World Bank Crisis Funding Demands",
@@ -455,10 +446,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 25,
-    "prob_reason_zh": "世行更倾向于使用现有的危机工具。",
-    "prob_reason_en": "WB prefers existing crisis instruments."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US White House Security Incident",
@@ -509,10 +497,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Equities Market Dynamics and Index Movements",
@@ -605,10 +590,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of Otoritas Jasa Keuangan (@ojkindonesia) post any tweet containing the acronym 'IHSG' in the month of June 2026?",
     "reddit_question_zh": "在2026年6月期间，印尼金融服务管理局官方X账号 (@ojkindonesia) 是否会发布任何包含“IHSG”首字母缩写的推文？",
     "reddit_resolution_source": "Otoritas Jasa Keuangan (OJK) Official X Account",
-    "reddit_resolution_url": "https://x.com/ojkindonesia",
-    "prob": 20,
-    "prob_reason_zh": "仅剩一个月，触及八千点难度大。",
-    "prob_reason_en": "Short window limits reaching 8,000 mark."
+    "reddit_resolution_url": "https://x.com/ojkindonesia"
   },
   {
     "name_en": "Spanish La Liga and German Bundesliga Season Finales",
@@ -701,10 +683,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "English Premier League and Championship Club Updates",
@@ -797,10 +776,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Persija Jakarta and Semen Padang Match Delay",
@@ -851,10 +827,7 @@ const groups = [
     "reddit_question_en": "Will the official PSSI website (pssi.org) publish a 'Hasil Sidang Komite Disiplin PSSI' (PSSI Disciplinary Committee Meeting Results) between May 25 and June 30, 2026, that explicitly issues a fine to Persija Jakarta for spectators lighting flares?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，PSSI官方网站 (pssi.org) 公布的“Hasil Sidang Komite Disiplin PSSI”（印尼足协纪律委员会处罚决定）中，是否会明确对因球迷燃放烟火的Persija Jakarta俱乐部处以罚款？",
     "reddit_resolution_source": "PSSI Official Website",
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "足协对烟火事件通常处以罚款而非禁赛。",
-    "prob_reason_en": "Fines are preferred over stadium bans."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "East Java Football Derby: Persebaya vs Persik",
@@ -905,10 +878,7 @@ const groups = [
     "reddit_question_en": "Will the official Persebaya Surabaya website (persebaya.id) publish an official news article announcing a new head coach to replace Paul Munster before July 1, 2026?",
     "reddit_question_zh": "在2026年7月1日之前，泗水之子官方网站 (persebaya.id) 是否会发布官方新闻，宣布任命新主教练以接替保罗·穆恩斯特 (Paul Munster)？",
     "reddit_resolution_source": "Persebaya Surabaya Official Website",
-    "reddit_resolution_url": null,
-    "prob": 85,
-    "prob_reason_zh": "赛季末成绩优异，教练留任概率极高。",
-    "prob_reason_en": "Strong season finish secures his job."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Harga di Bawah 2 Juta, REDMI Watch 6 Sudah Bisa Dibeli",
@@ -959,10 +929,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Xiaomi 17T dikabarkan dirilis di India pada Juni",
@@ -1013,10 +980,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Daftar Harga HP Flagship Xiaomi Terbaru 2026, Mana yang P…",
@@ -1067,10 +1031,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Samsung Galaxy Smartphone Innovations and Leaks",
@@ -1135,10 +1096,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 30,
-    "prob_reason_zh": "旗舰机因品质和专利仍使用自家屏幕。",
-    "prob_reason_en": "Flagships rely on Samsung Display."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google AI Integrations and Android XR Ecosystem",
@@ -1203,10 +1161,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 35,
-    "prob_reason_zh": "谷歌初期对新系统平台保持相对封闭。",
-    "prob_reason_en": "Google tends to keep new OS closed."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US Indictment of Raul Castro",
@@ -1257,10 +1212,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Middle Eastern Football Leagues and International Relocations",
@@ -1325,10 +1277,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Celebrity Personal Lives and Inquiries",
@@ -1435,10 +1384,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US-Iran Military and Geopolitical Confrontation",
@@ -1559,10 +1505,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 40,
-    "prob_reason_zh": "地缘政治风险与需求放缓预期博弈。",
-    "prob_reason_en": "Geopolitical risks conflict with demand."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Grand Theft Auto VI Digital-Only Rumors",
@@ -1613,10 +1556,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 95,
-    "prob_reason_zh": "巨大的市场需求确保首发必有实体版。",
-    "prob_reason_en": "High demand ensures physical copies."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sony Camera and Optical Lens Launches",
@@ -1667,10 +1607,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prabowo Administration Economic Programs and Policy Discipline",
@@ -1751,10 +1688,7 @@ const groups = [
     "reddit_question_en": "Will the official website of the Indonesian Ministry of Public Works (pu.go.id) publish any 'Surat Edaran' (Circular Letter) containing the word 'disiplin' or 'etik' between May 25 and June 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，印尼公共工程部官方网站 (pu.go.id) 是否会发布任何包含“disiplin”（纪律）或“etik”（道德）字样的“Surat Edaran”（通知/循环公文）？",
     "reddit_resolution_source": "Ministry of Public Works (KemenPU) Official Website",
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "现有公务员条例已涵盖，单独发文概率低。",
-    "prob_reason_en": "ASN rules exist; KemenPU decree unlikely."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bank Indonesia Monetary Defense and Rupiah Actions",
@@ -1835,10 +1769,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of Bank Indonesia (@bank_indonesia) publish at least 3 separate posts mentioning 'Local Currency Transaction' or 'LCT' between June 1 and June 30, 2026?",
     "reddit_question_zh": "在2026年6月1日至6月30日期间，印尼央行官方X账号 (@bank_indonesia) 是否会发布至少3条包含“Local Currency Transaction”或“LCT”（本地货币交易）字样的推文？",
     "reddit_resolution_source": "Bank Indonesia Official X Account",
-    "reddit_resolution_url": "https://x.com/bank_indonesia",
-    "prob": 35,
-    "prob_reason_zh": "央行防守表明印尼盾仍面临贬值压力。",
-    "prob_reason_en": "Active defense implies ongoing pressure."
+    "reddit_resolution_url": "https://x.com/bank_indonesia"
   },
   {
     "name_en": "Philippines Building Collapse Disaster",
@@ -1889,10 +1820,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Automotive Market and Leadership Transitions",
@@ -1971,10 +1899,7 @@ const groups = [
     "reddit_question_en": "Will the official GAIKINDO news portal (gaikindo.or.id) publish an article containing the word 'Chery' or 'iCar' between June 1 and June 30, 2026?",
     "reddit_question_zh": "在2026年6月1日至6月30日期间，GAIKINDO官方新闻门户网站 (gaikindo.or.id) 是否会发布任何包含“Chery”或“iCar”字样的文章？",
     "reddit_resolution_source": "GAIKINDO Official Website",
-    "reddit_resolution_url": null,
-    "prob": 45,
-    "prob_reason_zh": "经销商初始备货或能使批发量突破500。",
-    "prob_reason_en": "Initial dealer shipments could peak 500."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Haji 2026 Pilgrims and Security Protocols",
@@ -2025,10 +1950,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "iPhone 20th Anniversary Design Speculation",
@@ -2079,10 +2001,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 10,
-    "prob_reason_zh": "iPhone面世20周年是在2027年。",
-    "prob_reason_en": "The 20th anniversary is in 2027."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global and Local Viral Outbreak Monitoring",
@@ -2175,10 +2094,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of the Indonesian Ministry of Health (@KemenkesRI) publish any post containing the word 'Hantavirus' between May 25 and June 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，印尼卫生部官方X账号 (@KemenkesRI) 是否会发布任何包含“Hantavirus”（汉坦病毒）字样的推文？",
     "reddit_resolution_source": "Kementerian Kesehatan RI (Kemenkes) Official X Account",
-    "reddit_resolution_url": "https://x.com/KemenkesRI",
-    "prob": 12,
-    "prob_reason_zh": "汉坦病毒病例仍属零星，难发异常公告。",
-    "prob_reason_en": "Hantavirus cases remain sporadic."
+    "reddit_resolution_url": "https://x.com/KemenkesRI"
   },
   {
     "name_en": "Global Mental Health Challenges",
@@ -2229,10 +2145,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Local Javanese Social Incidents and Investigations",
@@ -2311,10 +2224,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Budget Android Smartphones Market Segment",
@@ -2365,10 +2275,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 55,
-    "prob_reason_zh": "传音在低端市场的扩张对小米构成威胁。",
-    "prob_reason_en": "Transsion aggressive in budget segment."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Southeast Asian Badminton Tournaments",
@@ -2433,10 +2340,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of the Badminton Association of Indonesia (@BadmintonINA) publish at least 10 posts containing the hashtag or phrase 'Singapore Open' between May 25 and June 15, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月15日期间，印尼羽协官方X账号 (@BadmintonINA) 是否会发布至少10条包含“Singapore Open”（新加坡公开赛）字样或标签的推文？",
     "reddit_resolution_source": "Humas dan Media PBSI Official X Account",
-    "reddit_resolution_url": "https://x.com/BadmintonINA",
-    "prob": 25,
-    "prob_reason_zh": "国际选手竞争激烈，印尼选手夺冠难。",
-    "prob_reason_en": "Fierce competition limits victory odds."
+    "reddit_resolution_url": "https://x.com/BadmintonINA"
   },
   {
     "name_en": "AMD Low-Budget PC Hardware Bundles",
@@ -2487,10 +2391,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Infinix Hot 70 Smartphone Launch",
@@ -2541,10 +2442,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "单凭Infinix品牌难以进入出货前三。",
-    "prob_reason_en": "Infinix alone unlikely to reach top 3."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Oleksandr Usyk vs Rico Verhoeven Fight Controversy",
@@ -2595,10 +2493,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Human Rights Activism and Diplomatic Appeals",
@@ -2665,10 +2560,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of the Indonesian Ministry of Foreign Affairs (@Kemlu_RI) publish any post containing the phrase 'Uni Eropa' or 'Parlemen Eropa' between May 25 and June 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，印尼外交部官方X账号 (@Kemlu_RI) 是否会发布任何包含“Uni Eropa”（欧盟）或“Parlemen Eropa”（欧洲议会）字样的推文？",
     "reddit_resolution_source": "Kementerian Luar Negeri RI Official X Account",
-    "reddit_resolution_url": "https://x.com/Kemlu_RI",
-    "prob": 75,
-    "prob_reason_zh": "外交部通常会迅速对欧盟决议作出回应。",
-    "prob_reason_en": "Kemlu quick to reject EU resolutions."
+    "reddit_resolution_url": "https://x.com/Kemlu_RI"
   },
   {
     "name_en": "State-Owned Enterprise Reforms and Resource Consolidation",
@@ -2749,10 +2641,7 @@ const groups = [
     "reddit_question_en": "Will the official press release portal of the Indonesian Ministry of State-Owned Enterprises (bumn.go.id/media/press-release) publish any release containing the phrase 'PT INTI' or 'Industri Telekomunikasi Indonesia' between May 25 and July 31, 2026?",
     "reddit_question_zh": "在2026年5月25日至7月31日期间，印尼国企部官方新闻发布门户网站 (bumn.go.id/media/press-release) 是否会发布任何包含“PT INTI”或“Industri Telekomunikasi Indonesia”字样的公告？",
     "reddit_resolution_source": "Ministry of State-Owned Enterprises (Kementerian BUMN) Press Release Portal",
-    "reddit_resolution_url": null,
-    "prob": 20,
-    "prob_reason_zh": "政府更倾向于重组而非让国企破产。",
-    "prob_reason_en": "Govt prefers restructuring to closure."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Political Figures Public Appearances and Social Engagements",
@@ -2817,10 +2706,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Viral Social Media and Television Trends in India",
@@ -2885,10 +2771,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Passion of the Christ Sequel Production Delays",
@@ -2939,10 +2822,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "SpaceX Mars Mission Directed by Chun Wang",
@@ -2993,10 +2873,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Russia-Ukraine War Hypersonic Missile Strikes",
@@ -3047,10 +2924,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "GoTo CEO Meets Cabinet Secretary on Driver Tariffs",
@@ -3101,10 +2975,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of the Indonesian Ministry of Transportation (@kemenhub151) publish any post containing the terms 'ojek online' or 'ojol' between May 25 and June 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，印尼交通部官方X账号 (@kemenhub151) 是否会发布任何包含“ojek online”或“ojol”（在线摩的）字样的推文？",
     "reddit_resolution_source": "Kementerian Perhubungan RI Official X Account",
-    "reddit_resolution_url": "https://x.com/kemenhub151",
-    "prob": 30,
-    "prob_reason_zh": "政府对调整网约车最低资费持谨慎态度。",
-    "prob_reason_en": "Govt cautious on transit cost increases."
+    "reddit_resolution_url": "https://x.com/kemenhub151"
   },
   {
     "name_en": "Indonesian Medals at Asian Science Olympiads",
@@ -3155,10 +3026,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Fashion and Celebrity Brand Campaigns",
@@ -3223,10 +3091,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US-China AI Trade War and Nvidia Chip Sales",
@@ -3277,10 +3142,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Manggarai Station Subsidized Apartment Development",
@@ -3331,10 +3193,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of PT Kereta Api Indonesia (@KAI121) publish any post containing the word 'Manggarai' along with either 'rusun', 'hunian', or 'apartemen' between May 25 and June 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，印尼铁路公司官方X账号 (@KAI121) 是否会发布任何同时包含“Manggarai”以及“rusun”（保障性住房）、“hunian”（住宅）或“apartemen”（公寓）其中之一词汇的推文？",
     "reddit_resolution_source": "PT Kereta Api Indonesia (Persero) Official X Account",
-    "reddit_resolution_url": "https://x.com/KAI121",
-    "prob": 40,
-    "prob_reason_zh": "复杂的TOD项目通常面临工期延误。",
-    "prob_reason_en": "TOD projects face construction delays."
+    "reddit_resolution_url": "https://x.com/KAI121"
   },
   {
     "name_en": "Chronic Illness and Cardiac Health Research",
@@ -3455,10 +3314,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "HIV Screening Initiatives in Pekanbaru Jondul",
@@ -3509,10 +3365,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Daily Zodiac Love and Career Predictions",
@@ -3577,10 +3430,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Westlife Jakarta GBK Concert Sellout",
@@ -3631,10 +3481,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 35,
-    "prob_reason_zh": "GBK体育场容量巨大，连开两场难度大。",
-    "prob_reason_en": "GBK scale makes second date hard."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prehistoric and Paleontological Fossil Discoveries",
@@ -3713,10 +3560,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Space Exploration and Astrophysics Discoveries",
@@ -3837,10 +3681,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BMKG Weather Alerts for Indonesian Wet Season",
@@ -3891,10 +3732,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of BMKG (@infoBMKG) post at least 50 tweets on June 1, 2026?",
     "reddit_question_zh": "在2026年6月1日当天，印尼气象局官方X账号 (@infoBMKG) 是否会发布至少50条推文？",
     "reddit_resolution_source": "BMKG Official X Account",
-    "reddit_resolution_url": "https://x.com/infoBMKG",
-    "prob": 15,
-    "prob_reason_zh": "六月进入干季过渡，大范围洪涝风险低。",
-    "prob_reason_en": "Dry season transition reduces risk."
+    "reddit_resolution_url": "https://x.com/infoBMKG"
   },
   {
     "name_en": "Indonesian Food Inflation and BI GPIPS Response",
@@ -3959,10 +3797,7 @@ const groups = [
     "reddit_question_en": "Will the national average retail price of 'Minyak Goreng Kemasan Sederhana' (Simple Packaged Cooking Oil) as reported on the Indonesian National Food Agency (Bapanas) price panel be higher than IDR 19,000 per liter on June 15, 2026?",
     "reddit_question_zh": "根据印尼国家粮食局 (Bapanas) 价格监测面板数据，2026年6月15日当天，“Minyak Goreng Kemasan Sederhana”（简装食用油）的全国平均零售价是否会高于每升19,000印尼盾？",
     "reddit_resolution_source": "Badan Pangan Nasional (Bapanas) Price Panel",
-    "reddit_resolution_url": null,
-    "prob": 70,
-    "prob_reason_zh": "节日季过后，六月食品价格通常稳定。",
-    "prob_reason_en": "Post-festive June stabilizes food cost."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prabowo Cabinet Reshuffle Rumors Targeting Zulhas",
@@ -4013,10 +3848,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of the Indonesian Cabinet Secretariat (@setkabgoid) publish any post containing the word 'reshuffle' between May 25 and June 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至6月30日期间，印尼内阁秘书处官方X账号 (@setkabgoid) 是否会发布任何包含“reshuffle”（改组）字样的推文？",
     "reddit_resolution_source": "Sekretariat Kabinet RI Official X Account",
-    "reddit_resolution_url": "https://x.com/setkabgoid",
-    "prob": 20,
-    "prob_reason_zh": "维持联盟稳定使得更换党首可能性较低。",
-    "prob_reason_en": "Coalition stability key for Prabowo."
+    "reddit_resolution_url": "https://x.com/setkabgoid"
   },
   {
     "name_en": "Indonesian Critical Infrastructure and Utility Security",
@@ -4097,10 +3929,7 @@ const groups = [
     "reddit_question_en": "Will the National Transportation Safety Committee (KNKT) publish a report on their official portal (knkt.go.id) containing the word 'Bekasi' in the document title or description between May 25 and September 30, 2026?",
     "reddit_question_zh": "在2026年5月25日至9月30日期间，印尼国家交通安全委员会 (KNKT) 官方网站 (knkt.go.id) 是否会发布在其文件标题或描述中包含“Bekasi”字样的调查报告？",
     "reddit_resolution_source": "Komite Nasional Keselamatan Transportasi (KNKT) Official Portal",
-    "reddit_resolution_url": null,
-    "prob": 25,
-    "prob_reason_zh": "铁路信号系统升级通常面临工期延迟。",
-    "prob_reason_en": "Rail signaling upgrades face delays."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Early English History Manuscript Discovery",
@@ -4151,10 +3980,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Jambi Community Social Forestry Programs",
@@ -4205,10 +4031,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bolivia Cabinet Reshuffle amidst Coup Warnings",
@@ -4259,10 +4082,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Colorectal Cancer and Dietary Health Studies",
@@ -4313,10 +4133,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   }
 ];
 

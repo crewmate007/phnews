@@ -18,6 +18,8 @@
   .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
   .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
   .lang-btn.active { background: #1e2535; color: #fff; }
+  .filter-btn { padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1e2535; border-radius: 8px; background: #161b27; color: #64748b; transition: all 0.15s; }
+  .filter-btn.active { background: #1e2535; color: #e2e8f0; }
 
   .stats { display: flex; gap: 12px; padding: 20px 40px; border-bottom: 1px solid #1e2535; flex-wrap: wrap; }
   .stat { background: #161b27; border: 1px solid #1e2535; border-radius: 8px; padding: 14px 20px; min-width: 110px; }
@@ -26,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -44,6 +46,17 @@
   .badge.drop      { background: #1f2937; color: #6b7280; }
 
   .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .source-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
+  .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
+  .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
+  .source-item .source-name { font-weight: 700; color: #94a3b8; }
+  .source-item.x_grok .source-name { color: #c4b5fd; }
+  .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -51,7 +64,17 @@
   .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
   .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
 
-  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .score-panel { margin-bottom: 14px; border: 1px solid #1e2535; border-radius: 8px; background: #0f1117; overflow: hidden; }
+  .score-panel summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 10px; }
+  .score-panel summary::-webkit-details-marker { display: none; }
+  .score-totals { display: flex; gap: 8px; flex-wrap: wrap; }
+  .score-total-chip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid #273244; border-radius: 999px; padding: 4px 9px; color: #94a3b8; font-size: 11px; font-weight: 700; }
+  .score-total-chip.primary { color: #fbbf24; border-color: #92400e; background: #1f1608; }
+  .score-total-chip b { color: #fff; font-size: 15px; }
+  .score-expand { color: #64748b; font-size: 11px; }
+  .score-section { padding: 0 10px 10px; }
+  .score-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.4px; margin: 6px 0; }
+  .rstuh { display: flex; gap: 6px; margin-bottom: 8px; }
   .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
   .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
   .dim .score  { font-size: 16px; font-weight: 700; }
@@ -66,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -99,6 +126,7 @@
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
+    <button id="filter-toggle" class="filter-btn" onclick="toggleFiltered()"></button>
   </div>
 </header>
 
@@ -114,6 +142,7 @@
 
 <script>
 let currentLang = "zh";
+let showFiltered = false;
 
 const i18n = {
   zh: {
@@ -124,7 +153,15 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
+    source_mix: "来源",
+    expand_scores: "展开",
+    rstuh: "市场结构",
+    bdlt: "下注欲望",
+    show_filtered: "显示过滤",
+    hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -135,7 +172,15 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
+    source_mix: "Sources",
+    expand_scores: "Expand",
+    rstuh: "Market quality",
+    bdlt: "Bet demand",
+    show_filtered: "Show filtered",
+    hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
@@ -150,16 +195,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "President Prabowo is centralizing export control through SOEs and attempting to reform customs and ministerial bureaucracy.",
     "narrative_zh": "总统普拉博沃正通过国企强化出口管制，并尝试改革海关及部委行政效率。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian government mandate the export of coal and palm oil exclusively through designated SOEs by Dec 31, 2026?",
     "question_en": "Will the Indonesian government mandate the export of coal and palm oil exclusively through designated SOEs by Dec 31, 2026?",
     "question_zh": "印尼政府是否会在2026年12月31日前强制规定煤炭和棕榈油必须通过指定国有企业进行出口？",
     "source": "Lembaran Negara RI",
-    "prob": 25,
-    "prob_reason_zh": "完全国有化阻力大，仅会部分试行。",
-    "prob_reason_en": "High resistance to full state monopoly."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Fiscal Policy and APBN 2027 Discussions",
@@ -170,16 +227,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Discussions surrounding Prabowo's 8% GDP growth goal, fiscal deficit management, and subsidy adjustments.",
     "narrative_zh": "关于普拉博沃8%增长目标、财政赤字管理及补贴调整的讨论。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the 2027 APBN state budget include an official GDP growth target of 8% or higher?",
     "question_en": "Will the 2027 APBN state budget include an official GDP growth target of 8% or higher?",
     "question_zh": "2027年国家预算（APBN）是否会包含8%或更高的GDP增长目标？",
     "source": "Kementerian Keuangan RI / APBN Law",
-    "prob": 15,
-    "prob_reason_zh": "8%目标过高，财政部更倾向保守估计。",
-    "prob_reason_en": "8% target is unrealistic for budget."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bank Indonesia Interest Rate and Currency Volatility",
@@ -190,16 +259,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Impact of the 50 bps BI rate hike on the Indonesian stock market (IHSG) and currency stability.",
     "narrative_zh": "印尼央行加息50个基点对印尼股市及汇率稳定性的影响。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will Bank Indonesia raise the BI-Rate to 5.75% or higher by end of Q3 2026?",
     "question_en": "Will Bank Indonesia raise the BI-Rate to 5.75% or higher by end of Q3 2026?",
     "question_zh": "到2026年第三季度末，印尼央行是否会将基准利率上调至5.75%或更高？",
     "source": "Bank Indonesia (bi.go.id)",
-    "prob": 40,
-    "prob_reason_zh": "通胀压力与汇率动荡可能促使加息。",
-    "prob_reason_en": "Inflation and FX risks may trigger hike."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Stock Market UMA and Taipan-Linked Companies",
@@ -210,16 +291,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Surveillance of stocks linked to major tycoons like Prajogo Pangestu and Haji Isam following MSCI exclusion and market drops.",
     "narrative_zh": "在被MSCI剔除及股价下跌后，对以Prajogo Pangestu和Haji Isam为首的财阀关联股票进行监管。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the TPIA ticker close below 2000 IDR at any point before July 1, 2026?",
     "question_en": "Will the TPIA ticker close below 2000 IDR at any point before July 1, 2026?",
     "question_zh": "TPIA股票在2026年7月1日之前是否会收盘跌破2000印尼盾？",
     "source": "IDX / Bloomberg",
-    "prob": 35,
-    "prob_reason_zh": "波动性大，但受大股东干预支撑。",
-    "prob_reason_en": "High volatility but support remains."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gojek Revenue Sharing and Gig Economy",
@@ -230,16 +323,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Gojek has adjusted its revenue-sharing model between drivers and the platform, impacting the broader transport sector.",
     "narrative_zh": "Gojek调整了司机与平台间的营收分成模式，影响了更广泛的交通领域。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "CNG Adoption and Energy Subsidies",
@@ -250,16 +355,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "The government is exploring CNG imports as a substitute for LPG, alongside debates on keeping Pertalite prices stable.",
     "narrative_zh": "政府正在探索进口CNG以替代LPG，并围绕保持Pertalite汽油价格稳定展开辩论。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian government increase the retail price of Pertalite before Jan 1, 2027?",
     "question_en": "Will the Indonesian government increase the retail price of Pertalite before Jan 1, 2027?",
     "question_zh": "印尼政府是否会在2027年1月1日前调涨Pertalite零售价格？",
     "source": "Kementerian ESDM",
-    "prob": 70,
-    "prob_reason_zh": "财政压力巨大，涨价是必然选择。",
-    "prob_reason_en": "Fiscal burden makes hike inevitable."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BPR Merger and Banking Consolidation",
@@ -270,16 +387,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Four rural banks (BPR) have completed a merger to increase assets.",
     "narrative_zh": "四家农村银行（BPR）已完成合并以增加资产规模。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Hantavirus Surveillance",
@@ -290,16 +419,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Local health authorities in Tangerang are increasing surveillance to prevent the spread of Hantavirus.",
     "narrative_zh": "坦格朗地方卫生部门正加强监测以防止汉坦病毒传播。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ebola Outbreak in Congo",
@@ -310,16 +451,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "WHO and regional health authorities are monitoring the spread of Ebola, noting the lack of available vaccines.",
     "narrative_zh": "世卫组织及地区卫生部门正监测埃博拉传播，并指出目前缺乏有效疫苗。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Activists Detained by Israel",
@@ -330,16 +483,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Five Indonesian citizens involved in a Gaza humanitarian mission were detained by Israeli forces, sparking diplomatic intervention.",
     "narrative_zh": "五名参与加沙人道主义任务的印尼公民被以色列军队拘留，引发外交干预。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Strait of Hormuz Geopolitical Tension",
@@ -350,16 +515,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 5
+    },
+    "why_users_bet": "",
     "narrative_en": "Escalating tensions involving Iran, the US, and NATO allies in the Strait of Hormuz impacting oil routes and regional security.",
     "narrative_zh": "伊朗、美国及北约盟国在霍尔木兹海峡的紧张局势升级，影响石油运输线路及地区安全。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the average daily price of Brent Crude oil exceed $95 for the month of June 2026?",
     "question_en": "Will the average daily price of Brent Crude oil exceed $95 for the month of June 2026?",
     "question_zh": "2026年6月布伦特原油日均价格是否会超过95美元？",
     "source": "ICE/EIA Market Data",
-    "prob": 20,
-    "prob_reason_zh": "市场趋稳，除非爆发全面战争。",
-    "prob_reason_en": "Market stable barring full-scale war."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "China-Russia-US-Iran Relations",
@@ -370,16 +547,28 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Broader geopolitical maneuvering including Putin's visit to China, US-Iran nuclear standoffs, and regional territorial tensions.",
     "narrative_zh": "更广泛的地缘政治博弈，包括普京访华、美伊核对峙及区域领土争端。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Palestinian Leadership Transition",
@@ -390,16 +579,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Discussions regarding the potential leadership succession of Yasser Abbas in Palestine.",
     "narrative_zh": "关于亚瑟·阿巴斯在巴勒斯坦潜在领导继任的讨论。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Thailand Visa Policy Change",
@@ -410,16 +611,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Thailand has reduced visa-free stay durations citing security and increasing crime.",
     "narrative_zh": "泰国以安全和犯罪增加为由缩短了免签停留时长。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Corruption Legal Cases (Nadiem/Ebenezer)",
@@ -430,16 +643,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "High-profile corruption cases triggering public debate over the fairness of legal sentencing in Indonesia.",
     "narrative_zh": "引发公众对印尼法律判决公平性辩论的高调腐败案件。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Jokowi Diploma Validity Dispute",
@@ -450,16 +675,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Ongoing public debates regarding the authenticity of former President Jokowi’s university diploma.",
     "narrative_zh": "关于前总统佐科维大学学历真实性的持续公众辩论。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "EU Parliament Resolution on Rights Defenders",
@@ -470,16 +707,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "The European Parliament is considering a resolution concerning the treatment of Indonesian rights defenders.",
     "narrative_zh": "欧洲议会正在审议一项关于印尼人权捍卫者待遇的决议。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Harkitnas 2026 Protests",
@@ -490,16 +739,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Mass demonstrations on the National Awakening Day caused significant traffic disruption in central Jakarta.",
     "narrative_zh": "民族觉醒日期间的群众示威活动导致雅加达市中心交通严重拥堵。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Malaysia Masters 2026 and Badminton Performance",
@@ -510,16 +771,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Coverage of results and player performance at the Malaysia Masters badminton tournament.",
     "narrative_zh": "马来西亚羽毛球大师赛的赛果与球员表现报道。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Persib Bandung Title Celebration and Management",
@@ -530,16 +803,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "Celebrations for Persib Bandung's league championship, contract renewal issues, and player squad news.",
     "narrative_zh": "万隆Persib队联赛夺冠庆典、合同续签问题及球员阵容新闻。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "European Soccer Managerial Changes",
@@ -550,16 +835,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "Managerial moves and rumors involving Pep Guardiola, Arne Slot, and Jose Mourinho in top European clubs.",
     "narrative_zh": "涉及瓜迪奥拉、斯洛特和穆里尼奥等在欧洲顶级俱乐部的执教动向与流言。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "World Cup 2026 Preparation",
@@ -570,16 +867,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Preparations, squad updates, and broadcast rights for the 2026 World Cup.",
     "narrative_zh": "2026年世界杯的筹备工作、球队最新消息及转播权事宜。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian national football team qualify for the 2026 World Cup final tournament?",
     "question_en": "Will the Indonesian national football team qualify for the 2026 World Cup final tournament?",
     "question_zh": "印尼国家足球队是否能进入2026年世界杯决赛圈？",
     "source": "FIFA.com",
-    "prob": 0,
-    "prob_reason_zh": "印尼队未能晋级2026世界杯。",
-    "prob_reason_en": "Indonesia failed to qualify for 2026."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "MotoGP 2026 Developments",
@@ -590,16 +899,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 2,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Race outcomes and team news involving Valentino Rossi and Marc Marquez in MotoGP.",
     "narrative_zh": "MotoGP比赛结果及涉及瓦伦蒂诺·罗西和马克·马尔克斯的团队动态。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "eSports Indonesia Performance",
@@ -610,16 +931,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Squad announcement and preparation for the Indonesian eSports team at the 2026 Asian Games.",
     "narrative_zh": "印尼电竞队参加2026年亚运会的阵容宣布及准备工作。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PSS Sleman Stadium Usage Controversy",
@@ -630,16 +963,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Controversy regarding the availability and use of Mandala Krida Stadium for PSS Sleman and PSIM matches.",
     "narrative_zh": "关于Mandala Krida体育场用于PSS Sleman和PSIM比赛的可用性及使用争议。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Women's Volleyball Tournament Performance",
@@ -650,16 +995,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Megawati Hangestri’s participation and recent performances in international volleyball leagues.",
     "narrative_zh": "Megawati Hangestri在国际排球联赛中的参与情况及近期表现。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WTA Tennis Tournament Updates",
@@ -670,16 +1027,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Tournament results and ranking updates for Janice Tjen at Maroko Open.",
     "narrative_zh": "Janice Tjen在摩洛哥公开赛的比赛结果与排名更新。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tech Gadget Releases (Mobile)",
@@ -690,16 +1059,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 5
+    },
+    "why_users_bet": "",
     "narrative_en": "Recent mobile device releases and price drops for brands like Tecno, Infinix, Redmi, and Motorola.",
     "narrative_zh": "Tecno、Infinix、Redmi和Motorola等品牌的近期移动设备发布及价格调整。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tech Hardware and Software Innovations",
@@ -710,16 +1091,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 1,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "New releases and updates in AI-integrated hardware, OS updates, and professional-grade computing components.",
     "narrative_zh": "AI集成硬件、操作系统更新及专业级计算组件的新发布与更新。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gaming Industry Developments",
@@ -730,16 +1123,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Game studio project announcements and digital service accessibility issues.",
     "narrative_zh": "游戏工作室项目发布及数字服务可访问性问题。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Space Exploration and Technology",
@@ -750,16 +1155,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "NASA's development of advanced gear for future lunar missions.",
     "narrative_zh": "NASA为未来登月任务研发先进装备。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Celebrity Personal Lives and Religious Observances",
@@ -770,16 +1187,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Public interest news regarding celebrity pregnancies, religious pilgrimages, and personal relationship decisions.",
     "narrative_zh": "关于名人怀孕、宗教朝圣及个人关系决策的公众新闻。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Entertainment Industry Trends and News",
@@ -790,16 +1219,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Global and local entertainment updates including festival controversies, movie releases, and band breakups.",
     "narrative_zh": "包括电影节争议、电影上映和乐队解散在内的全球及本地娱乐新闻。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Horoscopes and Superstitions",
@@ -810,16 +1251,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Daily horoscope predictions and cultural beliefs regarding luck in daily life.",
     "narrative_zh": "日常星座运势预测及关于日常生活中运气的文化信仰。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Concert and Performance Events",
@@ -830,16 +1283,28 @@ const groups = [
     "T": 1,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 2,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "The conclusion of 'Marapthon Season 3' concert series in Jakarta.",
     "narrative_zh": "“Marapthon Season 3”演唱会系列在雅加达的落幕。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "General Science and Archaeological Discoveries",
@@ -850,16 +1315,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Recent archaeological findings, space discoveries, and science curiosities reported by various outlets.",
     "narrative_zh": "多家媒体报道的近期考古发现、太空发现及科学趣闻。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -890,10 +1367,9 @@ function getDisposition(g) {
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
-  const da = getDisposition(a), db = getDisposition(b);
-  if (order[da] !== order[db]) return order[da] - order[db];
-  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+  const bdltDiff = bdltTotal(b) - bdltTotal(a);
+  if (bdltDiff !== 0) return bdltDiff;
+  return rstuhTotal(b) - rstuhTotal(a);
 });
 
 function renderCards(lang) {
@@ -903,13 +1379,33 @@ function renderCards(lang) {
 
   sorted.forEach(g => {
     const disp = getDisposition(g);
-    const total = g.R + g.S + g.T + g.U + g.H;
+    if (disp === "drop" && !showFiltered) return;
+    const total = rstuhTotal(g);
+    const bdlt = normalizeBDLT(g);
+    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
+    const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
+    const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
+      `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
+    ).join("");
+    const sourceItems = (g.source_examples || []).slice(0, 4).map(item => {
+      const title = lang === "zh" ? (item.title_zh || item.title_en) : (item.title_en || item.title_zh);
+      return `<div class="source-item ${item.source}">
+        <span class="source-name">${sourceLabel(item.source)}</span>
+        <span class="source-title" title="${escapeAttr(title)}">${escapeHtml(title)}</span>
+      </div>`;
+    }).join("");
 
     const card = document.createElement("div");
     card.className = `card ${disp}`;
@@ -922,7 +1418,10 @@ function renderCards(lang) {
         <span class="badge ${disp}">${t.badge[disp]}</span>
       </div>
 
-      <p class="narrative">${narr}</p>
+      ${showNarrative ? `<p class="narrative">${escapeHtml(narr)}</p>` : ""}
+
+      ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
+      ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
 
       <div class="density-bar">
         <div class="label">${t.density}</div>
@@ -930,13 +1429,33 @@ function renderCards(lang) {
         <div class="count">${densityCount}</div>
       </div>
 
-      <div class="rstuh">
-        ${["R","S","T","U","H"].map((l,i) => {
-          const s = [g.R,g.S,g.T,g.U,g.H][i];
-          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
-        }).join("")}
-        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
-      </div>
+      <details class="score-panel">
+        <summary>
+          <span class="score-totals">
+            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
+          </span>
+          <span class="score-expand">${t.expand_scores}</span>
+        </summary>
+        <div class="score-section">
+          <div class="score-label">${t.bdlt}</div>
+          <div class="rstuh">
+            ${["B","D","L","T"].map(l => {
+              const s = bdlt[l] || 0;
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+          </div>
+          <div class="score-label">${t.rstuh}</div>
+          <div class="rstuh">
+            ${["R","S","T","U","H"].map((l,i) => {
+              const s = [g.R,g.S,g.T,g.U,g.H][i];
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+          </div>
+        </div>
+      </details>
 
       ${g.bettable && question ? `
       <div class="question-box">
@@ -955,9 +1474,81 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });
+}
+
+function rstuhTotal(g) {
+  return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
+}
+
+function normalizeBDLT(g) {
+  const bdlt = g.BDLT || {};
+  return {
+    B: Number.isInteger(bdlt.B) ? bdlt.B : 0,
+    D: Number.isInteger(bdlt.D) ? bdlt.D : 0,
+    L: Number.isInteger(bdlt.L) ? bdlt.L : 0,
+    T: Number.isInteger(bdlt.T) ? bdlt.T : 0,
+  };
+}
+
+function bdltTotal(g) {
+  const bdlt = normalizeBDLT(g);
+  return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
+}
+
+function shouldShowNarrative(g, disp, narr) {
+  if (!narr) return false;
+  if (disp !== "drop") return true;
+  if (g.density > 1) return true;
+  const lowered = String(narr).toLowerCase();
+  if (lowered.startsWith("google news groups this under")) return false;
+  const first = (g.source_examples || [])[0] || {};
+  const titles = [first.title_en, first.title_zh, g.name_en, g.name_zh]
+    .filter(Boolean)
+    .map(value => String(value).slice(0, 72).toLowerCase());
+  return !titles.some(title => title && lowered.includes(title));
+}
+
+function sourceLabel(source) {
+  return {
+    google_news: "Google News",
+    x_grok: "Grok/X"
+  }[source] || source || "SourceIntel";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
+}
+
+function updateFilterButton() {
+  const btn = document.getElementById("filter-toggle");
+  btn.textContent = showFiltered ? i18n[currentLang].hide_filtered : i18n[currentLang].show_filtered;
+  btn.classList.toggle("active", showFiltered);
+}
+
+function toggleFiltered() {
+  showFiltered = !showFiltered;
+  updateFilterButton();
+  renderCards(currentLang);
 }
 
 function setLang(lang) {
@@ -968,10 +1559,12 @@ function setLang(lang) {
   document.querySelectorAll("[data-zh]").forEach(el => {
     el.textContent = el.dataset[lang];
   });
+  updateFilterButton();
   renderCards(lang);
 }
 
 initRegionLinks();
+updateFilterButton();
 renderCards("zh");
 </script>
 

@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,12 +50,13 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -88,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -148,6 +153,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -165,6 +172,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -253,9 +262,10 @@ const groups = [
     "question_en": "Will the Philippine Senate formally launch a committee inquiry into the Mayhem leadership transition incident before September 1, 2026?",
     "question_zh": "菲律宾参议院是否会在2026年9月1日之前正式对“参议院混乱”领导层变动事件启动委员会调查？",
     "source": "Official Senate Journal or committee reports of the Senate of the Philippines",
-    "prob": 15,
-    "prob_reason_zh": "参议院领导更迭极少面临正式调查。",
-    "prob_reason_en": "Leadership changes rarely face inquiries."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "VP Sara Duterte Impeachment Trial",
@@ -319,9 +329,10 @@ const groups = [
     "question_en": "Will the Philippine Senate formally convict Vice President Sara Duterte in her impeachment trial before December 31, 2026?",
     "question_zh": "菲律宾参议院是否会在2026年12月31日之前在副总统莎拉·杜特尔特的弹劾案审判中正式宣判其有罪？",
     "source": "Official records and journal of the Senate of the Philippines sitting as an impeachment court",
-    "prob": 20,
-    "prob_reason_zh": "弹劾程序漫长且政治上面临阻力。",
-    "prob_reason_en": "Impeachment is long and difficult."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ICC Investigation into Duterte Drug War",
@@ -383,9 +394,10 @@ const groups = [
     "question_en": "Will the International Criminal Court (ICC) issue a new public arrest warrant for former President Rodrigo Duterte or his close allies in relation to the drug war investigation before December 31, 2026?",
     "question_zh": "国际刑事法院（ICC）是否会在2026年12月31日之前针对前总统罗德里戈·杜特尔特或其亲密盟友就毒品战争调查发布新的公开逮捕令？",
     "source": "Official press releases and case documents published on the International Criminal Court (ICC) website",
-    "prob": 45,
-    "prob_reason_zh": "国际法院程序虽慢，但施压不断。",
-    "prob_reason_en": "ICC processes are slow but pressuring."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Legislative Anti-Corruption and Dynasty Bills",
@@ -475,9 +487,10 @@ const groups = [
     "question_en": "Will the Anti-Political Dynasty Bill (HB 8389 or its equivalent) be approved on third reading by the Philippine House of Representatives before December 31, 2026?",
     "question_zh": "菲律宾众议院是否会在2026年12月31日之前在第三读中通过《反政治家族法案》（HB 8389或其等效法案）？",
     "source": "Official legislative history and records of the House of Representatives of the Philippines",
-    "prob": 5,
-    "prob_reason_zh": "国会由政治家族主导，法案难过。",
-    "prob_reason_en": "Dynasties in Congress block the bill."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Comelec Campaign Finance Probes on Senators",
@@ -541,9 +554,10 @@ const groups = [
     "question_en": "Will the Commission on Elections (Comelec) formally file a campaign finance violation complaint with the Ombudsman against Representative/Senator Rodante Marcoleta before December 31, 2026?",
     "question_zh": "菲律宾选举委员会（Comelec）是否会在2026年12月31日之前正式向监察署提起针对众议员/参议员罗丹特·马科莱塔（Rodante Marcoleta）的竞选资金违规指控？",
     "source": "Official press statements or resolutions from the Commission on Elections (Comelec)",
-    "prob": 25,
-    "prob_reason_zh": "针对参议员的此类正式指控罕见。",
-    "prob_reason_en": "Such charges against senators are rare."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Marcos-Duterte Feud and Political Polarization",
@@ -605,9 +619,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Marcos Administration Diplomatic and Military Engagements",
@@ -669,9 +684,10 @@ const groups = [
     "question_en": "Will President Ferdinand Marcos Jr. receive a state decoration from the Government of Japan during the year 2026?",
     "question_zh": "斐迪南·马科斯总统是否会在2026年内获得日本政府颁发的国家勋章？",
     "source": "Official announcements from the Government of Japan (Cabinet Office) or the Office of the President of the Philippines (Malacañang)",
-    "prob": 85,
-    "prob_reason_zh": "双边关系密切且授勋准备已在进行。",
-    "prob_reason_en": "Strong ties and advanced preparations."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PBA Commissioner's Cup Semifinals",
@@ -747,9 +763,10 @@ const groups = [
     "question_en": "Will Barangay Ginebra San Miguel advance to win the 2026 PBA Commissioner's Cup?",
     "question_zh": "Barangay Ginebra San Miguel 是否会晋级并夺得2026年菲律宾篮球协会（PBA）专员杯冠军？",
     "source": "Official Philippine Basketball Association (PBA) website",
-    "prob": 35,
-    "prob_reason_zh": "该队实力强劲但仍面临激烈竞争。",
-    "prob_reason_en": "Ginebra faces tough competition."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA Playoffs and Social Justice Awards",
@@ -839,9 +856,10 @@ const groups = [
     "question_en": "Will the New York Knicks win the 2026 NBA Eastern Conference Finals?",
     "question_zh": "纽约尼克斯队是否会赢得2026年NBA东部决赛？",
     "source": "Official NBA.com standings and series results",
-    "prob": 30,
-    "prob_reason_zh": "尼克斯队面临东部强劲对手的竞争。",
-    "prob_reason_en": "Knicks face tough East competitors."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WNBA Collective Bargaining Agreement",
@@ -889,9 +907,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Tennis and Eala French Open Campaign",
@@ -953,9 +972,10 @@ const groups = [
     "question_en": "Will Alex Eala advance to the main draw of the 2026 French Open women's singles tournament?",
     "question_zh": "艾拉（Alex Eala）是否会晋级2026年法国网球公开赛女单正赛？",
     "source": "Official French Open (Roland Garros) website and match draws",
-    "prob": 40,
-    "prob_reason_zh": "大满贯资格赛对埃拉而言竞争激烈。",
-    "prob_reason_en": "Grand Slam qualifying is highly tough."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine National Sports, Volleyball, and Futsal",
@@ -1045,9 +1065,10 @@ const groups = [
     "question_en": "Will the National Capital Region (NCR) top the official gold medal tally at the Palarong Pambansa 2026?",
     "question_zh": "国家首都区（NCR）是否会在2026年菲律宾国家运动会（Palarong Pambansa）的官方金牌榜上名列第一？",
     "source": "Official Palarong Pambansa 2026 final medal tally published by the Department of Education (DepEd)",
-    "prob": 95,
-    "prob_reason_zh": "马尼拉首都区历来在该赛事占统治地位。",
-    "prob_reason_en": "NCR historically dominates this event."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "F1 & Real Madrid Governance",
@@ -1123,9 +1144,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "America's Cup Preliminary Regatta",
@@ -1173,9 +1195,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Rugby Africa Women's Cup",
@@ -1223,9 +1246,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Filipino Celebrities Social and Environmental Advocacy",
@@ -1287,9 +1311,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BTS 'Arirang' World Tour and Suga Marathon",
@@ -1351,9 +1376,10 @@ const groups = [
     "question_en": "Will BTS officially announce a concert date in the Philippines for their 'Arirang' tour before December 31, 2026?",
     "question_zh": "防弹少年团（BTS）是否会在2026年12月31日之前官方宣布其“Arirang”巡演在菲律宾的演唱会日期？",
     "source": "Official website or verified social media channels of Big Hit Music or official local Philippine concert promoters",
-    "prob": 80,
-    "prob_reason_zh": "菲律宾是防弹少年团巡演的核心市场。",
-    "prob_reason_en": "The Philippines is a major BTS market."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "79th Cannes Film Festival",
@@ -1429,9 +1455,10 @@ const groups = [
     "question_en": "Will a female director win the Palme d'Or at the 79th Cannes Film Festival in 2026?",
     "question_zh": "女性导演是否会获得2026年第79届戛纳电影节的金棕榈奖？",
     "source": "Official Cannes Film Festival website awards page",
-    "prob": 30,
-    "prob_reason_zh": "女性导演在参赛名单中仍占少数。",
-    "prob_reason_en": "Female directors are a minority."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pop Music Releases and Chart Peaks",
@@ -1493,9 +1520,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BLACKPINK Jennie Body Care Brand Ambassadorship",
@@ -1543,9 +1571,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Maureen Wroblewitz TV Audition Controversy",
@@ -1593,9 +1622,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Canal+ Vincent Bollore Controversy",
@@ -1643,9 +1673,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Consumer Tech and Hardware Launches in PH",
@@ -1735,9 +1766,10 @@ const groups = [
     "question_en": "Will Oppo officially launch the Enco Air 5s in the Philippines before June 30, 2026?",
     "question_zh": "OPPO是否会于2026年6月30日之前在菲律宾正式发布 Enco Air 5s 蓝牙耳机？",
     "source": "Official Oppo Philippines website or official press release",
-    "prob": 60,
-    "prob_reason_zh": "产品发布通常与年中促销活动契合。",
-    "prob_reason_en": "Launches often align with promos."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mobile Operating Systems and Legacy Hardware Failures",
@@ -1813,9 +1845,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tech Promotional Deals",
@@ -1877,9 +1910,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Enterprise AI Southeast Asia",
@@ -1941,9 +1975,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bungie Layoffs and Destiny 2 Development End",
@@ -1991,9 +2026,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bionic Exoskeleton and Prosthetics",
@@ -2055,9 +2091,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "CISA Known Exploited Vulnerabilities Catalog",
@@ -2105,9 +2142,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Climate Change, Sea Level Rise, and ICJ Action",
@@ -2183,9 +2221,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Deep Space Astronomy and Stellar Observations",
@@ -2289,9 +2328,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Lunar South Pole Mission and Shortcuts",
@@ -2353,9 +2393,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Palaeontological Discoveries and Marine Biology Specie Identification",
@@ -2445,9 +2486,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mars Sand Robotics",
@@ -2495,9 +2537,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Ebola Outbreaks and US Preparedness Measures",
@@ -2587,9 +2630,10 @@ const groups = [
     "question_en": "Will the World Health Organization (WHO) declare the 2026 Ebola outbreak in Uganda a Public Health Emergency of International Concern (PHEIC) before December 31, 2026?",
     "question_zh": "世界卫生组织（WHO）是否会在2026年12月31日之前将乌干达发生的2026年埃博拉疫情宣布为国际关注的突发公共卫生事件（PHEIC）？",
     "source": "Official statement or declaration from the World Health Organization (WHO)",
-    "prob": 25,
-    "prob_reason_zh": "世卫组织极少针对局部疫情宣布紧急状态。",
-    "prob_reason_en": "WHO rarely declares localized PHEICs."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Specialized Clinical Studies and Eating Disorder Alerts",
@@ -2665,9 +2709,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Child Immunization & Measles Outbreaks",
@@ -2729,9 +2774,10 @@ const groups = [
     "question_en": "Will the Philippine Department of Health (DOH) declare a national measles outbreak in 2026?",
     "question_zh": "菲律宾卫生部（DOH）是否会在2026年宣布全国暴发麻疹疫情？",
     "source": "Official announcements or press releases from the Philippine Department of Health (DOH)",
-    "prob": 35,
-    "prob_reason_zh": "此类疫情通常在地区而非全国宣布。",
-    "prob_reason_en": "Such outbreaks are usually regional."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Reproductive Health and HIV Initiatives",
@@ -2807,9 +2853,10 @@ const groups = [
     "question_en": "Will the average daily number of newly diagnosed HIV cases in the Philippines reported by the DOH exceed 60 in any single month of 2026?",
     "question_zh": "菲律宾卫生部（DOH）报告的任何一个月中，菲律宾每日新增确诊HIV病例的平均数是否会超过60例？",
     "source": "Official Philippine Department of Health (DOH) Epidemiology Bureau monthly registry reports",
-    "prob": 85,
-    "prob_reason_zh": "菲律宾每日新增确诊病例数持续攀升。",
-    "prob_reason_en": "Daily HIV diagnoses are rising steadily."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Middle East Geopolitical Conflicts and Drone Strikes",
@@ -2885,9 +2932,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Immigration Reforms and Overseas Labor Constraints",
@@ -2963,9 +3011,10 @@ const groups = [
     "question_en": "Will the total number of newly deployed Overseas Filipino Workers (OFWs) to Japan decrease in the full-year 2026 official statistics compared to 2025?",
     "question_zh": "根据官方统计，2026年全年新派往日本的菲律宾海外劳工（OFW）总数是否会比2025年有所减少？",
     "source": "Official annual reports from the Philippine Department of Migrant Workers (DMW) or Philippine Statistics Authority (PSA)",
-    "prob": 30,
-    "prob_reason_zh": "日本劳动力短缺推高了外籍工人的需求。",
-    "prob_reason_en": "Japan needs more foreign labor."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Energy Crisis and Fuel/Electricity Costs",
@@ -3055,9 +3104,10 @@ const groups = [
     "question_en": "Will Meralco's overall household electricity rate (per kWh) increase in July 2026 compared to June 2026?",
     "question_zh": "Meralco（马尼拉电力公司）2026年7月的整体住宅电价（每千瓦时）是否会比2026年6月有所上涨？",
     "source": "Official press release or rate announcement on the Meralco (Manila Electric Company) official website",
-    "prob": 55,
-    "prob_reason_zh": "七月电价常因燃料及发电成本而波动。",
-    "prob_reason_en": "July rates fluctuate with fuel costs."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesia Commodity Policy",
@@ -3105,9 +3155,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Swatch Collaboration",
@@ -3155,9 +3206,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Automotive Trends and Philippine International Motor Show",
@@ -3219,9 +3271,10 @@ const groups = [
     "question_en": "Will Suzuki surpass Honda in total new vehicle sales in the Philippines for the calendar year 2026?",
     "question_zh": "在2026日历年中，铃木（Suzuki）在菲律宾的新车总销量是否会超过本田（Honda）？",
     "source": "Joint sales reports released by Chamber of Automotive Manufacturers of the Philippines (CAMPI) and Truck Manufacturers Association (TMA)",
-    "prob": 40,
-    "prob_reason_zh": "本田在销量上通常对铃木保持优势。",
-    "prob_reason_en": "Honda usually maintains a sales edge."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Commercial Retail and Logistics Hubs",
@@ -3283,9 +3336,10 @@ const groups = [
     "question_en": "Will Jollibee Foods Corporation officially open its fourth Manhattan, New York location before December 31, 2026?",
     "question_zh": "快乐蜂（Jollibee Foods Corporation）是否会在2026年12月31日之前在纽约曼哈顿正式开设其第四家门店？",
     "source": "Official Jollibee Foods Corporation press releases, corporate reports, or official store locator updates",
-    "prob": 70,
-    "prob_reason_zh": "快乐蜂正大力拓展其在纽约市的业务。",
-    "prob_reason_en": "Jollibee is expanding fast in NYC."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BSP Banking Buffers and APEC Outlook",
@@ -3347,9 +3401,10 @@ const groups = [
     "question_en": "Will the Bangko Sentral ng Pilipinas (BSP) cut its benchmark policy rate (target reverse repurchase rate) at its Monetary Board meeting in June 2026?",
     "question_zh": "菲律宾央行（BSP）是否会在2026年6月的货币委员会会议上降息（降低目标逆回购利率）？",
     "source": "Official monetary policy decision statements published on the Bangko Sentral ng Pilipinas (BSP) official website",
-    "prob": 45,
-    "prob_reason_zh": "降息决策取决于国内通胀形势。",
-    "prob_reason_en": "BSP cuts depend on domestic inflation."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US-Taiwan Arms Sale Delay",
@@ -3397,9 +3452,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Generator Donations to Ukraine",
@@ -3447,9 +3503,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Vatican Beatification",
@@ -3497,9 +3554,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Havana US Embassy Protest on Raul Castro",
@@ -3547,9 +3605,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ticketmaster SM Prime Partnership",
@@ -3597,9 +3656,10 @@ const groups = [
     "question_en": "Will SM Tickets officially announce a Ticketmaster-powered concert/event to be held in the Philippines before December 31, 2026?",
     "question_zh": "SM Tickets是否会在2026年12月31日之前正式宣布在菲律宾举办一场由Ticketmaster支持的演唱会或活动？",
     "source": "Official SM Tickets or Ticketmaster Philippines website and press announcements",
-    "prob": 80,
-    "prob_reason_zh": "合作预示着双方将快速进行系统整合。",
-    "prob_reason_en": "Partnership points to quick integration."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Lotto Draw Results",
@@ -3647,9 +3707,10 @@ const groups = [
     "question_en": "Will the PCSO Ultra Lotto 6/58 jackpot reach or exceed 500 million PHP in any draw before September 1, 2026?",
     "question_zh": "在2026年9月1日之前的任何一次开奖中，PCSO Ultra Lotto 6/58 的头奖奖金是否会达到或超过5亿比索？",
     "source": "Official lottery results page of the Philippine Charity Sweepstakes Office (PCSO)",
-    "prob": 20,
-    "prob_reason_zh": "奖金达到5亿比索需要长期累积。",
-    "prob_reason_en": "Reaching 500M requires many rollovers."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kanlaon Volcano Alert and Ash Fall",
@@ -3697,9 +3758,10 @@ const groups = [
     "question_en": "Will PHIVOLCS raise the warning status of Kanlaon Volcano to Alert Level 3 or higher before July 1, 2026?",
     "question_zh": "菲律宾火山及地震研究所（PHIVOLCS）是否会在2026年7月1日之前将坎拉翁火山（Kanlaon Volcano）的警报等级调至3级或更高？",
     "source": "Official Kanlaon Volcano Bulletins and advisories published on the PHIVOLCS website",
-    "prob": 35,
-    "prob_reason_zh": "火山活跃度高，但达到3级预警仍较难。",
-    "prob_reason_en": "Activity is high but Level 3 is rare."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine-Netherlands Maritime Defense Cooperation",
@@ -3747,9 +3809,10 @@ const groups = [
     "question_en": "Will the Philippines and the Netherlands sign a formal bilateral defense cooperation agreement before December 31, 2026?",
     "question_zh": "菲律宾与荷兰是否会在2026年12月31日之前签署正式的双边防务合作协议？",
     "source": "Official press statements from the Department of National Defense (DND) or Department of Foreign Affairs (DFA) of the Philippines",
-    "prob": 75,
-    "prob_reason_zh": "两国正积极深化在印太的防务合作。",
-    "prob_reason_en": "Both nations are deepening defense ties."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Parola Manila Residential Area Fire",
@@ -3797,9 +3860,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Regeneron ISEF Science Fair Philippine Success",
@@ -3847,9 +3911,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WWII Thriller 'Pressure' Production",
@@ -3897,9 +3962,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "IIHF World Championship Latvia vs US",
@@ -3947,9 +4013,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -4002,6 +4069,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4081,6 +4154,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });

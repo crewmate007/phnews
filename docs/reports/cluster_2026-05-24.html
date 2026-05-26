@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,12 +50,12 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
   .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -263,10 +263,7 @@ const groups = [
     "reddit_question_en": "Will the Google Trends 7-day average search interest in the Philippines for 'Real Madrid' be at least 1.5 times higher than 'Barcelona' during the week of June 1, 2026?",
     "reddit_question_zh": "在 2026 年 6 月 1 日当周，菲律宾地区的 Google Trends 7 天平均搜索热度中，'Real Madrid' 的热度是否会比 'Barcelona' 高出至少 1.5 倍？",
     "reddit_resolution_source": "Google Trends (Philippines)",
-    "reddit_resolution_url": "https://trends.google.com/trends",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://trends.google.com/trends"
   },
   {
     "name_en": "PBA Commissioner's Cup Semifinals",
@@ -361,10 +358,7 @@ const groups = [
     "reddit_question_en": "Will the PBA official Facebook page post at least 5 separate promotional graphics or posts containing the word 'Ginebra' within the 24 hours leading up to Game 3?",
     "reddit_question_zh": "在第 3 场比赛开赛前的 24 小时内，PBA 官方 Facebook 页面是否会发布至少 5 条包含 'Ginebra' 词条的独立宣传图文或帖子？",
     "reddit_resolution_source": "PBA Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/pba.official",
-    "prob": 60,
-    "prob_reason_zh": "国王队在关键季后赛中经验更丰富。",
-    "prob_reason_en": "Ginebra has deep playoff experience."
+    "reddit_resolution_url": "https://www.facebook.com/pba.official"
   },
   {
     "name_en": "United States National Security and Foreign Policy",
@@ -429,10 +423,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine News Agency (PNA) publish more than 3 articles containing the word 'White House' in a single day between May 24 and May 31, 2026?",
     "reddit_question_zh": "在 2026 年 5 月 24 日至 31 日期间，菲律宾国家通讯社（PNA）是否会在单日内发布超过 3 篇包含 'White House' 词条的文章？",
     "reddit_resolution_source": "Philippine News Agency",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "No Filipinos reported infected with Ebola in Congo, Ugand…",
@@ -483,10 +474,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Health (DOH) official Facebook page post any public health advisory mentioning 'Ebola' before June 30, 2026?",
     "reddit_question_zh": "菲律宾卫生部（DOH）官方 Facebook 页面在 2026 年 6 月 30 日前是否会发布任何提及 'Ebola' 的公共卫生公告？",
     "reddit_resolution_source": "Department of Health Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/OfficialDOHgov",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/OfficialDOHgov"
   },
   {
     "name_en": "79th World Health Assembly: Maternal Deaths Set to Miss 2…",
@@ -537,10 +525,7 @@ const groups = [
     "reddit_question_en": "Will the DOH official Facebook page publish any press release containing both 'World Health Assembly' and 'maternal' by June 15, 2026?",
     "reddit_question_zh": "菲律宾卫生部（DOH）官方 Facebook 页面在 2026 年 6 月 15 日前是否会发布同时包含 'World Health Assembly' 和 'maternal' 的新闻声明？",
     "reddit_resolution_source": "Department of Health Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/OfficialDOHgov",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/OfficialDOHgov"
   },
   {
     "name_en": "Scripps to Host Free Cancer Survivorship Events in June",
@@ -591,10 +576,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Palarong Pambansa Multi-Sport Event Preparations",
@@ -645,10 +627,7 @@ const groups = [
     "reddit_question_en": "Will the DepEd official Facebook page post any update containing 'Agusan del Sur' on at least 3 separate days between May 24 and June 15, 2026?",
     "reddit_question_zh": "在 2026 年 5 月 24 日至 6 月 15 日期间，菲律宾教育部（DepEd）官方 Facebook 页面是否会在至少 3 个不同的日子里发布包含 'Agusan del Sur' 的更新？",
     "reddit_resolution_source": "DepEd Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/DepartmentOfEducation.PH",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/DepartmentOfEducation.PH"
   },
   {
     "name_en": "A virtual tour of the World Cup 2026 stadiums",
@@ -699,10 +678,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Rico Verhoeven coach Peter Fury calls for Oleksandr Usyk…",
@@ -753,10 +729,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "TECNO launches POVA Curve 2 5G in Philippines: Slimmest 5…",
@@ -807,10 +780,7 @@ const groups = [
     "reddit_question_en": "Will the TECNO Mobile Philippines official Facebook page post any promotional material containing the exact battery capacity '8000mAh' at least 5 times between May 24 and June 10, 2026?",
     "reddit_question_zh": "在 2026 年 5 月 24 日至 6 月 10 日期间，TECNO Mobile 菲律宾官方 Facebook 页面是否会发布至少 5 次包含 '8000mAh' 确切电池容量的宣传材料？",
     "reddit_resolution_source": "TECNO Mobile Philippines Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/TECNOMobilePH",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/TECNOMobilePH"
   },
   {
     "name_en": "Infinix GT 50 Pro launch date, pre-order in PH confirmed",
@@ -861,10 +831,7 @@ const groups = [
     "reddit_question_en": "Will the Infinix Mobile Philippines official Facebook page launch pinned posts for the 'GT 50 Pro' pre-order before June 15, 2026?",
     "reddit_question_zh": "Infinix 菲律宾官方 Facebook 页面是否会在 2026 年 6 月 15 日前将 'GT 50 Pro' 预售相关的帖子置顶？",
     "reddit_resolution_source": "Infinix Mobile Philippines Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/InfinixMobilePH",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/InfinixMobilePH"
   },
   {
     "name_en": "soundcore launches AI-powered Liberty 5 Pro earbuds in PH",
@@ -915,10 +882,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "West Philippine Sea Island Development and Sovereignty",
@@ -969,10 +933,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Foreign Affairs (DFA) publish any official statement or press release on dfa.gov.ph containing the words 'Pag-asa Island' between May 24 and June 30, 2026?",
     "reddit_question_zh": "菲律宾外交部（DFA）官方网站在 2026 年 5 月 24 日至 6 月 30 日期间，是否会发布任何包含 'Pag-asa Island' 词条的官方声明或新闻稿？",
     "reddit_resolution_source": "Department of Foreign Affairs Press Releases",
-    "reddit_resolution_url": "https://dfa.gov.ph",
-    "prob": 70,
-    "prob_reason_zh": "基础设施建设稳步推进，预计年底前完工。",
-    "prob_reason_en": "Infrastructure upgrades are ongoing."
+    "reddit_resolution_url": "https://dfa.gov.ph"
   },
   {
     "name_en": "Corporate AI Washing and Rebranding Controversies",
@@ -1023,10 +984,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine Securities and Exchange Commission (SEC) publish any advisory or circular containing the term 'AI washing' or 'artificial intelligence' in relation to corporate disclosure rules by December 31, 2026?",
     "reddit_question_zh": "菲律宾证券交易委员会（SEC）在 2026 年 12 月 31 日前，是否会发布任何在公司披露规则中包含 'AI washing'（AI虚假宣传）或 'artificial intelligence'（人工智能）术语的建议或通告？",
     "reddit_resolution_source": "Philippine Securities and Exchange Commission",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kim Soo-hyun Defamation and AI Faked Evidence Case",
@@ -1077,10 +1035,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Manhunt for Senator Bato dela Rosa",
@@ -1175,10 +1130,7 @@ const groups = [
     "reddit_question_en": "Will the official Facebook page of the National Bureau of Investigation (OfficialNBI) post a press release or statement containing the name 'Bato' or 'dela Rosa' before June 15, 2026?",
     "reddit_question_zh": "菲律宾国家调查局（NBI）官方 Facebook 页面在 2026 年 6 月 15 日前，是否会发布包含 'Bato' 或 'dela Rosa' 名字的新闻稿或声明？",
     "reddit_resolution_source": "National Bureau of Investigation Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/OfficialNBI",
-    "prob": 35,
-    "prob_reason_zh": "政治庇护和复杂局势降低落网概率。",
-    "prob_reason_en": "Political protection limits arrest."
+    "reddit_resolution_url": "https://www.facebook.com/OfficialNBI"
   },
   {
     "name_en": "Philippine Urban Environmental Vulnerability and Flood Preparedness",
@@ -1273,10 +1225,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of PAGASA (@dost_pagasa) post any tweet containing the hashtag '#LaNina' or '#LaNiña' in the month of June 2026?",
     "reddit_question_zh": "PAGASA 官方 X 账号（@dost_pagasa）在 2026 年 6 月内是否会发布包含标签 '#LaNina' 或 '#LaNiña' 的推文？",
     "reddit_resolution_source": "PAGASA Official X",
-    "reddit_resolution_url": "https://x.com/dost_pagasa",
-    "prob": 85,
-    "prob_reason_zh": "历史规律显示雨季通常在六月中前开始。",
-    "prob_reason_en": "Rainy season usually starts mid-June."
+    "reddit_resolution_url": "https://x.com/dost_pagasa"
   },
   {
     "name_en": "2026 Roland Garros Tennis Tournament",
@@ -1341,10 +1290,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gareth Southgate BBC One Drama Adaptation 'Dear England'",
@@ -1395,10 +1341,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cannes Film Festival Contenders and Technology Debates",
@@ -1477,10 +1420,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Senate Leadership Transition and Alliances",
@@ -1575,10 +1515,7 @@ const groups = [
     "reddit_question_en": "Will the official Facebook page of Senator Alan Peter Cayetano publish any post containing the word 'Pokemon' or 'Pokémon' between May 24 and June 30, 2026?",
     "reddit_question_zh": "参议员阿兰·彼得·卡耶塔诺（Alan Peter Cayetano）的官方 Facebook 页面在 2026 年 5 月 24 日至 6 月 30 日期间，是否会发布任何包含 'Pokemon' 或 'Pokémon' 词条的帖子？",
     "reddit_resolution_source": "Senator Alan Peter Cayetano Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/alanpetercayetano",
-    "prob": 25,
-    "prob_reason_zh": "参议院领导层更迭复杂，不确定性大。",
-    "prob_reason_en": "Senate leadership shifts are volatile."
+    "reddit_resolution_url": "https://www.facebook.com/alanpetercayetano"
   },
   {
     "name_en": "Asian Entertainment, Box Office, and Concert Tours",
@@ -1657,10 +1594,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA Playoffs: Eastern and Western Conferences",
@@ -1725,10 +1659,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 35,
-    "prob_reason_zh": "尼克斯面临强劲对手，晋级决赛不易。",
-    "prob_reason_en": "Tough path to Finals for the Knicks."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Plunder Complaint Against Rodante Marcoleta and Mike Defensor",
@@ -1795,10 +1726,7 @@ const groups = [
     "reddit_question_en": "Will the Office of the Ombudsman's official website media section publish any update mentioning the name 'Marcoleta' on or before September 30, 2026?",
     "reddit_question_zh": "菲律宾监察专员公署（Ombudsman）官方网站媒体板块在 2026 年 9 月 30 日前是否会发布提及 'Marcoleta' 名字的任何更新？",
     "reddit_resolution_source": "Office of the Ombudsman Press Releases",
-    "reddit_resolution_url": null,
-    "prob": 40,
-    "prob_reason_zh": "政治敏感案件的调查和起诉程序漫长。",
-    "prob_reason_en": "Political investigations take time."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Wordle and NYT Strands Daily Puzzles",
@@ -1863,10 +1791,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Macroeconomic Forecasts and Financial Pressures",
@@ -1931,10 +1856,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Taiwan-Philippine Smart Healthcare Cooperation",
@@ -1985,10 +1907,7 @@ const groups = [
     "reddit_question_en": "Will the DOH official website publish any press release containing both 'Taiwan' and 'health' (or 'healthcare') by December 31, 2026?",
     "reddit_question_zh": "菲律宾卫生部（DOH）官方网站在 2026 年 12 月 31 日前是否会发布同时包含 'Taiwan' 和 'health'（或 'healthcare'）的新闻稿？",
     "reddit_resolution_source": "Department of Health Press Releases",
-    "reddit_resolution_url": "https://doh.gov.ph",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://doh.gov.ph"
   },
   {
     "name_en": "Southeast Asian Energy Transition Finance and Challenges",
@@ -2067,10 +1986,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Finance (DOF) official website publish any press release mentioning 'energy transition' and 'HSBC' by December 31, 2026?",
     "reddit_question_zh": "菲律宾财政部（DOF）官方网站在 2026 年 12 月 31 日前是否会发布提及 'energy transition'（能源转型）和 'HSBC'（汇丰）的新闻稿？",
     "reddit_resolution_source": "Department of Finance Press Releases",
-    "reddit_resolution_url": "https://www.dof.gov.ph",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.dof.gov.ph"
   },
   {
     "name_en": "Sony Xperia 1 VIII Smartphone Reception",
@@ -2121,10 +2037,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tech Deals and Memorial Day Sales",
@@ -2203,10 +2116,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "James Webb Space Telescope Star Cluster Observations",
@@ -2257,10 +2167,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Smart Glasses and Foldable Device Launches",
@@ -2325,10 +2232,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "2026 Montreal Grand Prix F1 and F2 Races",
@@ -2435,10 +2339,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 55,
-    "prob_reason_zh": "勒克莱尔实力强劲，但加拿大站多雨。",
-    "prob_reason_en": "Unpredictable Canadian GP weather."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WWE Saturday Night's Main Event Results",
@@ -2489,10 +2390,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "China Chang'e-7 Moon South Pole Lunar Mission",
@@ -2543,10 +2441,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Apple Gen AI Integration and Market Launches",
@@ -2611,10 +2506,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 75,
-    "prob_reason_zh": "苹果急需在WWDC展示其AI战略进展。",
-    "prob_reason_en": "Apple needs to showcase its AI at WWDC."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Summer 2026 Fashion Bag Trends",
@@ -2665,10 +2557,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pep Guardiola Future and Man City Departure Plans",
@@ -2733,10 +2622,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "The White Lotus Season 4 Casting and Location News",
@@ -2787,10 +2673,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Book Industry and Actor Death Investigations",
@@ -2855,10 +2738,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "GoPro Action Camera Market and Takeover Speculation",
@@ -2909,10 +2789,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Early Complex Life Lived In Oxygenated Seas, Challenging…",
@@ -2963,10 +2840,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Scientists discover giant sea predator Tylosaurus rex tha…",
@@ -3017,10 +2891,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google Gemini and Android Software Updates",
@@ -3085,10 +2956,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "AI-Powered Cryptocurrency Trading Bot Launches",
@@ -3139,10 +3007,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 65,
-    "prob_reason_zh": "临近8万美元关口，突破概率较高。",
-    "prob_reason_en": "Strong momentum makes $85k likely."
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Researchers finally discovered why gold never rusts",
@@ -3193,10 +3058,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "From moisture to electricity: Scientists show off how kit…",
@@ -3247,10 +3109,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Power Supply and Electricity Rates Developments",
@@ -3315,10 +3174,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Energy (DOE) official Facebook page post any infographic containing the word 'Red Alert' or 'Yellow Alert' for the Visayas Grid on any day between May 25, 2026, and June 30, 2026?",
     "reddit_question_zh": "在 2026 年 5 月 25 日至 6 月 30 日期间，菲律宾能源部（DOE）官方 Facebook 页面是否会在任何一天发布包含米沙鄢电网（Visayas Grid）'Red Alert'（红色警报）或 'Yellow Alert'（黄色警报）字样的信息图表？",
     "reddit_resolution_source": "Department of Energy Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/doe.gov.ph",
-    "prob": 45,
-    "prob_reason_zh": "维萨亚斯电网虽有风险，目前供应尚可。",
-    "prob_reason_en": "Visayas grid risks remain elevated."
+    "reddit_resolution_url": "https://www.facebook.com/doe.gov.ph"
   },
   {
     "name_en": "Vice President Sara Duterte Impeachment Trial",
@@ -3385,10 +3241,7 @@ const groups = [
     "reddit_question_en": "Will the official Facebook page of the Office of the Vice President of the Philippines (OVP) publish any statement or video containing the word 'impeachment' or 'impeach' between May 24 and June 30, 2026?",
     "reddit_question_zh": "菲律宾副总统办公室（OVP）官方 Facebook 页面在 2026 年 5 月 24 日至 6 月 30 日期间，是否会发布任何包含 'impeachment' 或 'impeach'（弹劾）词条的声明或视频？",
     "reddit_resolution_source": "Office of the Vice President Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/OVPPH",
-    "prob": 60,
-    "prob_reason_zh": "政治博弈加剧，众议院弹劾推进概率大。",
-    "prob_reason_en": "Rising political friction drives case."
+    "reddit_resolution_url": "https://www.facebook.com/OVPPH"
   },
   {
     "name_en": "Manila Municipal and Social Relief Programs",
@@ -3453,10 +3306,7 @@ const groups = [
     "reddit_question_en": "Will the official Facebook page of the Manila Public Information Office (Manila PIO) post any updates containing 'Parola' and 'aid' or 'ayuda' at least 5 times between May 24 and June 15, 2026?",
     "reddit_question_zh": "在 2026 年 5 月 24 日至 6 月 15 日期间，马尼拉公共信息办公室（Manila PIO）官方 Facebook 页面是否会发布至少 5 次包含 'Parola' 且含有 'aid' 或 'ayuda'（援助）的更新？",
     "reddit_resolution_source": "Manila Public Information Office Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/ManilaPIO",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/ManilaPIO"
   },
   {
     "name_en": "Philippine Grand Lotto Jackpot Winners",
@@ -3507,10 +3357,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine Charity Sweepstakes Office (PCSO) official Facebook page announce a jackpot winner for the Grand Lotto 6/55 or Ultra Lotto 6/58 on any draw date in June 2026?",
     "reddit_question_zh": "菲律宾慈善抽奖办公室（PCSO）官方 Facebook 页面是否会在 2026 年 6 月的任何抽奖日中宣布 Grand Lotto 6/55 或 Ultra Lotto 6/58 的头奖中奖者？",
     "reddit_resolution_source": "PCSO Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/pcsoofficialsocialmedia",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://www.facebook.com/pcsoofficialsocialmedia"
   },
   {
     "name_en": "NASA Restructuring for Artemis Lunar Missions",
@@ -3561,10 +3408,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Climate Crisis Actions and Scientific Projections",
@@ -3643,10 +3487,7 @@ const groups = [
     "reddit_question_en": "Will the Department of Foreign Affairs (DFA) official website publish a press release containing both 'International Court of Justice' (or 'ICJ') and 'climate' between May 24 and June 30, 2026?",
     "reddit_question_zh": "菲律宾外交部（DFA）官方网站在 2026 年 5 月 24 日至 6 月 30 日期间，是否会发布包含 'International Court of Justice'（或 'ICJ'）和 'climate'（气候）词条的新闻稿？",
     "reddit_resolution_source": "Department of Foreign Affairs Press Releases",
-    "reddit_resolution_url": "https://dfa.gov.ph",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://dfa.gov.ph"
   },
   {
     "name_en": "Innovative Tech Gadgets and Charging Accessories",
@@ -3711,10 +3552,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NASA Deep Space and Solar Activity Observations",
@@ -3779,10 +3617,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Investigation into the Philippine Senate Shooting Incident",
@@ -3847,10 +3682,7 @@ const groups = [
     "reddit_question_en": "Will the official X handle of the Philippine Senate (@senatePH) post any tweet containing the word 'OSAA' or 'shooting' between May 24 and June 15, 2026?",
     "reddit_question_zh": "菲律宾参议院官方 X 账号（@senatePH）在 2026 年 5 月 24 日至 6 月 15 日期间，是否会发布包含 'OSAA'（警卫官办公室）或 'shooting'（枪击）词条的推文？",
     "reddit_resolution_source": "Philippine Senate Official X",
-    "reddit_resolution_url": "https://x.com/senatePH",
-    "prob": 48,
-    "prob_reason_zh": "内部调查复杂，对国会人员指控较谨慎。",
-    "prob_reason_en": "Internal Senate probes are delicate."
+    "reddit_resolution_url": "https://x.com/senatePH"
   },
   {
     "name_en": "Philippine President Marcos State Visit and Japanese Decorations",
@@ -3901,10 +3733,7 @@ const groups = [
     "reddit_question_en": "Will the Presidential Communications Office (PCO) website publish a press release containing both 'Marcos' and 'Japan' and 'decoration' (or 'award' / 'honor') between May 24 and June 30, 2026?",
     "reddit_question_zh": "总统府通信办公室（PCO）官方网站在 2026 年 5 月 24 日至 6 月 30 日期间，是否会发布同时包含 'Marcos'、'Japan' 和 'decoration'（或 'award' / 'honor'）的新闻稿？",
     "reddit_resolution_source": "Presidential Communications Office Press Releases",
-    "reddit_resolution_url": "https://pco.gov.ph",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": "https://pco.gov.ph"
   },
   {
     "name_en": "International Corporate and Brand Performance Developments",
@@ -3983,10 +3812,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesia Commodity Export Monopoly Plans",
@@ -4037,10 +3863,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Innovative Fuel-Saving Lunar Trajectory Calculations",
@@ -4091,10 +3914,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Science and Engineering Fair Student Awards",
@@ -4145,10 +3965,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pope Leo XIV Governance Guidelines for Lay Movements",
@@ -4199,10 +4016,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Lunar and Jovian Space Science Observations",
@@ -4267,10 +4081,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ASEAN-Canada International Trade and Integration Meetings",
@@ -4321,10 +4132,7 @@ const groups = [
     "reddit_question_en": "Will the official ASEAN Secretariat website (asean.org) publish an article containing the phrase 'ASEAN-Canada Free Trade Agreement' or 'ACAFTA' between May 24 and June 30, 2026?",
     "reddit_question_zh": "东盟秘书处官方网站（asean.org）在 2026 年 5 月 24 日至 6 月 30 日期间，是否会发布包含 'ASEAN-Canada Free Trade Agreement'（东盟-加拿大自贸协定）或 'ACAFTA' 词组的文章？",
     "reddit_resolution_source": "ASEAN Secretariat Official Website",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Macroeconomic Pressures: Inflation and Peso Depreciation",
@@ -4403,10 +4211,7 @@ const groups = [
     "reddit_question_en": "Will Google Trends search interest in the Philippines for 'dollar to peso' exceed 'inflation' on average for the week of June 1 to June 7, 2026?",
     "reddit_question_zh": "在 2026 年 6 月 1 日至 6 月 7 日当周，菲律宾地区的 Google Trends 平均搜索热度中，'dollar to peso' 的热度是否会超过 'inflation'？",
     "reddit_resolution_source": "Google Trends (Philippines)",
-    "reddit_resolution_url": "https://trends.google.com/trends",
-    "prob": 80,
-    "prob_reason_zh": "汇率已逼近61.75，突破62关口概率高。",
-    "prob_reason_en": "Rate is extremely close to 62.00."
+    "reddit_resolution_url": "https://trends.google.com/trends"
   },
   {
     "name_en": "Philippine Domestic Civil and Electoral Dynamics",
@@ -4471,10 +4276,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Regional Security and Insurgency Incidents",
@@ -4553,10 +4355,7 @@ const groups = [
     "reddit_question_en": "Will the Philippine National Police (PNP) official Facebook page publish any press release containing both 'Basilan' and 'shabu' or 'drug' between May 24 and June 15, 2026?",
     "reddit_question_zh": "菲律宾国家警察（PNP）官方 Facebook 页面在 2026 年 5 月 24 日至 6 月 15 日期间，是否会发布同时包含 'Basilan' 和 'shabu' 或 'drug' 的新闻稿？",
     "reddit_resolution_source": "Philippine National Police Official Facebook",
-    "reddit_resolution_url": "https://www.facebook.com/OfficialPhilippineNationalPolice",
-    "prob": 30,
-    "prob_reason_zh": "彻底清除活跃阵线在年底前难度较大。",
-    "prob_reason_en": "Insurgency clearing takes longer."
+    "reddit_resolution_url": "https://www.facebook.com/OfficialPhilippineNationalPolice"
   }
 ];
 

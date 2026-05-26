@@ -18,6 +18,8 @@
   .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
   .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
   .lang-btn.active { background: #1e2535; color: #fff; }
+  .filter-btn { padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1e2535; border-radius: 8px; background: #161b27; color: #64748b; transition: all 0.15s; }
+  .filter-btn.active { background: #1e2535; color: #e2e8f0; }
 
   .stats { display: flex; gap: 12px; padding: 20px 40px; border-bottom: 1px solid #1e2535; flex-wrap: wrap; }
   .stat { background: #161b27; border: 1px solid #1e2535; border-radius: 8px; padding: 14px 20px; min-width: 110px; }
@@ -26,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -44,6 +46,17 @@
   .badge.drop      { background: #1f2937; color: #6b7280; }
 
   .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .source-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
+  .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
+  .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
+  .source-item .source-name { font-weight: 700; color: #94a3b8; }
+  .source-item.x_grok .source-name { color: #c4b5fd; }
+  .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -51,7 +64,17 @@
   .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
   .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
 
-  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .score-panel { margin-bottom: 14px; border: 1px solid #1e2535; border-radius: 8px; background: #0f1117; overflow: hidden; }
+  .score-panel summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 10px; }
+  .score-panel summary::-webkit-details-marker { display: none; }
+  .score-totals { display: flex; gap: 8px; flex-wrap: wrap; }
+  .score-total-chip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid #273244; border-radius: 999px; padding: 4px 9px; color: #94a3b8; font-size: 11px; font-weight: 700; }
+  .score-total-chip.primary { color: #fbbf24; border-color: #92400e; background: #1f1608; }
+  .score-total-chip b { color: #fff; font-size: 15px; }
+  .score-expand { color: #64748b; font-size: 11px; }
+  .score-section { padding: 0 10px 10px; }
+  .score-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.4px; margin: 6px 0; }
+  .rstuh { display: flex; gap: 6px; margin-bottom: 8px; }
   .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
   .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
   .dim .score  { font-size: 16px; font-weight: 700; }
@@ -66,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -99,6 +126,7 @@
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
+    <button id="filter-toggle" class="filter-btn" onclick="toggleFiltered()"></button>
   </div>
 </header>
 
@@ -114,6 +142,7 @@
 
 <script>
 let currentLang = "zh";
+let showFiltered = false;
 
 const i18n = {
   zh: {
@@ -124,7 +153,15 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
+    source_mix: "来源",
+    expand_scores: "展开",
+    rstuh: "市场结构",
+    bdlt: "下注欲望",
+    show_filtered: "显示过滤",
+    hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -135,7 +172,15 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
+    source_mix: "Sources",
+    expand_scores: "Expand",
+    rstuh: "Market quality",
+    bdlt: "Bet demand",
+    show_filtered: "Show filtered",
+    hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
@@ -150,13 +195,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "The new administration faces rising fiscal deficits and potential institutional restructuring regarding commodity exports.",
     "narrative_zh": "新政府面临日益增加的财政赤字，并可能针对大宗商品出口机构进行重组。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian budget deficit exceed 1% of GDP by the end of Q3 2026?",
     "question_en": "Will the Indonesian budget deficit exceed 1% of GDP by the end of Q3 2026?",
     "question_zh": "到2026年第三季度末，印尼财政赤字会超过GDP的1%吗？",
-    "source": "Ministry of Finance (Kemenkeu)"
+    "source": "Ministry of Finance (Kemenkeu)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian National Security Deployments",
@@ -167,13 +227,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "The Army Chief of Staff is proposing to station a TNI battalion in every district, signaling a shift in internal security strategy.",
     "narrative_zh": "陆军参谋长提议在每个区部署一个TNI营，标志着国内安全战略的转变。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian military successfully deploy a full battalion in at least 50% of regencies by year-end 2026?",
     "question_en": "Will the Indonesian military successfully deploy a full battalion in at least 50% of regencies by year-end 2026?",
     "question_zh": "到2026年底，印尼军队是否能在至少50%的县/区内部署一个完整营？",
-    "source": "TNI official press releases"
+    "source": "TNI official press releases",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Rupiah and Economic Stability",
@@ -184,13 +259,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Concerns regarding currency depreciation and broader economic pressure on the Indonesian market.",
     "narrative_zh": "对货币贬值以及印尼市场面临的更广泛经济压力的担忧。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the USD/IDR exchange rate close above 16,500 on average in June 2026?",
     "question_en": "Will the USD/IDR exchange rate close above 16,500 on average in June 2026?",
     "question_zh": "2026年6月美元兑印尼盾平均汇率是否会收于16,500以上？",
-    "source": "Bank Indonesia"
+    "source": "Bank Indonesia",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Jokowi Political Influence",
@@ -201,13 +291,28 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 0,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Rumors and signs of former President Jokowi attempting to exert influence on the current administration.",
     "narrative_zh": "关于前总统佐科试图对现任政府施加影响的传闻与迹象。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
-    "source": null
+    "source": null,
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Energy Security and Infrastructure",
@@ -218,13 +323,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Monitoring fuel stock levels and urban infrastructure challenges in Jakarta.",
     "narrative_zh": "监测燃料库存水平以及雅加达面临的城市基础设施挑战。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will Pertalite national stock days fall below 10 days at any point in Q3 2026?",
     "question_en": "Will Pertalite national stock days fall below 10 days at any point in Q3 2026?",
     "question_zh": "2026年第三季度期间，Pertalite国家库存天数是否会跌破10天？",
-    "source": "Pertamina/ESDM"
+    "source": "Pertamina/ESDM",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Relations and Gaza",
@@ -235,13 +355,28 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 0,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Indonesia's diplomatic stance on the Gaza conflict and its exclusion from China-ASEAN regional infrastructure projects.",
     "narrative_zh": "印尼在加沙冲突上的外交立场，及其被中国-东盟区域基础设施项目排除在外的情况。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will Indonesia formally sign a new bilateral infrastructure agreement with China before the end of 2026?",
     "question_en": "Will Indonesia formally sign a new bilateral infrastructure agreement with China before the end of 2026?",
     "question_zh": "印尼是否会在2026年底前与中国正式签署新的双边基础设施协议？",
-    "source": "Ministry of Foreign Affairs"
+    "source": "Ministry of Foreign Affairs",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Public Health and Disease",
@@ -252,13 +387,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Calls for intensified awareness and caution regarding Hantavirus in Indonesia.",
     "narrative_zh": "呼吁加强印尼对汉坦病毒的意识与防范。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian Ministry of Health issue a nationwide health alert for Hantavirus by year-end 2026?",
     "question_en": "Will the Indonesian Ministry of Health issue a nationwide health alert for Hantavirus by year-end 2026?",
     "question_zh": "印尼卫生部是否会在2026年底前发布针对汉坦病毒的全国性健康预警？",
-    "source": "Ministry of Health (Kemenkes)"
+    "source": "Ministry of Health (Kemenkes)",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sports and International Events",
@@ -269,13 +419,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Performance of Indonesian athletes in international badminton and football, and global football market rumors.",
     "narrative_zh": "印尼运动员在羽毛球和足球上的表现，以及全球足球市场的转会传闻。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Indonesian National Football Team advance to the next round of the World Cup qualifiers in the next match?",
     "question_en": "Will the Indonesian National Football Team advance to the next round of the World Cup qualifiers in the next match?",
     "question_zh": "印尼国家足球队是否能在下一场比赛中晋级世界杯预选赛下一阶段？",
-    "source": "FIFA/PSSI"
+    "source": "FIFA/PSSI",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Climate and Weather Trends",
@@ -286,13 +451,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "Impact of El Nino weather patterns on Indonesian agriculture and climate stability.",
     "narrative_zh": "厄尔尼诺气候模式对印尼农业及气候稳定性的影响。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will BMKG declare an El Nino climate event active in Indonesia during Q3 2026?",
     "question_en": "Will BMKG declare an El Nino climate event active in Indonesia during Q3 2026?",
     "question_zh": "印尼气象、气候和地球物理局（BMKG）是否会宣布2026年第三季度印尼处于厄尔尼诺气候事件中？",
-    "source": "BMKG"
+    "source": "BMKG",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tech Industry and Consumer Trends",
@@ -303,13 +483,28 @@ const groups = [
     "T": 0,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 0,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "Samsung product strategy shifting, specifically concerning the discontinuation of the Z Flip line.",
     "narrative_zh": "三星产品策略的转变，特别涉及Z Flip系列的停产。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will Samsung officially announce the discontinuation of the Galaxy Z Flip line before 2027?",
     "question_en": "Will Samsung officially announce the discontinuation of the Galaxy Z Flip line before 2027?",
     "question_zh": "三星是否会在2027年之前正式宣布停止Galaxy Z Flip系列产品？",
-    "source": "Samsung official announcements"
+    "source": "Samsung official announcements",
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -340,10 +535,9 @@ function getDisposition(g) {
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
-  const da = getDisposition(a), db = getDisposition(b);
-  if (order[da] !== order[db]) return order[da] - order[db];
-  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+  const bdltDiff = bdltTotal(b) - bdltTotal(a);
+  if (bdltDiff !== 0) return bdltDiff;
+  return rstuhTotal(b) - rstuhTotal(a);
 });
 
 function renderCards(lang) {
@@ -353,13 +547,33 @@ function renderCards(lang) {
 
   sorted.forEach(g => {
     const disp = getDisposition(g);
-    const total = g.R + g.S + g.T + g.U + g.H;
+    if (disp === "drop" && !showFiltered) return;
+    const total = rstuhTotal(g);
+    const bdlt = normalizeBDLT(g);
+    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
+    const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
+    const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
+      `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
+    ).join("");
+    const sourceItems = (g.source_examples || []).slice(0, 4).map(item => {
+      const title = lang === "zh" ? (item.title_zh || item.title_en) : (item.title_en || item.title_zh);
+      return `<div class="source-item ${item.source}">
+        <span class="source-name">${sourceLabel(item.source)}</span>
+        <span class="source-title" title="${escapeAttr(title)}">${escapeHtml(title)}</span>
+      </div>`;
+    }).join("");
 
     const card = document.createElement("div");
     card.className = `card ${disp}`;
@@ -372,7 +586,10 @@ function renderCards(lang) {
         <span class="badge ${disp}">${t.badge[disp]}</span>
       </div>
 
-      <p class="narrative">${narr}</p>
+      ${showNarrative ? `<p class="narrative">${escapeHtml(narr)}</p>` : ""}
+
+      ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
+      ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
 
       <div class="density-bar">
         <div class="label">${t.density}</div>
@@ -380,13 +597,33 @@ function renderCards(lang) {
         <div class="count">${densityCount}</div>
       </div>
 
-      <div class="rstuh">
-        ${["R","S","T","U","H"].map((l,i) => {
-          const s = [g.R,g.S,g.T,g.U,g.H][i];
-          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
-        }).join("")}
-        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
-      </div>
+      <details class="score-panel">
+        <summary>
+          <span class="score-totals">
+            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
+          </span>
+          <span class="score-expand">${t.expand_scores}</span>
+        </summary>
+        <div class="score-section">
+          <div class="score-label">${t.bdlt}</div>
+          <div class="rstuh">
+            ${["B","D","L","T"].map(l => {
+              const s = bdlt[l] || 0;
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+          </div>
+          <div class="score-label">${t.rstuh}</div>
+          <div class="rstuh">
+            ${["R","S","T","U","H"].map((l,i) => {
+              const s = [g.R,g.S,g.T,g.U,g.H][i];
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+          </div>
+        </div>
+      </details>
 
       ${g.bettable && question ? `
       <div class="question-box">
@@ -405,9 +642,81 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });
+}
+
+function rstuhTotal(g) {
+  return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
+}
+
+function normalizeBDLT(g) {
+  const bdlt = g.BDLT || {};
+  return {
+    B: Number.isInteger(bdlt.B) ? bdlt.B : 0,
+    D: Number.isInteger(bdlt.D) ? bdlt.D : 0,
+    L: Number.isInteger(bdlt.L) ? bdlt.L : 0,
+    T: Number.isInteger(bdlt.T) ? bdlt.T : 0,
+  };
+}
+
+function bdltTotal(g) {
+  const bdlt = normalizeBDLT(g);
+  return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
+}
+
+function shouldShowNarrative(g, disp, narr) {
+  if (!narr) return false;
+  if (disp !== "drop") return true;
+  if (g.density > 1) return true;
+  const lowered = String(narr).toLowerCase();
+  if (lowered.startsWith("google news groups this under")) return false;
+  const first = (g.source_examples || [])[0] || {};
+  const titles = [first.title_en, first.title_zh, g.name_en, g.name_zh]
+    .filter(Boolean)
+    .map(value => String(value).slice(0, 72).toLowerCase());
+  return !titles.some(title => title && lowered.includes(title));
+}
+
+function sourceLabel(source) {
+  return {
+    google_news: "Google News",
+    x_grok: "Grok/X"
+  }[source] || source || "SourceIntel";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
+}
+
+function updateFilterButton() {
+  const btn = document.getElementById("filter-toggle");
+  btn.textContent = showFiltered ? i18n[currentLang].hide_filtered : i18n[currentLang].show_filtered;
+  btn.classList.toggle("active", showFiltered);
+}
+
+function toggleFiltered() {
+  showFiltered = !showFiltered;
+  updateFilterButton();
+  renderCards(currentLang);
 }
 
 function setLang(lang) {
@@ -418,10 +727,12 @@ function setLang(lang) {
   document.querySelectorAll("[data-zh]").forEach(el => {
     el.textContent = el.dataset[lang];
   });
+  updateFilterButton();
   renderCards(lang);
 }
 
 initRegionLinks();
+updateFilterButton();
 renderCards("zh");
 </script>
 

@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,12 +50,13 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -88,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -148,6 +153,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -165,6 +172,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -279,9 +288,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "PT Liga Indonesia Baru",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Persebaya vs Persik Football Match Result",
@@ -329,9 +339,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "PT Liga Indonesia Baru Match Reports",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "European Football Management and Awards",
@@ -449,9 +460,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "English Premier League Official",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "TNI Role Controversy in Anti-Begal Operations",
@@ -499,9 +511,10 @@ const groups = [
     "question_en": "Will the Indonesian Ministry of Defense or TNI Commander officially issue a regulation restricting military personnel from participating in civilian anti-begal operations by December 31, 2026?",
     "question_zh": "印尼国防部或国民军总司令是否会在2026年12月31日前正式出台规定，限制军人参与民事反抢劫行动？",
     "source": "Indonesian Ministry of Defense (Kementerian Pertahanan) official press releases or the Cabinet Secretariat website",
-    "prob": 25,
-    "prob_reason_zh": "因安保需求，政策限制出台概率较低。",
-    "prob_reason_en": "Policy unlikely due to security needs."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Laptop and PC Hardware Launches in Indonesia",
@@ -563,9 +576,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "ASUS Indonesia and Apple Indonesia official retail sites",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Gold Prices and Central Bank Accumulation",
@@ -627,9 +641,10 @@ const groups = [
     "question_en": "Will the London PM gold fix price close above $2,500 per troy ounce on September 30, 2026?",
     "question_zh": "2026年9月30日伦敦下午金定盘价是否会收于每金衡盎司 2,500 美元以上？",
     "source": "London Bullion Market Association (LBMA)",
-    "prob": 85,
-    "prob_reason_zh": "央行强劲购金需求支撑金价维持高位。",
-    "prob_reason_en": "Central bank buying supports gold price."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Finance Ministry Actions and Criticisms",
@@ -693,9 +708,10 @@ const groups = [
     "question_en": "Will Purbaya remain the Minister of Finance of Indonesia as of December 31, 2026?",
     "question_zh": "截至2026年12月31日，Purbaya 是否仍担任印尼财政部长？",
     "source": "Cabinet Secretariat of the Republic of Indonesia (Setkab)",
-    "prob": 75,
-    "prob_reason_zh": "内阁稳定性对市场至关重要。",
-    "prob_reason_en": "Cabinet stability is prioritized."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesia National Team Preparation for FIFA Friendlies",
@@ -743,9 +759,10 @@ const groups = [
     "question_en": "Will the Indonesian Men's National Football Team defeat Oman in their upcoming FIFA Matchday fixture in June 2026?",
     "question_zh": "印尼国家男子足球队是否会在2026年6月的国际友谊赛中击败阿曼？",
     "source": "FIFA.com Match Center",
-    "prob": 35,
-    "prob_reason_zh": "阿曼历史战绩和实力更强。",
-    "prob_reason_en": "Oman is historically stronger."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cristiano Ronaldo Achievements in Saudi Pro League",
@@ -807,9 +824,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Saudi Pro League Official",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Rupiah Depreciation and Central Bank Independence",
@@ -901,9 +919,10 @@ const groups = [
     "question_en": "Will the Bank Indonesia Jakarta Interbank Spot Dollar Rate (JISDOR) weaken past 18,000 IDR per USD at least once before July 31, 2026?",
     "question_zh": "在2026年7月31日之前，印尼央行雅加达银行间即期美元汇率（JISDOR）是否会至少一次跌破1美元兑18,000印尼盾？",
     "source": "Bank Indonesia (BI) official JISDOR reference rate page",
-    "prob": 60,
-    "prob_reason_zh": "央行干预或抵抗贬值，压力巨大。",
-    "prob_reason_en": "BI intervention resists deprecation."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Crude Palm Oil Prices and Export Policies",
@@ -951,9 +970,10 @@ const groups = [
     "question_en": "Will the Indonesian Ministry of Trade raise the CPO reference price or export tax for the June 2026 shipment period?",
     "question_zh": "印尼贸易部是否会调高2026年6月出运期的棕榈油（CPO）参考价格或出口税？",
     "source": "Ministry of Trade (Kementerian Perdagangan) Official Decrees",
-    "prob": 80,
-    "prob_reason_zh": "棕榈油价格回升将自动触发税率上调。",
-    "prob_reason_en": "CPO price rise triggers automatic tax."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "OJK Planned Restrictions on Paylater Credit",
@@ -1001,9 +1021,10 @@ const groups = [
     "question_en": "Will the OJK officially issue a new regulation or circular restricting buy-now-pay-later (BNPL) credit eligibility by December 31, 2026?",
     "question_zh": "印尼金融服务局（OJK）是否会在2026年12月31日前正式颁布限制“先买后付”（BNPL）授信资格的新规或通告？",
     "source": "OJK (Otoritas Jasa Keuangan) Official Website",
-    "prob": 70,
-    "prob_reason_zh": "坏账率上升推动监管机构出台新规。",
-    "prob_reason_en": "High bad debt drives regulatory urgency."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "TikTok Video Download and Quality Tips",
@@ -1051,9 +1072,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Video Game Development, Release Dates and Critiques",
@@ -1129,9 +1151,10 @@ const groups = [
     "question_en": "Will GTA VI be officially released worldwide on or before November 19, 2026?",
     "question_zh": "GTA VI 是否会在2026年11月19日或之前在全球范围内正式发售？",
     "source": "Rockstar Games / Take-Two Interactive official press releases",
-    "prob": 75,
-    "prob_reason_zh": "R星通常会努力按最终窗口期发售。",
-    "prob_reason_en": "Rockstar likely to meet target window."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Surgical Trends and Dietary Supplement Risks",
@@ -1207,9 +1230,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Indonesian Ministry of Health / WHO",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Wearable Smartwatch Launches in Indonesia",
@@ -1271,9 +1295,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Xiaomi and Realme Indonesia official channels",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Smartphone and Mobile Device Hardware Launches",
@@ -1377,9 +1402,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Samsung Indonesia and HMD Global official announcements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Danantara BUMN Restructuring and Resource Policies",
@@ -1457,9 +1483,10 @@ const groups = [
     "question_en": "Will state-owned enterprise PT INTI be officially declared closed or liquidated by Danantara by December 31, 2026?",
     "question_zh": "国企 PT INTI 是否会在2026年12月31日前被 Danantara 正式宣布关闭或清算？",
     "source": "Ministry of BUMN (Kementerian BUMN) or Cabinet Secretariat official announcements",
-    "prob": 40,
-    "prob_reason_zh": "国企清算程序漫长，面临法律障碍。",
-    "prob_reason_en": "State enterprise liquidation is slow."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Electric and Hybrid Vehicle Market Expansion",
@@ -1535,9 +1562,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "GAIKINDO (Gabungan Industri Kendaraan Bermotor Indonesia)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Digital Infrastructure and AI Cooperation",
@@ -1599,9 +1627,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Kementerian Komunikasi dan Informatika (Kominfo)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prehistoric Paleontology and Fossil Discoveries",
@@ -1663,9 +1692,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Nature Portfolio",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Linux Kernel Bug Management and AI Challenges",
@@ -1713,9 +1743,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Linux Kernel Mailing List",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BlackBerry Pivot to Cybersecurity Hardware",
@@ -1763,9 +1794,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "BlackBerry Investor Relations",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Smartphone System Memory and App Management",
@@ -1813,9 +1845,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ryan Gosling Casting Dismissal Controversy",
@@ -1863,9 +1896,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Official film industry trade archives / IMDb",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google and Meta Smart Glasses Competition",
@@ -1913,9 +1947,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Canalys or IDC wearable market reports",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BGN Chief Regular Hajj Pilgrimage Path",
@@ -1963,9 +1998,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Kementerian Agama (Kemenag) official pilgrim registration logs",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "China Coal Mine Explosion Disaster",
@@ -2013,9 +2049,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Xinhua News Agency",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Yamaha Finn Fuel Efficiency Performance",
@@ -2063,9 +2100,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Yamaha Motor Thailand",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prabowo-Gibran Administration Internal and Public Criticisms",
@@ -2143,9 +2181,10 @@ const groups = [
     "question_en": "Will President Prabowo's public approval rating in a nationwide poll by Indikator Politik Indonesia fall below 60% before November 1, 2026?",
     "question_zh": "在2026年11月1日前，Indikator Politik Indonesia 公布的全国民调中，总统普拉博沃的公众支持率是否会低于60%？",
     "source": "Indikator Politik Indonesia official survey releases",
-    "prob": 35,
-    "prob_reason_zh": "初始高支持率通常能提供缓冲空间。",
-    "prob_reason_en": "High base approval buffers fast drops."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Public Health Standards and Disease Risks",
@@ -2235,9 +2274,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Ministry of Health of Indonesia (Kemenkes)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BPOM Toxic Cosmetics and Herbal Products Warning",
@@ -2285,9 +2325,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "BPOM RI (Badan Pengawas Obat dan Makanan)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PT Vale Nickel ESG Campaign Concerns",
@@ -2335,9 +2376,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Ministry of Energy and Mineral Resources (Kementerian ESDM)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "MotoGP Race Incidents and Rider Speculation",
@@ -2399,9 +2441,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "MotoGP.com",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Gerindra Proposed Village Cinema Funding Scheme",
@@ -2449,9 +2492,10 @@ const groups = [
     "question_en": "Will the Indonesian House of Representatives (DPR) formally approve the allocation of funds for the '1,000 Village Cinemas' program in the APBN 2027 budget by December 31, 2026?",
     "question_zh": "印尼国会（DPR）是否会在2026年12月31日前正式批准在2027财年国家预算（APBN 2027）中为“1000个乡村电影院”项目拨付资金？",
     "source": "Ministry of Finance (Kemenkeu) APBN 2027 official fiscal documentation or the House of Representatives (DPR RI) portal",
-    "prob": 15,
-    "prob_reason_zh": "财政预算紧张，面临其他优先项目。",
-    "prob_reason_en": "Budget constraints limit pet projects."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pertamina Clarifies Rumored Pertalite Fuel Restrictions",
@@ -2499,9 +2543,10 @@ const groups = [
     "question_en": "Will the Indonesian government officially implement engine-capacity-based restrictions on purchasing subsidized Pertalite on or before September 30, 2026?",
     "question_zh": "印尼政府是否会在2026年9月30日或之前，正式实施基于发动机排量限制购买补贴柴油/汽油（Pertalite）的政策？",
     "source": "Ministry of Energy and Mineral Resources (Kementerian ESDM) official regulations or Pertamina corporate announcements",
-    "prob": 45,
-    "prob_reason_zh": "缩减燃油补贴面临较大的社会阻力。",
-    "prob_reason_en": "Subsidy cuts face high political risk."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Jakarta Sidewalk Bikers Stopped by Children",
@@ -2549,9 +2594,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Dishub DKI Jakarta official reports",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Weekly Horoscopes and Zodiac Forecasts",
@@ -2613,9 +2659,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA Playoffs 2026 Western Conference",
@@ -2663,9 +2710,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "NBA.com",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Westlife Jakarta Concert Ticket Launch",
@@ -2713,9 +2761,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Official ticketing partner website",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tommy Robinson Unite the Kingdom Protests",
@@ -2763,9 +2812,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "UK Metropolitan Police Service",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Chinese Historical Romance TV Dramas",
@@ -2813,9 +2863,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Infectious Disease Outbreaks and Environmental Risks",
@@ -2905,9 +2956,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Dinas Kesehatan Jawa Timur / Jember",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Polda Metro Jaya Police Officers Mutasi",
@@ -2955,9 +3007,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Humas Polda Metro Jaya",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Malaysia Masters 2026 Badminton Tournament",
@@ -3005,9 +3058,10 @@ const groups = [
     "question_en": "Will an Indonesian representative win the Men's Singles title at the Malaysia Masters 2026?",
     "question_zh": "印尼选手是否会获得2026年马来西亚羽毛球大师赛男子单打冠军？",
     "source": "Badminton World Federation (BWF) Tournament Software",
-    "prob": 25,
-    "prob_reason_zh": "男单赛场竞争激烈，夺冠难度较大。",
-    "prob_reason_en": "High competition in Men's Singles."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Middle East Geopolitical Conflicts and Hormuz Blockade",
@@ -3111,9 +3165,10 @@ const groups = [
     "question_en": "Will the Strait of Hormuz be officially closed to commercial shipping for more than 48 consecutive hours before August 1, 2026?",
     "question_zh": "在2026年8月1日之前，霍尔木兹海峡是否会因军事冲突或封锁对商业航运连续关闭超过48小时？",
     "source": "United States Energy Information Administration (EIA) or official maritime defense alerts",
-    "prob": 5,
-    "prob_reason_zh": "全面封锁将引发直接冲突，概率极低。",
-    "prob_reason_en": "Full closure would trigger global war."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "FTSE Russell Rebalancing of Indonesian Index",
@@ -3161,9 +3216,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "FTSE Russell Index Announcements",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Masha and Bear Russian Censorship Controversy",
@@ -3211,9 +3267,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kronologi Ayah Virzha Meninggal Dunia",
@@ -3261,9 +3318,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "DetikHOT / Kompas Entertainment",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kata Acha Septriasa soal Dijodohkan dengan Baim Wong",
@@ -3311,9 +3369,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Irfan Hakim Rela Tahan Lelah demi Antar Raffi Ahmad Beran…",
@@ -3361,9 +3420,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "DetikHOT",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Anak Deddy Dores Nekat Jual Bola Mata demi Penuhi Kebutuh…",
@@ -3411,9 +3471,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Keraton Gunung Kawi Viral Usai Didatangi Pesulap Merah, I…",
@@ -3461,9 +3522,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "DetikTravel",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ayu Ting Ting Disebut Lagi Bahagia Banget Usai Diduga Pun…",
@@ -3511,9 +3573,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Giza Pyramid Structural Earthquake Resistance Studies",
@@ -3561,9 +3624,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Nature Scientific Reports",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Diplomatic Measures and Sanctions on Israel",
@@ -3625,9 +3689,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Ministry of Foreign Affairs of South Korea / EU External Action",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Russia-Ukraine College Dormitory Attack",
@@ -3675,9 +3740,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Reuters / United Nations Human Rights Monitoring Mission",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Mental Health Burden Empirical Study",
@@ -3725,9 +3791,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "The Lancet Psychiatry",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bos Intelijen AS Mundur, Sempat Cekcok dengan Trump Soal…",
@@ -3775,9 +3842,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "ODNI.gov / White House Press Office",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tok! Kevin Warsh Resmi Jadi Bos The Fed, Efeknya Bisa Men…",
@@ -3825,9 +3893,10 @@ const groups = [
     "question_en": "Will the Federal Reserve lower the federal funds rate at its June 2026 FOMC meeting?",
     "question_zh": "美联储是否会在2026年6月的联邦公开市场委员会（FOMC）会议上降息？",
     "source": "Federal Reserve Board of Governors FOMC Statement",
-    "prob": 55,
-    "prob_reason_zh": "宏观数据与政策方向存在不确定性。",
-    "prob_reason_en": "Macro data keeps policy direction fluid."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Viral Global Rumors and Odd News Stories",
@@ -3889,9 +3958,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Royal.uk / Associated Press",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Deep Space Astronomy and Cosmology Discoveries",
@@ -4009,9 +4079,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "NASA Jet Propulsion Laboratory",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Infectious Disease Screening Programs in Indonesia",
@@ -4087,9 +4158,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Pemerintah Kota Pekanbaru / Dinkes Bangkalan",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sumatra PLN Power Grid Widespread Blackouts",
@@ -4137,9 +4209,10 @@ const groups = [
     "question_en": "Will PLN report another major power outage affecting at least three provinces in Sumatra for more than 12 continuous hours before September 30, 2026?",
     "question_zh": "在2026年9月30日之前，国家电网（PLN）是否会再次报告苏门答腊至少三个省份发生持续12小时以上的大范围停电事故？",
     "source": "PT PLN (Persero) Wilayah Sumatera official press releases or the Ministry of ESDM public notifications",
-    "prob": 15,
-    "prob_reason_zh": "发生大断电后，电网将重点保障稳定。",
-    "prob_reason_en": "PLN prioritizes stability after failure."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Foreign Maritime Vessel Resource Theft in Indonesian Waters",
@@ -4187,9 +4260,10 @@ const groups = [
     "question_en": "Will the Indonesian Navy or Bakamla officially report the capture of at least three illegal foreign fishing vessels in the Natuna Sea during Q3 2026?",
     "question_zh": "印尼海军或海上安全局（Bakamla）是否会在2026年第三季度正式通报在纳土纳海域抓扣了至少三艘非法外国渔船？",
     "source": "TNI Angkatan Laut (TNI AL) official news portal or Bakamla (Indonesian Coast Guard) press center",
-    "prob": 75,
-    "prob_reason_zh": "常态化巡逻经常会捕获非法船只。",
-    "prob_reason_en": "Regular patrols frequently catch boats."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Early Pemilu 2029 Political Party Fundraising Concerns",
@@ -4237,9 +4311,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Komisi Pemilihan Umum (KPU)",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -4292,6 +4367,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4371,6 +4452,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });

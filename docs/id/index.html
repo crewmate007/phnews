@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,8 +50,8 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
@@ -249,10 +249,7 @@ const groups = [
     "reddit_question_en": "Will US Central Command (CENTCOM) publish at least 5 official press releases mentioning \"Iran\" or \"Iranian\" in June 2026?",
     "reddit_question_zh": "美国中央司令部（CENTCOM）在2026年6月是否会发布至少5份提及“伊朗”或“伊朗的”官方新闻稿？",
     "reddit_resolution_source": "US Central Command Official Press Releases",
-    "reddit_resolution_url": null,
-    "prob": 40,
-    "prob_reason_zh": "局势紧张但直接军事冲突确认仍较克制",
-    "prob_reason_en": "Direct military claims remain rare"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US-Iran Peace Negotiations & Hormuz Opening",
@@ -331,10 +328,7 @@ const groups = [
     "reddit_question_en": "Will the US Maritime Administration (MARAD) have an active maritime advisory for the Persian Gulf or Strait of Hormuz on June 30, 2026?",
     "reddit_question_zh": "美国海运管理局（MARAD）在2026年6月30日是否会存在针对波斯湾或霍尔木兹海峡的有效航行安全警报？",
     "reddit_resolution_source": "US Maritime Administration Advisories",
-    "reddit_resolution_url": null,
-    "prob": 5,
-    "prob_reason_zh": "谈判进展缓慢，一个月内难以达成协议",
-    "prob_reason_en": "Agreement unlikely by end of June"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Oil Market Impact from Iran Conflict",
@@ -399,10 +393,7 @@ const groups = [
     "reddit_question_en": "Will the daily spread between Brent Crude and WTI Crude spot prices exceed $6.00 per barrel on any trading day in September 2026?",
     "reddit_question_zh": "在2026年9月的任何交易日中，布伦特原油与WTI原油现货日内价差是否会超过每桶6.00美元？",
     "reddit_resolution_source": "US Energy Information Administration Spot Prices",
-    "reddit_resolution_url": null,
-    "prob": 35,
-    "prob_reason_zh": "供应增加及经济压力抑制油价持续大涨",
-    "prob_reason_en": "Supply growth caps oil price spikes"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Iran Nuclear & Uranium Transfer Negotiations",
@@ -453,10 +444,7 @@ const groups = [
     "reddit_question_en": "Will the IAEA publish more than 3 official press releases specifically tagged under \"Iran\" between July 1, 2026, and September 30, 2026?",
     "reddit_question_zh": "国际原子能机构（IAEA）在2026年7月1日至9月30日期间，是否会发布超过3份专门标记为“伊朗”的官方新闻稿？",
     "reddit_resolution_source": "IAEA Press Releases",
-    "reddit_resolution_url": null,
-    "prob": 25,
-    "prob_reason_zh": "敏感核材料转让协议面临极高地缘阻力",
-    "prob_reason_en": "Sensitive deal faces political hurdles"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Singapore Open 2026 Badminton Tournament",
@@ -507,10 +495,7 @@ const groups = [
     "reddit_question_en": "Will there be at least two Indonesian players in the quarter-final round of the Men's Singles category at the Singapore Open 2026?",
     "reddit_question_zh": "在2026年新加坡羽毛球公开赛男单八强（四分之一决赛）中，是否会有至少两名印尼选手？",
     "reddit_resolution_source": "BWF Tournament Software",
-    "reddit_resolution_url": null,
-    "prob": 65,
-    "prob_reason_zh": "印尼羽毛球实力雄厚，夺冠概率较高",
-    "prob_reason_en": "Strong Indonesian squad has high chance"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Persib Bandung Coaching Staff Changes",
@@ -561,10 +546,7 @@ const groups = [
     "reddit_question_en": "Will Igor Tolic be officially registered as the head coach of Persib Bandung on the Liga Indonesia Baru website as of November 30, 2026?",
     "reddit_question_zh": "截至2026年11月30日，Igor Tolic是否会在印尼甲级联赛官网上被正式注册为万隆队（Persib Bandung）的主教练？",
     "reddit_resolution_source": "Liga Indonesia Baru Official Website",
-    "reddit_resolution_url": null,
-    "prob": 45,
-    "prob_reason_zh": "印尼联赛帅位不稳，执教到季末不易",
-    "prob_reason_en": "Indonesian coaches face high turnover"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Persija Jakarta Manager Departure",
@@ -615,10 +597,7 @@ const groups = [
     "reddit_question_en": "Will the permanent head coach of Persija Jakarta listed on their official website on August 1, 2026, be an Indonesian citizen?",
     "reddit_question_zh": "在2026年8月1日，雅加达普希查（Persija Jakarta）官网列出的常任主教练是否为印尼公民？",
     "reddit_resolution_source": "Persija Jakarta Official Website",
-    "reddit_resolution_url": null,
-    "prob": 85,
-    "prob_reason_zh": "俱乐部需为新赛季尽快确定主帅人选",
-    "prob_reason_en": "Club needs coach before new season"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bolivia Political Crisis & Protests",
@@ -669,10 +648,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Como UCL Qualification & Nico Paz Future",
@@ -737,10 +713,7 @@ const groups = [
     "reddit_question_en": "Will Nico Paz be registered as a member of Como 1907's squad on the official UEFA Champions League website for the first matchday of the 2026/27 league phase?",
     "reddit_question_zh": "在2026/27赛季欧冠联赛阶段首个比赛日中，尼科·帕斯（Nico Paz）是否会在欧足联官网注册为科莫（Como 1907）队的一员？",
     "reddit_resolution_source": "UEFA Champions League Official Website",
-    "reddit_resolution_url": null,
-    "prob": 30,
-    "prob_reason_zh": "皇马中场拥挤，立即回购的可能性有限",
-    "prob_reason_en": "Packed midfield limits immediate return"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "AC Milan Management & Coaching Changes",
@@ -791,10 +764,7 @@ const groups = [
     "reddit_question_en": "Will Zlatan Ibrahimovic still hold an official management, advisory, or executive role listed on the official AC Milan website on September 1, 2026?",
     "reddit_question_zh": "在2026年9月1日，兹拉坦·伊布拉希莫维奇是否依然在AC米兰官网上被列为拥有官方管理、顾问或高管职位？",
     "reddit_resolution_source": "AC Milan Official Website",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Arsenal & PSG Champions League Build-up",
@@ -859,10 +829,7 @@ const groups = [
     "reddit_question_en": "Will the winning team of the 2025/26 UEFA Champions League final keep a clean sheet (zero goals conceded in normal plus extra time)?",
     "reddit_question_zh": "2025/26赛季欧洲冠军联赛决赛的获胜球队是否会在常规时间和加时赛中零封对手（失球数为零）？",
     "reddit_resolution_source": "UEFA Champions League Official Matches",
-    "reddit_resolution_url": null,
-    "prob": 20,
-    "prob_reason_zh": "夺取欧冠冠军竞争极度激烈，难度大",
-    "prob_reason_en": "UCL title win is highly competitive"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Summer 2026 EPL Transfers",
@@ -983,10 +950,7 @@ const groups = [
     "reddit_question_en": "Will Anthony Gordon be listed as a Newcastle United player on the Premier League's official squad registration page on September 1, 2026?",
     "reddit_question_zh": "在2026年9月1日，安东尼·戈登（Anthony Gordon）是否在英超联赛官方球员注册页面中依然被登记为纽卡斯尔联队球员？",
     "reddit_resolution_source": "Premier League Official Player Profiles",
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "纽卡索要价高，拜仁成行难度极大",
-    "prob_reason_en": "High price makes Bayern move unlikely"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mohamed Salah Liverpool Exit",
@@ -1037,10 +1001,7 @@ const groups = [
     "reddit_question_en": "Will Mohamed Salah be listed in the Men's First Team squad on the official Liverpool FC website on September 1, 2026?",
     "reddit_question_zh": "在2026年9月1日，莫罕默德·萨拉赫是否仍会被列入利物浦足球俱乐部官网的一线队大名单中？",
     "reddit_resolution_source": "Liverpool FC Official Squad List",
-    "reddit_resolution_url": null,
-    "prob": 75,
-    "prob_reason_zh": "沙特联是萨拉赫离开利物浦后的首选",
-    "prob_reason_en": "Saudi league is top destination"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "FIFA World Cup 2026 & ASEAN Cup",
@@ -1119,10 +1080,7 @@ const groups = [
     "reddit_question_en": "Will Thom Haye be included in the official matchday squad list announced by PSSI on their official website for Indonesia's first match of the 2026 ASEAN Cup?",
     "reddit_question_zh": "在印尼足协（PSSI）官网公布的2026年东盟杯（Piala AFF）印尼队首场比赛官方名单中，是否会包含汤姆·海伊（Thom Haye）？",
     "reddit_resolution_source": "PSSI Official Website",
-    "reddit_resolution_url": null,
-    "prob": 70,
-    "prob_reason_zh": "印尼队实力提升，进入决赛希望很大",
-    "prob_reason_en": "Strong squad boosts final chances"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mees Hilgers FC Twente Extension",
@@ -1173,10 +1131,7 @@ const groups = [
     "reddit_question_en": "Will Mees Hilgers be listed as an active FC Twente first-team squad member on the official FC Twente website on September 1, 2026?",
     "reddit_question_zh": "在2026年9月1日，美斯·希尔格斯（Mees Hilgers）是否仍会被特温特（FC Twente）官网列为活跃的一线队队员？",
     "reddit_resolution_source": "FC Twente Official Squad",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Raffi Ahmad Lifestyle & Hajj Activities",
@@ -1241,10 +1196,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Celebrity & Music Gossip",
@@ -1365,10 +1317,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Taylor Swift & Travis Kelce Style",
@@ -1419,10 +1368,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Oppo & Vivo Device & OS Launches",
@@ -1515,10 +1461,7 @@ const groups = [
     "reddit_question_en": "Will a tablet device registered under the brand \"OPPO\" with a model number beginning with \"OPD\" be officially certified in the Indonesian SDPPI database between May 26, 2026, and August 31, 2026?",
     "reddit_question_zh": "在2026年5月26日至8月31日期间，印尼邮电认证数据库（SDPPI）中是否会出现一款品牌为“OPPO”、型号以“OPD”开头的平板电脑认证记录？",
     "reddit_resolution_source": "SDPPI Sertifikasi Database",
-    "reddit_resolution_url": null,
-    "prob": 85,
-    "prob_reason_zh": "按照系统更新周期，届时理应已发布",
-    "prob_reason_en": "Standard update cycle makes it likely"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Xiaomi, Huawei, & Honor Launches",
@@ -1597,10 +1540,7 @@ const groups = [
     "reddit_question_en": "Will any mobile phone (telepon seluler) from the brand \"HUAWEI\" be issued a new domestic content (TKDN) certificate with a value of 35% or higher by the Indonesian Ministry of Industry between June 1, 2026, and October 31, 2026?",
     "reddit_question_zh": "在2026年6月1日至10月31日期间，印尼工业部是否会向“HUAWEI”品牌的手机（telepon seluler）颁发新的、国产化率（TKDN）值达到35%或以上的证书？",
     "reddit_resolution_source": "Kementerian Perindustrian TKDN Database",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Infinix & iPhone Price Updates",
@@ -1665,10 +1605,7 @@ const groups = [
     "reddit_question_en": "Will the price of the base model iPhone 16 (128GB) listed on the official iBox Indonesia website be lower than Rp 15,000,000 on June 30, 2026?",
     "reddit_question_zh": "在2026年6月30日，印尼苹果授权经销商iBox官网上标注的iPhone 16（128GB）基础款售价是否会低于15,000,000印尼盾？",
     "reddit_resolution_source": "iBox Indonesia Official Website",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Next-Generation Gaming & Engines",
@@ -1747,10 +1684,7 @@ const groups = [
     "reddit_question_en": "Will the Entertainment Software Rating Board (ESRB) issue an official rating for a PlayStation 5 version of \"Metal Gear Solid 4\" by September 30, 2026?",
     "reddit_question_zh": "在2026年9月30日之前，娱乐软件分级委员会（ESRB）是否会为PlayStation 5版的《金属装备4》（Metal Gear Solid 4）进行官方评级？",
     "reddit_resolution_source": "ESRB Ratings Search",
-    "reddit_resolution_url": null,
-    "prob": 40,
-    "prob_reason_zh": "发售时间仍有变数，可能更早或更晚",
-    "prob_reason_en": "Release timing remains uncertain"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Astronomy, Space Exploration, & Space Tech",
@@ -1871,10 +1805,7 @@ const groups = [
     "reddit_question_en": "Will the official NASA Space Station blog publish any post in June 2026 that contains the words \"leak\" or \"pressure\" in relation to the Russian segment (Zvezda or Poisk)?",
     "reddit_question_zh": "美国国家航空航天局（NASA）空间站官方博客在2026年6月发布的文章中，是否会有包含“泄漏”（leak）或“压力”（pressure）且关联俄罗斯舱段（Zvezda或Poisk）的内容？",
     "reddit_resolution_source": "NASA Space Station Blog",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Paleontological Research & Dinosaur Studies",
@@ -1953,10 +1884,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Asia-Pacific Geopolitical Tensions",
@@ -2049,10 +1977,7 @@ const groups = [
     "reddit_question_en": "Will Taiwan's Ministry of National Defense report more than 35 Chinese military aircraft crossing the median line of the Taiwan Strait or entering Taiwan's ADIZ in a single 24-hour reporting period during June 2026?",
     "reddit_question_zh": "在2026年6月期间，台湾国防部是否会在单个24小时报告周期内，通报超过35架中国大陆军机越过海峡中线或进入其防空识别区（ADIZ）？",
     "reddit_resolution_source": "Taiwan Ministry of National Defense",
-    "reddit_resolution_url": null,
-    "prob": 10,
-    "prob_reason_zh": "避免直接冲突，开火或实战拦截极罕见",
-    "prob_reason_en": "Escalation risks make live fire rare"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesia Fiscal Policies & APBN 2027",
@@ -2161,10 +2086,7 @@ const groups = [
     "reddit_question_en": "Will the official 2027 State Budget Draft (RAPBN 2027) Nota Keuangan, published on the Ministry of Finance website, project an economic growth target of 5.5% or higher?",
     "reddit_question_zh": "印尼财政部官网上公布的2027年国家预算草案（RAPBN 2027）财务说明书（Nota Keuangan）中，预测的经济增长目标是否会达到5.5%或以上？",
     "reddit_resolution_source": "Kementerian Keuangan Republik Indonesia",
-    "reddit_resolution_url": "https://www.kemenkeu.go.id/",
-    "prob": 60,
-    "prob_reason_zh": "政府或维持财政纪律以稳定投资者信心",
-    "prob_reason_en": "Govt likely maintains fiscal discipline"
+    "reddit_resolution_url": "https://www.kemenkeu.go.id/"
   },
   {
     "name_en": "Indonesian Disease Prevention Campaigns",
@@ -2285,10 +2207,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 75,
-    "prob_reason_zh": "登革热多发，累计病例易突破该门槛",
-    "prob_reason_en": "Dengue spike likely to exceed limit"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Nutritional Advice & Food Warnings",
@@ -2395,10 +2314,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Advanced Medical Tech & Mental Health",
@@ -2463,10 +2379,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "IHSG Performance & MSCI Rebalancing",
@@ -2561,10 +2474,7 @@ const groups = [
     "reddit_question_en": "Will the cumulative net foreign transaction value on the Indonesia Stock Exchange (IDX) for the month of June 2026 be a net sell (negative value) exceeding Rp 5 trillion?",
     "reddit_question_zh": "2026年6月全月，印尼证券交易所（IDX）的外资累计净交易额是否会呈现超过5万亿印尼盾的净卖出（负值）？",
     "reddit_resolution_source": "Indonesia Stock Exchange (IDX) Trading Statistics",
-    "reddit_resolution_url": "https://www.idx.co.id/",
-    "prob": 80,
-    "prob_reason_zh": "虽有外资流出，但6700点支撑力较强",
-    "prob_reason_en": "Strong support at 6700 despite outflow"
+    "reddit_resolution_url": "https://www.idx.co.id/"
   },
   {
     "name_en": "BEI Stock Deletions & PGAS Dividend",
@@ -2629,10 +2539,7 @@ const groups = [
     "reddit_question_en": "Will PT Perusahaan Gas Negara Tbk (PGAS) publish an official corporate disclosure on the IDX website announcing the final \"Tanggal Pembayaran\" (Payment Date) for its fiscal year 2025 cash dividend to be on or before July 15, 2026?",
     "reddit_question_zh": "PT Perusahaan Gas Negara Tbk (PGAS) 是否会在印尼证交所（IDX）发布官方信息披露，宣布其2025财年现金股利的最终付款日（Tanggal Pembayaran）定在2026年7月15日或之前？",
     "reddit_resolution_source": "IDX Company Announcements",
-    "reddit_resolution_url": "https://www.idx.co.id/",
-    "prob": 65,
-    "prob_reason_zh": "派息计划已定，按期完成概率较高",
-    "prob_reason_en": "Scheduled dividend payout is likely"
+    "reddit_resolution_url": "https://www.idx.co.id/"
   },
   {
     "name_en": "Bank Indonesia Policies & De-dollarization",
@@ -2713,10 +2620,7 @@ const groups = [
     "reddit_question_en": "Will Bank Indonesia officially list a new bilateral partner country for the Local Currency Transactions (LCT) framework (beyond Malaysia, Thailand, Japan, China, Singapore, and South Korea) on its official website by December 31, 2026?",
     "reddit_question_zh": "到2026年12月31日，印尼央行（BI）是否会在官网列出新的本币交易（LCT）框架双边合作伙伴国家（不包括已有的马来西亚、泰国、日本、中国、新加坡和韩国）？",
     "reddit_resolution_source": "Bank Indonesia Official Website",
-    "reddit_resolution_url": "https://www.bi.go.id/",
-    "prob": 90,
-    "prob_reason_zh": "央行强力干预，汇率防线预计能守住",
-    "prob_reason_en": "Strong BI defense likely keeps it below"
+    "reddit_resolution_url": "https://www.bi.go.id/"
   },
   {
     "name_en": "Indonesia Fuel Subsidies & Polymarket Regulation",
@@ -2781,10 +2685,7 @@ const groups = [
     "reddit_question_en": "Will the domain \"polymarket.com\" or any \"polymarket\" sub-domain be listed as blocked on the official Indonesian Trust+ Positif database on July 31, 2026?",
     "reddit_question_zh": "在2026年7月31日，域名“polymarket.com”或任何包含“polymarket”的子域名是否会被印尼官方黑名单数据库（Trust+ Positif）列为拦截对象？",
     "reddit_resolution_source": "AduanKonten Trust+ Positif Database",
-    "reddit_resolution_url": null,
-    "prob": 45,
-    "prob_reason_zh": "政策讨论已久，但因通胀隐忧屡次推迟",
-    "prob_reason_en": "Policy likely delayed over inflation"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Police Investigations",
@@ -2865,10 +2766,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Chongqing Flash Floods",
@@ -2919,10 +2817,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "France Heatwave & Power Impacts",
@@ -2973,10 +2868,7 @@ const groups = [
     "reddit_question_en": "Will France be a net importer of electricity (import balance greater than export balance) for at least three consecutive hours on any day in July 2026, as recorded on the official RTE Eco2mix platform?",
     "reddit_question_zh": "根据法国国家电网运营商（RTE）的Eco2mix数据，在2026年7月的任一天内，法国是否会存在连续至少三小时的电力净进口状态（进口量大于出口量）？",
     "reddit_resolution_source": "RTE France Eco2mix Data",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "World's Most Beautiful Hotels & Museums",
@@ -3027,10 +2919,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Lombok Minimarket Closures",
@@ -3081,10 +2970,7 @@ const groups = [
     "reddit_question_en": "Will the Indonesian Ministry of Trade issue a new ministerial regulation (Permendag) specifically regulating modern retail market partnerships with local MSMEs by September 30, 2026?",
     "reddit_question_zh": "印尼贸易部是否会在2026年9月30日之前，出台新的部级条例（Permendag），专门规范现代零售市场与本地微型及中小企业（MSME）的合作机制？",
     "reddit_resolution_source": "Kementerian Perdagangan Republik Indonesia",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Researchers Academic Fraud Scandal",
@@ -3135,10 +3021,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 70,
-    "prob_reason_zh": "舆论压力大，教育部料将做出正式惩处",
-    "prob_reason_en": "Public pressure likely forces action"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "'Pocong' Armed Attacker Panic",
@@ -3189,10 +3072,7 @@ const groups = [
     "reddit_question_en": "Will the official Kominfo hoax debunking portal publish a report identifying stories of \"teror pocong\" or \"pocong\" attacks as a hoax (hoaks) by June 30, 2026?",
     "reddit_question_zh": "到2026年6月30日，印尼信息与通讯部（Kominfo）官方辟谣平台是否会发布报告，正式将“teror pocong”或“pocong”（裹尸布鬼）袭击的传闻标记为谣言（hoaks）？",
     "reddit_resolution_source": "Kominfo Laporan Isu Hoaks",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Honorer Teacher Protests",
@@ -3243,10 +3123,7 @@ const groups = [
     "reddit_question_en": "Will the National Civil Service Agency (BKN) officially open registration for the 2026 PPPK (Pegawai Pemerintah dengan Perjanjian Kerja) teacher category by October 31, 2026?",
     "reddit_question_zh": "印尼国家公务员局（BKN）是否会在2026年10月31日之前，正式开放2026年度教师类别政府雇员（PPPK）的报考注册？",
     "reddit_resolution_source": "Badan Kepegawaian Negara (BKN) Announcements",
-    "reddit_resolution_url": null,
-    "prob": 15,
-    "prob_reason_zh": "财政负担重，政府倾向于使用PPPK渠道",
-    "prob_reason_en": "Fiscal burden limits full PNS status"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Papua Separatist Violence",
@@ -3297,10 +3174,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": 10,
-    "prob_reason_zh": "避免国际关注，政府极少宣布军事戒严",
-    "prob_reason_en": "Govt avoids emergency declaration"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Police Law Revision & Listyo Sigit",
@@ -3351,10 +3225,7 @@ const groups = [
     "reddit_question_en": "Will the \"RUU tentang Kepolisian Negara Republik Indonesia\" be listed as officially passed (Persetujuan Bersama) into law on the DPR RI's official legislative database by December 31, 2026?",
     "reddit_question_zh": "在2026年12月31日之前，印尼国会（DPR RI）官方立法数据库中是否会显示《印尼国家警察法修正案草案》（RUU Kepolisian）已正式通过（Persetujuan Bersama）？",
     "reddit_resolution_source": "DPR RI Legislative Database",
-    "reddit_resolution_url": null,
-    "prob": 75,
-    "prob_reason_zh": "执政联盟占多数，法案修改推进速度通常较快",
-    "prob_reason_en": "Coalition backing fast-tracks bills"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "GIIAS 2026 Exhibition Planning",
@@ -3405,10 +3276,7 @@ const groups = [
     "reddit_question_en": "Will the official GIIAS 2026 website list more than 35 passenger car (kendaraan penumpang) brands as exhibitors for the July 2026 show?",
     "reddit_question_zh": "在2026年7月举办的车展中，GIIAS 2026官网列出的乘用车（kendaraan penumpang）参展品牌是否会超过35个？",
     "reddit_resolution_source": "GIIAS Official Website",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Istiqlal Mosque Meat Distribution Changes",
@@ -3459,10 +3327,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "DeepSeek AI Price Cut",
@@ -3513,10 +3378,7 @@ const groups = [
     "reddit_question_en": "Will the official DeepSeek API pricing page list the input token price for its primary chat model (DeepSeek-V3 or subsequent version) at less than $0.14 per million tokens on September 30, 2026?",
     "reddit_question_zh": "在2026年9月30日，DeepSeek官方API定价页面上其主推对话模型（DeepSeek-V3或其后续版本）的输入Token价格是否低于每百万Token 0.14美元？",
     "reddit_resolution_source": "DeepSeek API Official Documentation",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Pertamina Pertalite Restriction Hoax",
@@ -3567,10 +3429,7 @@ const groups = [
     "reddit_question_en": "Will PT Pertamina (Persero) publish a press release on its official website announcing the mandatory nationwide implementation of QR codes for all Pertalite purchases by August 31, 2026?",
     "reddit_question_zh": "在2026年8月31日之前，印尼国油（Pertamina）是否会在官网发布新闻稿，宣布在全国范围内强制对所有Pertalite燃油购买实施扫QR码交易？",
     "reddit_resolution_source": "Pertamina Press Releases",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bangladesh 'Donald Trump' Buffalo",
@@ -3621,10 +3480,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Daily Zodiac Horoscope Predictions",
@@ -3675,10 +3531,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Garena Free Fire Redeem Codes",
@@ -3729,10 +3582,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Honda City Facelift Release",
@@ -3783,10 +3633,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Chery Jaecoo EV SUV Launches",
@@ -3837,10 +3684,7 @@ const groups = [
     "reddit_question_en": "Will a vehicle under the brand name \"JAECOO\" or \"CHERY\" containing the word \"JAECOO\" be issued an official TKDN certificate by the Indonesian Ministry of Industry between June 1, 2026, and December 31, 2026?",
     "reddit_question_zh": "在2026年6月1日至12月31日期间，印尼工业部是否会向品牌为“JAECOO”或属于“CHERY”但包含“JAECOO”字样的车辆颁发官方TKDN（国产化率）证书？",
     "reddit_resolution_source": "Kementerian Perindustrian TKDN Database",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Oxford Ebola Vaccine Clinical Trials",
@@ -3891,10 +3735,7 @@ const groups = [
     "reddit_question_en": "Will ClinicalTrials.gov list a new clinical trial for an Ebola vaccine sponsored or co-sponsored by the University of Oxford with a \"First Posted\" date in 2026?",
     "reddit_question_zh": "美国临床试验数据库（ClinicalTrials.gov）上是否会列出一项由牛津大学赞助或联合赞助的埃博拉新疫苗临床试验，且其“首次发布时间”为2026年？",
     "reddit_resolution_source": "ClinicalTrials.gov registry",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "HyperMillennium Universe Simulation",
@@ -3945,10 +3786,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Meta Layoffs & Singapore Growth",
@@ -3999,10 +3837,7 @@ const groups = [
     "reddit_question_en": "Will the official Q2 2026 Retrenchment report published by Singapore's Ministry of Manpower (MOM) show more than 500 retrenchments in the \"Information & Communications\" sector?",
     "reddit_question_zh": "新加坡人力部（MOM）公布的2026年第二季度裁员报告中，“资讯与通讯”（Information & Communications）行业的裁员人数是否会超过500人？",
     "reddit_resolution_source": "Singapore Ministry of Manpower Statistics",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Lenovo Legion AMD Strix Halo Laptops",
@@ -4053,10 +3888,7 @@ const groups = [
     "reddit_question_en": "Will a portable computer (komputer genggam/laptop) under the brand \"Lenovo\" and containing \"Legion\" in its model designation be registered in the Indonesian SDPPI database between June 1, 2026, and September 30, 2026?",
     "reddit_question_zh": "在2026年6月1日至9月30日期间，印尼SDPPI认证数据库中是否会注册一款品牌为“Lenovo”且型号中包含“Legion”的便携式计算机（手提电脑/笔记本）？",
     "reddit_resolution_source": "SDPPI Sertifikasi Database",
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Antam Gold Prices ANTM",
@@ -4107,10 +3939,7 @@ const groups = [
     "reddit_question_en": "Will the official \"harga buyback\" (buyback price) for 1 gram of gold on the Logam Mulia website drop below Rp1,200,000 at any point in June 2026?",
     "reddit_question_zh": "在2026年6月的任何时候，印尼Logam Mulia官网上1克黄金的官方回购价（harga buyback）是否会跌破1,200,000印尼盾？",
     "reddit_resolution_source": "Logam Mulia Gold Prices",
-    "reddit_resolution_url": null,
-    "prob": 25,
-    "prob_reason_zh": "通胀及汇率贬值支撑本币金价维持高位",
-    "prob_reason_en": "Weak IDR keeps domestic gold price high"
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Transportation Accidents",
@@ -4161,10 +3990,7 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_resolution_url": null
   }
 ];
 

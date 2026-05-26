@@ -18,6 +18,8 @@
   .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
   .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
   .lang-btn.active { background: #1e2535; color: #fff; }
+  .filter-btn { padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1e2535; border-radius: 8px; background: #161b27; color: #64748b; transition: all 0.15s; }
+  .filter-btn.active { background: #1e2535; color: #e2e8f0; }
 
   .stats { display: flex; gap: 12px; padding: 20px 40px; border-bottom: 1px solid #1e2535; flex-wrap: wrap; }
   .stat { background: #161b27; border: 1px solid #1e2535; border-radius: 8px; padding: 14px 20px; min-width: 110px; }
@@ -26,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -44,6 +46,17 @@
   .badge.drop      { background: #1f2937; color: #6b7280; }
 
   .narrative { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+  .source-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
+  .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
+  .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
+  .source-item .source-name { font-weight: 700; color: #94a3b8; }
+  .source-item.x_grok .source-name { color: #c4b5fd; }
+  .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -51,7 +64,17 @@
   .bar-fill  { height: 100%; border-radius: 2px; background: #3b82f6; }
   .density-bar .count { font-size: 11px; color: #94a3b8; width: 40px; text-align: right; }
 
-  .rstuh { display: flex; gap: 6px; margin-bottom: 14px; }
+  .score-panel { margin-bottom: 14px; border: 1px solid #1e2535; border-radius: 8px; background: #0f1117; overflow: hidden; }
+  .score-panel summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 10px; }
+  .score-panel summary::-webkit-details-marker { display: none; }
+  .score-totals { display: flex; gap: 8px; flex-wrap: wrap; }
+  .score-total-chip { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid #273244; border-radius: 999px; padding: 4px 9px; color: #94a3b8; font-size: 11px; font-weight: 700; }
+  .score-total-chip.primary { color: #fbbf24; border-color: #92400e; background: #1f1608; }
+  .score-total-chip b { color: #fff; font-size: 15px; }
+  .score-expand { color: #64748b; font-size: 11px; }
+  .score-section { padding: 0 10px 10px; }
+  .score-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.4px; margin: 6px 0; }
+  .rstuh { display: flex; gap: 6px; margin-bottom: 8px; }
   .dim { display: flex; flex-direction: column; align-items: center; background: #0f1117; border-radius: 6px; padding: 6px 10px; min-width: 38px; }
   .dim .letter { font-size: 10px; color: #64748b; font-weight: 600; }
   .dim .score  { font-size: 16px; font-weight: 700; }
@@ -66,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -99,6 +126,7 @@
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
+    <button id="filter-toggle" class="filter-btn" onclick="toggleFiltered()"></button>
   </div>
 </header>
 
@@ -114,6 +142,7 @@
 
 <script>
 let currentLang = "zh";
+let showFiltered = false;
 
 const i18n = {
   zh: {
@@ -124,7 +153,15 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
+    source_mix: "来源",
+    expand_scores: "展开",
+    rstuh: "市场结构",
+    bdlt: "下注欲望",
+    show_filtered: "显示过滤",
+    hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
   },
   en: {
@@ -135,7 +172,15 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
+    source_mix: "Sources",
+    expand_scores: "Expand",
+    rstuh: "Market quality",
+    bdlt: "Bet demand",
+    show_filtered: "Show filtered",
+    hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
   }
 };
@@ -150,16 +195,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Legal and political fallout continues regarding Senator Bato dela Rosa's involvement in a Senate shooting incident and the denial of his petition to halt an ICC arrest warrant.",
     "narrative_zh": "关于参议员德拉罗萨涉及参议院枪击事件及最高法院驳回其针对国际刑事法院逮捕令的临时禁制令请求，法律与政治余波仍在持续。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will an arrest warrant for Bato Dela Rosa be served by December 31, 2026?",
     "question_en": "Will an arrest warrant for Bato Dela Rosa be served by December 31, 2026?",
     "question_zh": "到2026年12月31日，德拉罗萨参议员是否会被执行逮捕令？",
     "source": "Supreme Court of the Philippines / Official Department of Justice announcements",
-    "prob": 15,
-    "prob_reason_zh": "政治阻力大，执法机构难执行。",
-    "prob_reason_en": "High political friction inhibits arrest."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sara Duterte Impeachment Trial",
@@ -170,16 +227,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 0,
+      "T": 2,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "The House of Representatives is actively organizing the prosecution team and trial procedures for the impeachment of Vice President Sara Duterte.",
     "narrative_zh": "众议院正在积极组织针对副总统萨拉·杜特尔特的弹劾检控团队及审理程序。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the House of Representatives vote to impeach Vice President Sara Duterte by year-end 2026?",
     "question_en": "Will the House of Representatives vote to impeach Vice President Sara Duterte by year-end 2026?",
     "question_zh": "到2026年底，众议院是否会投票弹劾副总统萨拉·杜特尔特？",
     "source": "House of Representatives of the Philippines official journals",
-    "prob": 40,
-    "prob_reason_zh": "弹劾启动容易，但在参议院定罪极难。",
-    "prob_reason_en": "Initiation is likely, conviction is not."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine-Japan Friendship and Security",
@@ -190,16 +259,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "President Marcos and the First Lady are fostering Philippines-Japan ties ahead of a state visit focused on security and energy cooperation, amidst ongoing scrutiny of Japan's historical militarism.",
     "narrative_zh": "在马科斯总统即将对日进行旨在加强安全与能源合作的国事访问之际，菲日关系在关注日本历史军国主义的背景下持续互动。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Philippines and Japan sign a new Reciprocal Access Agreement (RAA) or similar defense pact during the 2026 state visit?",
     "question_en": "Will the Philippines and Japan sign a new Reciprocal Access Agreement (RAA) or similar defense pact during the 2026 state visit?",
     "question_zh": "菲律宾与日本是否会在2026年国事访问期间签署新的互惠准入协议或类似防御条约？",
     "source": "Department of Foreign Affairs of the Philippines",
-    "prob": 85,
-    "prob_reason_zh": "两国安全合作趋势强化，协议已成熟。",
-    "prob_reason_en": "Deepening security ties make pact likely."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Luzon and Visayas Power Grid Stability",
@@ -210,16 +291,28 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 0,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "Repeated red alerts and rotational blackouts across Luzon and Visayas grids are causing significant concerns about energy supply reliability.",
     "narrative_zh": "吕宋和米沙鄢电网频繁发出红色警报并进行轮流停电，引发了对能源供应可靠性的担忧。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Luzon power grid be placed under 'Red Alert' status at any point in June 2026?",
     "question_en": "Will the Luzon power grid be placed under 'Red Alert' status at any point in June 2026?",
     "question_zh": "2026年6月，吕宋电网是否会被列入“红色预警”状态？",
     "source": "Department of Energy (DOE) Philippines",
-    "prob": 65,
-    "prob_reason_zh": "六月高温导致电力需求高峰，风险高。",
-    "prob_reason_en": "June heat spikes elevate grid risk."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Alsons Power Solar Transition",
@@ -230,16 +323,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Alsons Power is transitioning a 55 MW diesel plant into a 98.7 MW solar project in the Philippines to align with renewable energy goals.",
     "narrative_zh": "Alsons Power正在将菲律宾的一座55兆瓦柴油发电厂转型为98.7兆瓦的太阳能项目，以契合可再生能源目标。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Alsons Consolidated Resources Investor Relations",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ICTSI AIIB Infrastructure Loan",
@@ -250,16 +355,28 @@ const groups = [
     "T": 1,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 1,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "ICTSI secured a $300-million loan from the Asian Infrastructure Investment Bank for terminal and port expansion.",
     "narrative_zh": "ICTSI从亚洲基础设施投资银行获得了3亿美元贷款，用于港口码头的扩建。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "ICTSI",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "FedEx Clark Facility Expansion",
@@ -270,16 +387,28 @@ const groups = [
     "T": 1,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 1,
+      "total": 1
+    },
+    "why_users_bet": "",
     "narrative_en": "FedEx has commenced a significant expansion project at its Clark facility to enhance regional logistics capabilities.",
     "narrative_zh": "联邦快递已在其克拉克设施启动重大扩建项目，以提升区域物流能力。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "FedEx / Clark Development Corporation",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PAFFP Farmer Financial Assistance",
@@ -290,16 +419,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 0,
+      "T": 1,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Government financial assistance programs like PAFFP are distributing aid to thousands of farmers in Tarlac and Albay to offset rising fuel and production costs.",
     "narrative_zh": "PAFFP等政府财政援助项目正在向塔拉克和阿尔拜省的数千名农民发放补助，以抵消日益增长的燃料和生产成本。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Department of Agriculture",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Airlines and Qatar Airways Partnership",
@@ -310,16 +451,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "Philippine Airlines and Qatar Airways have expanded their strategic codeshare partnership to improve connectivity across Southeast Asia, the Middle East, and Europe.",
     "narrative_zh": "菲律宾航空与卡塔尔航空扩大了战略代码共享合作伙伴关系，以加强东南亚、中东和欧洲之间的连通性。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Civil Aeronautics Board of the Philippines",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Anti-Political Dynasty Bill",
@@ -330,16 +483,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 1,
+      "D": 2,
+      "L": 0,
+      "T": 2,
+      "total": 5
+    },
+    "why_users_bet": "",
     "narrative_en": "The House of Representatives has approved the anti-political dynasty bill on second reading, marking a legislative attempt to curb concentrated political power.",
     "narrative_zh": "众议院二读通过了反政治王朝法案，标志着在限制政治权力集中方面的立法尝试。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Anti-Political Dynasty Bill pass into law by the end of the 20th Congress?",
     "question_en": "Will the Anti-Political Dynasty Bill pass into law by the end of the 20th Congress?",
     "question_zh": "到第20届国会结束时，《反政治王朝法案》是否会正式立法？",
     "source": "Official Gazette / Congress of the Philippines",
-    "prob": 10,
-    "prob_reason_zh": "议员多属政治家族，阻力巨大。",
-    "prob_reason_en": "Self-interest blocks legislative passage."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Misamis Oriental Steel Plant Probe",
@@ -350,16 +515,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "Defense Secretary Teodoro has warned against interference in the probe regarding allegedly radiologically-contaminated steel bars at a Misamis Oriental plant.",
     "narrative_zh": "国防部长特奥多罗警告称，不得干预对米沙鄢东部某钢厂涉嫌受放射性污染钢筋的调查。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Department of National Defense",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WPS Infrastructure Dispute",
@@ -370,16 +547,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 1,
+      "total": 7
+    },
+    "why_users_bet": "",
     "narrative_en": "The DND has rejected China's opposition to ongoing Philippine infrastructure projects within the West Philippine Sea.",
     "narrative_zh": "国防部拒绝了中国对菲律宾在西菲律宾海持续进行基础设施建设项目的反对意见。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will the Philippine government suspend infrastructure projects in the West Philippine Sea due to Chinese opposition before 2027?",
     "question_en": "Will the Philippine government suspend infrastructure projects in the West Philippine Sea due to Chinese opposition before 2027?",
     "question_zh": "菲律宾政府是否会在2027年前因中国的反对而暂停西菲律宾海的基础设施项目？",
     "source": "Department of National Defense / Official Government press statement",
-    "prob": 20,
-    "prob_reason_zh": "政府坚持主权，不会轻易让步。",
-    "prob_reason_en": "Govt maintains firm sovereignty stance."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Marcos Jr. on Taiwan Conflict",
@@ -390,16 +579,28 @@ const groups = [
     "T": 0,
     "U": 2,
     "H": 2,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 0,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "President Marcos indicated that the Philippines would likely be compelled to engage if conflict erupted in the Taiwan Strait.",
     "narrative_zh": "马科斯总统表示，如果台海爆发冲突，菲律宾将难以避免被卷入。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "N/A - Scenario dependent",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PBA and Local Basketball Updates",
@@ -410,16 +611,28 @@ const groups = [
     "T": 2,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 2,
+      "L": 2,
+      "T": 2,
+      "total": 8
+    },
+    "why_users_bet": "",
     "narrative_en": "Recent basketball updates include Chot Reyes focusing on TNT's health and the expansion of the Alas Pilipinas women's pool.",
     "narrative_zh": "近期篮球动态包括乔特·雷耶斯（Chot Reyes）对TNT球队健康状况的关注，以及Alas Pilipinas女篮集训队规模的扩大。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": true,
     "question": "Will TNT win the current PBA Conference title?",
     "question_en": "Will TNT win the current PBA Conference title?",
     "question_zh": "TNT篮球队是否会赢得当前的PBA赛季冠军？",
     "source": "PBA official results",
-    "prob": 25,
-    "prob_reason_zh": "PBA竞争激烈，夺冠不确定性高。",
-    "prob_reason_en": "High parity makes any title win tough."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PH Student Science Achievement",
@@ -430,16 +643,28 @@ const groups = [
     "T": 2,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 2,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "Filipino students secured six awards at a global science fair in Arizona, earning national recognition.",
     "narrative_zh": "菲律宾学生在亚利桑那州举行的全球科学博览会上斩获六个奖项，获得国内表彰。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "ISEF (Intel International Science and Engineering Fair) results",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PVL Coaching Awards",
@@ -450,16 +675,28 @@ const groups = [
     "T": 2,
     "U": 0,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 2,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Ricafort was named PVL Coach of the Year, while Bundit was recognized as the top mentor in the Spikers' Turf.",
     "narrative_zh": "Ricafort被评为PVL年度教练，Bundit则被认可为Spikers' Turf的最佳导师。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "PVL official website",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Rizal Memorial Redevelopment",
@@ -470,16 +707,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 2,
+      "T": 1,
+      "total": 6
+    },
+    "why_users_bet": "",
     "narrative_en": "The Philippine Sports Commission and the City of Manila are collaborating on a shared vision for the redevelopment of the historic Rizal Memorial Sports Complex.",
     "narrative_zh": "菲律宾体育委员会与马尼拉市政府正在合作，共同制定历史悠久的黎刹纪念体育综合体的改造愿景。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Philippine Sports Commission",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Siargao Tourism and Security",
@@ -490,16 +739,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "Recent incidents involving tourist assaults in Siargao have prompted calls for dialogue regarding local business security.",
     "narrative_zh": "锡亚高近期发生的游客遇袭事件引发了关于地方商业安全的对话呼吁。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Local Government Unit of Siargao",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Baguio Tourism Trends",
@@ -510,16 +771,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 0,
+    "BDLT": {
+      "B": 0,
+      "D": 1,
+      "L": 0,
+      "T": 1,
+      "total": 2
+    },
+    "why_users_bet": "",
     "narrative_en": "Baguio's tourism sector is in a recovery phase, though local businesses report ongoing post-pandemic challenges.",
     "narrative_zh": "碧瑶旅游业正处于恢复阶段，尽管当地企业报告称疫情后的挑战依然存在。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Department of Tourism (DOT) Philippines",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kim Robert de Leon DBM Appointment",
@@ -530,16 +803,28 @@ const groups = [
     "T": 1,
     "U": 1,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 1,
+      "L": 0,
+      "T": 1,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "President Marcos has appointed Kim Robert de Leon as the Acting Secretary of the Department of Budget and Management.",
     "narrative_zh": "马科斯总统已任命金·罗伯特·德莱昂为预算与管理部代理部长。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Commission on Appointments",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Spanish Pork Import Ban Lifted",
@@ -550,16 +835,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 2,
+      "D": 0,
+      "L": 2,
+      "T": 0,
+      "total": 4
+    },
+    "why_users_bet": "",
     "narrative_en": "The Philippines has lifted the ban on Spanish pork imports to address domestic supply shortages.",
     "narrative_zh": "菲律宾已解除对西班牙猪肉的进口禁令，以解决国内供应短缺问题。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Department of Agriculture",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Visayas Sugarcane Pest Outbreaks",
@@ -570,16 +867,28 @@ const groups = [
     "T": 1,
     "U": 2,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 2,
+      "L": 0,
+      "T": 1,
+      "total": 3
+    },
+    "why_users_bet": "",
     "narrative_en": "Renewed pest attacks on Visayas sugarcane plantations are threatening local agricultural output.",
     "narrative_zh": "米沙鄢甘蔗种植园再次遭受虫害侵袭，威胁到当地的农业产量。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "Sugar Regulatory Administration",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Tech and AI Developments",
@@ -590,16 +899,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Technology giants are advancing AI strategies, launching new hardware, and adjusting subscription services while addressing security vulnerabilities.",
     "narrative_zh": "科技巨头们正积极推进人工智能战略、推出新型硬件、调整订阅服务并应对安全漏洞。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Science and Astronomy Research",
@@ -610,16 +931,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 1,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "International research projects, NASA space missions, and paleontological studies are reshaping our understanding of solar defense, Martian geology, and ancient life.",
     "narrative_zh": "国际科研项目、NASA太空任务以及古生物学研究正在重塑我们对太阳防御、火星地质和古生物的认知。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Sports and World Events",
@@ -630,16 +963,28 @@ const groups = [
     "T": 0,
     "U": 0,
     "H": 2,
+    "BDLT": {
+      "B": 0,
+      "D": 0,
+      "L": 0,
+      "T": 0,
+      "total": 0
+    },
+    "why_users_bet": "",
     "narrative_en": "Global sporting events, ongoing geopolitical tensions (Iran/China/Myanmar), and international public health crises form a complex backdrop of world news.",
     "narrative_zh": "全球体育赛事、持续的地缘政治紧张局势（伊朗/中国/缅甸）及国际公共卫生危机，构成了复杂的全球新闻背景。",
+    "source_mix": {},
+    "source_labels": [],
+    "source_examples": [],
     "bettable": false,
     "question": null,
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -670,10 +1015,9 @@ function getDisposition(g) {
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const order = { top: 0, candidate: 1, watch: 2, drop: 3 };
-  const da = getDisposition(a), db = getDisposition(b);
-  if (order[da] !== order[db]) return order[da] - order[db];
-  return (b.R+b.S+b.T+b.U+b.H) - (a.R+a.S+a.T+a.U+a.H);
+  const bdltDiff = bdltTotal(b) - bdltTotal(a);
+  if (bdltDiff !== 0) return bdltDiff;
+  return rstuhTotal(b) - rstuhTotal(a);
 });
 
 function renderCards(lang) {
@@ -683,13 +1027,33 @@ function renderCards(lang) {
 
   sorted.forEach(g => {
     const disp = getDisposition(g);
-    const total = g.R + g.S + g.T + g.U + g.H;
+    if (disp === "drop" && !showFiltered) return;
+    const total = rstuhTotal(g);
+    const bdlt = normalizeBDLT(g);
+    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
+    const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
+    const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
+      `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
+    ).join("");
+    const sourceItems = (g.source_examples || []).slice(0, 4).map(item => {
+      const title = lang === "zh" ? (item.title_zh || item.title_en) : (item.title_en || item.title_zh);
+      return `<div class="source-item ${item.source}">
+        <span class="source-name">${sourceLabel(item.source)}</span>
+        <span class="source-title" title="${escapeAttr(title)}">${escapeHtml(title)}</span>
+      </div>`;
+    }).join("");
 
     const card = document.createElement("div");
     card.className = `card ${disp}`;
@@ -702,7 +1066,10 @@ function renderCards(lang) {
         <span class="badge ${disp}">${t.badge[disp]}</span>
       </div>
 
-      <p class="narrative">${narr}</p>
+      ${showNarrative ? `<p class="narrative">${escapeHtml(narr)}</p>` : ""}
+
+      ${sourceChips ? `<div class="source-row" aria-label="${t.source_mix}">${sourceChips}</div>` : ""}
+      ${sourceItems ? `<div class="source-list">${sourceItems}</div>` : ""}
 
       <div class="density-bar">
         <div class="label">${t.density}</div>
@@ -710,13 +1077,33 @@ function renderCards(lang) {
         <div class="count">${densityCount}</div>
       </div>
 
-      <div class="rstuh">
-        ${["R","S","T","U","H"].map((l,i) => {
-          const s = [g.R,g.S,g.T,g.U,g.H][i];
-          return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
-        }).join("")}
-        <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
-      </div>
+      <details class="score-panel">
+        <summary>
+          <span class="score-totals">
+            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
+          </span>
+          <span class="score-expand">${t.expand_scores}</span>
+        </summary>
+        <div class="score-section">
+          <div class="score-label">${t.bdlt}</div>
+          <div class="rstuh">
+            ${["B","D","L","T"].map(l => {
+              const s = bdlt[l] || 0;
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+          </div>
+          <div class="score-label">${t.rstuh}</div>
+          <div class="rstuh">
+            ${["R","S","T","U","H"].map((l,i) => {
+              const s = [g.R,g.S,g.T,g.U,g.H][i];
+              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            }).join("")}
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+          </div>
+        </div>
+      </details>
 
       ${g.bettable && question ? `
       <div class="question-box">
@@ -735,9 +1122,81 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });
+}
+
+function rstuhTotal(g) {
+  return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
+}
+
+function normalizeBDLT(g) {
+  const bdlt = g.BDLT || {};
+  return {
+    B: Number.isInteger(bdlt.B) ? bdlt.B : 0,
+    D: Number.isInteger(bdlt.D) ? bdlt.D : 0,
+    L: Number.isInteger(bdlt.L) ? bdlt.L : 0,
+    T: Number.isInteger(bdlt.T) ? bdlt.T : 0,
+  };
+}
+
+function bdltTotal(g) {
+  const bdlt = normalizeBDLT(g);
+  return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
+}
+
+function shouldShowNarrative(g, disp, narr) {
+  if (!narr) return false;
+  if (disp !== "drop") return true;
+  if (g.density > 1) return true;
+  const lowered = String(narr).toLowerCase();
+  if (lowered.startsWith("google news groups this under")) return false;
+  const first = (g.source_examples || [])[0] || {};
+  const titles = [first.title_en, first.title_zh, g.name_en, g.name_zh]
+    .filter(Boolean)
+    .map(value => String(value).slice(0, 72).toLowerCase());
+  return !titles.some(title => title && lowered.includes(title));
+}
+
+function sourceLabel(source) {
+  return {
+    google_news: "Google News",
+    x_grok: "Grok/X"
+  }[source] || source || "SourceIntel";
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
+}
+
+function updateFilterButton() {
+  const btn = document.getElementById("filter-toggle");
+  btn.textContent = showFiltered ? i18n[currentLang].hide_filtered : i18n[currentLang].show_filtered;
+  btn.classList.toggle("active", showFiltered);
+}
+
+function toggleFiltered() {
+  showFiltered = !showFiltered;
+  updateFilterButton();
+  renderCards(currentLang);
 }
 
 function setLang(lang) {
@@ -748,10 +1207,12 @@ function setLang(lang) {
   document.querySelectorAll("[data-zh]").forEach(el => {
     el.textContent = el.dataset[lang];
   });
+  updateFilterButton();
   renderCards(lang);
 }
 
 initRegionLinks();
+updateFilterButton();
 renderCards("zh");
 </script>
 

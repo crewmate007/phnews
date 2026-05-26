@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,12 +50,13 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -88,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -148,6 +153,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -165,6 +172,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -223,9 +232,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Iran and Middle East Geopolitical Tensions",
@@ -343,9 +353,10 @@ const groups = [
     "question_en": "Will Brent crude oil prices exceed $95 per barrel by December 31, 2026?",
     "question_zh": "到 2026 年 12 月 31 日，布伦特原油价格是否会超过每桶 95 美元？",
     "source": "ICE Futures Europe",
-    "prob": 35,
-    "prob_reason_zh": "地缘溢价已计入，但突破95美元需极端冲突。",
-    "prob_reason_en": "Geopolitical risk priced in; needs escalation."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Financial and Rupiah Market Volatility",
@@ -465,9 +476,10 @@ const groups = [
     "question_en": "Will Bank Indonesia increase the BI-Rate by at least 25 basis points by July 2026?",
     "question_zh": "到 2026 年 7 月，印尼央行（BI）是否会将基准利率至少上调 25 个基点？",
     "source": "Bank Indonesia Official Press Release",
-    "prob": 65,
-    "prob_reason_zh": "为稳住印尼盾，央行加息压力较大。",
-    "prob_reason_en": "Pressure to stabilize IDR favors rate hike."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Meta and Technology Sector Layoffs",
@@ -531,9 +543,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Arsenal Premier League Title Win",
@@ -581,9 +594,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Russo-Chinese Gas Pipeline Strategy",
@@ -631,9 +645,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ride-hailing Labor and Policy Changes",
@@ -681,9 +696,10 @@ const groups = [
     "question_en": "Will Gojek announce an official increase in minimum ride-hailing commission rates by end of Q3 2026?",
     "question_zh": "Gojek 是否会在 2026 年第三季度末前宣布官方上调网约车最低佣金费率？",
     "source": "Gojek Corporate Announcement",
-    "prob": 70,
-    "prob_reason_zh": "成本压力与司机诉求迫使费率调整。",
-    "prob_reason_en": "Cost pressure forces commission adjustment."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "2026 World Cup Indonesian Broadcasting",
@@ -731,9 +747,10 @@ const groups = [
     "question_en": "Will TVRI secure exclusive public broadcast rights for the 2026 World Cup in Indonesia?",
     "question_zh": "TVRI 是否会获得 2026 年世界杯在印尼的独家公共转播权？",
     "source": "TVRI/FIFA Official Announcement",
-    "prob": 40,
-    "prob_reason_zh": "竞标激烈，TVRI独家权成本过高。",
-    "prob_reason_en": "High competition makes exclusivity costly."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prabowo Subianto Economic Policy Agenda",
@@ -839,9 +856,10 @@ const groups = [
     "question_en": "Will the Indonesian government pass the proposed export control regulation for specific commodities by December 2026?",
     "question_zh": "印尼政府是否会在 2026 年 12 月前通过针对特定大宗商品的出口管制法规？",
     "source": "Indonesian Ministry of Trade / DPR",
-    "prob": 80,
-    "prob_reason_zh": "行政主导，政策落实意愿强烈。",
-    "prob_reason_en": "Strong executive push for resource control."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Chandra Asri (TPIA) Corporate Performance",
@@ -889,9 +907,10 @@ const groups = [
     "question_en": "Will TPIA be excluded from the MSCI Indonesia Index in the next rebalancing?",
     "question_zh": "TPIA 是否会在下一次调整中被剔除出 MSCI 印尼指数？",
     "source": "MSCI Global Index Review",
-    "prob": 55,
-    "prob_reason_zh": "市值与流动性指标均处于边缘风险。",
-    "prob_reason_en": "Market cap and liquidity on the edge."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Harkitnas 2026 Observance",
@@ -939,9 +958,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Football Youth Development",
@@ -1003,9 +1023,10 @@ const groups = [
     "question_en": "Will [Player Name] obtain Indonesian citizenship by end of 2026?",
     "question_zh": "到 2026 年底，[球员姓名]是否会获得印尼国籍？",
     "source": "Ministry of Law and Human Rights",
-    "prob": 60,
-    "prob_reason_zh": "归化政策持续推进，成功率较高。",
-    "prob_reason_en": "Naturalization policy remains active."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "VKTR Leadership Transition",
@@ -1053,9 +1074,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Global Hantavirus Outbreak and Health Risks",
@@ -1131,9 +1153,10 @@ const groups = [
     "question_en": "Will the WHO declare Hantavirus an international public health emergency by end of 2026?",
     "question_zh": "到 2026 年底，世界卫生组织是否会将汉坦病毒列为国际突发公共卫生事件？",
     "source": "WHO Official Dashboard",
-    "prob": 5,
-    "prob_reason_zh": "汉坦病毒全球大流行可能性极低。",
-    "prob_reason_en": "Global pandemic risk is extremely low."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google Tingkatkan Fitur Favorit di Pixel 10 yang Belum Ad…",
@@ -1181,9 +1204,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Samsung Gulirkan Update Keamanan Mei 2026 untuk HP Galaxy",
@@ -1231,9 +1255,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Google Perkenalkan Gemini Spark, AI Otonom yang Bekerja 2…",
@@ -1281,9 +1306,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Harga Lenovo Legion Slim 5, Laptop Gaming Ramping dengan…",
@@ -1331,9 +1357,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Fitur One UI 9 Beta Yang Tersedia Bagi Pengguna Samsung G…",
@@ -1381,9 +1408,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Prosesor Gaming Populer Ryzen 7 5800X3D 10th Anniversary…",
@@ -1431,9 +1459,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Redmi Turbo 6 Max Mengisyaratkan Peningkatan Signifikan d…",
@@ -1481,9 +1510,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Itel A100 Pro Resmi, HP Rp 1 Jutaan Mirip iPhone 17 Pro M…",
@@ -1531,9 +1561,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Xiaomi Siapkan Ponsel Konsep AI Kamera 200MP, Fotografi M…",
@@ -1581,9 +1612,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Forza Horizon 6 sudah menjadi judul Xbox Game Studios yan…",
@@ -1631,9 +1663,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sony Meluncurkan Konsol PlayStation 5 Pro di Indonesia",
@@ -1681,9 +1714,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Canva Offline Feature Expansion",
@@ -1731,9 +1765,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Coal Sector and Commodity Price Slump",
@@ -1795,9 +1830,10 @@ const groups = [
     "question_en": "Will the average Newcastle Coal Index price remain below $120 per tonne in Q4 2026?",
     "question_zh": "2026 年第四季度纽卡斯尔煤炭价格指数的平均价格是否会保持在每吨 120 美元以下？",
     "source": "ICE / Bloomberg Commodity Index",
-    "prob": 60,
-    "prob_reason_zh": "能源转型下煤炭需求长期疲软。",
-    "prob_reason_en": "Energy transition weakens coal demand."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BYD Indonesia Market Rumors",
@@ -1845,9 +1881,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Black Stone Photography and Scientific Interest",
@@ -1895,9 +1932,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Bariatric Surgery for Obesity",
@@ -1945,9 +1983,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mercedes-AMG Global EV Debut",
@@ -1995,9 +2034,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Rising Malaria and Zoonotic Threats",
@@ -2045,9 +2085,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Honda Financial Crisis Strategy",
@@ -2095,9 +2136,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Erin Tutup Pintu Damai dengan Eks ART: Nama Baik Saya Sud…",
@@ -2145,9 +2187,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Diduga Pacaran, Ayu Ting Ting Bawa Muhammad Kevin Gusnadi…",
@@ -2195,9 +2238,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "John Travolta Tak Menua di Usia 72, Dokter Prediksi Peraw…",
@@ -2245,9 +2289,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Momen Pratama Arhan dan Inka Andestha Liburan Bareng Kelu…",
@@ -2295,9 +2340,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Respons Jordi Onsu Usai Dicolek Sarwendah soal Isu Pesugi…",
@@ -2345,9 +2391,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Raffi Ahmad Pamit ke Prabowo Subianto Berangkat Haji Mala…",
@@ -2395,9 +2442,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kondisi Nikita Mirzani Usai Jalani Operasi Tulang Belakang",
@@ -2445,9 +2493,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Malaysia Masters Badminton Tournament",
@@ -2495,9 +2544,10 @@ const groups = [
     "question_en": "Will an Indonesian singles player reach the semi-finals of the 2026 Malaysia Masters?",
     "question_zh": "印尼单打选手是否会进入 2026 年马来西亚大师赛的半决赛？",
     "source": "BWF Tournament Software",
-    "prob": 45,
-    "prob_reason_zh": "印尼单打水平波动，半决赛难度大。",
-    "prob_reason_en": "Performance fluctuates, semis are tough."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Russo-British Air Interception",
@@ -2545,9 +2595,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "North Korean Women's Football Visit",
@@ -2595,9 +2646,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Taiwan Sovereignty and Foreign Power Stance",
@@ -2645,9 +2697,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Laser Weapon Proliferation in Middle East",
@@ -2695,9 +2748,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "K-Pop Industry Global Influence",
@@ -2787,9 +2841,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Telkom Corporate Governance and Restructuring",
@@ -2851,9 +2906,10 @@ const groups = [
     "question_en": "Will Telkom fulfill its plan to close 10 subsidiaries by June 30, 2026?",
     "question_zh": "Telkom 是否会按计划在 2026 年 6 月 30 日前关闭 10 家子公司？",
     "source": "IDX disclosure",
-    "prob": 65,
-    "prob_reason_zh": "重组目标明确，截止日前有望完成。",
-    "prob_reason_en": "Restructuring plan is well-defined."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Shopee Consumer Protection Clarification",
@@ -2901,9 +2957,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "IMF Warnings on Energy and Food Subsidies",
@@ -2951,9 +3008,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "International Court of Justice and Israel",
@@ -3001,9 +3059,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "ICC",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Football Transfer and Managerial Rumors",
@@ -3093,9 +3152,10 @@ const groups = [
     "question_en": "Will Pep Guardiola sign a contract with a new club by end of 2026?",
     "question_zh": "瓜迪奥拉是否会在 2026 年底前与新俱乐部签约？",
     "source": "Official club statement",
-    "prob": 20,
-    "prob_reason_zh": "瓜迪奥拉倾向长期留任或休息。",
-    "prob_reason_en": "Pep prefers staying or taking a break."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "MotoGP and World Superbike Racing",
@@ -3171,9 +3231,10 @@ const groups = [
     "question_en": "Will Valentino Rossi return to racing in a competitive GP event in 2026?",
     "question_zh": "瓦伦蒂诺·罗西是否会在 2026 年重返大奖赛的竞争性赛事？",
     "source": "MotoGP Official",
-    "prob": 10,
-    "prob_reason_zh": "罗西已退役，仅参与测试赛，非竞争性。",
-    "prob_reason_en": "Retired, only testing, not competitive."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indian Political Trends",
@@ -3221,9 +3282,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Indonesian Footballers in European Clubs",
@@ -3285,9 +3347,10 @@ const groups = [
     "question_en": "Will Jay Idzes be in the starting lineup for Sassuolo for at least 50% of league matches in the 2026-27 season?",
     "question_zh": "Jay Idzes 在 2026-27 赛季是否会出现在萨索洛至少 50% 的联赛首发名单中？",
     "source": "Official League Stats",
-    "prob": 30,
-    "prob_reason_zh": "欧洲联赛竞争激烈，首发率难达标。",
-    "prob_reason_en": "Tough competition, high bar for 50%."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cannes Film Festival Industry Insights",
@@ -3349,9 +3412,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Hajj Pilgrimage Challenges",
@@ -3413,9 +3477,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Public Health and Disease Prevention",
@@ -3533,9 +3598,10 @@ const groups = [
     "question_en": "Will the national rate of childhood stunting fall below 14% by the end of 2026?",
     "question_zh": "到 2026 年底，全国儿童发育迟缓率是否会降至 14% 以下？",
     "source": "Indonesian Ministry of Health (Kemenkes)",
-    "prob": 25,
-    "prob_reason_zh": "发育迟缓指标改善缓慢，难达标。",
-    "prob_reason_en": "Stunting progress is slower than target."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Megawati Hangestri Volleyball Transfer",
@@ -3583,9 +3649,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NASA Luncurkan LOXSAT Juli 2026 Uji Coba SPBU Luar Angkasa",
@@ -3633,9 +3700,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NASA Pastikan Asteroid 2026 JH2 Melintas Aman Dekat Bumi",
@@ -3683,9 +3751,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Sempat Dianggap Punah, Populasi Monyet Langka Ini Melonja…",
@@ -3733,9 +3802,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ilmuwan Ungkap Alasan Dinosaurus Predator seperti T-Rex B…",
@@ -3783,9 +3853,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NASA Percepat Peluncuran Teleskop Antariksa Roman ke Sept…",
@@ -3833,9 +3904,10 @@ const groups = [
     "question_en": "Will the Roman Space Telescope launch successfully in September 2026?",
     "question_zh": "罗曼空间望远镜是否会在 2026 年 9 月成功发射？",
     "source": "NASA",
-    "prob": 40,
-    "prob_reason_zh": "航天项目推迟是常态，风险较高。",
-    "prob_reason_en": "Space projects often face delays."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Fakta! Bahwa Bumi Hanyalah Bagian Kecil dari Galaksi Bima…",
@@ -3883,9 +3955,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Teleskop James Webb Berhasil Petakan \"Skeletal\" Semesta d…",
@@ -3933,9 +4006,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Dikira Punah Hampir Seabad, Burung Ini Terlihat Bertengge…",
@@ -3983,9 +4057,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tengkorak Berjejer Rapi, Begini Isi \"Guci Kematian\" Berus…",
@@ -4033,9 +4108,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Disaster Relief and Recovery Challenges",
@@ -4097,9 +4173,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Automotive Market Trends",
@@ -4147,9 +4224,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Papua Land Exploitation Issues",
@@ -4197,9 +4275,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": null,
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -4252,6 +4331,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4331,6 +4416,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });

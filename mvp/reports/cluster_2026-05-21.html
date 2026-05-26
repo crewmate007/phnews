@@ -28,7 +28,7 @@
 
   .main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px; }
 
-  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; }
+  .card { background: #161b27; border: 1px solid #1e2535; border-radius: 12px; padding: 20px; transition: border-color 0.15s; min-width: 0; }
   .card:hover { border-color: #334155; }
   .card.top    { border-left: 3px solid #22c55e; }
   .card.candidate { border-left: 3px solid #f59e0b; }
@@ -50,12 +50,13 @@
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
-  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; }
-  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; }
+  .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
+  .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
-  .source-item .source-title { color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
+  .source-item .source-name { align-self: start; }
 
   .density-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .density-bar .label { font-size: 11px; color: #64748b; width: 72px; flex-shrink: 0; }
@@ -88,6 +89,10 @@
   .question-box .q-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
   .question-box .q-text  { font-size: 13px; color: #e2e8f0; line-height: 1.5; font-style: italic; }
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
+  .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
+  .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
+  .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -148,6 +153,8 @@ const i18n = {
     total: "合计",
     q_label: "建议市场问题",
     resolution: "📎 结算源：",
+    reddit_label: "另一个角度",
+    reddit_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -165,6 +172,8 @@ const i18n = {
     total: "Total",
     q_label: "Suggested Market Question",
     resolution: "📎 Resolution source: ",
+    reddit_label: "Another angle",
+    reddit_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -267,9 +276,10 @@ const groups = [
     "question_en": "Will Sara Duterte be convicted in her impeachment trial before January 1, 2027?",
     "question_zh": "萨拉·杜特尔特是否会在2027年1月1日前在弹劾审判中被定罪？",
     "source": "Senate of the Philippines",
-    "prob": 15,
-    "prob_reason_zh": "弹劾需三分之二多数，政治难度极高。",
-    "prob_reason_en": "Requires 2/3 supermajority, very hard."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Senate Shooting Controversy",
@@ -373,9 +383,10 @@ const groups = [
     "question_en": "Will the Department of Justice officially name a suspect in the Senate shooting before August 2026?",
     "question_zh": "司法部是否会在2026年8月之前正式确认参议院枪击事件的嫌疑人？",
     "source": "Department of Justice (Philippines)",
-    "prob": 70,
-    "prob_reason_zh": "司法部面临压力，必须给出结论。",
-    "prob_reason_en": "DOJ under pressure to name suspect."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Economic Pressure and Inflation",
@@ -481,9 +492,10 @@ const groups = [
     "question_en": "Will the Philippine average inflation rate for Q3 2026 be above 5%?",
     "question_zh": "2026年第三季度菲律宾平均通胀率是否会超过5%？",
     "source": "Philippine Statistics Authority",
-    "prob": 65,
-    "prob_reason_zh": "通胀受供应和汇率影响，压力持续。",
-    "prob_reason_en": "Inflation risks persist from supply/FX."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Disaster Preparedness and Climate",
@@ -545,9 +557,10 @@ const groups = [
     "question_en": "Will the total volume of rice production in 2026 fall below 20 million metric tons?",
     "question_zh": "2026年大米总产量是否会低于2000万公吨？",
     "source": "Department of Agriculture (Philippines)",
-    "prob": 40,
-    "prob_reason_zh": "气候干扰虽大，但抗灾能力有所提升。",
-    "prob_reason_en": "Climate risks high but resilience grows."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Philippine Maritime and Security Policy",
@@ -611,9 +624,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "PBA Commissioner's Cup Playoffs",
@@ -675,9 +689,10 @@ const groups = [
     "question_en": "Which team will win the 2026 PBA Commissioner's Cup?",
     "question_zh": "哪支球队将赢得2026年PBA专员杯冠军？",
     "source": "PBA",
-    "prob": 25,
-    "prob_reason_zh": "竞争激烈，各队夺冠机会均等。",
-    "prob_reason_en": "Highly competitive, field is wide open."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA Western Conference Finals",
@@ -767,9 +782,10 @@ const groups = [
     "question_en": "Will the Oklahoma City Thunder win the NBA Western Conference Finals?",
     "question_zh": "俄克拉荷马雷霆队是否会赢得NBA西部决赛？",
     "source": "NBA",
-    "prob": 55,
-    "prob_reason_zh": "雷霆拥有主场优势和阵容深度。",
-    "prob_reason_en": "Thunder have home court and depth."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Corporate Expansion in Clark Ecozone",
@@ -831,9 +847,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "BCDA",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "HONOR Philippines’ new smartphone with AI-powered creativ…",
@@ -881,9 +898,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "realme P4 Series with up to a 10,001mAh Battery Set to La…",
@@ -931,9 +949,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Power Meets Brilliance: The New Infinix NOTE 60 Pro",
@@ -981,9 +1000,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "BenQ Expands Mac Ecosystem with its Newest MA Series Moni…",
@@ -1031,9 +1051,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘En…",
@@ -1081,9 +1102,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "MNL48 to conclude activities this May",
@@ -1131,9 +1153,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Donny Pangilinan, Belle Mariano reflect on end of era in…",
@@ -1181,9 +1204,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "VLF XXI brings theater families together in star-studded…",
@@ -1231,9 +1255,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "XONARA have arrived — and they aren’t waiting for approval",
@@ -1281,9 +1306,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Judy Ann Santos reunites with Brillante Mendoza in Cannes…",
@@ -1331,9 +1357,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Anne Curtis explores New York with this designer bag",
@@ -1381,9 +1408,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Matteo Guidicelli reacts to 'insecure' comments following…",
@@ -1431,9 +1459,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Disney+ and Hulu to livestream Lollapalooza and more majo…",
@@ -1481,9 +1510,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Mobile Legend Game with Jollibee mascots",
@@ -1531,9 +1561,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Australia is battling its worst diphtheria outbreak in de…",
@@ -1581,9 +1612,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ebola Crisis Sparks Debate Over Global Health Double Stan…",
@@ -1631,9 +1663,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "How Wet Weather in Argentina Helped Fuel the Cruise Ship…",
@@ -1681,9 +1714,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Risk of Ebola global spread is low, but high at regional…",
@@ -1731,9 +1765,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ASIA/SRI LANKA",
@@ -1781,9 +1816,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "WHO Health Emergencies EPI-WIN webinar: Hantavirus in Foc…",
@@ -1831,9 +1867,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "AI Research and Governance",
@@ -1937,9 +1974,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "Academic journals / Regulators",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "US indicts former Cuban President Raúl Castro over 1996 d…",
@@ -1987,9 +2025,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Middle East war live: Trump says willing to wait 'a few d…",
@@ -2037,9 +2076,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Trump claims he will speak to Taiwan’s president, departi…",
@@ -2087,9 +2127,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Far-right Israeli minister condemned for taunting handcuf…",
@@ -2137,9 +2178,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Putin, Xi signal unity but fail to reach deal on pipeline…",
@@ -2187,9 +2229,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Flak jackets and final goodbyes: Lebanon’s first responde…",
@@ -2237,9 +2280,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Hungary: Lessons on the character and limits of right-pop…",
@@ -2287,9 +2331,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "FirstFT: Trump critic Thomas Massie loses Kentucky primary",
@@ -2337,9 +2382,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "How the war in Iran is accelerating Asia's energy transfo…",
@@ -2387,9 +2433,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Space Exploration Progress",
@@ -2507,9 +2554,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Thailand tightens visa rules for tourists, citing crime b…",
@@ -2557,9 +2605,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Trinoma unveils a refreshed look",
@@ -2607,9 +2656,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Regulator voids registration of Mount Peak Securities",
@@ -2657,9 +2707,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "SEC Philippines",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Toyota adds more affordable Corolla Altis hybrid variants",
@@ -2707,9 +2758,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ChatCPR instructor delivers near-perfect CPR guidance in…",
@@ -2757,9 +2809,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "AMD’s Gorgon Halo is aimed at AI with 192GB of onboard me…",
@@ -2807,9 +2860,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "The Swatch x AP Collection Sold for $8,000 on StockX Befo…",
@@ -2857,9 +2911,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Filipino hospitality brands lean into local luxury appeal",
@@ -2907,9 +2962,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Study identifies new marker to find patients with advance…",
@@ -2957,9 +3013,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Arsenal to reward Mikel Arteta with huge pay rise and put…",
@@ -3007,9 +3064,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Complex animals evolved up to 10 million years earlier th…",
@@ -3057,9 +3115,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Can Jannik Sinner achieve a Career Grand Slam at the Fren…",
@@ -3107,9 +3166,10 @@ const groups = [
     "question_en": "Will Jannik Sinner win the 2026 French Open?",
     "question_zh": "扬尼克·辛纳是否会赢得2026年法国网球公开赛？",
     "source": "Roland Garros",
-    "prob": 35,
-    "prob_reason_zh": "红土场竞争极其激烈。",
-    "prob_reason_en": "Competition on clay is extremely stiff."
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tom Lynagh re-commits to Australian Rugby",
@@ -3157,9 +3217,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Europa League final reaction: Youri Tielemans, Morgan Rog…",
@@ -3207,9 +3268,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Tennis players plan ‘work-to-rule’ French Open media prot…",
@@ -3257,9 +3319,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "China's cleaner air cuts PM2.5, but dementia deaths still…",
@@ -3307,9 +3370,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Study Questions Methods Used in Alzheimer's Drug Analysis",
@@ -3357,9 +3421,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Justin Gaethje Is Here To Be Legendary | UFC Freedom 250",
@@ -3407,9 +3472,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Manchester City succession sheds light on Enzo Maresca’s…",
@@ -3457,9 +3523,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Thanks to MrBeast, the winner of 'Survivor' 50 takes home…",
@@ -3507,9 +3574,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Cytokine-armored CAR-T cell therapy successfully attacks…",
@@ -3557,9 +3625,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "How Will Googlebooks Actually Work? I Answer Your 7 Bigge…",
@@ -3607,9 +3676,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Microsoft Rushes Out Emergency Mitigation For ‘YellowKey’…",
@@ -3657,9 +3727,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "NBA star Victor Wembanyama and the San Antonio Spurs to p…",
@@ -3707,9 +3778,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "You can get $1,500 off Samsung's 85-inch Frame Pro TV",
@@ -3757,9 +3829,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Traces of AI embedded quotes found in famous fan-fiction…",
@@ -3807,9 +3880,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Own a piece of District transit history: Former DC Street…",
@@ -3857,9 +3931,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Trail Blazers lay off large number of business-side emplo…",
@@ -3907,9 +3982,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Novel CRISPR Technique Aims to Destroy Virus-Infected Cel…",
@@ -3957,9 +4033,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "The World's Longest-Living Vertebrate Can Reach 400 Years…",
@@ -4007,9 +4084,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Xbox hires game industry analyst Matthew Ball to lead str…",
@@ -4057,9 +4135,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Fused Silk Fibers Create Solid Materials Nearly As Tough…",
@@ -4107,9 +4186,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Plex appeal fades as Lifetime Pass jumps to $750",
@@ -4157,9 +4237,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Kizilelma UCAV deal to advance Indonesia’s air power, say…",
@@ -4207,9 +4288,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Ronald McDonald House New England Launches Brand Revitali…",
@@ -4257,9 +4339,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Grand Lotto winner hits ₱115.36M jackpot May 20",
@@ -4307,9 +4390,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "PCSO",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "Economic Watch: Private firms power China's innovation dr…",
@@ -4357,9 +4441,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "New DBM chief vows no repeat of flood control scandal",
@@ -4407,9 +4492,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   },
   {
     "name_en": "ICTSI lands AIIB’s first private Philippine loan for port…",
@@ -4457,9 +4543,10 @@ const groups = [
     "question_en": null,
     "question_zh": null,
     "source": "N/A",
-    "prob": null,
-    "prob_reason_zh": "",
-    "prob_reason_en": ""
+    "reddit_question_en": null,
+    "reddit_question_zh": null,
+    "reddit_resolution_source": null,
+    "reddit_resolution_url": null
   }
 ];
 
@@ -4512,6 +4599,12 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
+    const reddit_q = lang === "zh"
+      ? (g.reddit_question_zh || g.reddit_question_en)
+      : (g.reddit_question_en || g.reddit_question_zh);
+    const reddit_source_html = g.reddit_resolution_url
+      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
+      : escapeHtml(g.reddit_resolution_source || '');
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4591,6 +4684,13 @@ function renderCards(lang) {
         })() : ''}
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
+
+      ${reddit_q ? `
+      <div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}</div>
+        <div class="q-text">${reddit_q}</div>
+        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
+      </div>` : ''}
     `;
     container.appendChild(card);
   });
