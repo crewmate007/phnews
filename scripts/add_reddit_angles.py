@@ -26,7 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region  # noqa: E402
-from cluster import generate_reddit_angles  # noqa: E402
+from angles import RedditAngle  # noqa: E402
 
 
 def load_api_key() -> str:
@@ -87,7 +87,7 @@ def main() -> None:
         f"[INFO] Generating Reddit angles for {len(target_groups)} groups "
         f"({args.region}, {args.date}) via {model}..."
     )
-    stats = generate_reddit_angles(target_groups, client, model, region)
+    stats = RedditAngle().generate(target_groups, client, model, region)
     print(f"[OK] Reddit angles attached: {stats['attached']}/{stats['total']}")
 
     # generate_reddit_angles mutated target_groups in-place; that's the same

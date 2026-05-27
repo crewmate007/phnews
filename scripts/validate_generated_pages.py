@@ -92,21 +92,22 @@ def _has_foreign_bettable_question(region: str, groups: list[dict]) -> bool:
     terms = FOREIGN_TERMS.get(region, ())
     for group in groups:
         reddit_angles = group.get("reddit_angles") or []
-        # Reddit angle can appear on non-bettable cards too; check both blocks
-        # whenever EITHER is present.
-        has_reddit_angle = bool(
+        tiktok_angles = group.get("tiktok_angles") or []
+        # Any angle block (reddit or tiktok) can appear on non-bettable cards.
+        has_extra_angle = bool(
             reddit_angles
+            or tiktok_angles
             or group.get("reddit_question_en")
             or group.get("reddit_question_zh")
             or group.get("reddit_resolution_source")
         )
-        if not group.get("bettable") and not has_reddit_angle:
+        if not group.get("bettable") and not has_extra_angle:
             continue
         text_parts = [str(group.get(key) or "") for key in (
             "question", "question_en", "question_zh", "source",
             "reddit_question_en", "reddit_question_zh", "reddit_resolution_source",
         )]
-        for angle in reddit_angles:
+        for angle in list(reddit_angles) + list(tiktok_angles):
             if not isinstance(angle, dict):
                 continue
             for key in ("question_en", "question_zh", "source", "subtopic"):

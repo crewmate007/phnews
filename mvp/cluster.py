@@ -18,6 +18,16 @@ from typing import List, Dict, Optional
 
 from regions import RegionConfig, get_region
 
+# Angle plugins (see mvp/angles/). cluster.py imports the shared base helpers
+# (parse_json_response / generate_content_with_retry / clip) under their old
+# underscore-prefixed names so the rest of this module keeps calling them
+# without churn.
+from angles.base import (
+    parse_json_response as _parse_json_response,
+    generate_content_with_retry as _generate_content_with_retry,
+)
+from angles import PHASE_1_ANGLES, PHASE_2_ANGLES
+
 
 # ============================================================
 # LLM-based clustering (Gemini Flash)
@@ -95,100 +105,8 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
 """
 
 
-SCORE_PROMPT_TEMPLATE = """\
-You are a prediction-market analyst covering {country_name}. Today is {date}.
-
-Below are broad topic clusters created from SourceIntel hotspots. Your task is
-to score every cluster for prediction-market usefulness. Do not merge clusters,
-drop clusters, or invent new clusters. Return one scored object per input cluster.
-
-Region discipline:
-- The market question must be relevant to {country_name} or to a genuinely
-  global outcome.
-- If a cluster is mainly another country's domestic policy, central bank,
-  local election, local sports league, local court case, or local company
-  story with no clear {country_name} relevance, mark it as digest/watch:
-  bettable=false, suggested_question=null, suggested_question_zh=null.
-- Use {country_name} or global authoritative sources for resolvable questions.
-  Do not use another country's domestic regulator or central bank as the
-  resolver for a {country_name} page unless the topic is explicitly about a
-  cross-border/global market outcome.
-
-CLUSTERS:
-{groups}
-
-OUTPUT: strict JSON only, no markdown fences, no extra text.
-
-{{
-  "groups": [
-    {{
-      "broad_index": <int, index from the input cluster>,
-      "R": <0|1|2>,
-      "R_reason": "why this outcome is/isn't resolvable",
-      "S": <0|1|2>,
-      "S_reason": "what authoritative source resolves it",
-      "T": <0|1|2>,
-      "T_reason": "what is the time window / deadline",
-      "U": <0|1|2>,
-      "U_reason": "how uncertain is the outcome (0=decided, 2=genuinely uncertain)",
-      "H": <0|1|2>,
-      "H_reason": "how much public attention / discussion",
-      "BDLT": {{
-        "B": <0|1|2>,
-        "B_reason": "bet demand: would local DigiPlus-style users want to take a side?",
-        "D": <0|1|2>,
-        "D_reason": "disagreement: are there plausible buyers on both YES and NO?",
-        "L": <0|1|2>,
-        "L_reason": "local hook: is this familiar and emotionally relevant to local users?",
-        "T": <0|1|2>,
-        "T_reason": "timeliness: is settlement soon enough to feel playable?"
-      }},
-      "why_users_bet": "1 short reason this might attract real-money local bettors",
-      "bettable": <true|false>,
-      "suggested_question": "Will ... by ...? (null if not bettable)",
-      "suggested_question_zh": "中文预测市场问题（不可下注则为 null）",
-      "resolution_source": "specific official or authoritative source",
-      "disposition_hint": "top|candidate|watch|digest|drop"
-    }}
-  ]
-}}
-
-SCORING GUIDE:
-- R=2: clear yes/no outcome with objective criteria (e.g. "Will BSP cut by 25bp?")
-- R=1: outcome exists but boundary is fuzzy
-- R=0: outcome is purely subjective or has no defined endpoint
-- S=2: official government/regulatory body, court, league, exchange, company, or
-  tournament body announces result
-- S=1: reputable media consensus, or official source exists but is not clean
-- S=0: no clear authoritative resolver
-- T=2: specific date, deadline, meeting, recurring cadence, or tournament window
-- T=1: approximate deadline (this quarter, this month)
-- T=0: open-ended, no deadline
-- U=2: outcome is genuinely in doubt, implied probability 25%–75%
-- U=1: one side heavily favored but not certain
-- U=0: outcome is essentially decided / a sure thing
-- H=2: multiple sources, social discussion, or cross-section coverage
-- H=1: 2–4 evidence items, limited social discussion
-- H=0: single weak source or very low interest
-
-BDLT GUIDE, optimized for local DigiPlus-like betting demand:
-- B=2: strong real-money betting appeal; familiar rivalry, sports, prices,
-  lotto, disaster, celebrity, or political drama. B=1: niche but playable.
-  B=0: informative but unlikely to make users bet.
-- D=2: both YES and NO have emotionally/plausibly motivated buyers. D=1:
-  some uncertainty but one side dominates. D=0: boring, settled, or one-sided.
-- L=2: directly local and familiar to everyday users. L=1: indirect local
-  effect. L=0: foreign/abstract with little local hook.
-- T=2: settles in days/weeks or at a known event. T=1: this quarter/season.
-  T=0: long, vague, or open-ended.
-
-Important:
-- A cluster can be valuable digest even when it is not bettable.
-- Sports and entertainment can be bettable if the event has an official result
-  and a future time window; otherwise mark digest/watch.
-- Local politics, legal processes, economic policy, health outbreaks, weather,
-  security, and infrastructure should get careful market-question treatment.
-"""
+# SCORE_PROMPT_TEMPLATE moved to mvp/angles/serious.py
+# Now generates multi-candidate scoring; see SeriousAngle.
 
 
 LEGACY_CLUSTER_PROMPT_TEMPLATE = """\
@@ -257,258 +175,8 @@ SCORING GUIDE:
 
 
 # ============================================================
-# Reddit-style dry-wit angle (secondary market question)
+# (Reddit angle / scoring / URL allowlist moved to mvp/angles/)
 # ============================================================
-
-REDDIT_ANGLE_PROMPT_TEMPLATE = """\
-You have lurked Reddit for ten years. Your feed sprawls across
-prediction-market communities, regional / local-culture threads, and
-data-visualization corners. You read the news but never take the official
-narrative at face value. You like noticing the small observable signals
-nobody is bothering to track.
-
-Today is {date}. Country: {country_name}.
-
-The serious analyst has already produced a primary market question for each
-topic group below. Your job: for EACH group, propose between ONE and THREE
-second-market angles in your own voice -- dry-wit, lateral, observational.
-
-How many angles per group?
-- Most groups are about one story being covered from several angles.
-  ONE angle is the right answer for those.
-- Some groups bundle DISTINCT sub-storylines under one umbrella name
-  (different actors, different legal cases, different events linked by
-  theme but not by causality -- e.g. "Senate plunder + ICC arrest +
-  gun-permit revocation against different senators"). For those, propose
-  ONE angle PER sub-storyline, up to 3 total. Give each angle a short
-  Chinese `subtopic` label naming which sub-storyline it covers.
-- HARD CAP: never exceed 3 angles per group.
-
-Approach each topic from scratch. Do NOT follow a template. For every
-angle, ask yourself fresh:
-- What numeric or observable signal would catch this story from the side?
-- What is nobody bothering to count here?
-- Where is the gap between the official narrative and what you'd actually see?
-- What single, specific, future-checkable thing best captures the tension?
-- Could this be answered by waiting for an event, a non-event, a ratio,
-  a ranking, a threshold, a cadence change, a document appearing, a phrase
-  being used or avoided, a counter resetting, a comparison crossing over?
-
-You bet on the trace something leaves, not on the headline conclusion.
-Across the batch AND within a group's multi-angle list, vary your angle
-shapes -- if two angles would naturally produce the same shape, force
-yourself to find a different shape for the second.
-
-Voice rules (hard):
-- Allowed: any cool, observant angle. Counting, comparing, tracking a
-  metric over time, watching for a specific document or post, noticing
-  what an official does NOT say, ratios, rankings, thresholds, cadence
-  shifts.
-- Forbidden: jokes, puns, 段子, 哈哈/笑死/绷不住/笑点, sarcasm aimed at
-  individuals or groups, emoji-heavy framing, condescension.
-- You are careful side-eye, NOT roast.
-
-Resolution-source rules (hardest, this is what separates real markets
-from shower thoughts):
-- Every angle's `url` MUST point at a real, currently-existing public
-  resource. Acceptable shapes: official government / regulatory agency
-  websites in the relevant country, public statistical or trends services,
-  and the verified official social-media accounts of named agencies or
-  organizations.
-- The `source` string must name that resource in a way a reader can
-  recognize.
-- No real resolver exists for an angle? Skip that angle (do NOT include
-  it in the array). If no resolver exists for ANY angle in the group,
-  emit an empty `angles` array and set `drop_reason`.
-- NEVER invent URLs. Unsure whether a URL truly exists? Skip that angle.
-
-Topic groups:
-{groups}
-
-OUTPUT: strict JSON only, no markdown fences, no extra prose.
-
-{{
-  "groups": [
-    {{
-      "broad_index": <int, MUST match the input index>,
-      "angles": [
-        {{
-          "subtopic": "短中文标签 naming which sub-storyline this angle covers, or null if the group is one unified story",
-          "question_en": "English question",
-          "question_zh": "中文问题",
-          "source": "Human-readable source name",
-          "url": "https://..."
-        }}
-      ],
-      "drop_reason": "short reason when angles array is empty, otherwise null"
-    }}
-  ]
-}}
-"""
-
-
-_REDDIT_URL_ALLOWLIST = re.compile(
-    r"^https?://("
-    r"[a-z0-9-]+\.gov\.ph(?:/|$)"
-    r"|[a-z0-9-]+\.gov\.id(?:/|$)"
-    r"|(?:www\.)?bsp\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?doe\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?dof\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?dbm\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?neda\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?pagasa\.dost\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?phivolcs\.dost\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?comelec\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?dilg\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?congress\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?senate\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?dswd\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?dof\.gov\.ph(?:/|$)"
-    r"|(?:www\.)?meralco\.com\.ph(?:/|$)"
-    r"|(?:www\.)?ngcp\.ph(?:/|$)"
-    r"|(?:www\.)?pse\.com\.ph(?:/|$)"
-    r"|(?:www\.)?bi\.go\.id(?:/|$)"
-    r"|(?:www\.)?kemenkeu\.go\.id(?:/|$)"
-    r"|(?:www\.)?bps\.go\.id(?:/|$)"
-    r"|(?:www\.)?bmkg\.go\.id(?:/|$)"
-    r"|(?:www\.)?idx\.co\.id(?:/|$)"
-    r"|(?:www\.)?kpu\.go\.id(?:/|$)"
-    r"|(?:www\.)?x\.com/[A-Za-z0-9_]+"
-    r"|(?:www\.)?twitter\.com/[A-Za-z0-9_]+"
-    r"|(?:www\.)?facebook\.com/[A-Za-z0-9._-]+"
-    r"|(?:www\.)?youtube\.com/@[A-Za-z0-9._-]+"
-    r"|trends\.google\.com(?:/|$)"
-    r"|trends24\.in/(?:philippines|indonesia)"
-    r")",
-    re.IGNORECASE,
-)
-
-
-def _build_reddit_input(groups: List[Dict]) -> str:
-    """Build the per-group input for the Reddit-angle prompt.
-
-    Reads group["clusters"] (full SourceIntel cluster dicts attached by
-    cluster_with_llm at line ~319), so this helper works both during the live
-    pipeline AND when loading a saved clusters_*.json for backfill.
-    """
-    blocks = []
-    for index, group in enumerate(groups):
-        group_clusters = group.get("clusters") or []
-        sample_titles = []
-        sample_summaries = []
-        keywords_set: List[str] = []
-        for c in group_clusters[:5]:
-            title = c.get("cluster_title") or ""
-            if title:
-                sample_titles.append(_clip(title, 120))
-        for c in group_clusters[:3]:
-            summary = c.get("summary") or ""
-            if summary:
-                sample_summaries.append(_clip(summary, 220))
-            for kw in (c.get("keywords") or [])[:2]:
-                if kw and str(kw) not in keywords_set:
-                    keywords_set.append(str(kw))
-            if len(keywords_set) >= 6:
-                break
-        block = "\n".join([
-            f"[{index}] {group.get('name', '')} / {group.get('name_zh', '')}",
-            f"narrative={_clip(group.get('narrative', ''), 220)}",
-            f"primary_question={_clip(str(group.get('suggested_question') or ''), 180)}",
-            f"market_hint={_clip(str(group.get('market_hint') or ''), 140)}",
-            "sample_titles=" + " | ".join(sample_titles),
-            "sample_summaries=" + " || ".join(sample_summaries),
-            "keywords=" + ", ".join(keywords_set[:6]),
-        ])
-        blocks.append(block)
-    return "\n\n".join(blocks)
-
-
-_REDDIT_ANGLE_CAP = 3
-
-
-def generate_reddit_angles(
-    groups: List[Dict],
-    client,
-    model: str,
-    region_cfg: RegionConfig,
-) -> Dict[str, int]:
-    """Attach reddit_angles array (and legacy flat fields) to each group
-    in-place via one batched Gemini call.
-
-    Returns {"attached": int, "total": int, "angle_count": int}. attached
-    counts groups with at least one valid angle; angle_count is the total
-    angle blocks across all groups (multi-angle groups contribute >1).
-
-    Never raises — on parse or API failure the caller's groups are left
-    untouched and stats reflect zero. Hallucinated URLs are dropped via
-    _REDDIT_URL_ALLOWLIST; source label is preserved as plain text in
-    that case. Each group is capped at _REDDIT_ANGLE_CAP angles.
-    """
-    stats = {"attached": 0, "total": len(groups), "angle_count": 0}
-    if not groups:
-        return stats
-
-    prompt = REDDIT_ANGLE_PROMPT_TEMPLATE.format(
-        date=dt.date.today().isoformat(),
-        country_name=region_cfg.country_name,
-        groups=_build_reddit_input(groups),
-    )
-    response = _generate_content_with_retry(client, model, prompt)
-    result = _parse_json_response(response.text)
-
-    by_index: Dict[int, Dict] = {}
-    for item in result.get("groups", []):
-        if not isinstance(item, dict):
-            continue
-        idx = item.get("broad_index")
-        if isinstance(idx, int):
-            by_index[idx] = item
-
-    for i, group in enumerate(groups):
-        item = by_index.get(i)
-        if not item:
-            continue
-        raw_angles = item.get("angles") or []
-        if not isinstance(raw_angles, list):
-            continue
-        clean_angles: List[Dict] = []
-        for ang in raw_angles[:_REDDIT_ANGLE_CAP]:
-            if not isinstance(ang, dict):
-                continue
-            q_en = ang.get("question_en") or ang.get("question")
-            q_zh = ang.get("question_zh")
-            if not (q_en or q_zh):
-                continue
-            src = ang.get("source") or ang.get("resolution_source")
-            url = ang.get("url") or ang.get("resolution_url")
-            if url and not _REDDIT_URL_ALLOWLIST.match(str(url).strip()):
-                url = None  # drop unsafe URL, keep source name as text
-            subtopic = ang.get("subtopic")
-            if isinstance(subtopic, str):
-                subtopic = subtopic.strip() or None
-            else:
-                subtopic = None
-            clean_angles.append({
-                "subtopic": subtopic,
-                "question_en": q_en,
-                "question_zh": q_zh,
-                "source": src,
-                "url": url,
-            })
-        if not clean_angles:
-            continue
-        group["reddit_angles"] = clean_angles
-        # Legacy flat fields: first angle, so old readers / archives keep
-        # rendering one angle even if they haven't picked up the array shape.
-        first = clean_angles[0]
-        group["reddit_question"] = first["question_en"]
-        group["reddit_question_zh"] = first["question_zh"]
-        group["reddit_resolution_source"] = first["source"]
-        group["reddit_resolution_url"] = first["url"]
-        stats["attached"] += 1
-        stats["angle_count"] += len(clean_angles)
-    return stats
-
 
 # ============================================================
 
@@ -559,19 +227,26 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     broad_result = _ensure_minimum_broad_groups(broad_result, clusters, min_groups)
     broad_result = _promote_excess_noise(broad_result, clusters)
 
-    score_prompt = SCORE_PROMPT_TEMPLATE.format(
-        date=today,
-        groups=_build_score_groups(broad_result["groups"], clusters),
-        country_name=region_cfg.country_name,
-    )
-    score_response = _generate_content_with_retry(client, model, score_prompt)
-    score_result = _parse_json_response(score_response.text)
-    result = _merge_scored_groups(broad_result, score_result, clusters)
-    _apply_region_relevance_guard(result, region_cfg)
+    # PHASE 1: angles that drive disposition (scoring). Today: SeriousAngle.
+    # Runs BEFORE region guard / source metadata so the scores it writes are
+    # available to downstream filling + filtering.
+    _run_angles(PHASE_1_ANGLES, broad_result["groups"], client, model, region_cfg)
+
+    # Per-group housekeeping: fill missing score defaults, attach source_mix /
+    # source_examples derived from the original clusters, infer BDLT for any
+    # angle that didn't return them.
+    for g in broad_result.get("groups", []):
+        _fill_missing_scores(g)
+        g["density"] = len(g.get("entry_ids", []))
+        _attach_source_metadata(g, clusters)
+        _fill_missing_bdlt(g)
+
+    _apply_region_relevance_guard(broad_result, region_cfg)
+    result = broad_result
     result["region"] = region_cfg.slug
     result["total_entries"] = len(clusters)
     result["clustered_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
-    result["cluster_pipeline"] = "broad_then_score"
+    result["cluster_pipeline"] = "broad_then_angles"
     result["target_group_range"] = [min_groups, max_groups]
     result["entries"] = [_compact_entry(i, cluster) for i, cluster in enumerate(clusters)]
 
@@ -579,28 +254,33 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         group["clusters"] = [clusters[i] for i in group.get("entry_ids", [])
                              if i < len(clusters)]
 
-    # Reddit-style dry-wit angle: best-effort, never blocks the serious pipeline.
-    # Toggle off in CI by setting PHNEWS_REDDIT_ANGLES=0.
+    # PHASE 2: angles that read group["clusters"] for richer texture.
+    # Today: RedditAngle + TikTokAngle. Each is best-effort; failure of any
+    # one angle never blocks the others or the serious pipeline.
     if os.environ.get("PHNEWS_REDDIT_ANGLES", "1") != "0":
+        _run_angles(PHASE_2_ANGLES, result.get("groups", []), client, model, region_cfg)
+
+    return result
+
+
+def _run_angles(angles, groups, client, model, region_cfg):
+    """Call each angle's generate(); log attach rate; isolate per-angle failures."""
+    for angle in angles:
         try:
-            stats = generate_reddit_angles(
-                result.get("groups", []),
-                client,
-                model,
-                region_cfg,
-            )
+            stats = angle.generate(groups, client, model, region_cfg)
+            attached = stats.get("attached", 0)
+            total = stats.get("total", len(groups))
+            blocks = stats.get("candidate_count") or stats.get("angle_count") or attached
             print(
-                f"[INFO] Reddit angles attached: {stats['attached']}/{stats['total']} groups "
-                f"({stats.get('angle_count', stats['attached'])} angle blocks total)",
+                f"[INFO] {angle.name}: attached {attached}/{total} groups "
+                f"({blocks} blocks total)",
                 file=sys.stderr,
             )
         except Exception as exc:
             print(
-                f"[WARN] Reddit angles skipped: {type(exc).__name__}: {exc}",
+                f"[WARN] {angle.name} skipped: {type(exc).__name__}: {exc}",
                 file=sys.stderr,
             )
-
-    return result
 
 
 def _target_group_range(n_entries: int) -> tuple[int, int]:
@@ -611,27 +291,6 @@ def _target_group_range(n_entries: int) -> tuple[int, int]:
     if n_entries >= 30:
         return 12, 28
     return 6, 14
-
-
-def _generate_content_with_retry(client, model: str, prompt: str,
-                                 attempts: int = 4):
-    """Retry transient Gemini overloads without hiding persistent failures."""
-    last_exc = None
-    for attempt in range(attempts):
-        try:
-            return client.models.generate_content(model=model, contents=prompt)
-        except Exception as exc:  # google-genai exposes multiple transient types.
-            last_exc = exc
-            message = str(exc).lower()
-            status_code = getattr(exc, "status_code", None)
-            transient = status_code in (429, 500, 502, 503, 504) or any(
-                marker in message
-                for marker in ("503", "429", "unavailable", "high demand", "timeout")
-            )
-            if not transient or attempt == attempts - 1:
-                raise
-            time.sleep(5 * (2 ** attempt))
-    raise last_exc
 
 
 def _build_broad_entries(clusters: List[Dict]) -> str:
@@ -658,46 +317,6 @@ def _build_broad_entries(clusters: List[Dict]) -> str:
             fields.append(f"prediction_angle={_clip(c.get('prediction_angle', ''), 180)}")
         lines.append("\n".join(fields))
     return "\n\n".join(lines)
-
-
-def _build_score_groups(groups: List[Dict], clusters: List[Dict]) -> str:
-    blocks = []
-    for index, group in enumerate(groups):
-        entry_ids = [i for i in group.get("entry_ids", []) if isinstance(i, int) and 0 <= i < len(clusters)]
-        titles = [_clip(clusters[i].get("cluster_title", ""), 120) for i in entry_ids[:8]]
-        source_labels = sorted({clusters[i].get("section", "") for i in entry_ids})
-        blocks.append("\n".join([
-            f"[{index}] {group.get('name', '')} / {group.get('name_zh', '')}",
-            f"type={group.get('topic_type', '')}",
-            f"density={group.get('density', len(entry_ids))}",
-            f"entry_ids={entry_ids}",
-            f"sources={', '.join(source_labels[:6])}",
-            f"narrative={_clip(group.get('narrative', ''), 220)}",
-            f"market_hint={_clip(str(group.get('market_hint') or ''), 180)}",
-            "sample_titles=" + " | ".join(titles),
-        ]))
-    return "\n\n".join(blocks)
-
-
-_TRAILING_COMMA_RE = re.compile(r",(\s*[}\]])")
-
-
-def _parse_json_response(text: str) -> Dict:
-    text = text.strip()
-    if text.startswith("```"):
-        text = text[3:]
-        if text[:4].lower() == "json":
-            text = text[4:]
-        text = text.lstrip("\r\n")
-        end = text.rfind("```")
-        if end != -1:
-            text = text[:end]
-        text = text.strip()
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        # Gemini occasionally emits trailing commas before } or ]; clean once and retry.
-        return json.loads(_TRAILING_COMMA_RE.sub(r"\1", text))
 
 
 def _normalize_broad_result(result: Dict, clusters: List[Dict]) -> Dict:
@@ -911,37 +530,6 @@ def _compact_topic_name(title: str, max_len: int) -> str:
             cleaned = cleaned.split(separator, 1)[0].strip()
             break
     return _clip(cleaned, max_len)
-
-
-def _merge_scored_groups(broad_result: Dict, score_result: Dict,
-                         clusters: List[Dict]) -> Dict:
-    scores_by_index = {
-        item.get("broad_index"): item
-        for item in score_result.get("groups", [])
-        if isinstance(item.get("broad_index"), int)
-    }
-    groups = []
-    for index, broad in enumerate(broad_result.get("groups", [])):
-        scored = scores_by_index.get(index, {})
-        group = dict(broad)
-        for key in (
-            "R", "R_reason", "S", "S_reason", "T", "T_reason",
-            "U", "U_reason", "H", "H_reason", "bettable",
-            "suggested_question", "suggested_question_zh",
-            "resolution_source", "disposition_hint", "BDLT",
-            "why_users_bet",
-        ):
-            if key in scored:
-                group[key] = scored[key]
-        _fill_missing_scores(group)
-        group["density"] = len(group.get("entry_ids", []))
-        _attach_source_metadata(group, clusters)
-        _fill_missing_bdlt(group)
-        groups.append(group)
-    return {
-        "groups": groups,
-        "noise": broad_result.get("noise", []),
-    }
 
 
 def _attach_source_metadata(group: Dict, clusters: List[Dict]) -> None:

@@ -94,6 +94,11 @@
   .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
+  .question-box.tiktok-box { border-left: 3px solid #ec4899; background: #15101a; padding: 10px 12px; margin-top: 8px; }
+  .question-box.tiktok-box .q-label { color: #f472b6; }
+  .question-box.tiktok-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .question-box.tiktok-box .q-source a { color: #f472b6; text-decoration: none; }
+  .question-box.tiktok-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -157,6 +162,8 @@ const i18n = {
     resolution: "📎 结算源：",
     reddit_label: "另一个角度",
     reddit_resolution: "📎 信号源：",
+    tiktok_label: "爆款角度",
+    tiktok_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -176,6 +183,8 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     reddit_label: "Another angle",
     reddit_resolution: "📎 Signal source: ",
+    tiktok_label: "Viral angle",
+    tiktok_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -274,7 +283,8 @@ const groups = [
         "source": "Kementerian Energi dan Sektor Daya Mineral (ESDM) Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Selat Hormuz Transit Security and Operations",
@@ -348,7 +358,8 @@ const groups = [
         "source": "United States Maritime Administration (MARAD)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Iran's Wartime Domestic and Diplomatic Policies",
@@ -443,7 +454,8 @@ const groups = [
         "source": "US Department of the Treasury",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Middle East Geopolitical Realignment Pressures",
@@ -517,7 +529,8 @@ const groups = [
         "source": "US Department of State",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sumatra Electrical Blackout Investigation",
@@ -593,7 +606,8 @@ const groups = [
         "source": "PT PLN (Persero) Media Center",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Persib Bandung League Triumph and Management",
@@ -681,7 +695,8 @@ const groups = [
         "source": "Persatuan Sepakbola Seluruh Indonesia (PSSI)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Palm Oil Export Policy Investigations",
@@ -755,7 +770,8 @@ const groups = [
         "source": "Kementerian Perdagangan Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Equity Market Trading and Inclusion",
@@ -857,7 +873,8 @@ const groups = [
         "source": "Bursa Efek Indonesia (IDX)",
         "url": "https://www.idx.co.id"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Macroeconomic Challenges and BI Policy",
@@ -975,7 +992,8 @@ const groups = [
         "source": "Bank Indonesia",
         "url": "https://www.bi.go.id"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Manchester United Player Management and Transfers",
@@ -1070,7 +1088,8 @@ const groups = [
         "source": "Nogometna zveza Slovenije (NZS)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Arsenal FC Squad and Champions League Prep",
@@ -1144,7 +1163,8 @@ const groups = [
         "source": "Arsenal FC Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Jose Mourinho Managerial Speculation",
@@ -1218,7 +1238,8 @@ const groups = [
         "source": "Real Madrid CF Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Hantavirus Public Health Education and Debunking",
@@ -1292,7 +1313,8 @@ const groups = [
         "source": "Kementerian Kesehatan Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Wamenkes Singgung Diabetes Tipe 2 pada Usia Muda Mengkhaw…",
@@ -1352,7 +1374,8 @@ const groups = [
         "source": "Direktorat P2PTM - Kementerian Kesehatan RI",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Data Mengejutkan Kemenkes: 663 Ribu Anak Indonesia Alami…",
@@ -1412,7 +1435,8 @@ const groups = [
         "source": "Ikatan Dokter Anak Indonesia (IDAI)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Oppo Smart Device and ColorOS Updates",
@@ -1486,7 +1510,8 @@ const groups = [
         "source": "Direktorat Jenderal SDPPI, Kementerian Komunikasi dan Informatika RI",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Vivo Y600 Turbo Resmi Rilis 2026, Intip Spesifikasi Gahar…",
@@ -1546,7 +1571,8 @@ const groups = [
         "source": "Direktorat Jenderal SDPPI, Kementerian Komunikasi dan Informatika RI",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Update Harga Vivo per 26 Mei 2026, Harga Mulai Rp 1,9 Juta",
@@ -1606,7 +1632,8 @@ const groups = [
         "source": "Vivo Indonesia Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Xiaomi and Redmi Corporate and Product Updates",
@@ -1680,7 +1707,8 @@ const groups = [
         "source": "Xiaomi Corporation Investor Relations",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Raffi Ahmad's Wealth and Hajj Pilgrimage",
@@ -1754,7 +1782,8 @@ const groups = [
         "source": "Kementerian Agama Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Hollywood Box Office Hits in 2026",
@@ -1828,7 +1857,8 @@ const groups = [
         "source": "Lembaga Sensor Film Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Major Video Game Launches and Remasters",
@@ -1916,7 +1946,8 @@ const groups = [
         "source": "Entertainment Software Rating Board",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Dinosaur Paleontology and Evolutionary Discoveries",
@@ -2004,7 +2035,8 @@ const groups = [
         "source": "Nature Portfolio",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Advanced Space Exploration Technology and Planetary Studies",
@@ -2092,7 +2124,8 @@ const groups = [
         "source": "NASA Jet Propulsion Laboratory News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Severe Flash Flooding in Sulawesi and Gorontalo Regions",
@@ -2166,7 +2199,8 @@ const groups = [
         "source": "Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)",
         "url": "https://www.bmkg.go.id"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Musicians' Marital and Relationship Developments",
@@ -2232,7 +2266,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Celebrity Family Milestones and Style",
@@ -2298,7 +2333,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Nutritional Science, Coffee, and Weight Management Habits",
@@ -2372,7 +2408,8 @@ const groups = [
         "source": "Badan Pengawas Obat dan Makanan (BPOM)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Colorectal Cancer Risks and Advanced Radiotherapy Treatments",
@@ -2446,7 +2483,8 @@ const groups = [
         "source": "Kementerian Kesehatan Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Mental Health Challenges: Youth Crises and Caregiver Burnout",
@@ -2520,7 +2558,8 @@ const groups = [
         "source": "World Health Organization",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Infectious Disease Outbreaks and Vaccine Developments",
@@ -2594,7 +2633,8 @@ const groups = [
         "source": "Australian Government Department of Health and Aged Care",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "New Smartphone Launches in the Indonesian Market",
@@ -2668,7 +2708,8 @@ const groups = [
         "source": "Direktorat Jenderal SDPPI, Kementerian Komunikasi dan Informatika RI",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indo-Pacific Geopolitical Tensions and Trade Restrictions",
@@ -2742,7 +2783,8 @@ const groups = [
         "source": "Ministry of Commerce of the People's Republic of China",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Lunar Drift and Space Station Operational Anomalies",
@@ -2816,7 +2858,8 @@ const groups = [
         "source": "NASA International Space Station Blog",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Supercomputing Simulations and Quantum Optical Processing",
@@ -2890,7 +2933,8 @@ const groups = [
         "source": "Chinese Academy of Sciences",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "English Premier League Player Transfers and Departures",
@@ -3006,7 +3050,8 @@ const groups = [
         "source": "Liverpool FC Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Legendary Managers and Veterans in European Football",
@@ -3080,7 +3125,8 @@ const groups = [
         "source": "Real Madrid CF Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Early Post-Presidency Maneuvers and 2029 Electoral Preparations",
@@ -3154,7 +3200,8 @@ const groups = [
         "source": "Direktorat Jenderal Administrasi Hukum Umum",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Automotive Market, EV Incentives, and GIIAS Exhibition",
@@ -3242,7 +3289,8 @@ const groups = [
         "source": "Gabungan Industri Kendaraan Bermotor Indonesia (GAIKINDO)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Luxury Fashion Styles of Major Female Celebrities",
@@ -3308,7 +3356,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Israel-Gaza Conflict Military Actions and Detainees",
@@ -3382,7 +3431,8 @@ const groups = [
         "source": "Kementerian Luar Negeri Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sovereign Financial Assets: Gold Reserves and US Treasury Yields",
@@ -3456,7 +3506,8 @@ const groups = [
         "source": "Bureau of the Fiscal Service, US Department of the Treasury",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Major Infrastructure and Resource Projects Backed by Indonesian Conglomerates",
@@ -3530,7 +3581,8 @@ const groups = [
         "source": "Bursa Efek Indonesia (IDX) Disclosure",
         "url": "https://www.idx.co.id"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Public Health Warnings on Daily Habits and Lifestyle Choices",
@@ -3604,7 +3656,8 @@ const groups = [
         "source": "Badan Pengawas Obat dan Makanan (BPOM)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Athlete Performances in International Racquet Tournaments",
@@ -3678,7 +3731,8 @@ const groups = [
         "source": "Badminton World Federation (BWF)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Transport and Fuel Price Policies",
@@ -3752,7 +3806,8 @@ const groups = [
         "source": "Kementerian Perhubungan Republik Indonesia",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Entertainment Personnel Reunions and Host Controversies",
@@ -3818,7 +3873,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Big Tech Restructuring and AI Pricing",
@@ -3899,7 +3955,8 @@ const groups = [
         "source": "DeepSeek API Portal",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   }
 ];
 
@@ -3952,20 +4009,8 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_angles_html = (g.reddit_angles || []).map(a => {
-      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
-      if (!q) return '';
-      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
-      const sourceHtml = a.url
-        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
-        : escapeHtml(a.source || '');
-      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
-      return `<div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}${subtopic}</div>
-        <div class="q-text">${q}</div>
-        ${sourceLine}
-      </div>`;
-    }).join("");
+    const reddit_angles_html = renderAngleSlot(g.reddit_angles, "reddit-box", t.reddit_label, t.reddit_resolution, lang);
+    const tiktok_angles_html = renderAngleSlot(g.tiktok_angles, "tiktok-box", t.tiktok_label, t.tiktok_resolution, lang);
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4047,6 +4092,7 @@ function renderCards(lang) {
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
       ${reddit_angles_html}
+      ${tiktok_angles_html}
     `;
     container.appendChild(card);
   });
@@ -4089,6 +4135,26 @@ function sourceLabel(source) {
     google_news: "Google News",
     x_grok: "Grok/X"
   }[source] || source || "SourceIntel";
+}
+
+function renderAngleSlot(angles, boxClass, label, resolutionLabel, lang) {
+  if (!Array.isArray(angles) || angles.length === 0) return '';
+  return angles.map(a => {
+    const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+    if (!q) return '';
+    const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+    const sourceHtml = a.url
+      ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+      : escapeHtml(a.source || '');
+    const sourceLine = (a.source || a.url)
+      ? `<div class="q-source" style="margin-top:6px">${resolutionLabel}${sourceHtml}</div>`
+      : '';
+    return `<div class="question-box ${boxClass}">
+      <div class="q-label">${label}${subtopic}</div>
+      <div class="q-text">${q}</div>
+      ${sourceLine}
+    </div>`;
+  }).join("");
 }
 
 function escapeHtml(value) {

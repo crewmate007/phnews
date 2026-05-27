@@ -116,6 +116,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
+  .question-box.tiktok-box { border-left: 3px solid #ec4899; background: #15101a; padding: 10px 12px; margin-top: 8px; }
+  .question-box.tiktok-box .q-label { color: #f472b6; }
+  .question-box.tiktok-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .question-box.tiktok-box .q-source a { color: #f472b6; text-decoration: none; }
+  .question-box.tiktok-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -179,6 +184,8 @@ const i18n = {
     resolution: "📎 结算源：",
     reddit_label: "另一个角度",
     reddit_resolution: "📎 信号源：",
+    tiktok_label: "爆款角度",
+    tiktok_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -198,6 +205,8 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     reddit_label: "Another angle",
     reddit_resolution: "📎 Signal source: ",
+    tiktok_label: "Viral angle",
+    tiktok_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -260,20 +269,8 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_angles_html = (g.reddit_angles || []).map(a => {
-      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
-      if (!q) return '';
-      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
-      const sourceHtml = a.url
-        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
-        : escapeHtml(a.source || '');
-      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
-      return `<div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}${subtopic}</div>
-        <div class="q-text">${q}</div>
-        ${sourceLine}
-      </div>`;
-    }).join("");
+    const reddit_angles_html = renderAngleSlot(g.reddit_angles, "reddit-box", t.reddit_label, t.reddit_resolution, lang);
+    const tiktok_angles_html = renderAngleSlot(g.tiktok_angles, "tiktok-box", t.tiktok_label, t.tiktok_resolution, lang);
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -355,6 +352,7 @@ function renderCards(lang) {
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
       ${reddit_angles_html}
+      ${tiktok_angles_html}
     `;
     container.appendChild(card);
   });
@@ -397,6 +395,26 @@ function sourceLabel(source) {
     google_news: "Google News",
     x_grok: "Grok/X"
   }[source] || source || "SourceIntel";
+}
+
+function renderAngleSlot(angles, boxClass, label, resolutionLabel, lang) {
+  if (!Array.isArray(angles) || angles.length === 0) return '';
+  return angles.map(a => {
+    const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+    if (!q) return '';
+    const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+    const sourceHtml = a.url
+      ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+      : escapeHtml(a.source || '');
+    const sourceLine = (a.source || a.url)
+      ? `<div class="q-source" style="margin-top:6px">${resolutionLabel}${sourceHtml}</div>`
+      : '';
+    return `<div class="question-box ${boxClass}">
+      <div class="q-label">${label}${subtopic}</div>
+      <div class="q-text">${q}</div>
+      ${sourceLine}
+    </div>`;
+  }).join("");
 }
 
 function escapeHtml(value) {
@@ -494,34 +512,19 @@ def build_group(g: dict) -> dict:
         "reddit_resolution_source": g.get("reddit_resolution_source"),
         "reddit_resolution_url": g.get("reddit_resolution_url"),
         "reddit_angles": _build_reddit_angles_list(g),
+        "tiktok_angles": _normalize_angle_list(g.get("tiktok_angles")),
     }
 
 
 def _build_reddit_angles_list(g: dict) -> list:
     """Return reddit_angles as a list of dicts.
 
-    New-format JSON (post-Iteration 3): reads g["reddit_angles"] directly.
-    Legacy-format JSON (Iterations 1-2 with only flat reddit_question fields):
-    wraps the flat fields into a single-element list so the renderer can use
-    one code path.
+    New-format JSON: reads g["reddit_angles"] directly.
+    Legacy-format JSON (Iterations 1-2): wraps the flat reddit_question* fields
+    into a single-element list so the renderer can use one code path.
     """
-    angles = g.get("reddit_angles")
-    if isinstance(angles, list) and angles:
-        normalized = []
-        for a in angles:
-            if not isinstance(a, dict):
-                continue
-            q_en = a.get("question_en") or a.get("question")
-            q_zh = a.get("question_zh")
-            if not (q_en or q_zh):
-                continue
-            normalized.append({
-                "subtopic": a.get("subtopic"),
-                "question_en": q_en,
-                "question_zh": q_zh,
-                "source": a.get("source"),
-                "url": a.get("url"),
-            })
+    normalized = _normalize_angle_list(g.get("reddit_angles"))
+    if normalized:
         return normalized
     legacy_q = g.get("reddit_question")
     legacy_q_zh = g.get("reddit_question_zh")
@@ -534,6 +537,28 @@ def _build_reddit_angles_list(g: dict) -> list:
             "url": g.get("reddit_resolution_url"),
         }]
     return []
+
+
+def _normalize_angle_list(angles) -> list:
+    """Generic angle-list normalizer for any angle plugin's output array."""
+    if not isinstance(angles, list):
+        return []
+    normalized = []
+    for a in angles:
+        if not isinstance(a, dict):
+            continue
+        q_en = a.get("question_en") or a.get("question")
+        q_zh = a.get("question_zh")
+        if not (q_en or q_zh):
+            continue
+        normalized.append({
+            "subtopic": a.get("subtopic"),
+            "question_en": q_en,
+            "question_zh": q_zh,
+            "source": a.get("source"),
+            "url": a.get("url"),
+        })
+    return normalized
 
 
 def clean_source_example(item: dict) -> dict:

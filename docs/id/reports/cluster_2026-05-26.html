@@ -94,6 +94,11 @@
   .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
+  .question-box.tiktok-box { border-left: 3px solid #ec4899; background: #15101a; padding: 10px 12px; margin-top: 8px; }
+  .question-box.tiktok-box .q-label { color: #f472b6; }
+  .question-box.tiktok-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .question-box.tiktok-box .q-source a { color: #f472b6; text-decoration: none; }
+  .question-box.tiktok-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -157,6 +162,8 @@ const i18n = {
     resolution: "📎 结算源：",
     reddit_label: "另一个角度",
     reddit_resolution: "📎 信号源：",
+    tiktok_label: "爆款角度",
+    tiktok_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -176,6 +183,8 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     reddit_label: "Another angle",
     reddit_resolution: "📎 Signal source: ",
+    tiktok_label: "Viral angle",
+    tiktok_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -288,7 +297,8 @@ const groups = [
         "source": "Drewry World Container Index",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Economic Impacts of US-Iran Conflict",
@@ -362,7 +372,8 @@ const groups = [
         "source": "US Department of the Treasury Interest Rate Statistics",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Iran Domestic Crisis and Diplomacy",
@@ -436,7 +447,8 @@ const groups = [
         "source": "US OFAC Recent Actions",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Rupiah and Budget Pressures",
@@ -540,7 +552,8 @@ const groups = [
         "source": "Bank Indonesia News Releases",
         "url": "https://www.bi.go.id/id/publikasi/ruang-media/news-release/Default.aspx"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "European Heatwave and France Climate Issues",
@@ -600,7 +613,8 @@ const groups = [
         "source": "Météo-France Vigilance",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Electric Vehicle Incentive Delay in Indonesia",
@@ -660,7 +674,8 @@ const groups = [
         "source": "JDIH Kementerian Keuangan RI",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sumatra Power Outage Investigation",
@@ -720,7 +735,8 @@ const groups = [
         "source": "PT PLN Siaran Pers",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Bangladesh 'Donald Trump' Buffalo Sensation",
@@ -772,7 +788,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Meta Post-Layoffs Commitments",
@@ -832,7 +849,8 @@ const groups = [
         "source": "US SEC EDGAR System - Meta Platforms",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Xiaomi Q1 2026 Financial Performance",
@@ -892,7 +910,8 @@ const groups = [
         "source": "Hong Kong Exchanges and Clearing (HKEX) News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Israel-Hamas Conflict and Regional Escalation",
@@ -994,7 +1013,8 @@ const groups = [
         "source": "Ministry of Foreign Affairs and Expatriates of Jordan",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "East Asian Geopolitical and Trade Tensions",
@@ -1075,7 +1095,8 @@ const groups = [
         "source": "Ministry of External Affairs of India",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Tourism and Architecture Landmarks 2026",
@@ -1135,7 +1156,8 @@ const groups = [
         "source": "The Michelin Guide Hotels",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "DeepSeek AI Pricing Adjustments",
@@ -1195,7 +1217,8 @@ const groups = [
         "source": "DeepSeek API Docs Pricing",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Prabowo State Visit to France",
@@ -1255,7 +1278,8 @@ const groups = [
         "source": "Kementerian Pertahanan RI Siaran Pers",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "School Bus and Train Collision Incident",
@@ -1307,7 +1331,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Internet Rakyat Rural Connectivity Project",
@@ -1367,7 +1392,8 @@ const groups = [
         "source": "Indonesia Stock Exchange Company Announcements",
         "url": "https://www.idx.co.id/en/news/company-announcement/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "West Java and Sulawesi Flash Floods",
@@ -1448,7 +1474,8 @@ const groups = [
         "source": "BNPB Indonesia Berita",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Hantavirus Education and Fact-Checking",
@@ -1522,7 +1549,8 @@ const groups = [
         "source": "Kominfo Laporan Isu Hoaks",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Youth Diabetes and Hypertension Concerns in Indonesia",
@@ -1596,7 +1624,8 @@ const groups = [
         "source": "Kementerian Kesehatan RI - Sehat Negeriku",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Astronomical and Space Exploration Studies",
@@ -1719,7 +1748,8 @@ const groups = [
         "source": "NASA JPL News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Quantum Computing and Advanced Computer Simulations",
@@ -1800,7 +1830,8 @@ const groups = [
         "source": "Chinese Academy of Sciences Research News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Vivo and iQOO Smartphone Releases in Indonesia",
@@ -1888,7 +1919,8 @@ const groups = [
         "source": "Direktorat Jenderal SDPPI Sertifikasi",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Huawei and Redmi Smartphone Hardware Leak Discussions",
@@ -1969,7 +2001,8 @@ const groups = [
         "source": "Huawei Official Weibo",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Oppo Pad 6 and ColorOS 16 AI Software Features",
@@ -2043,7 +2076,8 @@ const groups = [
         "source": "Direktorat Jenderal SDPPI Sertifikasi",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Infinix HOT 70 Launch and Indonesia Gadget Market Shifts",
@@ -2117,7 +2151,8 @@ const groups = [
         "source": "Kementerian Perindustrian RI - Nilai TKDN",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Major Video Game Franchises and Engine Showcases",
@@ -2219,7 +2254,8 @@ const groups = [
         "source": "Unreal Engine Blog",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Premier League and Bundesliga Summer Transfer Rumors",
@@ -2335,7 +2371,8 @@ const groups = [
         "source": "Newcastle United FC News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "European Football Clubs Strategic Manager and Player Moves",
@@ -2458,7 +2495,8 @@ const groups = [
         "source": "FC Barcelona News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Football Coaching and National Player Updates",
@@ -2560,7 +2598,8 @@ const groups = [
         "source": "PSSI News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "International Racket Sports Tournaments",
@@ -2641,7 +2680,8 @@ const groups = [
         "source": "Roland Garros Tournament Official Site",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Paleontology and Dinosaur Evolutionary Studies",
@@ -2729,7 +2769,8 @@ const groups = [
         "source": "Nature Research Articles Portfolio",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Celebrity Marriages and Public Relations Disputes",
@@ -2809,7 +2850,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Celebrity Lifestyles and Family Milestones",
@@ -2903,7 +2945,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Pop Music Icons and Biopic Film Industry Updates",
@@ -2998,7 +3041,8 @@ const groups = [
         "source": "Box Office Mojo Annual Worldwide Box Office",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Raffi Ahmad Luxury Lifestyle and Hajj Pilgrimage",
@@ -3072,7 +3116,8 @@ const groups = [
         "source": "Kementerian Agama RI Pers Rilis",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Public Health Guidance, Diet Trends, and Digestive Illnesses",
@@ -3188,7 +3233,8 @@ const groups = [
         "source": "Badan Pengawas Obat dan Makanan RI - Penjelasan Publik",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Vaksin Ebola Terbaru Oxford Segera Diuji Coba, Terobosan…",
@@ -3248,7 +3294,8 @@ const groups = [
         "source": "U.S. ClinicalTrials.gov Registry",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Otoritas Kesehatan Australia Waspadai Lonjakan Difteri",
@@ -3308,7 +3355,8 @@ const groups = [
         "source": "Australian Government Department of Health NNDSS",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Mental Health Concerns: Caregiver Burnout and Youth Anxiety",
@@ -3382,7 +3430,8 @@ const groups = [
         "source": "WHO Newsroom Fact Sheets",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Foreign Capital Outflow and Key Blue-Chip Stocks Fall",
@@ -3456,7 +3505,8 @@ const groups = [
         "source": "Indonesia Stock Exchange Trading Summary",
         "url": "https://www.idx.co.id/en/market-data/trading-summary/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Energy Infrastructure and State Corporation Ventures",
@@ -3537,7 +3587,8 @@ const groups = [
         "source": "Kementerian BUMN Media News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Danantara's PT DSI Entity and Palm Oil Export Controls",
@@ -3639,7 +3690,8 @@ const groups = [
         "source": "JDIH Kementerian Perdagangan RI",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Automotive and Retail Market Policies",
@@ -3769,7 +3821,8 @@ const groups = [
         "source": "Gaikindo Indonesia International Auto Show News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Holiday Tourism Stimulus and Religious Logistics",
@@ -3871,7 +3924,8 @@ const groups = [
         "source": "Masjid Istiqlal News",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Prabowo Presidency Legitimacy and Makan Bergizi Gratis Funding",
@@ -3945,7 +3999,8 @@ const groups = [
         "source": "Kementerian Keuangan RI",
         "url": "https://www.kemenkeu.go.id/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Anti-Corruption Activism and Criminal Law Reforms",
@@ -4040,7 +4095,8 @@ const groups = [
         "source": "DPR RI RUU Prolegnas List",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Indonesian Internal Security Threats: Separatism and Armed Pocong Panic",
@@ -4121,7 +4177,8 @@ const groups = [
         "source": "Humas Polri Berita",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Iran Nuclear Program and China Relations",
@@ -4181,7 +4238,8 @@ const groups = [
         "source": "IAEA Statements of the Director General",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "May 2026 Astrological Predictions",
@@ -4233,7 +4291,8 @@ const groups = [
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
     "reddit_resolution_url": null,
-    "reddit_angles": []
+    "reddit_angles": [],
+    "tiktok_angles": []
   }
 ];
 
@@ -4286,20 +4345,8 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_angles_html = (g.reddit_angles || []).map(a => {
-      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
-      if (!q) return '';
-      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
-      const sourceHtml = a.url
-        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
-        : escapeHtml(a.source || '');
-      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
-      return `<div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}${subtopic}</div>
-        <div class="q-text">${q}</div>
-        ${sourceLine}
-      </div>`;
-    }).join("");
+    const reddit_angles_html = renderAngleSlot(g.reddit_angles, "reddit-box", t.reddit_label, t.reddit_resolution, lang);
+    const tiktok_angles_html = renderAngleSlot(g.tiktok_angles, "tiktok-box", t.tiktok_label, t.tiktok_resolution, lang);
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4381,6 +4428,7 @@ function renderCards(lang) {
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
       ${reddit_angles_html}
+      ${tiktok_angles_html}
     `;
     container.appendChild(card);
   });
@@ -4423,6 +4471,26 @@ function sourceLabel(source) {
     google_news: "Google News",
     x_grok: "Grok/X"
   }[source] || source || "SourceIntel";
+}
+
+function renderAngleSlot(angles, boxClass, label, resolutionLabel, lang) {
+  if (!Array.isArray(angles) || angles.length === 0) return '';
+  return angles.map(a => {
+    const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+    if (!q) return '';
+    const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+    const sourceHtml = a.url
+      ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+      : escapeHtml(a.source || '');
+    const sourceLine = (a.source || a.url)
+      ? `<div class="q-source" style="margin-top:6px">${resolutionLabel}${sourceHtml}</div>`
+      : '';
+    return `<div class="question-box ${boxClass}">
+      <div class="q-label">${label}${subtopic}</div>
+      <div class="q-text">${q}</div>
+      ${sourceLine}
+    </div>`;
+  }).join("");
 }
 
 function escapeHtml(value) {

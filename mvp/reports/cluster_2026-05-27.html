@@ -94,6 +94,11 @@
   .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
+  .question-box.tiktok-box { border-left: 3px solid #ec4899; background: #15101a; padding: 10px 12px; margin-top: 8px; }
+  .question-box.tiktok-box .q-label { color: #f472b6; }
+  .question-box.tiktok-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .question-box.tiktok-box .q-source a { color: #f472b6; text-decoration: none; }
+  .question-box.tiktok-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
   .prob-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .prob-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
@@ -157,6 +162,8 @@ const i18n = {
     resolution: "📎 结算源：",
     reddit_label: "另一个角度",
     reddit_resolution: "📎 信号源：",
+    tiktok_label: "爆款角度",
+    tiktok_resolution: "📎 信号源：",
     no_bet: "不适合作为预测市场话题",
     source_mix: "来源",
     expand_scores: "展开",
@@ -176,6 +183,8 @@ const i18n = {
     resolution: "📎 Resolution source: ",
     reddit_label: "Another angle",
     reddit_resolution: "📎 Signal source: ",
+    tiktok_label: "Viral angle",
+    tiktok_resolution: "📎 Signal source: ",
     no_bet: "Not suitable as a prediction market topic",
     source_mix: "Sources",
     expand_scores: "Expand",
@@ -260,7 +269,8 @@ const groups = [
         "source": "Department of Education Philippines Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "French Open Matches and Incidents",
@@ -355,7 +365,8 @@ const groups = [
         "source": "Roland Garros Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "NBA Finals, Playoffs, and Franchise Management",
@@ -485,7 +496,8 @@ const groups = [
         "source": "Los Angeles Lakers Front Office Directory",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "IndyCar Series and Grand Prix Races",
@@ -559,7 +571,8 @@ const groups = [
         "source": "IndyCar Official Results",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Premier League and European Football Tournaments",
@@ -640,7 +653,8 @@ const groups = [
         "source": "Crystal Palace FC Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "PVL 2026 Rookie Draft Outlook",
@@ -700,7 +714,8 @@ const groups = [
         "source": "Premier Volleyball League Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "IIHF Ice Hockey World Championship",
@@ -760,7 +775,8 @@ const groups = [
         "source": "IIHF Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Vatican AI Warnings and Trump Officials Policy",
@@ -820,7 +836,8 @@ const groups = [
         "source": "White House Briefing Room",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Philippine Economy Slowdown and Stagflation Risks",
@@ -896,7 +913,8 @@ const groups = [
         "source": "Philippine Statistics Authority Official Website",
         "url": "https://psa.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "BIR Digitalization and PCC Competition Controls",
@@ -977,7 +995,8 @@ const groups = [
         "source": "Philippine Competition Commission",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Binance Partnership for Philippine Comeback",
@@ -1037,7 +1056,8 @@ const groups = [
         "source": "Securities and Exchange Commission of the Philippines",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Visayas Grid Outages and NGCP Inquiries",
@@ -1113,7 +1133,8 @@ const groups = [
         "source": "National Grid Corporation of the Philippines Official Website",
         "url": "https://www.ngcp.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "West Philippine Sea Maritime Confrontations",
@@ -1173,7 +1194,8 @@ const groups = [
         "source": "Philippine Coast Guard Official Facebook Page",
         "url": "https://www.facebook.com/coastguardph"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Cotabato Radio Journalist Shooting",
@@ -1233,7 +1255,8 @@ const groups = [
         "source": "Philippine National Police Official Website",
         "url": "https://pnp.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Marcos SWS Satisfaction Rating Decline",
@@ -1293,7 +1316,8 @@ const groups = [
         "source": "Social Weather Stations Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sara Duterte Impeachment Moves",
@@ -1353,7 +1377,8 @@ const groups = [
         "source": "House of Representatives of the Philippines",
         "url": "https://www.congress.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Rodante Marcoleta Precautionary HDO",
@@ -1429,7 +1454,8 @@ const groups = [
         "source": "Sandiganbayan Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Bato dela Rosa Gun License and ICC Dispute",
@@ -1512,7 +1538,8 @@ const groups = [
         "source": "Department of Justice",
         "url": "https://doj.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Marcos-Imee No-El and Charter Change Rift",
@@ -1588,7 +1615,8 @@ const groups = [
         "source": "Senate of the Philippines",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Philippine Peso Weakening Projections",
@@ -1648,7 +1676,8 @@ const groups = [
         "source": "Bangko Sentral ng Pilipinas",
         "url": "https://www.bsp.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Fuel Costs and Philippine Inflation Risks",
@@ -1708,7 +1737,8 @@ const groups = [
         "source": "Department of Energy of the Philippines",
         "url": "https://www.doe.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Monsoon and El Niño Weather Dynamics",
@@ -1768,7 +1798,8 @@ const groups = [
         "source": "PAGASA Official Website",
         "url": "https://www.pagasa.dost.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Mayon Volcano Eruption and Meteor",
@@ -1828,7 +1859,8 @@ const groups = [
         "source": "PHIVOLCS Official Website",
         "url": "https://www.phivolcs.dost.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "PH-Australia Kasangga Joint Military Drills",
@@ -1888,7 +1920,8 @@ const groups = [
         "source": "Department of National Defense of the Philippines",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Shangri-La Singapore Defense Forum",
@@ -1948,7 +1981,8 @@ const groups = [
         "source": "Department of National Defense of the Philippines",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Davao Undocumented Chinese Workers Crackdown",
@@ -2008,7 +2042,8 @@ const groups = [
         "source": "Bureau of Immigration Philippines",
         "url": "https://immigration.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Pampanga Collapsed Building Retrieval Operations",
@@ -2068,7 +2103,8 @@ const groups = [
         "source": "NDRRMC Official Website",
         "url": "https://ndrrmc.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Cordillera and Regional Family Planning Trends",
@@ -2128,7 +2164,8 @@ const groups = [
         "source": "Philippine Statistics Authority",
         "url": "https://psa.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Iloilo Dengue Prevention and Statistics",
@@ -2188,7 +2225,8 @@ const groups = [
         "source": "Department of Health of the Philippines",
         "url": "https://doh.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Caraga Region Educational and Social Initiatives",
@@ -2269,7 +2307,8 @@ const groups = [
         "source": "DepEd Caraga Regional Office",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Philippine Solar Power and Grid Upgrade Projects",
@@ -2385,7 +2424,8 @@ const groups = [
         "source": "Department of Trade and Industry",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Philippine Banking and Corporate Finance Moves",
@@ -2473,7 +2513,8 @@ const groups = [
         "source": "Bangko Sentral ng Pilipinas",
         "url": "https://www.bsp.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Panhua Sarangani Steel Plant Opening",
@@ -2533,7 +2574,8 @@ const groups = [
         "source": "Board of Investments of the Philippines",
         "url": "https://boi.gov.ph/"
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Hantavirus Scare and Filipino Crew Quarantines",
@@ -2593,7 +2635,8 @@ const groups = [
         "source": "Bureau of Quarantine Philippines",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Ebola Outbreak in DRC and Uganda",
@@ -2681,7 +2724,8 @@ const groups = [
         "source": "World Health Organization",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Ebola Scientific Research and Travel Bans",
@@ -2783,7 +2827,8 @@ const groups = [
         "source": "Government of Canada Travel Advisories",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "US-Iran Ceasefire Violations and Conflict",
@@ -2843,7 +2888,8 @@ const groups = [
         "source": "US Department of Defense",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Smartphone Market Memory Crunch",
@@ -2903,7 +2949,8 @@ const groups = [
         "source": "Federal Reserve Bank of St. Louis (FRED)",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "East Asian Geopolitics, Human Rights, and Tourism",
@@ -3012,7 +3059,8 @@ const groups = [
         "source": "Ministry of Economy, Trade and Industry of Japan",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "NASA Lunar and Mars Exploration Initiatives",
@@ -3100,7 +3148,8 @@ const groups = [
         "source": "NASA Press Releases Portal",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Planetary and Deep Space Observations",
@@ -3202,7 +3251,8 @@ const groups = [
         "source": "Space Telescope Science Institute",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Geological, Paleontological, and Biological Discoveries",
@@ -3311,7 +3361,8 @@ const groups = [
         "source": "Smithsonian Global Volcanism Program",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "AI-Powered Scientific and Environmental Research Tools",
@@ -3413,7 +3464,8 @@ const groups = [
         "source": "NASA Earth Science Division",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Clinical Medical and Dietary Health Studies",
@@ -3501,7 +3553,8 @@ const groups = [
         "source": "US Food and Drug Administration",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Google Health App and Fitbit Integration",
@@ -3561,7 +3614,8 @@ const groups = [
         "source": "Google Play Store",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sony PS5 Exclusives Server Shutdowns",
@@ -3621,7 +3675,8 @@ const groups = [
         "source": "PlayStation Blog",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Adobe Gemini and PC Maker Launches",
@@ -3695,7 +3750,8 @@ const groups = [
         "source": "Google Gemini Release Notes",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Nvidia Control Panel App Retirement",
@@ -3755,7 +3811,8 @@ const groups = [
         "source": "Nvidia Official Driver Downloads Page",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sennheiser Introduces Momentum 5 Wireless with Much Impro…",
@@ -3815,7 +3872,8 @@ const groups = [
         "source": "Sennheiser Consumer Audio",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "GIGABYTE GO27Q24G WOLED Gaming Monitor Arrives in PH with…",
@@ -3875,7 +3933,8 @@ const groups = [
         "source": "Gigabyte Philippines Official Site",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "JBL unleashes power of AI with new party box karaoke for…",
@@ -3935,7 +3994,8 @@ const groups = [
         "source": "Harman Newsroom",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Samsung Brings 2026 Vision AI TV Lineup in India, Launche…",
@@ -3995,7 +4055,8 @@ const groups = [
         "source": "Samsung India Newsroom",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Consumer Tech, Accessory, and Automotive Launches",
@@ -4104,7 +4165,8 @@ const groups = [
         "source": "Seiko Watches Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Huawei Transistor Density and Chip Innovations",
@@ -4164,7 +4226,8 @@ const groups = [
         "source": "Huawei Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "K-pop Triumphs and Music Award Highlights",
@@ -4224,7 +4287,8 @@ const groups = [
         "source": "MTV VMAs Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Sonny Rollins and Jazz Legend Legacies",
@@ -4284,7 +4348,8 @@ const groups = [
         "source": "Grammy Awards Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Stephen Colbert and Julie Andrews Public Returns",
@@ -4365,7 +4430,8 @@ const groups = [
         "source": "World Parkinson Coalition",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "US Political Litigation and Documentary Films",
@@ -4439,7 +4505,8 @@ const groups = [
         "source": "White House Briefing Room",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Global Entertainment Milestones and Releases",
@@ -4534,7 +4601,8 @@ const groups = [
         "source": "Shonen Jump Official Website",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Creative Collaborations, Performing Arts, and Digital Media",
@@ -4664,7 +4732,8 @@ const groups = [
         "source": "Internet Broadway Database",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "US Corporate Recognitions and Social Benefit Policies",
@@ -4738,7 +4807,8 @@ const groups = [
         "source": "USDA Food and Nutrition Service",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Wealthy Americans Purchasing Foreign Citizenships",
@@ -4798,7 +4868,8 @@ const groups = [
         "source": "Community Malta Agency",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   },
   {
     "name_en": "Bangladesh Measles Outbreak Escalation",
@@ -4858,7 +4929,8 @@ const groups = [
         "source": "WHO Bangladesh Portal",
         "url": null
       }
-    ]
+    ],
+    "tiktok_angles": []
   }
 ];
 
@@ -4911,20 +4983,8 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_angles_html = (g.reddit_angles || []).map(a => {
-      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
-      if (!q) return '';
-      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
-      const sourceHtml = a.url
-        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
-        : escapeHtml(a.source || '');
-      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
-      return `<div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}${subtopic}</div>
-        <div class="q-text">${q}</div>
-        ${sourceLine}
-      </div>`;
-    }).join("");
+    const reddit_angles_html = renderAngleSlot(g.reddit_angles, "reddit-box", t.reddit_label, t.reddit_resolution, lang);
+    const tiktok_angles_html = renderAngleSlot(g.tiktok_angles, "tiktok-box", t.tiktok_label, t.tiktok_resolution, lang);
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -5006,6 +5066,7 @@ function renderCards(lang) {
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
       ${reddit_angles_html}
+      ${tiktok_angles_html}
     `;
     container.appendChild(card);
   });
@@ -5048,6 +5109,26 @@ function sourceLabel(source) {
     google_news: "Google News",
     x_grok: "Grok/X"
   }[source] || source || "SourceIntel";
+}
+
+function renderAngleSlot(angles, boxClass, label, resolutionLabel, lang) {
+  if (!Array.isArray(angles) || angles.length === 0) return '';
+  return angles.map(a => {
+    const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+    if (!q) return '';
+    const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+    const sourceHtml = a.url
+      ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+      : escapeHtml(a.source || '');
+    const sourceLine = (a.source || a.url)
+      ? `<div class="q-source" style="margin-top:6px">${resolutionLabel}${sourceHtml}</div>`
+      : '';
+    return `<div class="question-box ${boxClass}">
+      <div class="q-label">${label}${subtopic}</div>
+      <div class="q-text">${q}</div>
+      ${sourceLine}
+    </div>`;
+  }).join("");
 }
 
 function escapeHtml(value) {
