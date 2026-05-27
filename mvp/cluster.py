@@ -570,7 +570,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     _apply_region_relevance_guard(result, region_cfg)
     result["region"] = region_cfg.slug
     result["total_entries"] = len(clusters)
-    result["clustered_at"] = dt.datetime.now().isoformat()
+    result["clustered_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
     result["cluster_pipeline"] = "broad_then_score"
     result["target_group_range"] = [min_groups, max_groups]
     result["entries"] = [_compact_entry(i, cluster) for i, cluster in enumerate(clusters)]

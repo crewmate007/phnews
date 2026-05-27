@@ -91,6 +91,7 @@
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
   .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
   .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
@@ -113,6 +114,7 @@
     <h1 id="h-title">🇵🇭 PHNews 菲律宾预测市场话题日报</h1>
     <div class="meta">
       <span>📅 2026-05-21</span>
+      <span data-zh="🕐 生成于 2026-05-21 22:50 PHT" data-en="🕐 Generated 2026-05-21 22:50 PHT">🕐 生成于 2026-05-21 22:50 PHT</span>
       <span id="h-clusters">📰 读取 120 条 SourceIntel 热点</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
@@ -279,7 +281,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Senate Shooting Controversy",
@@ -386,7 +389,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine Economic Pressure and Inflation",
@@ -495,7 +499,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine Disaster Preparedness and Climate",
@@ -560,7 +565,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine Maritime and Security Policy",
@@ -627,7 +633,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "PBA Commissioner's Cup Playoffs",
@@ -692,7 +699,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "NBA Western Conference Finals",
@@ -785,7 +793,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Corporate Expansion in Clark Ecozone",
@@ -850,7 +859,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "HONOR Philippines’ new smartphone with AI-powered creativ…",
@@ -901,7 +911,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "realme P4 Series with up to a 10,001mAh Battery Set to La…",
@@ -952,7 +963,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Power Meets Brilliance: The New Infinix NOTE 60 Pro",
@@ -1003,7 +1015,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "BenQ Expands Mac Ecosystem with its Newest MA Series Moni…",
@@ -1054,7 +1067,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Cristine Reyes, ex-NYC chair Gio Tingson are engaged: ‘En…",
@@ -1105,7 +1119,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "MNL48 to conclude activities this May",
@@ -1156,7 +1171,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Donny Pangilinan, Belle Mariano reflect on end of era in…",
@@ -1207,7 +1223,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "VLF XXI brings theater families together in star-studded…",
@@ -1258,7 +1275,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "XONARA have arrived — and they aren’t waiting for approval",
@@ -1309,7 +1327,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Judy Ann Santos reunites with Brillante Mendoza in Cannes…",
@@ -1360,7 +1379,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Anne Curtis explores New York with this designer bag",
@@ -1411,7 +1431,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Matteo Guidicelli reacts to 'insecure' comments following…",
@@ -1462,7 +1483,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Disney+ and Hulu to livestream Lollapalooza and more majo…",
@@ -1513,7 +1535,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Mobile Legend Game with Jollibee mascots",
@@ -1564,7 +1587,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Australia is battling its worst diphtheria outbreak in de…",
@@ -1615,7 +1639,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Ebola Crisis Sparks Debate Over Global Health Double Stan…",
@@ -1666,7 +1691,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "How Wet Weather in Argentina Helped Fuel the Cruise Ship…",
@@ -1717,7 +1743,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Risk of Ebola global spread is low, but high at regional…",
@@ -1768,7 +1795,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "ASIA/SRI LANKA",
@@ -1819,7 +1847,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "WHO Health Emergencies EPI-WIN webinar: Hantavirus in Foc…",
@@ -1870,7 +1899,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "AI Research and Governance",
@@ -1977,7 +2007,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "US indicts former Cuban President Raúl Castro over 1996 d…",
@@ -2028,7 +2059,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Middle East war live: Trump says willing to wait 'a few d…",
@@ -2079,7 +2111,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Trump claims he will speak to Taiwan’s president, departi…",
@@ -2130,7 +2163,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Far-right Israeli minister condemned for taunting handcuf…",
@@ -2181,7 +2215,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Putin, Xi signal unity but fail to reach deal on pipeline…",
@@ -2232,7 +2267,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Flak jackets and final goodbyes: Lebanon’s first responde…",
@@ -2283,7 +2319,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Hungary: Lessons on the character and limits of right-pop…",
@@ -2334,7 +2371,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "FirstFT: Trump critic Thomas Massie loses Kentucky primary",
@@ -2385,7 +2423,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "How the war in Iran is accelerating Asia's energy transfo…",
@@ -2436,7 +2475,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Space Exploration Progress",
@@ -2557,7 +2597,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Thailand tightens visa rules for tourists, citing crime b…",
@@ -2608,7 +2649,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Trinoma unveils a refreshed look",
@@ -2659,7 +2701,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Regulator voids registration of Mount Peak Securities",
@@ -2710,7 +2753,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Toyota adds more affordable Corolla Altis hybrid variants",
@@ -2761,7 +2805,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "ChatCPR instructor delivers near-perfect CPR guidance in…",
@@ -2812,7 +2857,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "AMD’s Gorgon Halo is aimed at AI with 192GB of onboard me…",
@@ -2863,7 +2909,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "The Swatch x AP Collection Sold for $8,000 on StockX Befo…",
@@ -2914,7 +2961,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Filipino hospitality brands lean into local luxury appeal",
@@ -2965,7 +3013,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Study identifies new marker to find patients with advance…",
@@ -3016,7 +3065,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Arsenal to reward Mikel Arteta with huge pay rise and put…",
@@ -3067,7 +3117,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Complex animals evolved up to 10 million years earlier th…",
@@ -3118,7 +3169,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Can Jannik Sinner achieve a Career Grand Slam at the Fren…",
@@ -3169,7 +3221,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Tom Lynagh re-commits to Australian Rugby",
@@ -3220,7 +3273,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Europa League final reaction: Youri Tielemans, Morgan Rog…",
@@ -3271,7 +3325,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Tennis players plan ‘work-to-rule’ French Open media prot…",
@@ -3322,7 +3377,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "China's cleaner air cuts PM2.5, but dementia deaths still…",
@@ -3373,7 +3429,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Study Questions Methods Used in Alzheimer's Drug Analysis",
@@ -3424,7 +3481,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Justin Gaethje Is Here To Be Legendary | UFC Freedom 250",
@@ -3475,7 +3533,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Manchester City succession sheds light on Enzo Maresca’s…",
@@ -3526,7 +3585,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Thanks to MrBeast, the winner of 'Survivor' 50 takes home…",
@@ -3577,7 +3637,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Cytokine-armored CAR-T cell therapy successfully attacks…",
@@ -3628,7 +3689,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "How Will Googlebooks Actually Work? I Answer Your 7 Bigge…",
@@ -3679,7 +3741,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Microsoft Rushes Out Emergency Mitigation For ‘YellowKey’…",
@@ -3730,7 +3793,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "NBA star Victor Wembanyama and the San Antonio Spurs to p…",
@@ -3781,7 +3845,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "You can get $1,500 off Samsung's 85-inch Frame Pro TV",
@@ -3832,7 +3897,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Traces of AI embedded quotes found in famous fan-fiction…",
@@ -3883,7 +3949,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Own a piece of District transit history: Former DC Street…",
@@ -3934,7 +4001,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Trail Blazers lay off large number of business-side emplo…",
@@ -3985,7 +4053,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Novel CRISPR Technique Aims to Destroy Virus-Infected Cel…",
@@ -4036,7 +4105,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "The World's Longest-Living Vertebrate Can Reach 400 Years…",
@@ -4087,7 +4157,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Xbox hires game industry analyst Matthew Ball to lead str…",
@@ -4138,7 +4209,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Fused Silk Fibers Create Solid Materials Nearly As Tough…",
@@ -4189,7 +4261,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Plex appeal fades as Lifetime Pass jumps to $750",
@@ -4240,7 +4313,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Kizilelma UCAV deal to advance Indonesia’s air power, say…",
@@ -4291,7 +4365,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Ronald McDonald House New England Launches Brand Revitali…",
@@ -4342,7 +4417,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Grand Lotto winner hits ₱115.36M jackpot May 20",
@@ -4393,7 +4469,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Economic Watch: Private firms power China's innovation dr…",
@@ -4444,7 +4521,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "New DBM chief vows no repeat of flood control scandal",
@@ -4495,7 +4573,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "ICTSI lands AIIB’s first private Philippine loan for port…",
@@ -4546,7 +4625,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   }
 ];
 
@@ -4599,12 +4679,20 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_q = lang === "zh"
-      ? (g.reddit_question_zh || g.reddit_question_en)
-      : (g.reddit_question_en || g.reddit_question_zh);
-    const reddit_source_html = g.reddit_resolution_url
-      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
-      : escapeHtml(g.reddit_resolution_source || '');
+    const reddit_angles_html = (g.reddit_angles || []).map(a => {
+      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+      if (!q) return '';
+      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+      const sourceHtml = a.url
+        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+        : escapeHtml(a.source || '');
+      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
+      return `<div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}${subtopic}</div>
+        <div class="q-text">${q}</div>
+        ${sourceLine}
+      </div>`;
+    }).join("");
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4685,12 +4773,7 @@ function renderCards(lang) {
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
-      ${reddit_q ? `
-      <div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}</div>
-        <div class="q-text">${reddit_q}</div>
-        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
-      </div>` : ''}
+      ${reddit_angles_html}
     `;
     container.appendChild(card);
   });

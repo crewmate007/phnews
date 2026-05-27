@@ -91,6 +91,7 @@
   .question-box .q-source { font-size: 11px; color: #64748b; margin-top: 6px; }
   .question-box.reddit-box { border-left: 3px solid #ff4500; background: #110f0c; padding: 10px 12px; margin-top: 8px; }
   .question-box.reddit-box .q-label { color: #fb923c; }
+  .question-box.reddit-box .q-label .reddit-subtopic { color: #cbd5e1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 6px; }
   .question-box.reddit-box .q-source a { color: #fb923c; text-decoration: none; }
   .question-box.reddit-box .q-source a:hover { text-decoration: underline; }
   .no-bet { font-size: 12px; color: #4b5563; margin-top: 4px; }
@@ -113,6 +114,7 @@
     <h1 id="h-title">🇵🇭 PHNews 菲律宾预测市场话题日报</h1>
     <div class="meta">
       <span>📅 2026-05-23</span>
+      <span data-zh="🕐 生成于 2026-05-23 22:25 PHT" data-en="🕐 Generated 2026-05-23 22:25 PHT">🕐 生成于 2026-05-23 22:25 PHT</span>
       <span id="h-clusters">📰 读取 120 条 SourceIntel 热点</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
@@ -265,7 +267,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "VP Sara Duterte Impeachment Trial",
@@ -332,7 +335,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "ICC Investigation into Duterte Drug War",
@@ -397,7 +401,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine Legislative Anti-Corruption and Dynasty Bills",
@@ -490,7 +495,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Comelec Campaign Finance Probes on Senators",
@@ -557,7 +563,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Marcos-Duterte Feud and Political Polarization",
@@ -622,7 +629,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Marcos Administration Diplomatic and Military Engagements",
@@ -687,7 +695,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "PBA Commissioner's Cup Semifinals",
@@ -766,7 +775,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "NBA Playoffs and Social Justice Awards",
@@ -859,7 +869,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "WNBA Collective Bargaining Agreement",
@@ -910,7 +921,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "International Tennis and Eala French Open Campaign",
@@ -975,7 +987,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine National Sports, Volleyball, and Futsal",
@@ -1068,7 +1081,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "F1 & Real Madrid Governance",
@@ -1147,7 +1161,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "America's Cup Preliminary Regatta",
@@ -1198,7 +1213,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Rugby Africa Women's Cup",
@@ -1249,7 +1265,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Filipino Celebrities Social and Environmental Advocacy",
@@ -1314,7 +1331,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "BTS 'Arirang' World Tour and Suga Marathon",
@@ -1379,7 +1397,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "79th Cannes Film Festival",
@@ -1458,7 +1477,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Pop Music Releases and Chart Peaks",
@@ -1523,7 +1543,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "BLACKPINK Jennie Body Care Brand Ambassadorship",
@@ -1574,7 +1595,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Maureen Wroblewitz TV Audition Controversy",
@@ -1625,7 +1647,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Canal+ Vincent Bollore Controversy",
@@ -1676,7 +1699,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Consumer Tech and Hardware Launches in PH",
@@ -1769,7 +1793,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Mobile Operating Systems and Legacy Hardware Failures",
@@ -1848,7 +1873,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Tech Promotional Deals",
@@ -1913,7 +1939,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Enterprise AI Southeast Asia",
@@ -1978,7 +2005,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Bungie Layoffs and Destiny 2 Development End",
@@ -2029,7 +2057,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Bionic Exoskeleton and Prosthetics",
@@ -2094,7 +2123,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "CISA Known Exploited Vulnerabilities Catalog",
@@ -2145,7 +2175,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Climate Change, Sea Level Rise, and ICJ Action",
@@ -2224,7 +2255,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Deep Space Astronomy and Stellar Observations",
@@ -2331,7 +2363,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Lunar South Pole Mission and Shortcuts",
@@ -2396,7 +2429,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Palaeontological Discoveries and Marine Biology Specie Identification",
@@ -2489,7 +2523,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Mars Sand Robotics",
@@ -2540,7 +2575,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Global Ebola Outbreaks and US Preparedness Measures",
@@ -2633,7 +2669,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Specialized Clinical Studies and Eating Disorder Alerts",
@@ -2712,7 +2749,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Child Immunization & Measles Outbreaks",
@@ -2777,7 +2815,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine Reproductive Health and HIV Initiatives",
@@ -2856,7 +2895,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Middle East Geopolitical Conflicts and Drone Strikes",
@@ -2935,7 +2975,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Global Immigration Reforms and Overseas Labor Constraints",
@@ -3014,7 +3055,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Energy Crisis and Fuel/Electricity Costs",
@@ -3107,7 +3149,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Indonesia Commodity Policy",
@@ -3158,7 +3201,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Swatch Collaboration",
@@ -3209,7 +3253,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Automotive Trends and Philippine International Motor Show",
@@ -3274,7 +3319,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Commercial Retail and Logistics Hubs",
@@ -3339,7 +3385,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "BSP Banking Buffers and APEC Outlook",
@@ -3404,7 +3451,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "US-Taiwan Arms Sale Delay",
@@ -3455,7 +3503,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine Generator Donations to Ukraine",
@@ -3506,7 +3555,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Vatican Beatification",
@@ -3557,7 +3607,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Havana US Embassy Protest on Raul Castro",
@@ -3608,7 +3659,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Ticketmaster SM Prime Partnership",
@@ -3659,7 +3711,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Lotto Draw Results",
@@ -3710,7 +3763,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Kanlaon Volcano Alert and Ash Fall",
@@ -3761,7 +3815,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Philippine-Netherlands Maritime Defense Cooperation",
@@ -3812,7 +3867,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Parola Manila Residential Area Fire",
@@ -3863,7 +3919,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "Regeneron ISEF Science Fair Philippine Success",
@@ -3914,7 +3971,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "WWII Thriller 'Pressure' Production",
@@ -3965,7 +4023,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   },
   {
     "name_en": "IIHF World Championship Latvia vs US",
@@ -4016,7 +4075,8 @@ const groups = [
     "reddit_question_en": null,
     "reddit_question_zh": null,
     "reddit_resolution_source": null,
-    "reddit_resolution_url": null
+    "reddit_resolution_url": null,
+    "reddit_angles": []
   }
 ];
 
@@ -4069,12 +4129,20 @@ function renderCards(lang) {
     const narr    = lang === "zh" ? (g.narrative_zh || g.narrative_en) : g.narrative_en;
     const showNarrative = shouldShowNarrative(g, disp, narr);
     const question = lang === "zh" ? (g.question_zh || g.question_en || g.question) : (g.question_en || g.question);
-    const reddit_q = lang === "zh"
-      ? (g.reddit_question_zh || g.reddit_question_en)
-      : (g.reddit_question_en || g.reddit_question_zh);
-    const reddit_source_html = g.reddit_resolution_url
-      ? `<a href="${escapeAttr(g.reddit_resolution_url)}" target="_blank" rel="noopener">${escapeHtml(g.reddit_resolution_source || g.reddit_resolution_url)}</a>`
-      : escapeHtml(g.reddit_resolution_source || '');
+    const reddit_angles_html = (g.reddit_angles || []).map(a => {
+      const q = lang === "zh" ? (a.question_zh || a.question_en) : (a.question_en || a.question_zh);
+      if (!q) return '';
+      const subtopic = a.subtopic ? `<span class="reddit-subtopic">· ${escapeHtml(a.subtopic)}</span>` : '';
+      const sourceHtml = a.url
+        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.source || a.url)}</a>`
+        : escapeHtml(a.source || '');
+      const sourceLine = (a.source || a.url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${sourceHtml}</div>` : '';
+      return `<div class="question-box reddit-box">
+        <div class="q-label">${t.reddit_label}${subtopic}</div>
+        <div class="q-text">${q}</div>
+        ${sourceLine}
+      </div>`;
+    }).join("");
     const densityCount = `${g.density} ${t.articles}`;
     const sourceChips = Object.entries(g.source_mix || {}).map(([source, count]) =>
       `<span class="source-chip ${source}">${sourceLabel(source)} ${count}</span>`
@@ -4155,12 +4223,7 @@ function renderCards(lang) {
         <div class="q-source" style="margin-top:8px">${t.resolution}${g.source || ''}</div>
       </div>` : `<div class="no-bet">${t.no_bet}</div>`}
 
-      ${reddit_q ? `
-      <div class="question-box reddit-box">
-        <div class="q-label">${t.reddit_label}</div>
-        <div class="q-text">${reddit_q}</div>
-        ${(g.reddit_resolution_source || g.reddit_resolution_url) ? `<div class="q-source" style="margin-top:6px">${t.reddit_resolution}${reddit_source_html}</div>` : ''}
-      </div>` : ''}
+      ${reddit_angles_html}
     `;
     container.appendChild(card);
   });

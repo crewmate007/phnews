@@ -136,6 +136,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <h1 id="h-title">__FLAG__ __SITE_NAME__ __COUNTRY_ZH__预测市场话题日报</h1>
     <div class="meta">
       <span>📅 __DATE__</span>
+      <span data-zh="🕐 生成于 __GENERATED_AT__ PHT" data-en="🕐 Generated __GENERATED_AT__ PHT">🕐 生成于 __GENERATED_AT__ PHT</span>
       <span id="h-clusters">📰 读取 __TOTAL__ 条 SourceIntel 热点</span>
       <span>🤖 Gemini 3.1 Flash Lite</span>
     </div>
@@ -669,6 +670,28 @@ def _infer_bdlt_for_page(g: dict) -> dict:
     return {"B": b, "D": d, "L": l, "T": t, "total": b + d + l + t}
 
 
+_MANILA_TZ = dt.timezone(dt.timedelta(hours=8))
+
+
+def _format_manila_time(iso_str: str | None) -> str:
+    """Render a `clustered_at` ISO string as Manila local time.
+
+    cluster.py now writes a UTC tz-aware ISO string; older JSONs may have a
+    naive datetime (recorded as UTC in CI but ambiguous on local dev runs).
+    Naive strings are assumed UTC -- correct for daily-news.yml output, only
+    wrong by a few hours for hand-runs from non-UTC laptops.
+    """
+    if not iso_str:
+        return "—"
+    try:
+        ts = dt.datetime.fromisoformat(iso_str)
+    except (ValueError, TypeError):
+        return str(iso_str)
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=dt.timezone.utc)
+    return ts.astimezone(_MANILA_TZ).strftime("%Y-%m-%d %H:%M")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("date", nargs="?", default=dt.date.today().isoformat())
@@ -707,6 +730,7 @@ def main():
             .replace("__PH_ACTIVE__", "active" if region.slug == "ph" else "")
             .replace("__ID_ACTIVE__", "active" if region.slug == "id" else "")
             .replace("__DATE__", date)
+            .replace("__GENERATED_AT__", _format_manila_time(data.get("clustered_at")))
             .replace("__TOTAL__", str(total_entries))
             .replace("__N_GROUPS__", str(len(groups)))
             .replace("__N_TOP__", str(n_top))
