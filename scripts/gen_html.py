@@ -654,8 +654,13 @@ def translate_title_fallback(title: str) -> str:
     if translated != text:
         translated = re.sub(r"\b(can|will|the|a|an|at|in|on|to|of|and|with|for|achieve|win|wins)\b", "", translated, flags=re.IGNORECASE)
         translated = " ".join(translated.split()).strip(" ?-–—")
-        return translated[:28] or text[:28]
-    return text[:28]
+        return translated or text
+    # No dictionary match — return the full cleaned English title; the CSS
+    # (word-break + min-width: 0 on .source-title) handles wrap. The previous
+    # text[:28] cap was the actual cause of "Event spotlights smarter ene"
+    # style truncation users were seeing in zh mode (since this fallback only
+    # fires when title_zh wasn't already translated by SourceIntel).
+    return text
 
 
 def _bdlt_for_group(g: dict) -> dict:
