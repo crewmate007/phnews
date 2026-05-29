@@ -58,8 +58,18 @@ def write_run(result: Dict, region, run_date: str) -> bool:
     on code path, so coerce defensively here.
     """
     region_slug = getattr(region, "slug", region)
+    # Non-secret shape diagnostics: helps catch a malformed URL/key secret
+    # (e.g. wrong key type, truncation) without ever printing the values.
+    url = _env("SUPABASE_URL") or ""
+    key = _env("SUPABASE_SERVICE_KEY") or ""
+    print(
+        f"[INFO] Supabase cfg: url_len={len(url)} url_tail={url[-18:]!r} "
+        f"key_len={len(key)} key_prefix={key[:6]!r} key_dots={key.count('.')}",
+        file=sys.stderr,
+    )
     client = get_client()
     if client is None:
+        print("[WARN] Supabase: no client (missing creds)", file=sys.stderr)
         return False
     try:
         _write_run_impl(client, result, region_slug, run_date)
