@@ -85,6 +85,17 @@ jobs:
           TODAY="$(date -u +%F)"
           python scripts/validate_generated_pages.py --date "$TODAY"
 
+      # P2b-2 shadow mode: confirm the Supabase exporter reproduces the
+      # pipeline JSON. Non-blocking -- logs drift, never fails the build.
+      # Flip the render source to the exporter once this is clean for a few days.
+      - name: Shadow-diff Supabase export
+        working-directory: phnews
+        continue-on-error: true
+        run: |
+          TODAY="$(date -u +%F)"
+          python scripts/shadow_diff_db.py --date "$TODAY" --region ph
+          python scripts/shadow_diff_db.py --date "$TODAY" --region id
+
       - name: Commit and push generated site
         working-directory: phnews
         run: |

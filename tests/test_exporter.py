@@ -98,3 +98,22 @@ def test_roundtrip_disposition_matches():
     rebuilt = gen_html.build_group(clusters["groups"][0])
     original = gen_html.build_group(SAMPLE_GROUP)
     assert gen_html.classify_disposition(rebuilt) == gen_html.classify_disposition(original)
+
+
+# --- shadow diff comparison logic (no filesystem) ------------------------
+
+def test_shadow_index_equal_for_identical_groups():
+    """build_group output is stable: identical groups -> identical render
+    dicts, so the shadow diff sees no drift."""
+    import shadow_diff_db
+    clusters = _capture_and_reconstruct(SAMPLE_GROUP)
+    a = shadow_diff_db._index(clusters["groups"])
+    b = shadow_diff_db._index(clusters["groups"])
+    assert a == b and len(a) == 1
+
+
+def test_shadow_index_skips_noise():
+    import shadow_diff_db
+    groups = [{"name": "noise"}, dict(SAMPLE_GROUP)]
+    idx = shadow_diff_db._index(groups)
+    assert len(idx) == 1  # the noise group is dropped
