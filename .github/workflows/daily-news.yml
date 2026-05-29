@@ -39,6 +39,8 @@ jobs:
       SOURCE_INTEL_DAYS: ${{ github.event.inputs.days || '7' }}
       SOURCE_INTEL_TOTAL_LIMIT: ${{ github.event.inputs.total_limit || '120' }}
       SOURCE_INTEL_X_LIMIT: ${{ github.event.inputs.x_limit || '30' }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
     steps:
       - name: Checkout PHNews

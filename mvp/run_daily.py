@@ -30,6 +30,7 @@ from scorer import score_topic, classify_with_gemini
 from reporter import generate_report
 from cluster import cluster_with_llm, cluster_keyword_fallback, groups_to_scored_topics, save_cluster_result
 from regions import get_region, reports_dir
+import db  # Supabase mirror; no-op without SUPABASE_* env vars
 from source_intel_bridge import (
     load_source_intel_clusters,
     mock_source_intel_clusters,
@@ -178,6 +179,11 @@ def main():
 
         cluster_path = save_cluster_result(cluster_result, os.path.join(base, args.output_dir), region)
         print(f"[OK] Cluster result → {cluster_path}")
+
+        # Phase 1 dual-write: mirror the result into Supabase. No-op without
+        # SUPABASE_* env; never raises (failure only logs, JSON is unaffected).
+        if db.write_run(cluster_result, region.slug, today):
+            print(f"[OK] Supabase ← mirrored {region.slug} {today}")
         print()
 
         # 3. 转成 scored_topics 格式给 reporter
