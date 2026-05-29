@@ -94,6 +94,8 @@ def _write_run_impl(client, result: Dict, region: str, run_date: str) -> None:
         "clustered_at": result.get("clustered_at"),
         "cluster_pipeline": result.get("cluster_pipeline"),
         "target_group_range": result.get("target_group_range"),
+        "noise_count": result.get("noise_count",
+                                  len(result.get("noise", []) or [])),
     }
     run_row = (
         client.table("runs")
