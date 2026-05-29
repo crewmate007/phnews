@@ -216,18 +216,35 @@ class SeriousAngle:
 
 
 def _build_score_groups(groups: List[Dict]) -> str:
-    """Serialize a per-group block for the SCORE prompt input."""
+    """Serialize a per-group block for the SCORE prompt input.
+
+    IMPORTANT: include sample_titles and the source mix. The Heat (H)
+    dimension is scored on "multiple sources / social discussion / cross-
+    section coverage"; without article titles and source breakdown in the
+    prompt the model has no evidence for H and defaults every group to H=0,
+    which vetoes every group out of the TOP tier. Reads group["clusters"]
+    (attached before PHASE_1 in cluster_with_llm).
+    """
     blocks = []
     for index, group in enumerate(groups):
         entry_ids = group.get("entry_ids", []) or []
-        sources_label = sorted({str(group.get("name", "") or ""), str(group.get("market_hint") or "")})
+        group_clusters = group.get("clusters") or []
+        titles = [
+            clip(c.get("cluster_title", ""), 120)
+            for c in group_clusters[:8]
+            if c.get("cluster_title")
+        ]
+        source_mix = group.get("source_mix") or {}
+        sources = ", ".join(f"{name}:{count}" for name, count in source_mix.items())
         blocks.append("\n".join([
             f"[{index}] {group.get('name', '')} / {group.get('name_zh', '')}",
             f"type={group.get('topic_type', '')}",
             f"density={group.get('density', len(entry_ids))}",
             f"entry_ids={entry_ids}",
+            f"sources={sources}",
             f"narrative={clip(group.get('narrative', ''), 220)}",
             f"market_hint={clip(str(group.get('market_hint') or ''), 180)}",
+            "sample_titles=" + " | ".join(titles),
         ]))
     return "\n\n".join(blocks)
 

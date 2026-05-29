@@ -227,6 +227,14 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     broad_result = _ensure_minimum_broad_groups(broad_result, clusters, min_groups)
     broad_result = _promote_excess_noise(broad_result, clusters)
 
+    # Attach full cluster dicts to every group up front so ALL angles -- not
+    # just PHASE_2 -- can read article titles. SeriousAngle needs them to score
+    # the Heat (H) dimension; without sample titles it defaults every group to
+    # H=0, which vetoes everything out of the TOP tier.
+    for group in broad_result.get("groups", []):
+        group["clusters"] = [clusters[i] for i in group.get("entry_ids", [])
+                             if i < len(clusters)]
+
     # PHASE 1: angles that drive disposition (scoring). Today: SeriousAngle.
     # Runs BEFORE region guard / source metadata so the scores it writes are
     # available to downstream filling + filtering.
@@ -249,10 +257,6 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     result["cluster_pipeline"] = "broad_then_angles"
     result["target_group_range"] = [min_groups, max_groups]
     result["entries"] = [_compact_entry(i, cluster) for i, cluster in enumerate(clusters)]
-
-    for group in result.get("groups", []):
-        group["clusters"] = [clusters[i] for i in group.get("entry_ids", [])
-                             if i < len(clusters)]
 
     # PHASE 2: angles that read group["clusters"] for richer texture.
     # Today: RedditAngle + TikTokAngle. Each is best-effort; failure of any
