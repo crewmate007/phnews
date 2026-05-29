@@ -182,8 +182,8 @@ def main():
 
         # Phase 1 dual-write: mirror the result into Supabase. No-op without
         # SUPABASE_* env; never raises (failure only logs, JSON is unaffected).
-        if db.write_run(cluster_result, region.slug, today):
-            print(f"[OK] Supabase ← mirrored {region.slug} {today}")
+        if db.write_run(cluster_result, region, today):
+            print(f"[OK] Supabase ← mirrored {region} {today}")
         print()
 
         # 3. 转成 scored_topics 格式给 reporter

@@ -49,14 +49,20 @@ def get_client():
         return None
 
 
-def write_run(result: Dict, region: str, run_date: str) -> bool:
+def write_run(result: Dict, region, run_date: str) -> bool:
     """Mirror one cluster_with_llm() result into Supabase. Returns True on
-    success, False on no-op or failure. Never raises."""
+    success, False on no-op or failure. Never raises.
+
+    `region` may be a slug string ("ph"/"id") or a RegionConfig object with a
+    .slug attribute -- callers in run_daily.py pass it in either form depending
+    on code path, so coerce defensively here.
+    """
+    region_slug = getattr(region, "slug", region)
     client = get_client()
     if client is None:
         return False
     try:
-        _write_run_impl(client, result, region, run_date)
+        _write_run_impl(client, result, region_slug, run_date)
         return True
     except Exception as exc:  # noqa: BLE001
         print(f"[WARN] Supabase write_run failed: {type(exc).__name__}: {exc}", file=sys.stderr)
