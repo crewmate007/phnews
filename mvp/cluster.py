@@ -267,24 +267,67 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     return result
 
 
-def _run_angles(angles, groups, client, model, region_cfg):
-    """Call each angle's generate(); log attach rate; isolate per-angle failures."""
+_ANGLE_BATCH_SIZE = 10
+_ANGLE_MAX_RETRY_ROUNDS = 2
+
+
+def _chunk(seq, n):
+    """Yield successive n-sized slices of seq."""
+    for i in range(0, len(seq), n):
+        yield seq[i:i + n]
+
+
+def _run_angles(angles, groups, client, model, region_cfg,
+                batch_size: int = _ANGLE_BATCH_SIZE,
+                max_retry_rounds: int = _ANGLE_MAX_RETRY_ROUNDS):
+    """Run each angle over `groups` in small batches with per-batch failure
+    isolation and retry.
+
+    Each angle.generate() mutates the group dicts in place, so passing a
+    sub-list of the same group objects is transparent to the caller. A batch
+    that raises (e.g. a network blip or a truncated JSON response) only loses
+    that batch's groups; the rest are unaffected and the failed batch is
+    retried in a later round. This replaces the old "one call for all ~70
+    groups" model that made a single transient error wipe an entire angle
+    (the 2026-05-29 TOP=0 incident).
+
+    Batching is purely orchestration here -- angle code is unchanged. Note
+    angle.generate() also has its own per-call network retry
+    (generate_content_with_retry); the two layers are complementary.
+    """
     for angle in angles:
-        try:
-            stats = angle.generate(groups, client, model, region_cfg)
-            attached = stats.get("attached", 0)
-            total = stats.get("total", len(groups))
-            blocks = stats.get("candidate_count") or stats.get("angle_count") or attached
+        pending = list(groups)
+        attached = 0
+        blocks = 0
+        for round_i in range(max_retry_rounds + 1):
+            if not pending:
+                break
+            failed = []
+            for batch in _chunk(pending, batch_size):
+                try:
+                    stats = angle.generate(batch, client, model, region_cfg)
+                    attached += stats.get("attached", 0)
+                    blocks += (stats.get("candidate_count")
+                               or stats.get("angle_count") or 0)
+                except Exception as exc:
+                    failed.extend(batch)
+                    print(
+                        f"[WARN] {angle.name} batch of {len(batch)} failed "
+                        f"(round {round_i}): {type(exc).__name__}: {exc}",
+                        file=sys.stderr,
+                    )
+            pending = failed
+        if pending:
             print(
-                f"[INFO] {angle.name}: attached {attached}/{total} groups "
-                f"({blocks} blocks total)",
+                f"[WARN] {angle.name}: {len(pending)} groups still unprocessed "
+                f"after {max_retry_rounds} retries",
                 file=sys.stderr,
             )
-        except Exception as exc:
-            print(
-                f"[WARN] {angle.name} skipped: {type(exc).__name__}: {exc}",
-                file=sys.stderr,
-            )
+        print(
+            f"[INFO] {angle.name}: attached {attached}/{len(groups)} groups "
+            f"({blocks} blocks total)",
+            file=sys.stderr,
+        )
 
 
 def _target_group_range(n_entries: int) -> tuple[int, int]:
