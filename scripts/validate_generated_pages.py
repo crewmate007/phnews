@@ -71,6 +71,16 @@ def main() -> int:
         if len(groups) == 0:
             print(f"[ERR] {region}: page contains no groups", file=sys.stderr)
             failed = True
+        # Safety net for swallowed serious-angle failures: with 20+ groups,
+        # zero bettable means the scoring angle silently died (e.g. a network
+        # disconnect caught by the orchestrator try/except) and the page would
+        # ship with TOP tier = 0. Fail loudly so the broken page never deploys.
+        n_bettable = sum(1 for g in groups if g.get("bettable"))
+        if len(groups) >= 20 and n_bettable == 0:
+            print(
+                f"[ERR] {region}: {len(groups)} groups but 0 bettable -- "
+                f"serious scoring angle likely failed", file=sys.stderr)
+            failed = True
         if _has_foreign_bettable_question(region, groups):
             print(f"[ERR] {region}: foreign domestic resolver in bettable question", file=sys.stderr)
             failed = True

@@ -1,5 +1,7 @@
 """Unit tests for shared angle utilities (mvp/angles/base.py)."""
-from angles.base import parse_json_response, safe_url, clip
+import pytest
+
+from angles.base import parse_json_response, safe_url, clip, generate_content_with_retry
 
 
 def test_parse_plain_json():
@@ -55,3 +57,60 @@ def test_clip_short_passthrough():
 def test_clip_truncates_with_ellipsis():
     out = clip("a" * 50, 10)
     assert len(out) == 10 and out.endswith("...")
+
+
+# --- generate_content_with_retry transient handling --------------------------
+
+class _Resp:
+    text = '{"ok": 1}'
+
+
+class _FlakyModels:
+    """Fails `fail_n` times with `exc`, then succeeds."""
+    def __init__(self, exc, fail_n):
+        self.exc = exc
+        self.fail_n = fail_n
+        self.calls = 0
+
+    def generate_content(self, model=None, contents=None):
+        self.calls += 1
+        if self.calls <= self.fail_n:
+            raise self.exc
+        return _Resp()
+
+
+class _Client:
+    def __init__(self, models):
+        self.models = models
+
+
+class RemoteProtocolError(Exception):
+    """Mimics httpx.RemoteProtocolError by type name."""
+
+
+def test_retry_recovers_from_remote_protocol_error(monkeypatch):
+    # Regression for 2026-05-29: a "Server disconnected" RemoteProtocolError
+    # must be treated as transient and retried, not raised on first hit.
+    monkeypatch.setattr("angles.base.time.sleep", lambda *_: None)
+    exc = RemoteProtocolError("Server disconnected without sending a response.")
+    models = _FlakyModels(exc, fail_n=2)
+    resp = generate_content_with_retry(_Client(models), "fake", "prompt")
+    assert resp.text == '{"ok": 1}'
+    assert models.calls == 3  # 2 failures + 1 success
+
+
+def test_retry_recovers_from_disconnect_message(monkeypatch):
+    monkeypatch.setattr("angles.base.time.sleep", lambda *_: None)
+    exc = Exception("connection reset by peer")
+    models = _FlakyModels(exc, fail_n=1)
+    resp = generate_content_with_retry(_Client(models), "fake", "prompt")
+    assert resp.text == '{"ok": 1}'
+
+
+def test_retry_gives_up_on_non_transient(monkeypatch):
+    monkeypatch.setattr("angles.base.time.sleep", lambda *_: None)
+    exc = ValueError("totally unrelated bug")
+    models = _FlakyModels(exc, fail_n=99)
+    with pytest.raises(ValueError):
+        generate_content_with_retry(_Client(models), "fake", "prompt")
+    assert models.calls == 1  # not retried
