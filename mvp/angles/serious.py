@@ -86,6 +86,9 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
             "L": <0|1|2>, "L_reason": "local hook reason",
             "T": <0|1|2>, "T_reason": "timeliness reason"
           }},
+          "yes_buyer": "specific motivated YES-buyer archetype, or null",
+          "no_buyer": "specific motivated NO-buyer archetype, or null",
+          "tradeability_reason": "why this has or lacks real two-sided demand",
           "why_users_bet": "1 short reason this might attract real-money local bettors"
         }}
       ]
@@ -111,16 +114,32 @@ SCORING GUIDE:
 - H=1: 2-4 evidence items, limited social discussion
 - H=0: single weak source or very low interest
 
-BDLT GUIDE, optimized for local DigiPlus-like betting demand:
-- B=2: strong real-money betting appeal; familiar rivalry, sports, prices,
-  lotto, disaster, celebrity, or political drama. B=1: niche but playable.
-  B=0: informative but unlikely to make users bet.
-- D=2: both YES and NO have emotionally/plausibly motivated buyers. D=1:
-  some uncertainty but one side dominates. D=0: boring, settled, or one-sided.
+TRADEABILITY GATE (BDLT), optimized for local DigiPlus-like betting demand:
+- First name a plausible motivated YES buyer and NO buyer. If either side is
+  missing or merely "someone following the news", the candidate is not a real
+  market even when R/S/T are objectively clean.
+- B=2: broad or intense local betting demand from users with money, identity,
+  fandom, livelihood, status, or daily-life stakes. B=1: niche but playable.
+  B=0: informative, routine, narrow-audience, or unlikely to make users bet.
+- D=2: both YES and NO have plausible motivated buyers with different priors
+  or incentives. D=1: some two-sided demand but one side is much easier to
+  imagine. D=0: no real counterparty, boring, settled, or one-sided.
 - L=2: directly local and familiar to everyday users. L=1: indirect local
-  effect. L=0: foreign/abstract with little local hook.
-- T=2: settles in days/weeks or at a known event. T=1: this quarter/season.
-  T=0: long, vague, or open-ended.
+  effect or strong global relevance. L=0: foreign/abstract with little local
+  hook.
+- T=2: near-term settlement or active information flow before a known event.
+  T=1: this quarter/season or a slower but trackable cadence. T=0: long,
+  vague, open-ended, or no meaningful information flow before settlement.
+
+Tradeability hard rules:
+- If B=0 or D=0, set bettable=false and null question fields.
+- If B+D < 3, set bettable=false and null question fields. Weak demand plus
+  weak disagreement does not create a real order book.
+- If B+D+L+T < 4, set bettable=false and null question fields.
+- B+D+L+T = 4 is at most watch. B+D+L+T = 5 is at most candidate.
+- TOP requires B=2, B+D >= 3, B+D+L+T >= 6, and no RSTUH veto.
+- Do not blacklist by topic label. Judge the market mechanism: motivated
+  counterparties, local stake, uncertainty, and information flow.
 
 Important:
 - A cluster can be valuable digest even when it is not bettable.
@@ -202,6 +221,9 @@ class SeriousAngle:
             group["H"] = best["H"]
             group["H_reason"] = best["H_reason"]
             group["BDLT"] = best["BDLT"]
+            group["yes_buyer"] = best["yes_buyer"]
+            group["no_buyer"] = best["no_buyer"]
+            group["tradeability_reason"] = best["tradeability_reason"]
             group["why_users_bet"] = best["why_users_bet"]
             group["bettable"] = best["bettable"]
             group["suggested_question"] = best["suggested_question"]
@@ -280,8 +302,12 @@ def _normalize_candidate(c: Dict) -> Dict | None:
             "T": _clip_score(bdlt.get("T")),
             "T_reason": bdlt.get("T_reason", "") or "",
         },
+        "yes_buyer": c.get("yes_buyer", "") or "",
+        "no_buyer": c.get("no_buyer", "") or "",
+        "tradeability_reason": c.get("tradeability_reason", "") or "",
         "why_users_bet": c.get("why_users_bet", "") or "",
     }
+    _apply_tradeability_gate(normalized)
     return normalized
 
 
@@ -293,9 +319,47 @@ def _clip_score(v) -> int:
     return max(0, min(2, i))
 
 
+def _bdlt_total(c: Dict) -> int:
+    b = c["BDLT"]
+    return b["B"] + b["D"] + b["L"] + b["T"]
+
+
+def _tradeability_rejection_reason(c: Dict) -> str:
+    b = c["BDLT"]
+    if b["B"] <= 0:
+        return "No plausible motivated buyer demand."
+    if b["D"] <= 0:
+        return "No plausible motivated YES and NO buyer."
+    if b["B"] + b["D"] < 3:
+        return "Buyer demand and disagreement are both too weak."
+    if _bdlt_total(c) < 4:
+        return "Tradeability score is below the surfacing threshold."
+    return ""
+
+
+def _passes_tradeability_gate(c: Dict) -> bool:
+    return bool(c.get("bettable")) and not _tradeability_rejection_reason(c)
+
+
+def _apply_tradeability_gate(c: Dict) -> None:
+    if not c.get("bettable"):
+        return
+    reason = _tradeability_rejection_reason(c)
+    if not reason:
+        return
+    c["bettable"] = False
+    c["suggested_question"] = None
+    c["suggested_question_zh"] = None
+    c["disposition_hint"] = "digest"
+    c["tradeability_reason"] = c.get("tradeability_reason") or reason
+    c["why_users_bet"] = c.get("why_users_bet") or reason
+
+
 def _candidate_total(c: Dict) -> tuple:
-    """Sorting key: (bettable, rstuh_sum + bdlt_sum, rstuh_sum)."""
+    """Sorting key: tradeability first, then market-structure quality."""
     rstuh = c["R"] + c["S"] + c["T"] + c["U"] + c["H"]
     b = c["BDLT"]
-    bdlt = b["B"] + b["D"] + b["L"] + b["T"]
-    return (c["bettable"], rstuh + bdlt, rstuh)
+    bdlt = _bdlt_total(c)
+    rstuh_has_no_veto = all(c[key] > 0 for key in ("R", "S", "T", "U", "H"))
+    two_sided_strength = min(b["B"], b["D"])
+    return (_passes_tradeability_gate(c), rstuh_has_no_veto, bdlt, two_sided_strength, rstuh)

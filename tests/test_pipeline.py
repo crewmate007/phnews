@@ -85,16 +85,16 @@ def test_serious_failure_does_not_kill_pipeline(fake_gemini):
     assert not any(g.get("serious_candidates") for g in result["groups"])
 
 
-def test_validator_flags_zero_bettable(fake_gemini):
-    """The 2026-05-29 failure mode: serious angle dies, pipeline ships 65
-    groups with 0 bettable. The validator must catch this so the broken
-    page never deploys. Simulate by building groups with bettable=False."""
+def test_validator_flags_zero_scored(fake_gemini):
+    """The 2026-05-29 failure mode: serious angle dies, pipeline ships many
+    groups with no RSTUH scores. The validator must catch this so the broken
+    page never deploys."""
     import validate_generated_pages as v
     groups = [{"bettable": False, "source_mix": {"x_grok": 1}} for _ in range(30)]
-    # 30 groups, 0 bettable -> the new safety check trips
+    # 30 groups, 0 scored -> the safety check should trip in main().
     assert v._has_foreign_bettable_question("ph", groups) is False
-    n_bettable = sum(1 for g in groups if g.get("bettable"))
-    assert len(groups) >= 20 and n_bettable == 0
+    n_scored = sum(1 for g in groups if any(g.get(k) for k in "RSTUH"))
+    assert len(groups) >= 20 and n_scored == 0
 
 
 # --- P2a: batched angle orchestration (_run_angles) --------------------------

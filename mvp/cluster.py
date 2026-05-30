@@ -248,6 +248,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         g["density"] = len(g.get("entry_ids", []))
         _attach_source_metadata(g, clusters)
         _fill_missing_bdlt(g)
+        _apply_tradeability_guard(g)
 
     _apply_region_relevance_guard(broad_result, region_cfg)
     result = broad_result
@@ -256,7 +257,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     result["clustered_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
     result["cluster_pipeline"] = "broad_then_angles"
     result["target_group_range"] = [min_groups, max_groups]
-    result["entries"] = [_compact_entry(i, cluster) for i, cluster in enumerate(clusters)]
+    result["entries"] = [_source_entry(i, cluster) for i, cluster in enumerate(clusters)]
 
     # PHASE 2: angles that read group["clusters"] for richer texture.
     # Today: RedditAngle + TikTokAngle. Each is best-effort; failure of any
@@ -629,6 +630,27 @@ def _compact_entry(entry_id: int, cluster: Dict) -> Dict:
     }
 
 
+def _source_entry(entry_id: int, cluster: Dict) -> Dict:
+    raw = cluster.get("raw_hotspot")
+    raw = raw if isinstance(raw, dict) else None
+    entry = _compact_entry(entry_id, cluster)
+    entry.update({
+        "source_count": cluster.get("source_count"),
+        "article_count": cluster.get("article_count"),
+        "entities": cluster.get("sources", []),
+        "keywords": cluster.get("keywords", []),
+        "claims_en": cluster.get("claims_en") or (raw or {}).get("claims_en", []),
+        "claims_zh": cluster.get("claims_zh") or (raw or {}).get("claims_zh", []),
+        "evidence_urls": cluster.get("evidence_urls", []),
+        "observed_at": cluster.get("published", ""),
+        "rank_reason": cluster.get("rank_reason", ""),
+        "prediction_angle": cluster.get("prediction_angle", ""),
+    })
+    if raw:
+        entry["raw"] = raw
+    return entry
+
+
 def _source_from_section(section: str) -> str:
     if "x_grok" in section:
         return "x_grok"
@@ -698,6 +720,34 @@ def _mark_digest(group: Dict, reason: str) -> None:
         "T_reason": reason,
     }
     group["BDLT"]["total"] = sum(group["BDLT"][key] for key in ("B", "D", "L", "T"))
+
+
+def _apply_tradeability_guard(group: Dict) -> None:
+    if not group.get("bettable"):
+        return
+    bdlt = group.get("BDLT") if isinstance(group.get("BDLT"), dict) else {}
+    b = bdlt.get("B", 0)
+    d = bdlt.get("D", 0)
+    total = sum(bdlt.get(key, 0) for key in ("B", "D", "L", "T"))
+    reason = ""
+    if b <= 0:
+        reason = "No plausible motivated buyer demand."
+    elif d <= 0:
+        reason = "No plausible motivated YES and NO buyer."
+    elif b + d < 3:
+        reason = "Buyer demand and disagreement are both too weak."
+    elif total < 4:
+        reason = "Tradeability score is below the surfacing threshold."
+    if not reason:
+        return
+    group["bettable"] = False
+    group["suggested_question"] = None
+    group["suggested_question_zh"] = None
+    group["resolution_source"] = ""
+    group["disposition_hint"] = "digest"
+    group["tradeability_filtered"] = True
+    group["tradeability_reason"] = reason
+    group["why_users_bet"] = reason
 
 
 def _fill_missing_scores(group: Dict) -> None:
@@ -916,6 +966,8 @@ def cluster_keyword_fallback(clusters: List[Dict],
         "noise": noise,
         "total_entries": len(clusters),
         "clustered_at": dt.datetime.now().isoformat(),
+        "cluster_pipeline": "keyword_fallback",
+        "entries": [_source_entry(i, cluster) for i, cluster in enumerate(clusters)],
     }
 
 
@@ -1089,7 +1141,7 @@ def _entries_from_groups(groups: List[Dict]) -> List[Dict]:
         for cluster in group.get("clusters", []):
             entry_id = cluster.get("id")
             if isinstance(entry_id, int):
-                entries_by_id[entry_id] = _compact_entry(entry_id, cluster)
+                entries_by_id[entry_id] = _source_entry(entry_id, cluster)
     return [entries_by_id[key] for key in sorted(entries_by_id)]
 
 

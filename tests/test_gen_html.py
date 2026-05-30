@@ -28,6 +28,24 @@ def test_classify_drop_when_not_bettable():
     assert gen_html.classify_disposition(_base_group(bettable=False)) == "drop"
 
 
+def test_classify_drop_when_tradeability_gate_fails():
+    assert gen_html.classify_disposition(_base_group(
+        BDLT={"B": 2, "D": 0, "L": 2, "T": 2, "total": 6},
+    )) == "drop"
+    assert gen_html.classify_disposition(_base_group(
+        BDLT={"B": 0, "D": 2, "L": 2, "T": 2, "total": 6},
+    )) == "drop"
+
+
+def test_classify_low_tradeability_cannot_be_top():
+    assert gen_html.classify_disposition(_base_group(
+        BDLT={"B": 1, "D": 1, "L": 1, "T": 1, "total": 4},
+    )) == "drop"
+    assert gen_html.classify_disposition(_base_group(
+        BDLT={"B": 2, "D": 1, "L": 1, "T": 0, "total": 4},
+    )) == "watch"
+
+
 def test_classify_watch_on_veto():
     # any 0 dimension is a veto -> cannot be top/candidate
     assert gen_html.classify_disposition(_base_group(S=0)) == "watch"

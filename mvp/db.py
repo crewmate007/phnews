@@ -1,4 +1,4 @@
-"""Supabase persistence layer for the PHNews pipeline.
+"""Supabase persistence layer for the Daily News pipeline.
 
 Phase 0/1: thin write-only mirror. Everything is a NO-OP when the
 SUPABASE_URL / SUPABASE_SERVICE_KEY env vars are absent, so local dev and
@@ -6,8 +6,9 @@ any environment without credentials keeps working exactly as before — only
 CI (which has the secrets) actually writes to Supabase.
 
 The single public entry point is `write_run(result, region, run_date)`, which
-maps the dict returned by cluster.cluster_with_llm() into the 4 tables:
-runs -> topics -> (angles, source_examples).
+maps the dict returned by cluster.cluster_with_llm() into the Supabase mirror:
+runs -> source_entries -> topics -> (topic_source_entries, angles,
+source_examples).
 
 Design choices:
 - Never raises to the caller. Any failure is logged to stderr and swallowed,
@@ -20,6 +21,9 @@ from __future__ import annotations
 import os
 import sys
 from typing import Dict, List, Optional
+
+
+_SOURCE_ENTRY_CHUNK = 500
 
 
 def _env(name: str) -> Optional[str]:
@@ -106,9 +110,17 @@ def _write_run_impl(client, result: Dict, region: str, run_date: str) -> None:
     #    to angles + source_examples via FK ON DELETE CASCADE).
     client.table("topics").delete().eq("run_id", run_id).execute()
 
-    # 3) Insert topics, then their angles + source_examples.
+    # 3) Store the raw-ish SourceIntel inputs. This is optional until the new
+    #    tables are migrated in Supabase; if absent, the old 4-table mirror still
+    #    continues.
+    source_entry_ids = _try_replace_source_entries(
+        client, run_id, result, region, run_date
+    )
+
+    # 4) Insert topics, then their joins, angles + source_examples.
     for idx, g in enumerate(groups):
         topic_id = _insert_topic(client, run_id, region, run_date, idx, g)
+        _try_insert_topic_source_entries(client, topic_id, g, source_entry_ids)
         _insert_angles(client, topic_id, g)
         _insert_source_examples(client, topic_id, g)
 
@@ -157,6 +169,110 @@ def _insert_topic(client, run_id, region, run_date, broad_index, g: Dict) -> str
     }
     row = client.table("topics").insert(payload).execute()
     return row.data[0]["id"]
+
+
+def _try_replace_source_entries(client, run_id, result: Dict, region: str,
+                                run_date: str) -> Dict[int, str]:
+    entries = result.get("entries") or []
+    if not entries:
+        return {}
+
+    try:
+        client.table("source_entries").delete().eq("run_id", run_id).execute()
+        rows = [
+            _source_entry_payload(run_id, region, run_date, entry)
+            for entry in entries
+            if isinstance(entry.get("id"), int)
+        ]
+        entry_ids: Dict[int, str] = {}
+        for chunk in _chunks(rows, _SOURCE_ENTRY_CHUNK):
+            result = client.table("source_entries").insert(chunk).execute()
+            for row in result.data or []:
+                if isinstance(row.get("entry_id"), int) and row.get("id"):
+                    entry_ids[row["entry_id"]] = row["id"]
+        return entry_ids
+    except Exception as exc:  # noqa: BLE001
+        print(
+            f"[WARN] Supabase source_entries skipped: {type(exc).__name__}: {exc}",
+            file=sys.stderr,
+        )
+        return {}
+
+
+def _source_entry_payload(run_id, region: str, run_date: str, entry: Dict) -> Dict:
+    return {
+        "run_id": run_id,
+        "region": region,
+        "run_date": run_date,
+        "entry_id": entry.get("id"),
+        "source": entry.get("source"),
+        "source_label": entry.get("source_label"),
+        "source_section": entry.get("section"),
+        "title_en": entry.get("title_en"),
+        "title_zh": entry.get("title_zh"),
+        "summary_en": entry.get("summary_en"),
+        "summary_zh": entry.get("summary_zh"),
+        "link": entry.get("link"),
+        "rank_score": entry.get("rank_score"),
+        "rank_reason": entry.get("rank_reason"),
+        "social_heat": entry.get("social_heat"),
+        "uncertainty": entry.get("uncertainty"),
+        "observed_at": entry.get("observed_at"),
+        "source_count": entry.get("source_count"),
+        "article_count": entry.get("article_count"),
+        "entities": _as_list(entry.get("entities")),
+        "keywords": _as_list(entry.get("keywords")),
+        "claims_en": _as_list(entry.get("claims_en")),
+        "claims_zh": _as_list(entry.get("claims_zh")),
+        "evidence_urls": _as_list(entry.get("evidence_urls")),
+        "prediction_angle": entry.get("prediction_angle"),
+        "raw": entry.get("raw") if isinstance(entry.get("raw"), dict) else entry,
+    }
+
+
+def _try_insert_topic_source_entries(client, topic_id, g: Dict,
+                                     source_entry_ids: Dict[int, str]) -> None:
+    if not source_entry_ids:
+        return
+
+    rows = []
+    example_ids = {
+        item.get("id")
+        for item in (g.get("source_examples") or [])
+        if isinstance(item.get("id"), int)
+    }
+    for pos, entry_id in enumerate(g.get("entry_ids") or []):
+        source_entry_id = source_entry_ids.get(entry_id)
+        if not source_entry_id:
+            continue
+        rows.append({
+            "topic_id": topic_id,
+            "source_entry_id": source_entry_id,
+            "entry_id": entry_id,
+            "position": pos,
+            "is_example": entry_id in example_ids,
+        })
+    if not rows:
+        return
+
+    try:
+        client.table("topic_source_entries").insert(rows).execute()
+    except Exception as exc:  # noqa: BLE001
+        print(
+            f"[WARN] Supabase topic_source_entries skipped: {type(exc).__name__}: {exc}",
+            file=sys.stderr,
+        )
+
+
+def _chunks(rows: List[Dict], size: int):
+    for i in range(0, len(rows), size):
+        yield rows[i:i + size]
+
+
+def _as_list(value):
+    if value is None:
+        return []
+    return value if isinstance(value, list) else [value]
 
 
 def _insert_angles(client, topic_id, g: Dict) -> None:
