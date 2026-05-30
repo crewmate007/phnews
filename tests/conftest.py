@@ -1,4 +1,4 @@
-"""Shared fixtures for the PHNews test suite.
+"""Shared fixtures for the Daily News test suite.
 
 The pipeline's only external dependency is the Gemini API (google-genai).
 cluster_with_llm() does `from google import genai; genai.Client(...)`. We

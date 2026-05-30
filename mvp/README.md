@@ -1,4 +1,4 @@
-# PH Prediction Market News MVP
+# Daily News MVP
 
 每日分析菲律宾话题，给预测市场挂单挑选候选。基于 [Schema v1.4](../04_topic_schema_v1.4.md)。
 
@@ -138,7 +138,7 @@ Excel 报告有 6 个 Sheet：
 ## 当前局限（下一轮迭代项）
 
 - [ ] 话题状态机未实装（ACTIVE/WATCHING/ARCHIVED 转换）
-- [ ] 发现管道已迁到 SourceIntel，PHNews 仅消费其输出
+- [ ] 发现管道已迁到 SourceIntel，Daily News 仅消费其输出
 - [ ] Bing News 备份源未加
 - [ ] Fact-Checker feed 未接入热度信号
 - [ ] 反馈回路（市场结果回写）未实装

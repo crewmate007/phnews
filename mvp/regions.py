@@ -26,7 +26,7 @@ class RegionConfig:
 REGIONS: dict[str, RegionConfig] = {
     "ph": RegionConfig(
         slug="ph",
-        site_name="PHNews",
+        site_name="Daily News",
         flag="🇵🇭",
         country_code="PH",
         language_code="en",
@@ -39,7 +39,7 @@ REGIONS: dict[str, RegionConfig] = {
     ),
     "id": RegionConfig(
         slug="id",
-        site_name="IDNews",
+        site_name="Daily News",
         flag="🇮🇩",
         country_code="ID",
         language_code="id",
