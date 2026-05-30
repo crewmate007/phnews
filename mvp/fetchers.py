@@ -1,7 +1,7 @@
 """
 Reddit signal fetcher for the classic YAML topic flow.
 
-Upstream news collection now lives in the sibling SourceIntel project. PHNews
+Upstream news collection now lives in the sibling SourceIntel project. Daily News
 reads SourceIntel JSON artifacts through source_intel_bridge instead of fetching
 news sources directly.
 """
@@ -24,7 +24,7 @@ except ImportError:
 from source_intel_bridge import source_intel_signals_for_topic
 
 
-REDDIT_USER_AGENT = "ph-news-bot:v0.1 (by /u/ph_markets_research)"
+REDDIT_USER_AGENT = "daily-news-bot:v0.1 (by /u/ph_markets_research)"
 
 
 def _fetch_url(url: str, timeout: int = 15) -> str:
