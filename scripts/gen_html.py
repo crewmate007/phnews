@@ -238,15 +238,19 @@ function initRegionLinks() {
 function getDisposition(g) {
   const total = g.R + g.S + g.T + g.U + g.H;
   const veto = [g.R, g.S, g.T, g.U, g.H].filter(s => s === 0).length;
-  if (!g.bettable) return "drop";
-  if (veto === 0 && total >= 9) return "top";
-  if (veto === 0 && total >= 7) return "candidate";
+  const bdlt = normalizeBDLT(g);
+  const tradeTotal = bdlt.B + bdlt.D + bdlt.L + bdlt.T;
+  if (!passesTradeGate(g)) return "drop";
+  if (veto === 0 && total >= 9 && bdlt.B === 2 && tradeTotal >= 6) return "top";
+  if (veto === 0 && total >= 7 && tradeTotal >= 5) return "candidate";
   return "watch";
 }
 
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
+  const dispDiff = dispositionRank(getDisposition(b)) - dispositionRank(getDisposition(a));
+  if (dispDiff !== 0) return dispDiff;
   const bdltDiff = bdltTotal(b) - bdltTotal(a);
   if (bdltDiff !== 0) return bdltDiff;
   return rstuhTotal(b) - rstuhTotal(a);
@@ -377,6 +381,22 @@ function bdltTotal(g) {
   return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
 }
 
+function passesTradeGate(g) {
+  const bdlt = normalizeBDLT(g);
+  const total = bdlt.B + bdlt.D + bdlt.L + bdlt.T;
+  return (
+    Boolean(g.bettable) &&
+    bdlt.B > 0 &&
+    bdlt.D > 0 &&
+    (bdlt.B + bdlt.D) >= 3 &&
+    total >= 4
+  );
+}
+
+function dispositionRank(disp) {
+  return { top: 3, candidate: 2, watch: 1, drop: 0 }[disp] || 0;
+}
+
 function shouldShowNarrative(g, disp, narr) {
   if (!narr) return false;
   if (disp !== "drop") return true;
@@ -465,15 +485,27 @@ renderCards("zh");
 
 
 def classify_disposition(g: dict) -> str:
-    if not g.get("bettable"):
+    bdlt = _bdlt_for_group(g)
+    if not passes_tradeability_gate(g, bdlt):
         return "drop"
     total = g["R"] + g["S"] + g["T"] + g["U"] + g["H"]
     veto = sum(1 for k in "RSTUH" if g[k] == 0)
-    if veto == 0 and total >= 9:
+    if veto == 0 and total >= 9 and bdlt["B"] == 2 and bdlt["total"] >= 6:
         return "top"
-    if veto == 0 and total >= 7:
+    if veto == 0 and total >= 7 and bdlt["total"] >= 5:
         return "candidate"
     return "watch"
+
+
+def passes_tradeability_gate(g: dict, bdlt: dict | None = None) -> bool:
+    bdlt = bdlt or _bdlt_for_group(g)
+    return (
+        bool(g.get("bettable"))
+        and bdlt.get("B", 0) > 0
+        and bdlt.get("D", 0) > 0
+        and bdlt.get("B", 0) + bdlt.get("D", 0) >= 3
+        and bdlt.get("total", 0) >= 4
+    )
 
 
 def build_group(g: dict) -> dict:
@@ -496,6 +528,9 @@ def build_group(g: dict) -> dict:
         "U": g.get("U", 0),
         "H": g.get("H", 0),
         "BDLT": _bdlt_for_group(g),
+        "yes_buyer": g.get("yes_buyer", ""),
+        "no_buyer": g.get("no_buyer", ""),
+        "tradeability_reason": g.get("tradeability_reason", ""),
         "why_users_bet": g.get("why_users_bet", ""),
         "narrative_en": narr,
         "narrative_zh": narr_zh,
@@ -746,7 +781,7 @@ def main():
     dispositions = [classify_disposition(g) for g in groups]
     n_top = dispositions.count("top")
     n_cand = dispositions.count("candidate")
-    n_bet = sum(1 for g in groups if g["bettable"])
+    n_bet = sum(1 for g in groups if passes_tradeability_gate(g))
     total_entries = data.get("total_entries", sum(g["density"] for g in groups))
     n_noise = data.get("noise_count", len(data.get("noise", [])))
 

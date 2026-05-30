@@ -21,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region
+import gen_html
 
 
 PROMPT = """You are a prediction-market analyst.
@@ -201,7 +202,10 @@ def main():
         sys.exit(1)
 
     data = json.loads(json_path.read_text(encoding="utf-8"))
-    bettable = [g for g in data.get("groups", []) if g.get("bettable")]
+    bettable = [
+        g for g in data.get("groups", [])
+        if gen_html.passes_tradeability_gate(g)
+    ]
     if not bettable:
         print("[INFO] No bettable groups; nothing to do.")
         return

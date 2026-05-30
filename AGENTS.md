@@ -1,4 +1,4 @@
-# AGENTS.md — PHNews
+# AGENTS.md — Daily News
 
 Guidance for Claude Code / Codex agents working in this repo. Read this first.
 
@@ -59,11 +59,11 @@ To add an angle: drop a new file with the `generate()` contract, register it in
 
 ### Supabase (data platform, in progress)
 
-`mvp/db.py` mirrors each run into 4 tables: `runs → topics → (angles,
-source_examples)`. Currently **dual-write only** — JSON stays source of truth.
-RLS is on with no policies (anon blocked; CI uses the `service_role` key which
-bypasses RLS). `topics` has per-angle checkpoint columns
-(`serious_status` / `reddit_status` / `tiktok_status` / `prob_status`).
+`mvp/db.py` mirrors each run into Supabase: `runs → source_entries → topics →
+(topic_source_entries, angles, source_examples)`. Currently **dual-write only**
+— JSON stays source of truth. RLS is on with no policies (anon blocked; CI uses
+the `service_role` key which bypasses RLS). `topics` has per-angle checkpoint
+columns (`serious_status` / `reddit_status` / `tiktok_status` / `prob_status`).
 
 ## Build / run commands
 
