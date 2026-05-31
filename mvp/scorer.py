@@ -272,9 +272,11 @@ R={scores['R']['score']}, S={scores['S']['score']}, T={scores['T']['score']}, H=
 """
     try:
         response = client.models.generate_content(
-            model="gemini-3.0-flash",
+            model=os.environ.get("GEMINI_MODEL", "gemini-3.5-flash"),
             contents=prompt,
         )
+        from angles.base import log_gemini_usage
+        log_gemini_usage(response, "classic_classifier")
         text = response.text.strip()
         # 去掉可能的 markdown ```json
         if text.startswith("```"):

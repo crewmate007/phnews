@@ -1,7 +1,8 @@
 """SeriousAngle: institutional prediction-market analyst persona.
 
-Generates 2-3 candidate market questions per cluster, each independently
-scored on RSTUH + BDLT. Picks the highest-scoring candidate as the primary
+Generates 3-5 candidate market questions per cluster, each independently
+scored on contract quality plus volume potential. Picks the highest-volume
+candidate as the primary
 (populates the flat g.suggested_question / g.R / g.BDLT / etc. fields the
 rest of the system reads). All candidates are preserved under
 g.serious_candidates for inspection and future "show alternatives" UI.
@@ -13,10 +14,12 @@ PHASE_1 (before region guard / cluster attach).
 from __future__ import annotations
 
 import datetime as dt
+import os
 import sys
 from typing import Dict, List
 
 from regions import RegionConfig
+import market_scoring as scoring
 
 from .base import (
     RESOLVER_URL_ALLOWLIST,
@@ -30,9 +33,10 @@ SCORE_PROMPT_TEMPLATE = """\
 You are a prediction-market analyst covering {country_name}. Today is {date}.
 
 Below are broad topic clusters created from SourceIntel hotspots. For each
-cluster, PROPOSE 2-3 CANDIDATE market questions, each scored independently.
-The system will pick the highest-scoring candidate to surface as the primary
-market; the others are stored for inspection.
+cluster, PROPOSE 3-5 CANDIDATE market questions, each scored independently.
+The system will first reject invalid contracts, then pick the highest expected
+local retail trading volume candidate to surface as the primary market. The
+others are stored for inspection.
 
 Why multiple candidates: a topic often supports several market shapes of
 different quality (different thresholds, different time windows, different
@@ -40,11 +44,11 @@ resolution sources). Generating multiple forces you to explore those shapes
 explicitly instead of locking onto the first one that comes to mind.
 
 Make the candidates GENUINELY different. Different resolver, different
-deadline, different threshold, different question shape. Do NOT just rephrase
-the same question 3 times. If a cluster truly only supports one good market
-angle, you may return just one candidate -- never return zero. If the cluster
-is not bettable at all, return one candidate with bettable=false and null
-question fields.
+deadline, different threshold, different question shape, or different retail
+audience. Do NOT just rephrase the same question several times. If a cluster
+truly only supports one good market angle, you may return just one candidate --
+never return zero. If the cluster is not bettable at all, return one candidate
+with bettable=false and null question fields.
 
 Region discipline:
 - Each candidate's market question must be relevant to {country_name} or to a
@@ -80,12 +84,32 @@ OUTPUT: strict JSON only, no markdown fences, no extra text.
           "T": <0|1|2>, "T_reason": "what is the time window / deadline",
           "U": <0|1|2>, "U_reason": "how uncertain is the outcome",
           "H": <0|1|2>, "H_reason": "how much public attention",
-          "BDLT": {{
-            "B": <0|1|2>, "B_reason": "bet demand reason",
-            "D": <0|1|2>, "D_reason": "disagreement reason",
-            "L": <0|1|2>, "L_reason": "local hook reason",
-            "T": <0|1|2>, "T_reason": "timeliness reason"
+          "contract_quality": {{
+            "R": <0|1|2>, "R_reason": "same as above",
+            "S": <0|1|2>, "S_reason": "same as above",
+            "T": <0|1|2>, "T_reason": "same as above",
+            "U": <0|1|2>, "U_reason": "same as above"
           }},
+          "volume_potential": {{
+            "audience_reach": <0|1|2|3|4|5>,
+            "audience_reach_reason": "how many local retail users know/care",
+            "stake_salience": <0|1|2|3|4|5>,
+            "stake_salience_reason": "money, identity, fandom, livelihood, status, safety, daily-life stakes",
+            "two_sided_conviction": <0|1|2|3|4|5>,
+            "two_sided_conviction_reason": "why both YES and NO have motivated buyers",
+            "trade_now_trigger": <0|1|2|3|4|5>,
+            "trade_now_trigger_reason": "why users would trade today, not merely read",
+            "update_cadence": <0|1|2|3|4|5>,
+            "update_cadence_reason": "new info before settlement that can move price",
+            "comprehension_speed": <0|1|2|3|4|5>,
+            "comprehension_speed_reason": "whether the market is instantly understandable",
+            "narrative_heat": <0|1|2|3|4|5>,
+            "narrative_heat_reason": "controversy, rivalry, emotion, shareability",
+            "local_relevance": <0|1|2|3|4|5>,
+            "local_relevance_reason": "fit for {country_name} retail bettors",
+            "personas": ["sports/fandom|politics/public events|cost of living/consumer|weather/transport/safety|entertainment/gaming/tech|finance/crypto"]
+          }},
+          "volume_score": <0-100 weighted expected trading-volume score>,
           "yes_buyer": "specific motivated YES-buyer archetype, or null",
           "no_buyer": "specific motivated NO-buyer archetype, or null",
           "tradeability_reason": "why this has or lacks real two-sided demand",
@@ -114,32 +138,39 @@ SCORING GUIDE:
 - H=1: 2-4 evidence items, limited social discussion
 - H=0: single weak source or very low interest
 
-TRADEABILITY GATE (BDLT), optimized for local DigiPlus-like betting demand:
+CONTRACT GATE:
+- Contract quality uses R/S/T/U only. H is attention evidence, not a validity
+  veto.
+- If any of R/S/T/U is 0, set bettable=false and null question fields.
+- Do not rescue a vague or already-decided contract just because the topic is
+  hot.
+
+VOLUME POTENTIAL, optimized for {country_name} local retail users:
 - First name a plausible motivated YES buyer and NO buyer. If either side is
   missing or merely "someone following the news", the candidate is not a real
-  market even when R/S/T are objectively clean.
-- B=2: broad or intense local betting demand from users with money, identity,
-  fandom, livelihood, status, or daily-life stakes. B=1: niche but playable.
-  B=0: informative, routine, narrow-audience, or unlikely to make users bet.
-- D=2: both YES and NO have plausible motivated buyers with different priors
-  or incentives. D=1: some two-sided demand but one side is much easier to
-  imagine. D=0: no real counterparty, boring, settled, or one-sided.
-- L=2: directly local and familiar to everyday users. L=1: indirect local
-  effect or strong global relevance. L=0: foreign/abstract with little local
-  hook.
-- T=2: near-term settlement or active information flow before a known event.
-  T=1: this quarter/season or a slower but trackable cadence. T=0: long,
-  vague, open-ended, or no meaningful information flow before settlement.
+  order book even when R/S/T are clean.
+- Score 0-5 on each volume dimension. 0 means no signal; 5 means obvious,
+  broad, urgent, and locally legible.
+- Local retail persona panel: sports/fandom, politics/public events, cost of
+  living/consumer, weather/transport/safety, entertainment/gaming/tech, and
+  finance/crypto. Use whichever personas plausibly create order flow; do not
+  force every persona to care.
+- High-volume markets need a reason to trade today and a reason to revisit as
+  new information arrives before settlement.
+- Product listings, SKU launches, routine corporate announcements, and website
+  availability milestones usually have low audience, weak stake, weak
+  two-sided conviction, and no trade-now trigger. Let those dimensions push
+  them to drop naturally; do not blacklist by topic label.
 
-Tradeability hard rules:
-- If B=0 or D=0, set bettable=false and null question fields.
-- If B+D < 3, set bettable=false and null question fields. Weak demand plus
-  weak disagreement does not create a real order book.
-- If B+D+L+T < 4, set bettable=false and null question fields.
-- B+D+L+T = 4 is at most watch. B+D+L+T = 5 is at most candidate.
-- TOP requires B=2, B+D >= 3, B+D+L+T >= 6, and no RSTUH veto.
+Volume hard rules:
+- Drop if volume_score < 45.
+- Watch if 45 <= volume_score < 60.
+- Candidate if volume_score >= 60.
+- TOP requires volume_score >= 75, two_sided_conviction >= 4,
+  trade_now_trigger >= 3, update_cadence >= 3, and a strong contract.
 - Do not blacklist by topic label. Judge the market mechanism: motivated
-  counterparties, local stake, uncertainty, and information flow.
+  counterparties, local stake, uncertainty, information flow, and user impulse
+  to place a trade.
 
 Important:
 - A cluster can be valuable digest even when it is not bettable.
@@ -148,6 +179,33 @@ Important:
 - Local politics, legal processes, economic policy, health outbreaks, weather,
   security, and infrastructure should get careful market-question treatment.
 """
+
+
+def _reorder_score_prompt_for_cache(template: str) -> str:
+    """Move the dynamic cluster payload after the fixed instructions.
+
+    This preserves the prompt text and output schema while making the shared
+    prefix much longer for conservative cache A/B tests.
+    """
+    marker = "\nCLUSTERS:\n{groups}\n\n"
+    before, after = template.split(marker, 1)
+    return before + "\n" + after.rstrip() + "\n\nCLUSTERS:\n{groups}\n"
+
+
+SCORE_PROMPT_TEMPLATE_REORDERED = _reorder_score_prompt_for_cache(SCORE_PROMPT_TEMPLATE)
+
+
+def _score_prompt_template() -> str:
+    if _score_prompt_order() == "reordered":
+        return SCORE_PROMPT_TEMPLATE_REORDERED
+    return SCORE_PROMPT_TEMPLATE
+
+
+def _score_prompt_order() -> str:
+    order = os.environ.get("PHNEWS_SERIOUS_PROMPT_ORDER", "legacy").strip().lower()
+    if order in {"reordered", "cache", "cached"}:
+        return "reordered"
+    return "legacy"
 
 
 class SeriousAngle:
@@ -164,9 +222,9 @@ class SeriousAngle:
     ) -> Dict[str, int]:
         """Populate primary serious-market fields on each group in-place.
 
-        For each group: ask Gemini for 2-3 candidate market questions with
-        independent RSTUH+BDLT scores. Pick the highest-total candidate as
-        primary (flat fields). Store all candidates under g.serious_candidates.
+        For each group: ask Gemini for 3-5 candidate market questions with
+        independent contract + volume scores. Pick the highest-volume candidate
+        as primary (flat fields). Store all candidates under g.serious_candidates.
 
         Returns {"attached": int, "total": int, "candidate_count": int}.
         Never raises - on parse / API failure the groups are left untouched
@@ -177,12 +235,14 @@ class SeriousAngle:
             return stats
 
         today = dt.date.today().isoformat()
-        prompt = SCORE_PROMPT_TEMPLATE.format(
+        prompt = _score_prompt_template().format(
             date=today,
             country_name=region_cfg.country_name,
             groups=_build_score_groups(groups),
         )
-        response = generate_content_with_retry(client, model, prompt)
+        response = generate_content_with_retry(
+            client, model, prompt, usage_label=f"serious_angle:{_score_prompt_order()}"
+        )
         result = parse_json_response(response.text)
 
         by_index: Dict[int, Dict] = {}
@@ -204,7 +264,7 @@ class SeriousAngle:
                 raw = [item]
             if not isinstance(raw, list) or not raw:
                 continue
-            cleaned = [_normalize_candidate(c) for c in raw[:3] if isinstance(c, dict)]
+            cleaned = [_normalize_candidate(c) for c in raw[:5] if isinstance(c, dict)]
             cleaned = [c for c in cleaned if c is not None]
             if not cleaned:
                 continue
@@ -220,6 +280,10 @@ class SeriousAngle:
             group["U_reason"] = best["U_reason"]
             group["H"] = best["H"]
             group["H_reason"] = best["H_reason"]
+            group["contract_quality"] = best["contract_quality"]
+            group["volume_potential"] = best["volume_potential"]
+            group["volume_score"] = best["volume_score"]
+            group["scoring_version"] = best["scoring_version"]
             group["BDLT"] = best["BDLT"]
             group["yes_buyer"] = best["yes_buyer"]
             group["no_buyer"] = best["no_buyer"]
@@ -292,6 +356,10 @@ def _normalize_candidate(c: Dict) -> Dict | None:
         "U_reason": c.get("U_reason", "") or "",
         "H": _clip_score(c.get("H")),
         "H_reason": c.get("H_reason", "") or "",
+        "contract_quality": c.get("contract_quality") if isinstance(c.get("contract_quality"), dict) else {},
+        "volume_potential": c.get("volume_potential") if isinstance(c.get("volume_potential"), dict) else {},
+        "volume_score": c.get("volume_score"),
+        "scoring_version": c.get("scoring_version") or scoring.SCORING_VERSION,
         "BDLT": {
             "B": _clip_score(bdlt.get("B")),
             "B_reason": bdlt.get("B_reason", "") or "",
@@ -307,7 +375,7 @@ def _normalize_candidate(c: Dict) -> Dict | None:
         "tradeability_reason": c.get("tradeability_reason", "") or "",
         "why_users_bet": c.get("why_users_bet", "") or "",
     }
-    _apply_tradeability_gate(normalized)
+    scoring.apply_market_gates(normalized)
     return normalized
 
 
@@ -319,47 +387,6 @@ def _clip_score(v) -> int:
     return max(0, min(2, i))
 
 
-def _bdlt_total(c: Dict) -> int:
-    b = c["BDLT"]
-    return b["B"] + b["D"] + b["L"] + b["T"]
-
-
-def _tradeability_rejection_reason(c: Dict) -> str:
-    b = c["BDLT"]
-    if b["B"] <= 0:
-        return "No plausible motivated buyer demand."
-    if b["D"] <= 0:
-        return "No plausible motivated YES and NO buyer."
-    if b["B"] + b["D"] < 3:
-        return "Buyer demand and disagreement are both too weak."
-    if _bdlt_total(c) < 4:
-        return "Tradeability score is below the surfacing threshold."
-    return ""
-
-
-def _passes_tradeability_gate(c: Dict) -> bool:
-    return bool(c.get("bettable")) and not _tradeability_rejection_reason(c)
-
-
-def _apply_tradeability_gate(c: Dict) -> None:
-    if not c.get("bettable"):
-        return
-    reason = _tradeability_rejection_reason(c)
-    if not reason:
-        return
-    c["bettable"] = False
-    c["suggested_question"] = None
-    c["suggested_question_zh"] = None
-    c["disposition_hint"] = "digest"
-    c["tradeability_reason"] = c.get("tradeability_reason") or reason
-    c["why_users_bet"] = c.get("why_users_bet") or reason
-
-
 def _candidate_total(c: Dict) -> tuple:
-    """Sorting key: tradeability first, then market-structure quality."""
-    rstuh = c["R"] + c["S"] + c["T"] + c["U"] + c["H"]
-    b = c["BDLT"]
-    bdlt = _bdlt_total(c)
-    rstuh_has_no_veto = all(c[key] > 0 for key in ("R", "S", "T", "U", "H"))
-    two_sided_strength = min(b["B"], b["D"])
-    return (_passes_tradeability_gate(c), rstuh_has_no_veto, bdlt, two_sided_strength, rstuh)
+    """Sorting key: expected volume first, then contract quality."""
+    return scoring.candidate_sort_key(c)

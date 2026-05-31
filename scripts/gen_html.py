@@ -18,6 +18,7 @@ import re
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region
+import market_scoring as scoring
 
 
 HTML_TEMPLATE = r"""<!DOCTYPE html>
@@ -190,7 +191,7 @@ const i18n = {
     source_mix: "来源",
     expand_scores: "展开",
     rstuh: "市场结构",
-    bdlt: "下注欲望",
+    bdlt: "成交潜力",
     show_filtered: "显示过滤",
     hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
@@ -211,7 +212,7 @@ const i18n = {
     source_mix: "Sources",
     expand_scores: "Expand",
     rstuh: "Market quality",
-    bdlt: "Bet demand",
+    bdlt: "Volume",
     show_filtered: "Show filtered",
     hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
@@ -236,13 +237,16 @@ function initRegionLinks() {
 }
 
 function getDisposition(g) {
-  const total = g.R + g.S + g.T + g.U + g.H;
-  const veto = [g.R, g.S, g.T, g.U, g.H].filter(s => s === 0).length;
-  const bdlt = normalizeBDLT(g);
-  const tradeTotal = bdlt.B + bdlt.D + bdlt.L + bdlt.T;
-  if (!passesTradeGate(g)) return "drop";
-  if (veto === 0 && total >= 9 && bdlt.B === 2 && tradeTotal >= 6) return "top";
-  if (veto === 0 && total >= 7 && tradeTotal >= 5) return "candidate";
+  const volume = normalizeVolume(g);
+  if (!passesVolumeGate(g)) return "drop";
+  if (
+    hasStrongContract(g) &&
+    volume.score >= 75 &&
+    volume.two_sided_conviction >= 4 &&
+    volume.trade_now_trigger >= 3 &&
+    volume.update_cadence >= 3
+  ) return "top";
+  if (volume.score >= 60) return "candidate";
   return "watch";
 }
 
@@ -251,9 +255,9 @@ const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 const sorted = [...groups].sort((a, b) => {
   const dispDiff = dispositionRank(getDisposition(b)) - dispositionRank(getDisposition(a));
   if (dispDiff !== 0) return dispDiff;
-  const bdltDiff = bdltTotal(b) - bdltTotal(a);
-  if (bdltDiff !== 0) return bdltDiff;
-  return rstuhTotal(b) - rstuhTotal(a);
+  const volumeDiff = volumeScore(b) - volumeScore(a);
+  if (volumeDiff !== 0) return volumeDiff;
+  return contractTotal(b) - contractTotal(a);
 });
 
 function renderCards(lang) {
@@ -265,8 +269,11 @@ function renderCards(lang) {
     const disp = getDisposition(g);
     if (disp === "drop" && !showFiltered) return;
     const total = rstuhTotal(g);
+    const contract = normalizeContract(g);
+    const contractScore = contractTotal(g);
+    const volume = normalizeVolume(g);
+    const volScore = volume.score;
     const bdlt = normalizeBDLT(g);
-    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
@@ -312,7 +319,7 @@ function renderCards(lang) {
       <details class="score-panel">
         <summary>
           <span class="score-totals">
-            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip primary">VOL <b>${volScore}</b>/100</span>
             <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
           </span>
           <span class="score-expand">${t.expand_scores}</span>
@@ -320,19 +327,29 @@ function renderCards(lang) {
         <div class="score-section">
           <div class="score-label">${t.bdlt}</div>
           <div class="rstuh">
-            ${["B","D","L","T"].map(l => {
-              const s = bdlt[l] || 0;
-              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            ${[
+              ["AR", "audience_reach"],
+              ["ST", "stake_salience"],
+              ["2S", "two_sided_conviction"],
+              ["NOW", "trade_now_trigger"],
+              ["UPD", "update_cadence"],
+              ["5S", "comprehension_speed"],
+              ["HEAT", "narrative_heat"],
+              ["LOC", "local_relevance"]
+            ].map(([label, key]) => {
+              const s = volume[key] || 0;
+              const cls = s >= 4 ? 2 : s >= 2 ? 1 : 0;
+              return `<div class="dim"><div class="letter">${label}</div><div class="score s${cls}">${s}</div></div>`;
             }).join("")}
-            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${volScore}</div></div>
           </div>
           <div class="score-label">${t.rstuh}</div>
           <div class="rstuh">
-            ${["R","S","T","U","H"].map((l,i) => {
-              const s = [g.R,g.S,g.T,g.U,g.H][i];
+            ${["R","S","T","U"].map(l => {
+              const s = contract[l] || 0;
               return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
             }).join("")}
-            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${contractScore}</div></div>
           </div>
         </div>
       </details>
@@ -366,6 +383,33 @@ function rstuhTotal(g) {
   return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
 }
 
+function normalizeContract(g) {
+  const raw = g.contract_quality || {};
+  return {
+    R: Number.isInteger(raw.R) ? raw.R : (g.R || 0),
+    S: Number.isInteger(raw.S) ? raw.S : (g.S || 0),
+    T: Number.isInteger(raw.T) ? raw.T : (g.T || 0),
+    U: Number.isInteger(raw.U) ? raw.U : (g.U || 0),
+  };
+}
+
+function contractTotal(g) {
+  const c = normalizeContract(g);
+  return c.R + c.S + c.T + c.U;
+}
+
+function passesContractGate(g) {
+  const c = normalizeContract(g);
+  return Boolean(g.bettable) && Boolean(g.question_en || g.question || g.suggested_question) &&
+    Boolean(g.source || g.resolution_source) &&
+    c.R > 0 && c.S > 0 && c.T > 0 && c.U > 0;
+}
+
+function hasStrongContract(g) {
+  const c = normalizeContract(g);
+  return passesContractGate(g) && contractTotal(g) >= 7 && c.R >= 2 && c.S >= 2 && c.T >= 1 && c.U >= 1;
+}
+
 function normalizeBDLT(g) {
   const bdlt = g.BDLT || {};
   return {
@@ -381,16 +425,63 @@ function bdltTotal(g) {
   return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
 }
 
-function passesTradeGate(g) {
+function normalizeVolume(g) {
+  const raw = g.volume_potential || {};
   const bdlt = normalizeBDLT(g);
-  const total = bdlt.B + bdlt.D + bdlt.L + bdlt.T;
-  return (
-    Boolean(g.bettable) &&
-    bdlt.B > 0 &&
-    bdlt.D > 0 &&
-    (bdlt.B + bdlt.D) >= 3 &&
-    total >= 4
-  );
+  const score5 = value => ({0: 0, 1: 3, 2: 5}[value] || 0);
+  const fallbackB = score5(bdlt.B);
+  const fallbackD = score5(bdlt.D);
+  const fallbackL = score5(bdlt.L);
+  const fallbackT = score5(bdlt.T);
+  const out = {
+    audience_reach: Number.isInteger(raw.audience_reach) ? raw.audience_reach : fallbackB,
+    stake_salience: Number.isInteger(raw.stake_salience) ? raw.stake_salience : fallbackB,
+    two_sided_conviction: Number.isInteger(raw.two_sided_conviction) ? raw.two_sided_conviction : fallbackD,
+    trade_now_trigger: Number.isInteger(raw.trade_now_trigger) ? raw.trade_now_trigger : fallbackT,
+    update_cadence: Number.isInteger(raw.update_cadence) ? raw.update_cadence : fallbackT,
+    comprehension_speed: Number.isInteger(raw.comprehension_speed) ? raw.comprehension_speed : 4,
+    narrative_heat: Number.isInteger(raw.narrative_heat) ? raw.narrative_heat : Math.max(fallbackB, fallbackL),
+    local_relevance: Number.isInteger(raw.local_relevance) ? raw.local_relevance : fallbackL,
+  };
+  if (Number.isInteger(g.volume_score)) {
+    out.score = Math.max(0, Math.min(100, g.volume_score));
+  } else if (Number.isInteger(raw.score)) {
+    out.score = Math.max(0, Math.min(100, raw.score));
+  } else {
+    out.score = Math.round((
+      out.audience_reach * 1.2 +
+      out.stake_salience * 1.2 +
+      out.two_sided_conviction * 1.3 +
+      out.trade_now_trigger * 1.2 +
+      out.update_cadence * 1.0 +
+      out.comprehension_speed * 0.9 +
+      out.narrative_heat * 1.0 +
+      out.local_relevance * 1.2
+    ) / (5 * 9.0) * 100);
+  }
+  return out;
+}
+
+function volumeScore(g) {
+  return normalizeVolume(g).score;
+}
+
+function concreteBuyer(value) {
+  const text = String(value || "").trim().toLowerCase();
+  return text.length >= 4 && !["someone", "people", "users", "bettors", "traders", "news followers", "general public"].includes(text);
+}
+
+function passesVolumeGate(g) {
+  const v = normalizeVolume(g);
+  return passesContractGate(g) &&
+    concreteBuyer(g.yes_buyer) &&
+    concreteBuyer(g.no_buyer) &&
+    v.two_sided_conviction >= 2 &&
+    v.score >= 45;
+}
+
+function passesTradeGate(g) {
+  return passesVolumeGate(g);
 }
 
 function dispositionRank(disp) {
@@ -485,27 +576,15 @@ renderCards("zh");
 
 
 def classify_disposition(g: dict) -> str:
-    bdlt = _bdlt_for_group(g)
-    if not passes_tradeability_gate(g, bdlt):
-        return "drop"
-    total = g["R"] + g["S"] + g["T"] + g["U"] + g["H"]
-    veto = sum(1 for k in "RSTUH" if g[k] == 0)
-    if veto == 0 and total >= 9 and bdlt["B"] == 2 and bdlt["total"] >= 6:
-        return "top"
-    if veto == 0 and total >= 7 and bdlt["total"] >= 5:
-        return "candidate"
-    return "watch"
+    return scoring.classify_disposition(g)
 
 
 def passes_tradeability_gate(g: dict, bdlt: dict | None = None) -> bool:
-    bdlt = bdlt or _bdlt_for_group(g)
-    return (
-        bool(g.get("bettable"))
-        and bdlt.get("B", 0) > 0
-        and bdlt.get("D", 0) > 0
-        and bdlt.get("B", 0) + bdlt.get("D", 0) >= 3
-        and bdlt.get("total", 0) >= 4
-    )
+    return scoring.passes_volume_gate(g)
+
+
+def passes_volume_gate(g: dict) -> bool:
+    return scoring.passes_volume_gate(g)
 
 
 def build_group(g: dict) -> dict:
@@ -518,6 +597,7 @@ def build_group(g: dict) -> dict:
     if is_effectively_english(narr_zh):
         narr_zh = clean_summary(question_zh) if question_zh and not is_effectively_english(question_zh) else name_zh
     source_examples = [clean_source_example(item) for item in g.get("source_examples", [])]
+    scoring.ensure_scoring_fields(g)
     return {
         "name_en": name_en,
         "name_zh": name_zh,
@@ -527,6 +607,10 @@ def build_group(g: dict) -> dict:
         "T": g.get("T", 0),
         "U": g.get("U", 0),
         "H": g.get("H", 0),
+        "contract_quality": g.get("contract_quality", {}),
+        "volume_potential": g.get("volume_potential", {}),
+        "volume_score": g.get("volume_score", 0),
+        "scoring_version": g.get("scoring_version", scoring.SCORING_VERSION),
         "BDLT": _bdlt_for_group(g),
         "yes_buyer": g.get("yes_buyer", ""),
         "no_buyer": g.get("no_buyer", ""),
@@ -541,7 +625,10 @@ def build_group(g: dict) -> dict:
         "question": question_en,
         "question_en": question_en,
         "question_zh": question_zh,
+        "suggested_question": question_en,
+        "suggested_question_zh": question_zh,
         "source": g.get("resolution_source", ""),
+        "resolution_source": g.get("resolution_source", ""),
         "reddit_question_en": g.get("reddit_question"),
         "reddit_question_zh": g.get("reddit_question_zh"),
         "reddit_resolution_source": g.get("reddit_resolution_source"),
@@ -699,6 +786,8 @@ def translate_title_fallback(title: str) -> str:
 
 
 def _bdlt_for_group(g: dict) -> dict:
+    if isinstance(g.get("volume_potential"), dict):
+        return scoring.bdlt_from_volume_potential(scoring.normalize_volume_potential(g))
     bdlt = g.get("BDLT") if isinstance(g.get("BDLT"), dict) else {}
     if all(bdlt.get(key) in (0, 1, 2) for key in ("B", "D", "L", "T")):
         out = {key: bdlt.get(key, 0) for key in ("B", "D", "L", "T")}

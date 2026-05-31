@@ -4,7 +4,14 @@ No real Supabase needed: get_client() returns None without env vars (no-op
 mode), and the mapping logic is exercised with a fake client that records
 every table operation so we can assert the JSON->rows mapping is correct.
 """
+import pytest
+
 import db
+
+
+@pytest.fixture(autouse=True)
+def no_local_dotenv(monkeypatch):
+    monkeypatch.setattr(db, "_dotenv_values", lambda: {})
 
 
 # --- no-op mode (no credentials) ---------------------------------------------
@@ -50,6 +57,10 @@ class FakeQuery:
         self._op = "delete"
         return self
 
+    def select(self, *_):
+        self._op = "select"
+        return self
+
     def eq(self, *_):
         return self
 
@@ -61,19 +72,36 @@ class FakeQuery:
             n = len([x for x in self.log if x[0] == "topics" and x[1] == "insert"])
             return FakeResult([{"id": f"topic-{n}"}])
         if self.table == "source_entries" and self._op == "insert":
+            if getattr(self, "return_empty_source_insert", False):
+                return FakeResult([])
             return FakeResult([
                 {"id": f"source-entry-{item['entry_id']}", "entry_id": item["entry_id"]}
                 for item in self._payload
+            ])
+        if self.table == "source_entries" and self._op == "select":
+            return FakeResult([
+                {"id": "source-entry-0", "entry_id": 0},
+                {"id": "source-entry-1", "entry_id": 1},
             ])
         return FakeResult([{}])
 
 
 class FakeClient:
+    query_cls = FakeQuery
+
     def __init__(self):
         self.log = []
 
     def table(self, name):
-        return FakeQuery(name, self.log)
+        return self.query_cls(name, self.log)
+
+
+class NoReturningSourceEntryQuery(FakeQuery):
+    return_empty_source_insert = True
+
+
+class NoReturningSourceEntryClient(FakeClient):
+    query_cls = NoReturningSourceEntryQuery
 
 
 SAMPLE_GROUP = {
@@ -88,7 +116,17 @@ SAMPLE_GROUP = {
     "source_labels": ["Google News 5"],
     "R": 2, "R_reason": "clear", "S": 2, "S_reason": "official",
     "T": 2, "T_reason": "soon", "U": 2, "U_reason": "tight", "H": 2, "H_reason": "huge",
+    "contract_quality": {"R": 2, "S": 2, "T": 2, "U": 2, "total": 8},
+    "volume_potential": {"audience_reach": 5, "stake_salience": 5,
+                         "two_sided_conviction": 5, "trade_now_trigger": 5,
+                         "update_cadence": 5, "comprehension_speed": 5,
+                         "narrative_heat": 5, "local_relevance": 5,
+                         "personas": ["sports/fandom"]},
+    "volume_score": 96,
+    "scoring_version": "volume_v1",
     "BDLT": {"B": 2, "D": 2, "L": 2, "T": 2, "total": 8},
+    "yes_buyer": "Spurs fans",
+    "no_buyer": "Thunder fans",
     "bettable": True,
     "suggested_question": "Will the Spurs win?",
     "suggested_question_zh": "马刺会赢吗？",
@@ -98,6 +136,12 @@ SAMPLE_GROUP = {
     "serious_candidates": [
         {"suggested_question": "Will the Spurs win?", "suggested_question_zh": "马刺会赢吗？",
          "resolution_source": "NBA.com", "R": 2, "S": 2, "T": 2, "U": 2, "H": 2,
+         "contract_quality": {"R": 2, "S": 2, "T": 2, "U": 2, "total": 8},
+         "volume_potential": {"audience_reach": 5, "stake_salience": 5,
+                              "two_sided_conviction": 5, "trade_now_trigger": 5,
+                              "update_cadence": 5, "comprehension_speed": 5,
+                              "narrative_heat": 5, "local_relevance": 5},
+         "volume_score": 96, "scoring_version": "volume_v1",
          "BDLT": {"B": 2, "D": 2, "L": 2, "T": 2}},
         {"suggested_question": "Alt?", "suggested_question_zh": "备选？",
          "resolution_source": "ESPN", "R": 2, "S": 1, "T": 2, "U": 1, "H": 1,
@@ -165,6 +209,14 @@ def _run_with_fake(monkeypatch, result):
     return ok, fake.log
 
 
+def _run_with_client(monkeypatch, client, result):
+    monkeypatch.setenv("SUPABASE_URL", "https://fake.supabase.co")
+    monkeypatch.setenv("SUPABASE_SERVICE_KEY", "fake-key")
+    monkeypatch.setattr(db, "get_client", lambda: client)
+    ok = db.write_run(result, "ph", "2026-05-29")
+    return ok, client.log
+
+
 def test_write_run_maps_all_tables(monkeypatch):
     ok, log = _run_with_fake(monkeypatch, {
         "total_entries": 120, "clustered_at": "2026-05-29T00:00:00+00:00",
@@ -191,6 +243,9 @@ def test_topic_payload_fields(monkeypatch):
     assert topic_payload["R"] == 2 and topic_payload["H"] == 2
     assert topic_payload["bettable"] is True
     assert topic_payload["bdlt"]["total"] == 8
+    assert topic_payload["contract_quality"]["total"] == 8
+    assert topic_payload["volume_score"] == 96
+    assert topic_payload["scoring_version"] == "volume_v1"
     assert topic_payload["region"] == "ph" and topic_payload["run_date"] == "2026-05-29"
     assert topic_payload["serious_status"] == "done"
     assert topic_payload["reddit_status"] == "done"
@@ -241,6 +296,25 @@ def test_source_entries_and_topic_links(monkeypatch):
             "position": 1,
             "is_example": False,
         },
+    ]
+
+
+def test_source_entry_id_fetch_fallback_when_insert_returns_minimal(monkeypatch):
+    fake = NoReturningSourceEntryClient()
+    ok, log = _run_with_client(monkeypatch, fake, {
+        "entries": SAMPLE_ENTRIES,
+        "groups": [SAMPLE_GROUP],
+    })
+    assert ok is True
+    ops = [(t, op) for t, op, _ in log]
+    assert ("source_entries", "select") in ops
+    link_rows = next(
+        p for t, op, p in log
+        if t == "topic_source_entries" and op == "insert"
+    )
+    assert [row["source_entry_id"] for row in link_rows] == [
+        "source-entry-0",
+        "source-entry-1",
     ]
 
 

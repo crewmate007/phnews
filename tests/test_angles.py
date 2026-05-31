@@ -14,8 +14,10 @@ class _Client:
     """Minimal client returning a fixed response regardless of prompt."""
     def __init__(self, text):
         self._text = text
+        self.last_contents = None
         self.models = self
     def generate_content(self, model=None, contents=None):
+        self.last_contents = contents
         return _Resp(self._text)
 
 
@@ -45,6 +47,24 @@ def test_serious_multi_candidate_picks_best():
         assert g["bettable"] is True
         assert g["suggested_question"]
         assert len(g["serious_candidates"]) == 2
+
+
+def test_serious_prompt_reordered_ab_switch(monkeypatch):
+    region = get_region("ph")
+    clusters = make_clusters(1)
+    groups = _broad_groups(1)
+    _attach_clusters(groups, clusters)
+
+    legacy_client = _Client(default_serious(1))
+    SeriousAngle().generate(groups, legacy_client, "fake", region)
+    assert legacy_client.last_contents.index("CLUSTERS:") < legacy_client.last_contents.index("OUTPUT:")
+
+    monkeypatch.setenv("PHNEWS_SERIOUS_PROMPT_ORDER", "reordered")
+    reordered_groups = _broad_groups(1)
+    _attach_clusters(reordered_groups, clusters)
+    reordered_client = _Client(default_serious(1))
+    SeriousAngle().generate(reordered_groups, reordered_client, "fake", region)
+    assert reordered_client.last_contents.index("OUTPUT:") < reordered_client.last_contents.index("CLUSTERS:")
 
 
 def test_serious_handles_not_bettable():

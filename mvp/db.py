@@ -20,22 +20,52 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 from typing import Dict, List, Optional
 
 
 _SOURCE_ENTRY_CHUNK = 500
+_DOTENV_CACHE: Optional[Dict[str, str]] = None
 
 
 def _env(name: str) -> Optional[str]:
     v = os.environ.get(name)
-    return v.strip() if v else None
+    if v:
+        return v.strip()
+    return _dotenv_values().get(name)
+
+
+def _dotenv_values() -> Dict[str, str]:
+    """Read repo-root .env once as a local fallback for manual runs."""
+    global _DOTENV_CACHE
+    if _DOTENV_CACHE is not None:
+        return _DOTENV_CACHE
+
+    values: Dict[str, str] = {}
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if env_path.exists():
+        for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            name, value = line.split("=", 1)
+            name = name.strip()
+            if name.startswith("export "):
+                name = name.removeprefix("export ").strip()
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+                value = value[1:-1]
+            values[name] = value
+    _DOTENV_CACHE = values
+    return values
 
 
 def get_client():
     """Return a Supabase client, or None if credentials are absent.
 
-    Reads SUPABASE_URL + SUPABASE_SERVICE_KEY. Returns None (no-op mode) when
-    either is missing or the supabase package isn't installed.
+    Reads SUPABASE_URL + SUPABASE_SERVICE_KEY from shell env, then repo .env.
+    Returns None (no-op mode) when either is missing or the supabase package
+    isn't installed.
     """
     url = _env("SUPABASE_URL")
     key = _env("SUPABASE_SERVICE_KEY")
@@ -67,8 +97,8 @@ def write_run(result: Dict, region, run_date: str) -> bool:
     url = _env("SUPABASE_URL") or ""
     key = _env("SUPABASE_SERVICE_KEY") or ""
     print(
-        f"[INFO] Supabase cfg: url_len={len(url)} url_tail={url[-18:]!r} "
-        f"key_len={len(key)} key_prefix={key[:6]!r} key_dots={key.count('.')}",
+        f"[INFO] Supabase cfg: url_len={len(url)} "
+        f"key_len={len(key)} key_dots={key.count('.')}",
         file=sys.stderr,
     )
     client = get_client()
@@ -152,6 +182,10 @@ def _insert_topic(client, run_id, region, run_date, broad_index, g: Dict) -> str
         "T": _score(g, "T"), "T_reason": g.get("T_reason"),
         "U": _score(g, "U"), "U_reason": g.get("U_reason"),
         "H": _score(g, "H"), "H_reason": g.get("H_reason"),
+        "contract_quality": g.get("contract_quality"),
+        "volume_potential": g.get("volume_potential"),
+        "volume_score": _score(g, "volume_score"),
+        "scoring_version": g.get("scoring_version"),
         "bdlt": g.get("BDLT"),
         "bettable": bool(g.get("bettable")),
         "suggested_question": g.get("suggested_question"),
@@ -187,6 +221,19 @@ def _try_replace_source_entries(client, run_id, result: Dict, region: str,
         entry_ids: Dict[int, str] = {}
         for chunk in _chunks(rows, _SOURCE_ENTRY_CHUNK):
             result = client.table("source_entries").insert(chunk).execute()
+            for row in result.data or []:
+                if isinstance(row.get("entry_id"), int) and row.get("id"):
+                    entry_ids[row["entry_id"]] = row["id"]
+        if rows and not entry_ids:
+            # Some PostgREST clients/environments can use return=minimal for
+            # inserts. Fetch ids back so topic_source_entries still links the
+            # raw inputs to topics.
+            result = (
+                client.table("source_entries")
+                .select("id,entry_id")
+                .eq("run_id", run_id)
+                .execute()
+            )
             for row in result.data or []:
                 if isinstance(row.get("entry_id"), int) and row.get("id"):
                     entry_ids[row["entry_id"]] = row["id"]
@@ -289,7 +336,14 @@ def _insert_angles(client, topic_id, g: Dict) -> None:
             "source": c.get("resolution_source"),
             "url": None,
             "is_primary": c.get("suggested_question") == g.get("suggested_question"),
-            "scores": {k: c.get(k) for k in ("R", "S", "T", "U", "H", "BDLT") if k in c},
+            "scores": {
+                k: c.get(k)
+                for k in (
+                    "R", "S", "T", "U", "H", "contract_quality",
+                    "volume_potential", "volume_score", "scoring_version", "BDLT",
+                )
+                if k in c
+            },
         })
     # reddit + tiktok angle arrays
     for angle_type in ("reddit", "tiktok"):

@@ -80,7 +80,7 @@ def main() -> None:
         sys.exit(1)
 
     api_key = load_api_key()
-    model = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+    model = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
     client = genai.Client(api_key=api_key)
 
     print(
