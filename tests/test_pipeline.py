@@ -97,6 +97,15 @@ def test_validator_flags_zero_scored(fake_gemini):
     assert len(groups) >= 20 and n_scored == 0
 
 
+def test_validator_defaults_to_ph_only():
+    import validate_generated_pages as v
+
+    checks = v._checks_for("2026-06-02")
+    assert [item[0] for item in checks] == ["ph"]
+    assert checks[0][1].as_posix() == "docs/index.html"
+    assert all("id/" not in path.as_posix() for _, *paths in checks for path in paths)
+
+
 # --- P2a: batched angle orchestration (_run_angles) --------------------------
 
 class _RecordingAngle:

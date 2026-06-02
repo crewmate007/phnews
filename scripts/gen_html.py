@@ -37,9 +37,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   header .meta span { margin-right: 20px; }
 
   .top-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-  .region-toggle, .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
-  .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
+  .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
   .lang-btn.active { background: #1e2535; color: #fff; }
   .filter-btn { padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1e2535; border-radius: 8px; background: #161b27; color: #64748b; transition: all 0.15s; }
   .filter-btn.active { background: #1e2535; color: #e2e8f0; }
@@ -148,10 +147,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     </div>
   </div>
   <div class="top-controls">
-    <div class="region-toggle" aria-label="Region">
-      <a class="region-link __PH_ACTIVE__" data-region-link="ph" href="./index.html">PH</a>
-      <a class="region-link __ID_ACTIVE__" data-region-link="id" href="./id/index.html">IN</a>
-    </div>
     <div class="lang-toggle" aria-label="Language">
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -231,9 +226,6 @@ function siteBasePath() {
 }
 
 function initRegionLinks() {
-  const base = siteBasePath();
-  document.querySelector('[data-region-link="ph"]').href = base + "index.html";
-  document.querySelector('[data-region-link="id"]').href = base + "id/index.html";
 }
 
 function getDisposition(g) {
@@ -881,8 +873,6 @@ def main():
             .replace("__FLAG__", region.flag)
             .replace("__COUNTRY_ZH__", region.country_name_zh)
             .replace("__COUNTRY_EN__", region.country_label_en)
-            .replace("__PH_ACTIVE__", "active" if region.slug == "ph" else "")
-            .replace("__ID_ACTIVE__", "active" if region.slug == "id" else "")
             .replace("__DATE__", date)
             .replace("__GENERATED_AT__", _format_manila_time(data.get("clustered_at")))
             .replace("__TOTAL__", str(total_entries))

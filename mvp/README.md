@@ -40,21 +40,11 @@ python3 -m source_intel.cli collect --source all --region ph --limit all --x-lim
 把 `docs/` 推到 GitHub 后，网站会由 GitHub Pages 托管，例如：
 `https://crewmate007.github.io/phnews/`
 
-### 3.1 印尼地区页面
+### 3.1 地区范围
 
-同一套程序支持印尼地区：
-
-```bash
-python run_daily.py --cluster --region id
-```
-
-印尼输出会单独写入：
-
-- `reports/id/clusters_YYYY-MM-DD.json`
-- `reports/id/cluster_YYYY-MM-DD.xlsx`
-- `../docs/id/index.html` 和 `../docs/id/reports/cluster_YYYY-MM-DD.html`
-
-如果不传 `--region`，默认仍然是菲律宾页面，旧路径不变。
+每日自动化现在只处理菲律宾（PH）：SourceIntel 只采集 `--region ph`，
+PHNews 只生成 `docs/index.html` 和 `docs/reports/cluster_YYYY-MM-DD.html`。
+历史 Indonesia 归档仍保留在仓库中，但不会再由日常流水线更新。
 
 ### 4. 经典真实模式
 

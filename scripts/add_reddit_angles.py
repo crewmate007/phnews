@@ -13,7 +13,6 @@ After running this, regenerate the HTML (no API calls):
 Usage:
   python3 scripts/add_reddit_angles.py                 # today, ph
   python3 scripts/add_reddit_angles.py 2026-05-24      # specific date, ph
-  python3 scripts/add_reddit_angles.py --region id
   python3 scripts/add_reddit_angles.py --limit 5       # smoke test on first 5 groups
 """
 from __future__ import annotations

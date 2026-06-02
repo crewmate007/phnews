@@ -26,20 +26,7 @@ def main() -> int:
     parser.add_argument("--date", required=True)
     args = parser.parse_args()
 
-    checks = [
-        (
-            "ph",
-            Path("docs/index.html"),
-            Path(f"mvp/reports/clusters_{args.date}.json"),
-            Path(f"mvp/reports/source_intel_inputs_{args.date}.json"),
-        ),
-        (
-            "id",
-            Path("docs/id/index.html"),
-            Path(f"mvp/reports/id/clusters_{args.date}.json"),
-            Path(f"mvp/reports/id/source_intel_inputs_{args.date}.json"),
-        ),
-    ]
+    checks = _checks_for(args.date)
     failed = False
     for region, html_path, json_path, inputs_path in checks:
         if not html_path.exists():
@@ -90,6 +77,17 @@ def main() -> int:
             f"{summary.get('total_entries')} entries, {summary.get('noise_count')} noise"
         )
     return 1 if failed else 0
+
+
+def _checks_for(date: str) -> list[tuple[str, Path, Path, Path]]:
+    return [
+        (
+            "ph",
+            Path("docs/index.html"),
+            Path(f"mvp/reports/clusters_{date}.json"),
+            Path(f"mvp/reports/source_intel_inputs_{date}.json"),
+        )
+    ]
 
 
 def _extract_groups(html: str) -> list[dict]:

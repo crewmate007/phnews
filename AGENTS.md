@@ -5,17 +5,17 @@ Guidance for Claude Code / Codex agents working in this repo. Read this first.
 ## What this project is
 
 A daily pipeline that turns collected news hotspots into bilingual (zh/en)
-prediction-market topic cards for the Philippines (`ph`) and Indonesia (`id`),
-then renders a 100% static site. Runs unattended via GitHub Actions; output is
+prediction-market topic cards for the Philippines (`ph`), then renders a 100%
+static site. Runs unattended via GitHub Actions; output is
 committed to `docs/` and auto-deployed by Vercel + GitHub Pages.
 
 ## Architecture (data flow)
 
 ```
-SourceIntel repo (separate)  →  hotspots_{region}_{date}.json
+SourceIntel repo (separate)  →  hotspots_ph_{date}.json
    │  (checked out as ../SourceIntel in CI)
    ▼
-mvp/run_daily.py --cluster --region {ph|id}
+mvp/run_daily.py --cluster --region ph
    ├─ source_intel_bridge.py   load + normalize hotspots → "clusters"
    ├─ cluster.cluster_with_llm()   the core orchestration:
    │     1. BROAD clustering   1 Gemini call: ~120 hotspots → ~65 topic groups
@@ -70,9 +70,8 @@ columns (`serious_status` / `reddit_status` / `tiktok_status` / `prob_status`).
 ```bash
 pip install -r requirements-dev.txt          # deps + pytest
 
-# Full pipeline for one region (needs GEMINI_API_KEY; SourceIntel data in ../SourceIntel)
+# Full PH pipeline (needs GEMINI_API_KEY; SourceIntel data in ../SourceIntel)
 python mvp/run_daily.py --cluster --region ph --source-intel-dir ../SourceIntel
-python mvp/run_daily.py --cluster --region id --source-intel-dir ../SourceIntel
 
 # Re-render HTML from existing clusters JSON (NO LLM, safe to run anytime)
 python scripts/gen_html.py 2026-05-29 --region ph
@@ -140,6 +139,8 @@ python -m pytest tests/test_pipeline.py -q
 ## Schedule & deploy
 
 - Cron: `0 23 * * *` UTC = **07:00 Asia/Manila** daily (`.github/workflows/daily-news.yml`).
+  The workflow is PH-only: it collects SourceIntel PH hotspots, generates PHNews,
+  validates PH output, and commits only PH `docs/` + `mvp/reports/` artifacts.
   Also `workflow_dispatch` for manual runs.
 - Concurrency group serializes runs (no cancel-in-progress).
 - Push to `main` → Vercel Production + GitHub Pages deploy automatically.

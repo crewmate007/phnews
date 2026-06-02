@@ -2,7 +2,7 @@ name: Daily News Automation
 
 on:
   schedule:
-    # 07:00 Asia/Manila (PHT, UTC+8) = 06:00 WIB = 07:00 Asia/Shanghai
+    # 07:00 Asia/Manila (PHT, UTC+8) = 07:00 Asia/Shanghai
     - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
@@ -11,11 +11,11 @@ on:
         required: false
         default: "7"
       total_limit:
-        description: "Final SourceIntel hotspot cap per region"
+        description: "Final SourceIntel hotspot cap for PH"
         required: false
         default: "120"
       x_limit:
-        description: "Grok/X hotspot cap per region"
+        description: "Grok/X hotspot cap for PH"
         required: false
         default: "30"
 
@@ -71,13 +71,11 @@ jobs:
         working-directory: SourceIntel
         run: |
           python -m source_intel.cli collect --source all --region ph --days "$SOURCE_INTEL_DAYS" --limit all --x-limit "$SOURCE_INTEL_X_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
-          python -m source_intel.cli collect --source all --region id --days "$SOURCE_INTEL_DAYS" --limit all --x-limit "$SOURCE_INTEL_X_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
 
       - name: Generate PHNews static pages
         working-directory: phnews
         run: |
           python mvp/run_daily.py --cluster --region ph --source-intel-dir ../SourceIntel
-          python mvp/run_daily.py --cluster --region id --source-intel-dir ../SourceIntel
 
       - name: Validate generated pages
         working-directory: phnews
@@ -91,12 +89,11 @@ jobs:
           TODAY="$(date -u +%F)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/id/index.html
-          git add "docs/reports/cluster_${TODAY}.html" "docs/id/reports/cluster_${TODAY}.html"
-          git add "mvp/reports/cluster_${TODAY}.html" "mvp/reports/id/cluster_${TODAY}.html"
-          git add "mvp/reports/id/clusters_${TODAY}.json"
+          git add docs/index.html
+          git add "docs/reports/cluster_${TODAY}.html"
+          git add "mvp/reports/cluster_${TODAY}.html"
           git add -f "mvp/reports/clusters_${TODAY}.json"
-          git add -f "mvp/reports/source_intel_inputs_${TODAY}.json" "mvp/reports/id/source_intel_inputs_${TODAY}.json"
+          git add -f "mvp/reports/source_intel_inputs_${TODAY}.json"
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
           else
