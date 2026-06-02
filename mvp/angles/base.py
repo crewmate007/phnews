@@ -96,9 +96,11 @@ def generate_content_with_retry(
 ):
     """Retry transient Gemini overloads without hiding persistent failures."""
     last_exc = None
+    active_model = model
+    fallback_model = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-3.1-flash-lite")
     for attempt in range(attempts):
         try:
-            response = client.models.generate_content(model=model, contents=prompt)
+            response = _call_generate_content(client, active_model, prompt)
             log_gemini_usage(response, usage_label)
             return response
         except Exception as exc:
@@ -117,7 +119,8 @@ def generate_content_with_retry(
             transient = status_code in (429, 500, 502, 503, 504) or any(
                 marker in message
                 for marker in (
-                    "503", "429", "unavailable", "high demand", "timeout",
+                    "503", "504", "429", "unavailable", "high demand", "timeout",
+                    "deadline", "deadline_exceeded",
                     "disconnected", "connection reset", "connection aborted",
                     "remote protocol", "server disconnected", "read error",
                 )
@@ -130,8 +133,42 @@ def generate_content_with_retry(
             )
             if not transient or attempt == attempts - 1:
                 raise
+            if _should_fallback_from_model(status_code, message, active_model, fallback_model):
+                print(
+                    f"[WARN] Gemini model {active_model} hit 503/high demand; "
+                    f"falling back to {fallback_model}",
+                    file=sys.stderr,
+                )
+                active_model = fallback_model
             time.sleep(5 * (2 ** attempt))
     raise last_exc
+
+
+def _should_fallback_from_model(
+    status_code,
+    message: str,
+    active_model: str,
+    fallback_model: str,
+) -> bool:
+    if not fallback_model or active_model == fallback_model:
+        return False
+    if status_code == 503:
+        return True
+    return "503" in message or "high demand" in message or "unavailable" in message
+
+
+def _call_generate_content(client, model: str, prompt: str):
+    config = {
+        "thinking_config": {"thinking_budget": int(os.environ.get("GEMINI_THINKING_BUDGET", "0"))}
+    }
+    try:
+        return client.models.generate_content(model=model, contents=prompt, config=config)
+    except TypeError:
+        return client.models.generate_content(model=model, contents=prompt)
+    except Exception as exc:
+        if "thinking" not in str(exc).lower():
+            raise
+        return client.models.generate_content(model=model, contents=prompt)
 
 
 def log_gemini_usage(response, label: str | None = None) -> None:

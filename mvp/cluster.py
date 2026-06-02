@@ -206,7 +206,11 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         raise RuntimeError("pip install google-genai")
 
     region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
-    client = genai.Client(api_key=api_key)
+    timeout_ms = int(os.environ.get("GEMINI_TIMEOUT_MS", "180000"))
+    try:
+        client = genai.Client(api_key=api_key, http_options={"timeout": timeout_ms})
+    except TypeError:
+        client = genai.Client(api_key=api_key)
 
     today = dt.date.today().isoformat()
     min_groups, max_groups = _target_group_range(len(clusters))
@@ -221,10 +225,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         country_adjective=region_cfg.country_adjective,
     )
 
-    broad_response = _generate_content_with_retry(
-        client, model, broad_prompt, usage_label="broad_cluster"
-    )
-    broad_result = _parse_json_response(broad_response.text)
+    broad_result = _generate_broad_cluster_result(client, model, broad_prompt)
     broad_result = _normalize_broad_result(broad_result, clusters)
     broad_result = _split_catchall_groups(broad_result, clusters)
     broad_result = _ensure_minimum_broad_groups(broad_result, clusters, min_groups)
@@ -271,7 +272,29 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     return result
 
 
-_ANGLE_BATCH_SIZE = 10
+def _generate_broad_cluster_result(client, model: str, broad_prompt: str) -> Dict:
+    """Generate and parse the broad cluster JSON, retrying malformed JSON once."""
+    last_exc = None
+    for attempt in range(2):
+        response = _generate_content_with_retry(
+            client,
+            model,
+            broad_prompt,
+            usage_label="broad_cluster" if attempt == 0 else "broad_cluster_retry",
+        )
+        try:
+            return _parse_json_response(response.text)
+        except json.JSONDecodeError as exc:
+            last_exc = exc
+            print(
+                f"[WARN] broad_cluster JSON parse failed "
+                f"(attempt {attempt + 1}/2): {exc}",
+                file=sys.stderr,
+            )
+    raise last_exc
+
+
+_ANGLE_BATCH_SIZE = int(os.environ.get("PHNEWS_ANGLE_BATCH_SIZE", "10"))
 _ANGLE_MAX_RETRY_ROUNDS = 2
 
 
@@ -354,18 +377,18 @@ def _build_broad_entries(clusters: List[Dict]) -> str:
             f"lane={c.get('source_lane') or c.get('source_name') or ''}",
             f"source_count={c.get('source_count', 0)}",
             f"rank={c.get('rank_score', '')}",
-            f"title={_clip(c.get('cluster_title', ''), 170)}",
+            f"title={_clip(c.get('cluster_title', ''), 130)}",
         ]
         if c.get("summary"):
-            fields.append(f"summary={_clip(c.get('summary', ''), 220)}")
+            fields.append(f"summary={_clip(c.get('summary', ''), 140)}")
         if claims:
-            fields.append(f"claims={_clip(' | '.join(claims[:3]), 260)}")
+            fields.append(f"claims={_clip(' | '.join(claims[:2]), 160)}")
         if c.get("sources"):
-            fields.append(f"entities={_clip(', '.join(str(s) for s in c.get('sources', [])[:8]), 140)}")
+            fields.append(f"entities={_clip(', '.join(str(s) for s in c.get('sources', [])[:6]), 100)}")
         if c.get("keywords"):
-            fields.append(f"keywords={_clip(', '.join(str(k) for k in c.get('keywords', [])[:8]), 120)}")
+            fields.append(f"keywords={_clip(', '.join(str(k) for k in c.get('keywords', [])[:6]), 80)}")
         if c.get("prediction_angle"):
-            fields.append(f"prediction_angle={_clip(c.get('prediction_angle', ''), 180)}")
+            fields.append(f"prediction_angle={_clip(c.get('prediction_angle', ''), 120)}")
         lines.append("\n".join(fields))
     return "\n\n".join(lines)
 

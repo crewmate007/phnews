@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region
-from angles.base import log_gemini_usage
+from angles.base import generate_content_with_retry
 import gen_html
 
 
@@ -78,11 +78,12 @@ def call_gemini(bettable_groups: list, api_key: str) -> list:
         groups="\n".join(payload_lines),
     )
     client = genai.Client(api_key=api_key)
-    resp = client.models.generate_content(
-        model=os.environ.get("GEMINI_MODEL", "gemini-3.5-flash"),
-        contents=prompt,
+    resp = generate_content_with_retry(
+        client,
+        os.environ.get("GEMINI_MODEL", "gemini-3.5-flash"),
+        prompt,
+        usage_label="probabilities",
     )
-    log_gemini_usage(resp, "probabilities")
     text = resp.text.strip()
     if text.startswith("```"):
         parts = text.split("```")
