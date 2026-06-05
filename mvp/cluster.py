@@ -267,7 +267,11 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     # Today: RedditAngle + TikTokAngle. Each is best-effort; failure of any
     # one angle never blocks the others or the serious pipeline.
     if os.environ.get("PHNEWS_REDDIT_ANGLES", "1") != "0":
-        _run_angles(PHASE_2_ANGLES, result.get("groups", []), client, model, region_cfg)
+        phase_2_groups = [
+            group for group in result.get("groups", [])
+            if not group.get("region_irrelevant")
+        ]
+        _run_angles(PHASE_2_ANGLES, phase_2_groups, client, model, region_cfg)
 
     return result
 
@@ -721,6 +725,7 @@ def _apply_region_relevance_guard(result: Dict, region: RegionConfig) -> None:
                 group,
                 f"Foreign domestic resolver is not suitable for {region.country_label_en} page.",
             )
+            group["region_irrelevant"] = True
 
 
 def _mark_digest(group: Dict, reason: str) -> None:
@@ -743,6 +748,8 @@ def _mark_digest(group: Dict, reason: str) -> None:
     })
     group["volume_score"] = 0
     group["tradeability_reason"] = reason
+    group.pop("reddit_angles", None)
+    group.pop("tiktok_angles", None)
     group["why_users_bet"] = reason
     scoring.ensure_scoring_fields(group)
 

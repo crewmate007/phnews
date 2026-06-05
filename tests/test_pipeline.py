@@ -54,6 +54,31 @@ def test_all_three_angles_present(fake_gemini):
     assert any(g.get("tiktok_angles") for g in groups)
 
 
+def test_region_irrelevant_groups_skip_phase_two():
+    groups = [
+        {"id": 1, "region_irrelevant": True},
+        {"id": 2},
+    ]
+    angle = _RecordingAngle()
+    cluster._run_angles([angle], [g for g in groups if not g.get("region_irrelevant")], None, "m", None)
+    assert "_marks" not in groups[0]
+    assert groups[1]["_marks"] == 1
+
+
+def test_mark_digest_clears_side_angles():
+    group = {
+        "R": 2,
+        "S": 2,
+        "T": 2,
+        "reddit_angles": [{"question_en": "Will Bank Indonesia move rates?"}],
+        "tiktok_angles": [{"question_en": "Will rupiah crash?"}],
+    }
+    cluster._mark_digest(group, "foreign resolver")
+    assert "reddit_angles" not in group
+    assert "tiktok_angles" not in group
+    assert group["bettable"] is False
+
+
 def test_reddit_and_tiktok_are_separate(fake_gemini):
     result = _run(fake_gemini)
     # A group that got both should keep them in distinct fields.
