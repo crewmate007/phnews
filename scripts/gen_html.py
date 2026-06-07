@@ -72,11 +72,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-chip.google_trends { color: #86efac; border-color: #166534; background: #0c1f14; }
   .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
   .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item.google_trends .source-name { color: #86efac; }
   .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
   .source-item .source-name { align-self: start; }
 
@@ -463,9 +465,58 @@ function concreteBuyer(value) {
   return text.length >= 4 && !["someone", "people", "users", "bettors", "traders", "news followers", "general public"].includes(text);
 }
 
+const consumerPromoProductTerms = [
+  "smartphone", "phone", "5g", "mah", "battery", "tech bundle", "student tech",
+  "consumer electronics", "mini-led", "tv", "tablet", "earbuds", "wearable",
+  "手机", "智能手机", "电池", "数码", "电子", "电视", "平板", "耳机"
+];
+const consumerPromoBrandTerms = [
+  "realme", "honor", "huawei", "xiaomi", "redmi", "oppo", "vivo", "infinix",
+  "tecno", "samsung", "haier", "真我", "荣耀", "华为", "小米"
+];
+const consumerPromoEventTerms = [
+  "launch", "listing", "sale", "deals", "promo", "promotion", "bundle",
+  "back-to-school", "student", "6.6", "6.18", "shopee", "lazada",
+  "tiktok shop", "ranking", "rankings", "leaderboard", "official store",
+  "seller", "flagship store", "上市", "发布", "开售", "大促", "促销",
+  "返校", "礼包", "优惠", "销量榜", "排行榜", "官方旗舰店", "旗舰店",
+  "电商", "店铺"
+];
+const consumerPromoAllowTerms = [
+  "regulation", "regulator", "policy", "lawsuit", "fine", "ban", "blocked",
+  "outage", "recall", "defect", "breach", "cyber", "security", "tariff",
+  "customs", "privacy", "data leak", "bsp", "dict", "dti",
+  "监管", "政策", "法规", "罚款", "禁令", "下架", "封禁", "中断", "召回",
+  "缺陷", "漏洞", "泄露", "隐私", "安全", "关税", "海关", "诉讼"
+];
+
+function marketText(g) {
+  const fields = [
+    g.name_en, g.name_zh, g.narrative_en, g.narrative_zh, g.question,
+    g.question_en, g.question_zh, g.suggested_question, g.suggested_question_zh,
+    g.source, g.resolution_source, g.yes_buyer, g.no_buyer
+  ];
+  (g.source_examples || []).forEach(item => {
+    if (!item || typeof item !== "object") return;
+    fields.push(item.title, item.title_en, item.title_zh, item.summary, item.summary_en, item.summary_zh);
+  });
+  return fields.filter(Boolean).join(" ").toLowerCase();
+}
+
+function lowStakesConsumerPromo(g) {
+  const text = marketText(g);
+  if (!text) return false;
+  if (consumerPromoAllowTerms.some(term => text.includes(term))) return false;
+  const hasProduct = consumerPromoProductTerms.some(term => text.includes(term));
+  const hasBrand = consumerPromoBrandTerms.some(term => text.includes(term));
+  const eventHits = consumerPromoEventTerms.filter(term => text.includes(term)).length;
+  return eventHits >= 1 && (hasProduct || hasBrand);
+}
+
 function passesVolumeGate(g) {
   const v = normalizeVolume(g);
   return passesContractGate(g) &&
+    !lowStakesConsumerPromo(g) &&
     concreteBuyer(g.yes_buyer) &&
     concreteBuyer(g.no_buyer) &&
     v.two_sided_conviction >= 2 &&
@@ -496,6 +547,7 @@ function shouldShowNarrative(g, disp, narr) {
 function sourceLabel(source) {
   return {
     google_news: "Google News",
+    google_trends: "Google Trends",
     x_grok: "Grok/X"
   }[source] || source || "SourceIntel";
 }

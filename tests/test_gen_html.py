@@ -92,6 +92,44 @@ def test_product_sku_listing_drops_despite_clean_contract():
     assert gen_html.classify_disposition(g) == "drop"
 
 
+def test_consumer_phone_promo_drops_even_with_high_volume_score():
+    g = _base_group(
+        name="Realme P4 Series 5G Launch Philippines",
+        name_zh="真我P4 5G超大电池手机上市",
+        narrative="Realme introduced the P4 Series 5G through Shopee Philippines.",
+        narrative_zh="真我在菲律宾推出P4系列5G新机，主打10001毫安电池。",
+        suggested_question=(
+            "Will Realme P4 Series 5G enter Shopee Philippines 6.18 "
+            "smartphone sales top five?"
+        ),
+        suggested_question_zh="真我P4系列5G会进入Shopee菲律宾6.18手机销量榜前五名吗？",
+        resolution_source="Shopee Philippines official realme Store rankings",
+        volume_score=78,
+        yes_buyer="Realme launch and Shopee promo watchers",
+        no_buyer="Competing smartphone brand shoppers",
+    )
+    assert gen_html.classify_disposition(g) == "drop"
+
+
+def test_student_ecommerce_bundle_promo_drops_even_with_high_volume_score():
+    g = _base_group(
+        name="Honor 6.6 Sale Student Tech Bundles",
+        name_zh="荣耀6.6大促及返校促销包",
+        narrative="HONOR launched 6.6 sale student tech bundles on ecommerce platforms.",
+        narrative_zh="荣耀在各大电商平台启动6.6大促，推出学生返校数码礼包。",
+        suggested_question=(
+            "Will HONOR Philippines secure the top-selling smartphone brand "
+            "spot on Shopee Philippines during the 6.6 sale?"
+        ),
+        suggested_question_zh="荣耀菲律宾会在6.6大促期间拿下Shopee菲律宾智能手机销量榜首位吗？",
+        resolution_source="Shopee Philippines official seller leaderboards",
+        volume_score=74,
+        yes_buyer="HONOR store campaign followers",
+        no_buyer="Xiaomi and realme deal watchers",
+    )
+    assert gen_html.classify_disposition(g) == "drop"
+
+
 def test_hot_one_sided_market_cannot_be_top():
     g = _base_group(
         volume_potential={"audience_reach": 5, "stake_salience": 5,

@@ -135,8 +135,8 @@
 <div class="stats">
   <div class="stat"><div class="val">107</div><div class="lbl" data-zh="话题组" data-en="Topics">话题组</div></div>
   <div class="stat"><div class="val" style="color:#4ade80">20</div><div class="lbl" data-zh="TOP 级" data-en="TOP tier">TOP 级</div></div>
-  <div class="stat"><div class="val" style="color:#fbbf24">31</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
-  <div class="stat"><div class="val">63</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
+  <div class="stat"><div class="val" style="color:#fbbf24">27</div><div class="lbl" data-zh="候选" data-en="Candidates">候选</div></div>
+  <div class="stat"><div class="val">57</div><div class="lbl" data-zh="可下注" data-en="Bettable">可下注</div></div>
   <div class="stat"><div class="val" style="color:#64748b">0</div><div class="lbl" data-zh="噪音过滤" data-en="Noise filtered">噪音过滤</div></div>
 </div>
 
@@ -12807,9 +12807,58 @@ function concreteBuyer(value) {
   return text.length >= 4 && !["someone", "people", "users", "bettors", "traders", "news followers", "general public"].includes(text);
 }
 
+const consumerPromoProductTerms = [
+  "smartphone", "phone", "5g", "mah", "battery", "tech bundle", "student tech",
+  "consumer electronics", "mini-led", "tv", "tablet", "earbuds", "wearable",
+  "手机", "智能手机", "电池", "数码", "电子", "电视", "平板", "耳机"
+];
+const consumerPromoBrandTerms = [
+  "realme", "honor", "huawei", "xiaomi", "redmi", "oppo", "vivo", "infinix",
+  "tecno", "samsung", "haier", "真我", "荣耀", "华为", "小米"
+];
+const consumerPromoEventTerms = [
+  "launch", "listing", "sale", "deals", "promo", "promotion", "bundle",
+  "back-to-school", "student", "6.6", "6.18", "shopee", "lazada",
+  "tiktok shop", "ranking", "rankings", "leaderboard", "official store",
+  "seller", "flagship store", "上市", "发布", "开售", "大促", "促销",
+  "返校", "礼包", "优惠", "销量榜", "排行榜", "官方旗舰店", "旗舰店",
+  "电商", "店铺"
+];
+const consumerPromoAllowTerms = [
+  "regulation", "regulator", "policy", "lawsuit", "fine", "ban", "blocked",
+  "outage", "recall", "defect", "breach", "cyber", "security", "tariff",
+  "customs", "privacy", "data leak", "bsp", "dict", "dti",
+  "监管", "政策", "法规", "罚款", "禁令", "下架", "封禁", "中断", "召回",
+  "缺陷", "漏洞", "泄露", "隐私", "安全", "关税", "海关", "诉讼"
+];
+
+function marketText(g) {
+  const fields = [
+    g.name_en, g.name_zh, g.narrative_en, g.narrative_zh, g.question,
+    g.question_en, g.question_zh, g.suggested_question, g.suggested_question_zh,
+    g.source, g.resolution_source, g.yes_buyer, g.no_buyer
+  ];
+  (g.source_examples || []).forEach(item => {
+    if (!item || typeof item !== "object") return;
+    fields.push(item.title, item.title_en, item.title_zh, item.summary, item.summary_en, item.summary_zh);
+  });
+  return fields.filter(Boolean).join(" ").toLowerCase();
+}
+
+function lowStakesConsumerPromo(g) {
+  const text = marketText(g);
+  if (!text) return false;
+  if (consumerPromoAllowTerms.some(term => text.includes(term))) return false;
+  const hasProduct = consumerPromoProductTerms.some(term => text.includes(term));
+  const hasBrand = consumerPromoBrandTerms.some(term => text.includes(term));
+  const eventHits = consumerPromoEventTerms.filter(term => text.includes(term)).length;
+  return eventHits >= 1 && (hasProduct || hasBrand);
+}
+
 function passesVolumeGate(g) {
   const v = normalizeVolume(g);
   return passesContractGate(g) &&
+    !lowStakesConsumerPromo(g) &&
     concreteBuyer(g.yes_buyer) &&
     concreteBuyer(g.no_buyer) &&
     v.two_sided_conviction >= 2 &&

@@ -43,6 +43,31 @@ TOP_UPDATE_CADENCE_MIN = 3
 
 DISPOSITION_RANK = {"drop": 0, "watch": 1, "candidate": 2, "top": 3}
 
+CONSUMER_PROMO_PRODUCT_TERMS = (
+    "smartphone", "phone", "5g", "mah", "battery", "tech bundle", "student tech",
+    "consumer electronics", "mini-led", "tv", "tablet", "earbuds", "wearable",
+    "手机", "智能手机", "电池", "数码", "电子", "电视", "平板", "耳机",
+)
+CONSUMER_PROMO_BRAND_TERMS = (
+    "realme", "honor", "huawei", "xiaomi", "redmi", "oppo", "vivo", "infinix",
+    "tecno", "samsung", "haier", "真我", "荣耀", "华为", "小米",
+)
+CONSUMER_PROMO_EVENT_TERMS = (
+    "launch", "listing", "sale", "deals", "promo", "promotion", "bundle",
+    "back-to-school", "student", "6.6", "6.18", "shopee", "lazada",
+    "tiktok shop", "ranking", "rankings", "leaderboard", "official store",
+    "seller", "flagship store", "上市", "发布", "开售", "大促", "促销",
+    "返校", "礼包", "优惠", "销量榜", "排行榜", "官方旗舰店", "旗舰店",
+    "电商", "店铺",
+)
+CONSUMER_PROMO_ALLOW_TERMS = (
+    "regulation", "regulator", "policy", "lawsuit", "fine", "ban", "blocked",
+    "outage", "recall", "defect", "breach", "cyber", "security", "tariff",
+    "customs", "privacy", "data leak", "bsp", "dict", "dti",
+    "监管", "政策", "法规", "罚款", "禁令", "下架", "封禁", "中断", "召回",
+    "缺陷", "漏洞", "泄露", "隐私", "安全", "关税", "海关", "诉讼",
+)
+
 
 def clip_score(value: Any, high: int) -> int:
     try:
@@ -137,6 +162,9 @@ def has_strong_contract(g: Mapping[str, Any]) -> bool:
 def volume_rejection_reason(g: Mapping[str, Any]) -> str:
     if not passes_contract_gate(g):
         return contract_rejection_reason(g)
+    promo_reason = consumer_product_promo_rejection_reason(g)
+    if promo_reason:
+        return promo_reason
     volume = normalize_volume_potential(g)
     if not (_has_concrete_buyer(g.get("yes_buyer")) and _has_concrete_buyer(g.get("no_buyer"))):
         return "Missing concrete motivated YES and NO buyers."
@@ -149,6 +177,21 @@ def volume_rejection_reason(g: Mapping[str, Any]) -> str:
 
 def passes_volume_gate(g: Mapping[str, Any]) -> bool:
     return not volume_rejection_reason(g)
+
+
+def consumer_product_promo_rejection_reason(g: Mapping[str, Any]) -> str:
+    """Reject promo-style consumer-electronics topics with inflated volume."""
+    text = _combined_market_text(g)
+    if not text:
+        return ""
+    if _contains_any(text, CONSUMER_PROMO_ALLOW_TERMS):
+        return ""
+    has_product = _contains_any(text, CONSUMER_PROMO_PRODUCT_TERMS)
+    has_brand = _contains_any(text, CONSUMER_PROMO_BRAND_TERMS)
+    event_hits = sum(1 for term in CONSUMER_PROMO_EVENT_TERMS if term in text)
+    if event_hits >= 1 and (has_product or has_brand):
+        return "Consumer product launch or e-commerce promotion is too promotional and low-stakes for surfacing."
+    return ""
 
 
 def passes_tradeability_gate(g: Mapping[str, Any]) -> bool:
@@ -298,6 +341,30 @@ def _has_concrete_buyer(value: Any) -> bool:
         "someone following the news",
     }
     return text not in weak
+
+
+def _contains_any(text: str, terms: tuple[str, ...]) -> bool:
+    return any(term in text for term in terms)
+
+
+def _combined_market_text(g: Mapping[str, Any]) -> str:
+    fields: list[str] = []
+    for key in (
+        "name", "name_zh", "narrative", "narrative_zh", "suggested_question",
+        "suggested_question_zh", "question", "question_en", "question_zh",
+        "resolution_source", "yes_buyer", "no_buyer",
+    ):
+        value = g.get(key)
+        if value:
+            fields.append(str(value))
+    for item in g.get("source_examples") or []:
+        if not isinstance(item, Mapping):
+            continue
+        for key in ("title", "title_en", "title_zh", "summary", "summary_en", "summary_zh"):
+            value = item.get(key)
+            if value:
+                fields.append(str(value))
+    return " ".join(fields).lower()
 
 
 def _question_text(g: Mapping[str, Any]) -> Any:

@@ -221,6 +221,7 @@ def _hotspot_to_cluster(index: int, item: dict[str, Any]) -> dict[str, Any]:
 def _source_lane(source_name: str) -> str:
     labels = {
         "google_news": "Google News",
+        "google_trends": "Google Trends",
         "x_grok": "Grok/X",
     }
     return labels.get(source_name, source_name or "SourceIntel")

@@ -623,7 +623,7 @@ def _attach_source_metadata(group: Dict, clusters: List[Dict]) -> None:
         source_mix[source] = source_mix.get(source, 0) + 1
     group["source_mix"] = {
         source: source_mix[source]
-        for source in sorted(source_mix, key=lambda name: (name != "google_news", name))
+        for source in sorted(source_mix, key=_source_sort_key)
     }
     group["source_labels"] = [
         _source_label(source, count)
@@ -633,7 +633,7 @@ def _attach_source_metadata(group: Dict, clusters: List[Dict]) -> None:
     ranked = sorted(
         entry_ids,
         key=lambda entry_id: (
-            0 if (clusters[entry_id].get("source_name") == "x_grok") else 1,
+            _source_sort_key(clusters[entry_id].get("source_name") or ""),
             -(clusters[entry_id].get("rank_score") or 0),
         ),
     )
@@ -684,14 +684,22 @@ def _source_entry(entry_id: int, cluster: Dict) -> Dict:
 def _source_from_section(section: str) -> str:
     if "x_grok" in section:
         return "x_grok"
+    if "google_trends" in section:
+        return "google_trends"
     if "google_news" in section:
         return "google_news"
     return "source_intel"
 
 
+def _source_sort_key(source: str) -> tuple[int, str]:
+    order = {"google_news": 0, "google_trends": 1, "x_grok": 2}
+    return order.get(source, 9), source
+
+
 def _source_label(source: str, count: int) -> str:
     names = {
         "google_news": "Google News",
+        "google_trends": "Google Trends",
         "x_grok": "Grok/X",
     }
     return f"{names.get(source, source)} {count}"
