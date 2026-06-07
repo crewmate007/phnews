@@ -17,7 +17,9 @@ each angle's own module so adding a new angle stays a single-file change.
 from __future__ import annotations
 
 import json
+import os
 import re
+import sys
 import time
 from typing import Dict
 
@@ -85,12 +87,22 @@ def parse_json_response(text: str) -> Dict:
         return json.loads(_TRAILING_COMMA_RE.sub(r"\1", text))
 
 
-def generate_content_with_retry(client, model: str, prompt: str, attempts: int = 4):
+def generate_content_with_retry(
+    client,
+    model: str,
+    prompt: str,
+    attempts: int = 4,
+    usage_label: str | None = None,
+):
     """Retry transient Gemini overloads without hiding persistent failures."""
     last_exc = None
+    active_model = model
+    fallback_model = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-3.1-flash-lite")
     for attempt in range(attempts):
         try:
-            return client.models.generate_content(model=model, contents=prompt)
+            response = _call_generate_content(client, active_model, prompt)
+            log_gemini_usage(response, usage_label)
+            return response
         except Exception as exc:
             last_exc = exc
             message = str(exc).lower()
@@ -107,7 +119,8 @@ def generate_content_with_retry(client, model: str, prompt: str, attempts: int =
             transient = status_code in (429, 500, 502, 503, 504) or any(
                 marker in message
                 for marker in (
-                    "503", "429", "unavailable", "high demand", "timeout",
+                    "503", "504", "429", "unavailable", "high demand", "timeout",
+                    "deadline", "deadline_exceeded",
                     "disconnected", "connection reset", "connection aborted",
                     "remote protocol", "server disconnected", "read error",
                 )
@@ -120,8 +133,102 @@ def generate_content_with_retry(client, model: str, prompt: str, attempts: int =
             )
             if not transient or attempt == attempts - 1:
                 raise
+            if _should_fallback_from_model(status_code, message, active_model, fallback_model):
+                print(
+                    f"[WARN] Gemini model {active_model} hit 503/high demand; "
+                    f"falling back to {fallback_model}",
+                    file=sys.stderr,
+                )
+                active_model = fallback_model
             time.sleep(5 * (2 ** attempt))
     raise last_exc
+
+
+def _should_fallback_from_model(
+    status_code,
+    message: str,
+    active_model: str,
+    fallback_model: str,
+) -> bool:
+    if not fallback_model or active_model == fallback_model:
+        return False
+    if status_code == 503:
+        return True
+    return "503" in message or "high demand" in message or "unavailable" in message
+
+
+def _call_generate_content(client, model: str, prompt: str):
+    config = {
+        "thinking_config": {"thinking_budget": int(os.environ.get("GEMINI_THINKING_BUDGET", "0"))}
+    }
+    try:
+        return client.models.generate_content(model=model, contents=prompt, config=config)
+    except TypeError:
+        return client.models.generate_content(model=model, contents=prompt)
+    except Exception as exc:
+        if "thinking" not in str(exc).lower():
+            raise
+        return client.models.generate_content(model=model, contents=prompt)
+
+
+def log_gemini_usage(response, label: str | None = None) -> None:
+    """Log Gemini token usage and cache-hit metadata when the SDK exposes it."""
+    if os.environ.get("PHNEWS_GEMINI_USAGE_LOG", "1") == "0":
+        return
+    usage = gemini_usage_summary(response)
+    if not usage:
+        return
+    name = f" {label}" if label else ""
+    print(
+        "[INFO] Gemini usage"
+        f"{name}: prompt={_fmt_usage(usage.get('prompt_token_count'))}"
+        f" output={_fmt_usage(usage.get('candidates_token_count'))}"
+        f" total={_fmt_usage(usage.get('total_token_count'))}"
+        f" cached={_fmt_usage(usage.get('cached_content_token_count'))}"
+        f" cache_hit={usage['cache_hit']}",
+        file=sys.stderr,
+    )
+
+
+def gemini_usage_summary(response) -> Dict | None:
+    """Return normalized token usage metadata for Gemini responses."""
+    meta = (
+        getattr(response, "usage_metadata", None)
+        or getattr(response, "usageMetadata", None)
+    )
+    if meta is None:
+        return None
+    cached = _usage_value(meta, "cached_content_token_count", "cachedContentTokenCount")
+    summary = {
+        "prompt_token_count": _usage_value(meta, "prompt_token_count", "promptTokenCount"),
+        "candidates_token_count": _usage_value(meta, "candidates_token_count", "candidatesTokenCount"),
+        "total_token_count": _usage_value(meta, "total_token_count", "totalTokenCount"),
+        "cached_content_token_count": cached,
+        "cache_hit": "unknown",
+    }
+    if cached is not None:
+        summary["cache_hit"] = "yes" if _as_int(cached) > 0 else "no"
+    return summary
+
+
+def _usage_value(meta, snake_name: str, camel_name: str):
+    if isinstance(meta, dict):
+        return meta.get(snake_name, meta.get(camel_name))
+    value = getattr(meta, snake_name, None)
+    if value is not None:
+        return value
+    return getattr(meta, camel_name, None)
+
+
+def _as_int(value) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _fmt_usage(value) -> str:
+    return "?" if value is None else str(value)
 
 
 def clip(text: str, n: int) -> str:

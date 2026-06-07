@@ -1,12 +1,22 @@
 """Tests for the HTML generation layer (scripts/gen_html.py)."""
 import gen_html
+import add_probabilities
 
 
 def _base_group(**over):
     g = {
         "name": "Topic", "name_zh": "话题", "density": 2,
         "R": 2, "S": 2, "T": 2, "U": 2, "H": 2,
+        "contract_quality": {"R": 2, "S": 2, "T": 2, "U": 2, "total": 8},
+        "volume_potential": {"audience_reach": 5, "stake_salience": 5,
+                             "two_sided_conviction": 5, "trade_now_trigger": 4,
+                             "update_cadence": 4, "comprehension_speed": 5,
+                             "narrative_heat": 5, "local_relevance": 5,
+                             "personas": ["sports/fandom"]},
+        "volume_score": 90,
         "BDLT": {"B": 2, "D": 2, "L": 2, "T": 2, "total": 8},
+        "yes_buyer": "local fans backing the favorite",
+        "no_buyer": "local fans backing the underdog",
         "bettable": True, "suggested_question": "Will X by Y?",
         "suggested_question_zh": "X会在Y前发生吗？", "resolution_source": "BSP",
         "narrative": "n", "narrative_zh": "叙事", "source_mix": {"google_news": 2},
@@ -21,16 +31,128 @@ def test_classify_top():
 
 
 def test_classify_candidate():
-    assert gen_html.classify_disposition(_base_group(H=0, U=1, R=2, S=2, T=2)) in ("candidate", "watch")
+    assert gen_html.classify_disposition(_base_group(volume_score=65)) == "candidate"
 
 
 def test_classify_drop_when_not_bettable():
     assert gen_html.classify_disposition(_base_group(bettable=False)) == "drop"
 
 
+def test_classify_drop_when_tradeability_gate_fails():
+    assert gen_html.classify_disposition(_base_group(
+        volume_potential={"audience_reach": 5, "stake_salience": 5,
+                          "two_sided_conviction": 0, "trade_now_trigger": 5,
+                          "update_cadence": 5, "comprehension_speed": 5,
+                          "narrative_heat": 5, "local_relevance": 5},
+        volume_score=80,
+    )) == "drop"
+    assert gen_html.classify_disposition(_base_group(
+        volume_potential={"audience_reach": 1, "stake_salience": 1,
+                          "two_sided_conviction": 4, "trade_now_trigger": 1,
+                          "update_cadence": 1, "comprehension_speed": 4,
+                          "narrative_heat": 1, "local_relevance": 2},
+        volume_score=30,
+    )) == "drop"
+
+
+def test_classify_low_tradeability_cannot_be_top():
+    assert gen_html.classify_disposition(_base_group(
+        volume_potential={"audience_reach": 3, "stake_salience": 3,
+                          "two_sided_conviction": 2, "trade_now_trigger": 2,
+                          "update_cadence": 2, "comprehension_speed": 4,
+                          "narrative_heat": 3, "local_relevance": 3},
+        volume_score=52,
+    )) == "watch"
+    assert gen_html.classify_disposition(_base_group(
+        volume_potential={"audience_reach": 5, "stake_salience": 5,
+                          "two_sided_conviction": 2, "trade_now_trigger": 5,
+                          "update_cadence": 5, "comprehension_speed": 5,
+                          "narrative_heat": 5, "local_relevance": 5},
+        volume_score=86,
+    )) != "top"
+
+
 def test_classify_watch_on_veto():
-    # any 0 dimension is a veto -> cannot be top/candidate
-    assert gen_html.classify_disposition(_base_group(S=0)) == "watch"
+    # any 0 contract dimension is a hard veto
+    assert gen_html.classify_disposition(_base_group(S=0, contract_quality={"R": 2, "S": 0, "T": 2, "U": 2})) == "drop"
+
+
+def test_product_sku_listing_drops_despite_clean_contract():
+    g = _base_group(
+        name="Haier Mini-LED TV website listing",
+        R=2, S=2, T=2, U=1, H=1,
+        volume_potential={"audience_reach": 1, "stake_salience": 1,
+                          "two_sided_conviction": 1, "trade_now_trigger": 1,
+                          "update_cadence": 1, "comprehension_speed": 4,
+                          "narrative_heat": 1, "local_relevance": 2},
+        volume_score=26,
+        yes_buyer="Haier product launch watchers",
+        no_buyer="retail skeptics",
+    )
+    assert gen_html.classify_disposition(g) == "drop"
+
+
+def test_consumer_phone_promo_drops_even_with_high_volume_score():
+    g = _base_group(
+        name="Realme P4 Series 5G Launch Philippines",
+        name_zh="真我P4 5G超大电池手机上市",
+        narrative="Realme introduced the P4 Series 5G through Shopee Philippines.",
+        narrative_zh="真我在菲律宾推出P4系列5G新机，主打10001毫安电池。",
+        suggested_question=(
+            "Will Realme P4 Series 5G enter Shopee Philippines 6.18 "
+            "smartphone sales top five?"
+        ),
+        suggested_question_zh="真我P4系列5G会进入Shopee菲律宾6.18手机销量榜前五名吗？",
+        resolution_source="Shopee Philippines official realme Store rankings",
+        volume_score=78,
+        yes_buyer="Realme launch and Shopee promo watchers",
+        no_buyer="Competing smartphone brand shoppers",
+    )
+    assert gen_html.classify_disposition(g) == "drop"
+
+
+def test_student_ecommerce_bundle_promo_drops_even_with_high_volume_score():
+    g = _base_group(
+        name="Honor 6.6 Sale Student Tech Bundles",
+        name_zh="荣耀6.6大促及返校促销包",
+        narrative="HONOR launched 6.6 sale student tech bundles on ecommerce platforms.",
+        narrative_zh="荣耀在各大电商平台启动6.6大促，推出学生返校数码礼包。",
+        suggested_question=(
+            "Will HONOR Philippines secure the top-selling smartphone brand "
+            "spot on Shopee Philippines during the 6.6 sale?"
+        ),
+        suggested_question_zh="荣耀菲律宾会在6.6大促期间拿下Shopee菲律宾智能手机销量榜首位吗？",
+        resolution_source="Shopee Philippines official seller leaderboards",
+        volume_score=74,
+        yes_buyer="HONOR store campaign followers",
+        no_buyer="Xiaomi and realme deal watchers",
+    )
+    assert gen_html.classify_disposition(g) == "drop"
+
+
+def test_hot_one_sided_market_cannot_be_top():
+    g = _base_group(
+        volume_potential={"audience_reach": 5, "stake_salience": 5,
+                          "two_sided_conviction": 2, "trade_now_trigger": 5,
+                          "update_cadence": 5, "comprehension_speed": 5,
+                          "narrative_heat": 5, "local_relevance": 5},
+        volume_score=86,
+    )
+    assert gen_html.classify_disposition(g) != "top"
+
+
+def test_probability_selection_uses_volume_gate():
+    top = _base_group(name="High volume")
+    low = _base_group(
+        name="Low volume",
+        volume_potential={"audience_reach": 1, "stake_salience": 1,
+                          "two_sided_conviction": 1, "trade_now_trigger": 1,
+                          "update_cadence": 1, "comprehension_speed": 4,
+                          "narrative_heat": 1, "local_relevance": 1},
+        volume_score=25,
+    )
+    selected = add_probabilities.select_probability_groups({"groups": [top, low]})
+    assert selected == [top]
 
 
 def test_build_group_passes_reddit_angles():

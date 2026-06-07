@@ -1,4 +1,4 @@
-"""Read SourceIntel artifacts for PHNews without fetching upstream sources."""
+"""Read SourceIntel artifacts for Daily News without fetching upstream sources."""
 from __future__ import annotations
 
 import datetime as dt
@@ -212,12 +212,16 @@ def _hotspot_to_cluster(index: int, item: dict[str, Any]) -> dict[str, Any]:
         "uncertainty": item.get("uncertainty", ""),
         "rank_score": item.get("rank_score"),
         "rank_reason": item.get("rank_reason", ""),
+        "claims_en": item.get("claims_en", []),
+        "claims_zh": item.get("claims_zh", []),
+        "raw_hotspot": item,
     }
 
 
 def _source_lane(source_name: str) -> str:
     labels = {
         "google_news": "Google News",
+        "google_trends": "Google Trends",
         "x_grok": "Grok/X",
     }
     return labels.get(source_name, source_name or "SourceIntel")

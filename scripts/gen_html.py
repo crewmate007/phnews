@@ -18,6 +18,7 @@ import re
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region
+import market_scoring as scoring
 
 
 HTML_TEMPLATE = r"""<!DOCTYPE html>
@@ -36,9 +37,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   header .meta span { margin-right: 20px; }
 
   .top-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-  .region-toggle, .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .region-link, .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
-  .region-link.active, .lang-btn.active { background: #1e2535; color: #fff; }
+  .lang-toggle { display: flex; background: #161b27; border: 1px solid #1e2535; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .lang-btn { padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; text-decoration: none; line-height: 1.2; }
   .lang-btn.active { background: #1e2535; color: #fff; }
   .filter-btn { padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1e2535; border-radius: 8px; background: #161b27; color: #64748b; transition: all 0.15s; }
   .filter-btn.active { background: #1e2535; color: #e2e8f0; }
@@ -72,11 +72,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   .source-chip { font-size: 10px; font-weight: 700; letter-spacing: 0.2px; padding: 4px 8px; border-radius: 999px; border: 1px solid #273244; color: #94a3b8; background: #101722; }
   .source-chip.x_grok { color: #c4b5fd; border-color: #4c1d95; background: #1f1733; }
   .source-chip.google_news { color: #93c5fd; border-color: #1d4ed8; background: #111d35; }
+  .source-chip.google_trends { color: #86efac; border-color: #166534; background: #0c1f14; }
   .source-list { margin: -2px 0 14px; display: grid; gap: 6px; min-width: 0; }
   .source-item { display: grid; grid-template-columns: 74px 1fr; gap: 8px; font-size: 11px; color: #64748b; line-height: 1.35; min-width: 0; }
   .source-item .source-name { font-weight: 700; color: #94a3b8; }
   .source-item.x_grok .source-name { color: #c4b5fd; }
   .source-item.google_news .source-name { color: #93c5fd; }
+  .source-item.google_trends .source-name { color: #86efac; }
   .source-item .source-title { color: #94a3b8; word-break: break-word; overflow-wrap: anywhere; min-width: 0; }
   .source-item .source-name { align-self: start; }
 
@@ -147,10 +149,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     </div>
   </div>
   <div class="top-controls">
-    <div class="region-toggle" aria-label="Region">
-      <a class="region-link __PH_ACTIVE__" data-region-link="ph" href="./index.html">PH</a>
-      <a class="region-link __ID_ACTIVE__" data-region-link="id" href="./id/index.html">IN</a>
-    </div>
     <div class="lang-toggle" aria-label="Language">
       <button class="lang-btn active" onclick="setLang('zh')">中文</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -190,7 +188,7 @@ const i18n = {
     source_mix: "来源",
     expand_scores: "展开",
     rstuh: "市场结构",
-    bdlt: "下注欲望",
+    bdlt: "成交潜力",
     show_filtered: "显示过滤",
     hide_filtered: "隐藏过滤",
     badge: { top: "🟢 TOP", candidate: "🟡 候选", watch: "👀 关注", drop: "⚫ 过滤" },
@@ -211,7 +209,7 @@ const i18n = {
     source_mix: "Sources",
     expand_scores: "Expand",
     rstuh: "Market quality",
-    bdlt: "Bet demand",
+    bdlt: "Volume",
     show_filtered: "Show filtered",
     hide_filtered: "Hide filtered",
     badge: { top: "🟢 TOP", candidate: "🟡 Candidate", watch: "👀 Watch", drop: "⚫ Drop" },
@@ -230,26 +228,30 @@ function siteBasePath() {
 }
 
 function initRegionLinks() {
-  const base = siteBasePath();
-  document.querySelector('[data-region-link="ph"]').href = base + "index.html";
-  document.querySelector('[data-region-link="id"]').href = base + "id/index.html";
 }
 
 function getDisposition(g) {
-  const total = g.R + g.S + g.T + g.U + g.H;
-  const veto = [g.R, g.S, g.T, g.U, g.H].filter(s => s === 0).length;
-  if (!g.bettable) return "drop";
-  if (veto === 0 && total >= 9) return "top";
-  if (veto === 0 && total >= 7) return "candidate";
+  const volume = normalizeVolume(g);
+  if (!passesVolumeGate(g)) return "drop";
+  if (
+    hasStrongContract(g) &&
+    volume.score >= 75 &&
+    volume.two_sided_conviction >= 4 &&
+    volume.trade_now_trigger >= 3 &&
+    volume.update_cadence >= 3
+  ) return "top";
+  if (volume.score >= 60) return "candidate";
   return "watch";
 }
 
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
 const sorted = [...groups].sort((a, b) => {
-  const bdltDiff = bdltTotal(b) - bdltTotal(a);
-  if (bdltDiff !== 0) return bdltDiff;
-  return rstuhTotal(b) - rstuhTotal(a);
+  const dispDiff = dispositionRank(getDisposition(b)) - dispositionRank(getDisposition(a));
+  if (dispDiff !== 0) return dispDiff;
+  const volumeDiff = volumeScore(b) - volumeScore(a);
+  if (volumeDiff !== 0) return volumeDiff;
+  return contractTotal(b) - contractTotal(a);
 });
 
 function renderCards(lang) {
@@ -261,8 +263,11 @@ function renderCards(lang) {
     const disp = getDisposition(g);
     if (disp === "drop" && !showFiltered) return;
     const total = rstuhTotal(g);
+    const contract = normalizeContract(g);
+    const contractScore = contractTotal(g);
+    const volume = normalizeVolume(g);
+    const volScore = volume.score;
     const bdlt = normalizeBDLT(g);
-    const bdltScore = bdltTotal(g);
     const pct = Math.round((g.density / MAX_DENSITY) * 100);
     const title   = lang === "zh" ? g.name_zh : g.name_en;
     const sub     = lang === "zh" ? g.name_en : g.name_zh;
@@ -308,7 +313,7 @@ function renderCards(lang) {
       <details class="score-panel">
         <summary>
           <span class="score-totals">
-            <span class="score-total-chip primary">BDLT <b>${bdltScore}</b>/8</span>
+            <span class="score-total-chip primary">VOL <b>${volScore}</b>/100</span>
             <span class="score-total-chip">RSTUH <b>${total}</b>/10</span>
           </span>
           <span class="score-expand">${t.expand_scores}</span>
@@ -316,19 +321,29 @@ function renderCards(lang) {
         <div class="score-section">
           <div class="score-label">${t.bdlt}</div>
           <div class="rstuh">
-            ${["B","D","L","T"].map(l => {
-              const s = bdlt[l] || 0;
-              return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
+            ${[
+              ["AR", "audience_reach"],
+              ["ST", "stake_salience"],
+              ["2S", "two_sided_conviction"],
+              ["NOW", "trade_now_trigger"],
+              ["UPD", "update_cadence"],
+              ["5S", "comprehension_speed"],
+              ["HEAT", "narrative_heat"],
+              ["LOC", "local_relevance"]
+            ].map(([label, key]) => {
+              const s = volume[key] || 0;
+              const cls = s >= 4 ? 2 : s >= 2 ? 1 : 0;
+              return `<div class="dim"><div class="letter">${label}</div><div class="score s${cls}">${s}</div></div>`;
             }).join("")}
-            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${bdltScore}</div></div>
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${volScore}</div></div>
           </div>
           <div class="score-label">${t.rstuh}</div>
           <div class="rstuh">
-            ${["R","S","T","U","H"].map((l,i) => {
-              const s = [g.R,g.S,g.T,g.U,g.H][i];
+            ${["R","S","T","U"].map(l => {
+              const s = contract[l] || 0;
               return `<div class="dim"><div class="letter">${l}</div><div class="score s${s}">${s}</div></div>`;
             }).join("")}
-            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${total}</div></div>
+            <div class="dim-total"><div class="letter">${t.total}</div><div class="score">${contractScore}</div></div>
           </div>
         </div>
       </details>
@@ -362,6 +377,33 @@ function rstuhTotal(g) {
   return (g.R || 0) + (g.S || 0) + (g.T || 0) + (g.U || 0) + (g.H || 0);
 }
 
+function normalizeContract(g) {
+  const raw = g.contract_quality || {};
+  return {
+    R: Number.isInteger(raw.R) ? raw.R : (g.R || 0),
+    S: Number.isInteger(raw.S) ? raw.S : (g.S || 0),
+    T: Number.isInteger(raw.T) ? raw.T : (g.T || 0),
+    U: Number.isInteger(raw.U) ? raw.U : (g.U || 0),
+  };
+}
+
+function contractTotal(g) {
+  const c = normalizeContract(g);
+  return c.R + c.S + c.T + c.U;
+}
+
+function passesContractGate(g) {
+  const c = normalizeContract(g);
+  return Boolean(g.bettable) && Boolean(g.question_en || g.question || g.suggested_question) &&
+    Boolean(g.source || g.resolution_source) &&
+    c.R > 0 && c.S > 0 && c.T > 0 && c.U > 0;
+}
+
+function hasStrongContract(g) {
+  const c = normalizeContract(g);
+  return passesContractGate(g) && contractTotal(g) >= 7 && c.R >= 2 && c.S >= 2 && c.T >= 1 && c.U >= 1;
+}
+
 function normalizeBDLT(g) {
   const bdlt = g.BDLT || {};
   return {
@@ -375,6 +417,118 @@ function normalizeBDLT(g) {
 function bdltTotal(g) {
   const bdlt = normalizeBDLT(g);
   return bdlt.B + bdlt.D + bdlt.L + bdlt.T;
+}
+
+function normalizeVolume(g) {
+  const raw = g.volume_potential || {};
+  const bdlt = normalizeBDLT(g);
+  const score5 = value => ({0: 0, 1: 3, 2: 5}[value] || 0);
+  const fallbackB = score5(bdlt.B);
+  const fallbackD = score5(bdlt.D);
+  const fallbackL = score5(bdlt.L);
+  const fallbackT = score5(bdlt.T);
+  const out = {
+    audience_reach: Number.isInteger(raw.audience_reach) ? raw.audience_reach : fallbackB,
+    stake_salience: Number.isInteger(raw.stake_salience) ? raw.stake_salience : fallbackB,
+    two_sided_conviction: Number.isInteger(raw.two_sided_conviction) ? raw.two_sided_conviction : fallbackD,
+    trade_now_trigger: Number.isInteger(raw.trade_now_trigger) ? raw.trade_now_trigger : fallbackT,
+    update_cadence: Number.isInteger(raw.update_cadence) ? raw.update_cadence : fallbackT,
+    comprehension_speed: Number.isInteger(raw.comprehension_speed) ? raw.comprehension_speed : 4,
+    narrative_heat: Number.isInteger(raw.narrative_heat) ? raw.narrative_heat : Math.max(fallbackB, fallbackL),
+    local_relevance: Number.isInteger(raw.local_relevance) ? raw.local_relevance : fallbackL,
+  };
+  if (Number.isInteger(g.volume_score)) {
+    out.score = Math.max(0, Math.min(100, g.volume_score));
+  } else if (Number.isInteger(raw.score)) {
+    out.score = Math.max(0, Math.min(100, raw.score));
+  } else {
+    out.score = Math.round((
+      out.audience_reach * 1.2 +
+      out.stake_salience * 1.2 +
+      out.two_sided_conviction * 1.3 +
+      out.trade_now_trigger * 1.2 +
+      out.update_cadence * 1.0 +
+      out.comprehension_speed * 0.9 +
+      out.narrative_heat * 1.0 +
+      out.local_relevance * 1.2
+    ) / (5 * 9.0) * 100);
+  }
+  return out;
+}
+
+function volumeScore(g) {
+  return normalizeVolume(g).score;
+}
+
+function concreteBuyer(value) {
+  const text = String(value || "").trim().toLowerCase();
+  return text.length >= 4 && !["someone", "people", "users", "bettors", "traders", "news followers", "general public"].includes(text);
+}
+
+const consumerPromoProductTerms = [
+  "smartphone", "phone", "5g", "mah", "battery", "tech bundle", "student tech",
+  "consumer electronics", "mini-led", "tv", "tablet", "earbuds", "wearable",
+  "手机", "智能手机", "电池", "数码", "电子", "电视", "平板", "耳机"
+];
+const consumerPromoBrandTerms = [
+  "realme", "honor", "huawei", "xiaomi", "redmi", "oppo", "vivo", "infinix",
+  "tecno", "samsung", "haier", "真我", "荣耀", "华为", "小米"
+];
+const consumerPromoEventTerms = [
+  "launch", "listing", "sale", "deals", "promo", "promotion", "bundle",
+  "back-to-school", "student", "6.6", "6.18", "shopee", "lazada",
+  "tiktok shop", "ranking", "rankings", "leaderboard", "official store",
+  "seller", "flagship store", "上市", "发布", "开售", "大促", "促销",
+  "返校", "礼包", "优惠", "销量榜", "排行榜", "官方旗舰店", "旗舰店",
+  "电商", "店铺"
+];
+const consumerPromoAllowTerms = [
+  "regulation", "regulator", "policy", "lawsuit", "fine", "ban", "blocked",
+  "outage", "recall", "defect", "breach", "cyber", "security", "tariff",
+  "customs", "privacy", "data leak", "bsp", "dict", "dti",
+  "监管", "政策", "法规", "罚款", "禁令", "下架", "封禁", "中断", "召回",
+  "缺陷", "漏洞", "泄露", "隐私", "安全", "关税", "海关", "诉讼"
+];
+
+function marketText(g) {
+  const fields = [
+    g.name_en, g.name_zh, g.narrative_en, g.narrative_zh, g.question,
+    g.question_en, g.question_zh, g.suggested_question, g.suggested_question_zh,
+    g.source, g.resolution_source, g.yes_buyer, g.no_buyer
+  ];
+  (g.source_examples || []).forEach(item => {
+    if (!item || typeof item !== "object") return;
+    fields.push(item.title, item.title_en, item.title_zh, item.summary, item.summary_en, item.summary_zh);
+  });
+  return fields.filter(Boolean).join(" ").toLowerCase();
+}
+
+function lowStakesConsumerPromo(g) {
+  const text = marketText(g);
+  if (!text) return false;
+  if (consumerPromoAllowTerms.some(term => text.includes(term))) return false;
+  const hasProduct = consumerPromoProductTerms.some(term => text.includes(term));
+  const hasBrand = consumerPromoBrandTerms.some(term => text.includes(term));
+  const eventHits = consumerPromoEventTerms.filter(term => text.includes(term)).length;
+  return eventHits >= 1 && (hasProduct || hasBrand);
+}
+
+function passesVolumeGate(g) {
+  const v = normalizeVolume(g);
+  return passesContractGate(g) &&
+    !lowStakesConsumerPromo(g) &&
+    concreteBuyer(g.yes_buyer) &&
+    concreteBuyer(g.no_buyer) &&
+    v.two_sided_conviction >= 2 &&
+    v.score >= 45;
+}
+
+function passesTradeGate(g) {
+  return passesVolumeGate(g);
+}
+
+function dispositionRank(disp) {
+  return { top: 3, candidate: 2, watch: 1, drop: 0 }[disp] || 0;
 }
 
 function shouldShowNarrative(g, disp, narr) {
@@ -393,6 +547,7 @@ function shouldShowNarrative(g, disp, narr) {
 function sourceLabel(source) {
   return {
     google_news: "Google News",
+    google_trends: "Google Trends",
     x_grok: "Grok/X"
   }[source] || source || "SourceIntel";
 }
@@ -465,15 +620,15 @@ renderCards("zh");
 
 
 def classify_disposition(g: dict) -> str:
-    if not g.get("bettable"):
-        return "drop"
-    total = g["R"] + g["S"] + g["T"] + g["U"] + g["H"]
-    veto = sum(1 for k in "RSTUH" if g[k] == 0)
-    if veto == 0 and total >= 9:
-        return "top"
-    if veto == 0 and total >= 7:
-        return "candidate"
-    return "watch"
+    return scoring.classify_disposition(g)
+
+
+def passes_tradeability_gate(g: dict, bdlt: dict | None = None) -> bool:
+    return scoring.passes_volume_gate(g)
+
+
+def passes_volume_gate(g: dict) -> bool:
+    return scoring.passes_volume_gate(g)
 
 
 def build_group(g: dict) -> dict:
@@ -486,6 +641,7 @@ def build_group(g: dict) -> dict:
     if is_effectively_english(narr_zh):
         narr_zh = clean_summary(question_zh) if question_zh and not is_effectively_english(question_zh) else name_zh
     source_examples = [clean_source_example(item) for item in g.get("source_examples", [])]
+    scoring.ensure_scoring_fields(g)
     return {
         "name_en": name_en,
         "name_zh": name_zh,
@@ -495,7 +651,14 @@ def build_group(g: dict) -> dict:
         "T": g.get("T", 0),
         "U": g.get("U", 0),
         "H": g.get("H", 0),
+        "contract_quality": g.get("contract_quality", {}),
+        "volume_potential": g.get("volume_potential", {}),
+        "volume_score": g.get("volume_score", 0),
+        "scoring_version": g.get("scoring_version", scoring.SCORING_VERSION),
         "BDLT": _bdlt_for_group(g),
+        "yes_buyer": g.get("yes_buyer", ""),
+        "no_buyer": g.get("no_buyer", ""),
+        "tradeability_reason": g.get("tradeability_reason", ""),
         "why_users_bet": g.get("why_users_bet", ""),
         "narrative_en": narr,
         "narrative_zh": narr_zh,
@@ -506,7 +669,10 @@ def build_group(g: dict) -> dict:
         "question": question_en,
         "question_en": question_en,
         "question_zh": question_zh,
+        "suggested_question": question_en,
+        "suggested_question_zh": question_zh,
         "source": g.get("resolution_source", ""),
+        "resolution_source": g.get("resolution_source", ""),
         "reddit_question_en": g.get("reddit_question"),
         "reddit_question_zh": g.get("reddit_question_zh"),
         "reddit_resolution_source": g.get("reddit_resolution_source"),
@@ -664,6 +830,8 @@ def translate_title_fallback(title: str) -> str:
 
 
 def _bdlt_for_group(g: dict) -> dict:
+    if isinstance(g.get("volume_potential"), dict):
+        return scoring.bdlt_from_volume_potential(scoring.normalize_volume_potential(g))
     bdlt = g.get("BDLT") if isinstance(g.get("BDLT"), dict) else {}
     if all(bdlt.get(key) in (0, 1, 2) for key in ("B", "D", "L", "T")):
         out = {key: bdlt.get(key, 0) for key in ("B", "D", "L", "T")}
@@ -746,7 +914,7 @@ def main():
     dispositions = [classify_disposition(g) for g in groups]
     n_top = dispositions.count("top")
     n_cand = dispositions.count("candidate")
-    n_bet = sum(1 for g in groups if g["bettable"])
+    n_bet = sum(1 for g in groups if passes_tradeability_gate(g))
     total_entries = data.get("total_entries", sum(g["density"] for g in groups))
     n_noise = data.get("noise_count", len(data.get("noise", [])))
 
@@ -757,8 +925,6 @@ def main():
             .replace("__FLAG__", region.flag)
             .replace("__COUNTRY_ZH__", region.country_name_zh)
             .replace("__COUNTRY_EN__", region.country_label_en)
-            .replace("__PH_ACTIVE__", "active" if region.slug == "ph" else "")
-            .replace("__ID_ACTIVE__", "active" if region.slug == "id" else "")
             .replace("__DATE__", date)
             .replace("__GENERATED_AT__", _format_manila_time(data.get("clustered_at")))
             .replace("__TOTAL__", str(total_entries))

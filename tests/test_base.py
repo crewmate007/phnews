@@ -1,7 +1,16 @@
 """Unit tests for shared angle utilities (mvp/angles/base.py)."""
+from types import SimpleNamespace
+
 import pytest
 
-from angles.base import parse_json_response, safe_url, clip, generate_content_with_retry
+from angles.base import (
+    clip,
+    gemini_usage_summary,
+    generate_content_with_retry,
+    log_gemini_usage,
+    parse_json_response,
+    safe_url,
+)
 
 
 def test_parse_plain_json():
@@ -57,6 +66,34 @@ def test_clip_short_passthrough():
 def test_clip_truncates_with_ellipsis():
     out = clip("a" * 50, 10)
     assert len(out) == 10 and out.endswith("...")
+
+
+def test_gemini_usage_summary_detects_cache_hit():
+    resp = SimpleNamespace(usage_metadata=SimpleNamespace(
+        prompt_token_count=123,
+        candidates_token_count=45,
+        total_token_count=168,
+        cached_content_token_count=67,
+    ))
+    usage = gemini_usage_summary(resp)
+    assert usage["prompt_token_count"] == 123
+    assert usage["cached_content_token_count"] == 67
+    assert usage["cache_hit"] == "yes"
+
+
+def test_log_gemini_usage_reports_cache_hit(capsys, monkeypatch):
+    monkeypatch.delenv("PHNEWS_GEMINI_USAGE_LOG", raising=False)
+    resp = SimpleNamespace(usage_metadata={
+        "promptTokenCount": 100,
+        "candidatesTokenCount": 20,
+        "totalTokenCount": 120,
+        "cachedContentTokenCount": 50,
+    })
+    log_gemini_usage(resp, "serious_angle:reordered")
+    err = capsys.readouterr().err
+    assert "serious_angle:reordered" in err
+    assert "cached=50" in err
+    assert "cache_hit=yes" in err
 
 
 # --- generate_content_with_retry transient handling --------------------------

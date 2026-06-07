@@ -54,6 +54,31 @@ def test_all_three_angles_present(fake_gemini):
     assert any(g.get("tiktok_angles") for g in groups)
 
 
+def test_region_irrelevant_groups_skip_phase_two():
+    groups = [
+        {"id": 1, "region_irrelevant": True},
+        {"id": 2},
+    ]
+    angle = _RecordingAngle()
+    cluster._run_angles([angle], [g for g in groups if not g.get("region_irrelevant")], None, "m", None)
+    assert "_marks" not in groups[0]
+    assert groups[1]["_marks"] == 1
+
+
+def test_mark_digest_clears_side_angles():
+    group = {
+        "R": 2,
+        "S": 2,
+        "T": 2,
+        "reddit_angles": [{"question_en": "Will Bank Indonesia move rates?"}],
+        "tiktok_angles": [{"question_en": "Will rupiah crash?"}],
+    }
+    cluster._mark_digest(group, "foreign resolver")
+    assert "reddit_angles" not in group
+    assert "tiktok_angles" not in group
+    assert group["bettable"] is False
+
+
 def test_reddit_and_tiktok_are_separate(fake_gemini):
     result = _run(fake_gemini)
     # A group that got both should keep them in distinct fields.
@@ -85,16 +110,25 @@ def test_serious_failure_does_not_kill_pipeline(fake_gemini):
     assert not any(g.get("serious_candidates") for g in result["groups"])
 
 
-def test_validator_flags_zero_bettable(fake_gemini):
-    """The 2026-05-29 failure mode: serious angle dies, pipeline ships 65
-    groups with 0 bettable. The validator must catch this so the broken
-    page never deploys. Simulate by building groups with bettable=False."""
+def test_validator_flags_zero_scored(fake_gemini):
+    """The 2026-05-29 failure mode: serious angle dies, pipeline ships many
+    groups with no RSTUH scores. The validator must catch this so the broken
+    page never deploys."""
     import validate_generated_pages as v
     groups = [{"bettable": False, "source_mix": {"x_grok": 1}} for _ in range(30)]
-    # 30 groups, 0 bettable -> the new safety check trips
+    # 30 groups, 0 scored -> the safety check should trip in main().
     assert v._has_foreign_bettable_question("ph", groups) is False
-    n_bettable = sum(1 for g in groups if g.get("bettable"))
-    assert len(groups) >= 20 and n_bettable == 0
+    n_scored = sum(1 for g in groups if any(g.get(k) for k in "RSTUH"))
+    assert len(groups) >= 20 and n_scored == 0
+
+
+def test_validator_defaults_to_ph_only():
+    import validate_generated_pages as v
+
+    checks = v._checks_for("2026-06-02")
+    assert [item[0] for item in checks] == ["ph"]
+    assert checks[0][1].as_posix() == "docs/index.html"
+    assert all("id/" not in path.as_posix() for _, *paths in checks for path in paths)
 
 
 # --- P2a: batched angle orchestration (_run_angles) --------------------------
