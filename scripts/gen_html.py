@@ -246,20 +246,22 @@ function getDisposition(g) {
 
 const MAX_DENSITY = Math.max(...groups.map(g => g.density));
 
-const sorted = [...groups].sort((a, b) => {
-  const dispDiff = dispositionRank(getDisposition(b)) - dispositionRank(getDisposition(a));
-  if (dispDiff !== 0) return dispDiff;
-  const volumeDiff = volumeScore(b) - volumeScore(a);
-  if (volumeDiff !== 0) return volumeDiff;
-  return contractTotal(b) - contractTotal(a);
-});
+function sortedGroups() {
+  return [...groups].sort((a, b) => {
+    const dispDiff = dispositionRank(getDisposition(b)) - dispositionRank(getDisposition(a));
+    if (dispDiff !== 0) return dispDiff;
+    const volumeDiff = volumeScore(b) - volumeScore(a);
+    if (volumeDiff !== 0) return volumeDiff;
+    return contractTotal(b) - contractTotal(a);
+  });
+}
 
 function renderCards(lang) {
   const t = i18n[lang];
   const container = document.getElementById("cards");
   container.innerHTML = "";
 
-  sorted.forEach(g => {
+  sortedGroups().forEach(g => {
     const disp = getDisposition(g);
     if (disp === "drop" && !showFiltered) return;
     const total = rstuhTotal(g);
