@@ -2,7 +2,7 @@ name: Daily News Automation
 
 on:
   schedule:
-    # 07:00 Asia/Manila (PHT, UTC+8) = 06:00 WIB = 07:00 Asia/Shanghai
+    # GitHub cron is UTC. 23:00 UTC = 07:00 Asia/Manila / Asia/Shanghai = 06:00 WIB.
     - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
@@ -32,6 +32,7 @@ jobs:
     timeout-minutes: 60
 
     env:
+      TZ: Asia/Manila
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
       GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash' }}
@@ -82,7 +83,7 @@ jobs:
       - name: Validate generated pages
         working-directory: phnews
         run: |
-          TODAY="$(date -u +%F)"
+          TODAY="$(date +%F)"
           python scripts/validate_generated_pages.py --date "$TODAY"
 
       # P2b-2 shadow mode: confirm the Supabase exporter reproduces the
@@ -92,14 +93,14 @@ jobs:
         working-directory: phnews
         continue-on-error: true
         run: |
-          TODAY="$(date -u +%F)"
+          TODAY="$(date +%F)"
           python scripts/shadow_diff_db.py --date "$TODAY" --region ph
           python scripts/shadow_diff_db.py --date "$TODAY" --region id
 
       - name: Commit and push generated site
         working-directory: phnews
         run: |
-          TODAY="$(date -u +%F)"
+          TODAY="$(date +%F)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/index.html docs/id/index.html

@@ -131,6 +131,8 @@ python -m pytest tests/test_pipeline.py -q
 - **Secrets live in GitHub Actions**, not in files. Pipeline needs
   `GEMINI_API_KEY`, `XAI_API_KEY`, `SOURCE_INTEL_REPO_TOKEN`, `SUPABASE_URL`,
   `SUPABASE_SERVICE_ROLE_KEY`. `db.py` no-ops cleanly when Supabase creds absent.
+- **If local network is blocked by the sandbox**, stop retrying alternate
+  workarounds and ask the user to run the exact command in Terminal.
 - **Never reproduce source-article text at length.** Cards summarize; titles are
   shown but full article bodies are not stored or rendered.
 - **CSS grid + long text:** wrapping needs `min-width: 0` on every nested grid

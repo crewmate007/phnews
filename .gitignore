@@ -1,4 +1,6 @@
 .env
+.venv/
+supabase/.temp/
 *.xlsx
 mvp/reports/*.json
 __pycache__/

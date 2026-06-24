@@ -14,8 +14,10 @@ class _Client:
     """Minimal client returning a fixed response regardless of prompt."""
     def __init__(self, text):
         self._text = text
+        self.last_contents = None
         self.models = self
     def generate_content(self, model=None, contents=None):
+        self.last_contents = contents
         return _Resp(self._text)
 
 
@@ -47,6 +49,24 @@ def test_serious_multi_candidate_picks_best():
         assert len(g["serious_candidates"]) == 2
 
 
+def test_serious_prompt_reordered_ab_switch(monkeypatch):
+    region = get_region("ph")
+    clusters = make_clusters(1)
+    groups = _broad_groups(1)
+    _attach_clusters(groups, clusters)
+
+    legacy_client = _Client(default_serious(1))
+    SeriousAngle().generate(groups, legacy_client, "fake", region)
+    assert legacy_client.last_contents.index("CLUSTERS:") < legacy_client.last_contents.index("OUTPUT:")
+
+    monkeypatch.setenv("PHNEWS_SERIOUS_PROMPT_ORDER", "reordered")
+    reordered_groups = _broad_groups(1)
+    _attach_clusters(reordered_groups, clusters)
+    reordered_client = _Client(default_serious(1))
+    SeriousAngle().generate(reordered_groups, reordered_client, "fake", region)
+    assert reordered_client.last_contents.index("OUTPUT:") < reordered_client.last_contents.index("CLUSTERS:")
+
+
 def test_serious_handles_not_bettable():
     region = get_region("ph")
     clusters = make_clusters(1)
@@ -59,6 +79,38 @@ def test_serious_handles_not_bettable():
          "BDLT": {"B": 0, "D": 0, "L": 0, "T": 0}, "why_users_bet": ""}]}]})
     SeriousAngle().generate(groups, _Client(payload), "fake", region)
     assert groups[0]["bettable"] is False
+
+
+def test_serious_tradeability_gate_beats_clean_but_one_sided_market():
+    region = get_region("ph")
+    clusters = make_clusters(1)
+    groups = _broad_groups(1)
+    _attach_clusters(groups, clusters)
+    payload = json.dumps({"groups": [{"broad_index": 0, "candidates": [
+        {"suggested_question": "Will a company list a niche item by Dec 31?",
+         "suggested_question_zh": "某公司会在12月31日前上架小众商品吗？",
+         "resolution_source": "Company website", "bettable": True,
+         "disposition_hint": "top",
+         "R": 2, "R_reason": "x", "S": 2, "S_reason": "x",
+         "T": 2, "T_reason": "x", "U": 2, "U_reason": "x",
+         "H": 2, "H_reason": "x",
+         "BDLT": {"B": 2, "D": 0, "L": 2, "T": 2},
+         "why_users_bet": "resolvable but one-sided"},
+        {"suggested_question": "Will a cabinet vote fail by Dec 31?",
+         "suggested_question_zh": "内阁投票会在12月31日前失败吗？",
+         "resolution_source": "Official records", "bettable": True,
+         "disposition_hint": "candidate",
+         "R": 2, "R_reason": "x", "S": 2, "S_reason": "x",
+         "T": 2, "T_reason": "x", "U": 1, "U_reason": "x",
+         "H": 1, "H_reason": "x",
+         "BDLT": {"B": 2, "D": 2, "L": 1, "T": 1},
+         "yes_buyer": "government critics",
+         "no_buyer": "administration supporters",
+         "why_users_bet": "both sides care"},
+    ]}]})
+    SeriousAngle().generate(groups, _Client(payload), "fake", region)
+    assert groups[0]["suggested_question"] == "Will a cabinet vote fail by Dec 31?"
+    assert groups[0]["serious_candidates"][0]["bettable"] is False
 
 
 def test_reddit_angles_array_and_url_filter():

@@ -21,6 +21,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "mvp"))
 from regions import get_region
+from angles.base import generate_content_with_retry
+import gen_html
 
 
 PROMPT = """You are a prediction-market analyst.
@@ -76,9 +78,11 @@ def call_gemini(bettable_groups: list, api_key: str) -> list:
         groups="\n".join(payload_lines),
     )
     client = genai.Client(api_key=api_key)
-    resp = client.models.generate_content(
-        model=os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
-        contents=prompt,
+    resp = generate_content_with_retry(
+        client,
+        os.environ.get("GEMINI_MODEL", "gemini-3.5-flash"),
+        prompt,
+        usage_label="probabilities",
     )
     text = resp.text.strip()
     if text.startswith("```"):
@@ -179,6 +183,13 @@ def patch_html(html: str, probs_by_name: dict) -> str:
     return html
 
 
+def select_probability_groups(data: dict) -> list:
+    return [
+        g for g in data.get("groups", [])
+        if gen_html.passes_volume_gate(g)
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("date", nargs="?", default=dt.date.today().isoformat())
@@ -201,7 +212,7 @@ def main():
         sys.exit(1)
 
     data = json.loads(json_path.read_text(encoding="utf-8"))
-    bettable = [g for g in data.get("groups", []) if g.get("bettable")]
+    bettable = select_probability_groups(data)
     if not bettable:
         print("[INFO] No bettable groups; nothing to do.")
         return

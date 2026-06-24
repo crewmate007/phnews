@@ -129,7 +129,7 @@ def main():
 
     api_key = load_gemini_api_key()
     use_llm = (not args.no_llm) and bool(api_key)
-    gemini_model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
+    gemini_model = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
     print(f"[INFO] LLM mode: {'Gemini Flash' if use_llm else 'heuristic only'}")
     if use_llm:
         print(f"[INFO] LLM model: {gemini_model}")

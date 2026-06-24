@@ -5,7 +5,7 @@ Takes normalized SourceIntel hotspots, first groups them broadly for coverage,
 then evaluates each group for prediction-market bettability.
 
 Flow:
-  SourceIntel hotspots → broad clusters → RSTUH scoring → report groups
+  SourceIntel hotspots -> broad clusters -> contract + volume scoring -> report groups
 """
 from __future__ import annotations
 import json
@@ -17,6 +17,7 @@ import time
 from typing import List, Dict, Optional
 
 from regions import RegionConfig, get_region
+import market_scoring as scoring
 
 # Angle plugins (see mvp/angles/). cluster.py imports the shared base helpers
 # (parse_json_response / generate_content_with_retry / clip) under their old
@@ -183,7 +184,7 @@ SCORING GUIDE:
 
 def cluster_with_llm(clusters: List[Dict], api_key: str,
                      region: RegionConfig | str | None = None,
-                     model: str = "gemini-flash-latest") -> Dict:
+                     model: str = "gemini-3.5-flash") -> Dict:
     """Cluster SourceIntel entries broadly, then score each group with Gemini.
 
     Args:
@@ -205,7 +206,11 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         raise RuntimeError("pip install google-genai")
 
     region_cfg = region if isinstance(region, RegionConfig) else get_region(region)
-    client = genai.Client(api_key=api_key)
+    timeout_ms = int(os.environ.get("GEMINI_TIMEOUT_MS", "180000"))
+    try:
+        client = genai.Client(api_key=api_key, http_options={"timeout": timeout_ms})
+    except TypeError:
+        client = genai.Client(api_key=api_key)
 
     today = dt.date.today().isoformat()
     min_groups, max_groups = _target_group_range(len(clusters))
@@ -220,8 +225,7 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
         country_adjective=region_cfg.country_adjective,
     )
 
-    broad_response = _generate_content_with_retry(client, model, broad_prompt)
-    broad_result = _parse_json_response(broad_response.text)
+    broad_result = _generate_broad_cluster_result(client, model, broad_prompt)
     broad_result = _normalize_broad_result(broad_result, clusters)
     broad_result = _split_catchall_groups(broad_result, clusters)
     broad_result = _ensure_minimum_broad_groups(broad_result, clusters, min_groups)
@@ -241,13 +245,14 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     _run_angles(PHASE_1_ANGLES, broad_result["groups"], client, model, region_cfg)
 
     # Per-group housekeeping: fill missing score defaults, attach source_mix /
-    # source_examples derived from the original clusters, infer BDLT for any
-    # angle that didn't return them.
+    # source_examples derived from the original clusters, infer volume fields
+    # for any legacy angle that did not return them.
     for g in broad_result.get("groups", []):
         _fill_missing_scores(g)
         g["density"] = len(g.get("entry_ids", []))
         _attach_source_metadata(g, clusters)
-        _fill_missing_bdlt(g)
+        _fill_missing_volume_potential(g)
+        _apply_tradeability_guard(g)
 
     _apply_region_relevance_guard(broad_result, region_cfg)
     result = broad_result
@@ -256,18 +261,44 @@ def cluster_with_llm(clusters: List[Dict], api_key: str,
     result["clustered_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
     result["cluster_pipeline"] = "broad_then_angles"
     result["target_group_range"] = [min_groups, max_groups]
-    result["entries"] = [_compact_entry(i, cluster) for i, cluster in enumerate(clusters)]
+    result["entries"] = [_source_entry(i, cluster) for i, cluster in enumerate(clusters)]
 
     # PHASE 2: angles that read group["clusters"] for richer texture.
     # Today: RedditAngle + TikTokAngle. Each is best-effort; failure of any
     # one angle never blocks the others or the serious pipeline.
     if os.environ.get("PHNEWS_REDDIT_ANGLES", "1") != "0":
-        _run_angles(PHASE_2_ANGLES, result.get("groups", []), client, model, region_cfg)
+        phase_2_groups = [
+            group for group in result.get("groups", [])
+            if not group.get("region_irrelevant")
+        ]
+        _run_angles(PHASE_2_ANGLES, phase_2_groups, client, model, region_cfg)
 
     return result
 
 
-_ANGLE_BATCH_SIZE = 10
+def _generate_broad_cluster_result(client, model: str, broad_prompt: str) -> Dict:
+    """Generate and parse the broad cluster JSON, retrying malformed JSON once."""
+    last_exc = None
+    for attempt in range(2):
+        response = _generate_content_with_retry(
+            client,
+            model,
+            broad_prompt,
+            usage_label="broad_cluster" if attempt == 0 else "broad_cluster_retry",
+        )
+        try:
+            return _parse_json_response(response.text)
+        except json.JSONDecodeError as exc:
+            last_exc = exc
+            print(
+                f"[WARN] broad_cluster JSON parse failed "
+                f"(attempt {attempt + 1}/2): {exc}",
+                file=sys.stderr,
+            )
+    raise last_exc
+
+
+_ANGLE_BATCH_SIZE = int(os.environ.get("PHNEWS_ANGLE_BATCH_SIZE", "10"))
 _ANGLE_MAX_RETRY_ROUNDS = 2
 
 
@@ -350,18 +381,18 @@ def _build_broad_entries(clusters: List[Dict]) -> str:
             f"lane={c.get('source_lane') or c.get('source_name') or ''}",
             f"source_count={c.get('source_count', 0)}",
             f"rank={c.get('rank_score', '')}",
-            f"title={_clip(c.get('cluster_title', ''), 170)}",
+            f"title={_clip(c.get('cluster_title', ''), 130)}",
         ]
         if c.get("summary"):
-            fields.append(f"summary={_clip(c.get('summary', ''), 220)}")
+            fields.append(f"summary={_clip(c.get('summary', ''), 140)}")
         if claims:
-            fields.append(f"claims={_clip(' | '.join(claims[:3]), 260)}")
+            fields.append(f"claims={_clip(' | '.join(claims[:2]), 160)}")
         if c.get("sources"):
-            fields.append(f"entities={_clip(', '.join(str(s) for s in c.get('sources', [])[:8]), 140)}")
+            fields.append(f"entities={_clip(', '.join(str(s) for s in c.get('sources', [])[:6]), 100)}")
         if c.get("keywords"):
-            fields.append(f"keywords={_clip(', '.join(str(k) for k in c.get('keywords', [])[:8]), 120)}")
+            fields.append(f"keywords={_clip(', '.join(str(k) for k in c.get('keywords', [])[:6]), 80)}")
         if c.get("prediction_angle"):
-            fields.append(f"prediction_angle={_clip(c.get('prediction_angle', ''), 180)}")
+            fields.append(f"prediction_angle={_clip(c.get('prediction_angle', ''), 120)}")
         lines.append("\n".join(fields))
     return "\n\n".join(lines)
 
@@ -592,7 +623,7 @@ def _attach_source_metadata(group: Dict, clusters: List[Dict]) -> None:
         source_mix[source] = source_mix.get(source, 0) + 1
     group["source_mix"] = {
         source: source_mix[source]
-        for source in sorted(source_mix, key=lambda name: (name != "google_news", name))
+        for source in sorted(source_mix, key=_source_sort_key)
     }
     group["source_labels"] = [
         _source_label(source, count)
@@ -602,7 +633,7 @@ def _attach_source_metadata(group: Dict, clusters: List[Dict]) -> None:
     ranked = sorted(
         entry_ids,
         key=lambda entry_id: (
-            0 if (clusters[entry_id].get("source_name") == "x_grok") else 1,
+            _source_sort_key(clusters[entry_id].get("source_name") or ""),
             -(clusters[entry_id].get("rank_score") or 0),
         ),
     )
@@ -629,17 +660,46 @@ def _compact_entry(entry_id: int, cluster: Dict) -> Dict:
     }
 
 
+def _source_entry(entry_id: int, cluster: Dict) -> Dict:
+    raw = cluster.get("raw_hotspot")
+    raw = raw if isinstance(raw, dict) else None
+    entry = _compact_entry(entry_id, cluster)
+    entry.update({
+        "source_count": cluster.get("source_count"),
+        "article_count": cluster.get("article_count"),
+        "entities": cluster.get("sources", []),
+        "keywords": cluster.get("keywords", []),
+        "claims_en": cluster.get("claims_en") or (raw or {}).get("claims_en", []),
+        "claims_zh": cluster.get("claims_zh") or (raw or {}).get("claims_zh", []),
+        "evidence_urls": cluster.get("evidence_urls", []),
+        "observed_at": cluster.get("published", ""),
+        "rank_reason": cluster.get("rank_reason", ""),
+        "prediction_angle": cluster.get("prediction_angle", ""),
+    })
+    if raw:
+        entry["raw"] = raw
+    return entry
+
+
 def _source_from_section(section: str) -> str:
     if "x_grok" in section:
         return "x_grok"
+    if "google_trends" in section:
+        return "google_trends"
     if "google_news" in section:
         return "google_news"
     return "source_intel"
 
 
+def _source_sort_key(source: str) -> tuple[int, str]:
+    order = {"google_news": 0, "google_trends": 1, "x_grok": 2}
+    return order.get(source, 9), source
+
+
 def _source_label(source: str, count: int) -> str:
     names = {
         "google_news": "Google News",
+        "google_trends": "Google Trends",
         "x_grok": "Grok/X",
     }
     return f"{names.get(source, source)} {count}"
@@ -673,6 +733,7 @@ def _apply_region_relevance_guard(result: Dict, region: RegionConfig) -> None:
                 group,
                 f"Foreign domestic resolver is not suitable for {region.country_label_en} page.",
             )
+            group["region_irrelevant"] = True
 
 
 def _mark_digest(group: Dict, reason: str) -> None:
@@ -687,17 +748,22 @@ def _mark_digest(group: Dict, reason: str) -> None:
     group["R_reason"] = reason
     group["S_reason"] = reason
     group["T_reason"] = reason
-    group["BDLT"] = {
-        "B": min(group.get("BDLT", {}).get("B", 0), 1),
-        "B_reason": reason,
-        "D": min(group.get("BDLT", {}).get("D", 0), 1),
-        "D_reason": reason,
-        "L": 0,
-        "L_reason": reason,
-        "T": min(group.get("BDLT", {}).get("T", 0), 1),
-        "T_reason": reason,
+    group["volume_potential"] = {
+        key: 0 for key in scoring.VOLUME_DIMENSIONS
     }
-    group["BDLT"]["total"] = sum(group["BDLT"][key] for key in ("B", "D", "L", "T"))
+    group["volume_potential"].update({
+        f"{key}_reason": reason for key in scoring.VOLUME_DIMENSIONS
+    })
+    group["volume_score"] = 0
+    group["tradeability_reason"] = reason
+    group.pop("reddit_angles", None)
+    group.pop("tiktok_angles", None)
+    group["why_users_bet"] = reason
+    scoring.ensure_scoring_fields(group)
+
+
+def _apply_tradeability_guard(group: Dict) -> None:
+    scoring.apply_market_gates(group)
 
 
 def _fill_missing_scores(group: Dict) -> None:
@@ -710,23 +776,28 @@ def _fill_missing_scores(group: Dict) -> None:
     group.setdefault("suggested_question", None)
     group.setdefault("suggested_question_zh", None)
     group.setdefault("resolution_source", "")
+    group["contract_quality"] = scoring.normalize_contract_quality(group)
 
 
-def _fill_missing_bdlt(group: Dict) -> None:
-    raw = group.get("BDLT") if isinstance(group.get("BDLT"), dict) else {}
-    inferred = _infer_bdlt(group)
+def _fill_missing_volume_potential(group: Dict) -> None:
+    raw = group.get("volume_potential") if isinstance(group.get("volume_potential"), dict) else {}
+    inferred = _infer_volume_potential(group)
     normalized = {}
-    for key in ("B", "D", "L", "T"):
+    for key in scoring.VOLUME_DIMENSIONS:
         value = raw.get(key)
-        normalized[key] = value if value in (0, 1, 2) else inferred[key]
+        normalized[key] = scoring.clip_score(value, 5) if value is not None else inferred[key]
         reason_key = f"{key}_reason"
         normalized[reason_key] = raw.get(reason_key) or inferred[f"{key}_reason"]
-    normalized["total"] = sum(normalized[key] for key in ("B", "D", "L", "T"))
-    group["BDLT"] = normalized
+    personas = raw.get("personas")
+    normalized["personas"] = personas if isinstance(personas, list) else inferred["personas"]
+    group["volume_potential"] = normalized
+    if not isinstance(group.get("volume_score"), int):
+        group["volume_score"] = scoring.normalize_volume_potential(group)["score"]
+    scoring.ensure_scoring_fields(group)
     group.setdefault("why_users_bet", inferred["why_users_bet"])
 
 
-def _infer_bdlt(group: Dict) -> Dict:
+def _infer_volume_potential(group: Dict) -> Dict:
     text = " ".join(str(group.get(key) or "") for key in (
         "name", "name_zh", "narrative", "narrative_zh",
         "suggested_question", "suggested_question_zh", "topic_type",
@@ -764,35 +835,71 @@ def _infer_bdlt(group: Dict) -> Dict:
     looks_foreign = any(term in text for term in foreign_noise_terms)
 
     if not group.get("bettable") and not has_high_demand:
-        b = 0
+        audience = 0
     elif has_high_demand or topic_type in ("sports", "politics", "economy", "weather", "entertainment"):
-        b = 2
+        audience = 5
     elif rstuh_total >= 7 or source_mix.get("x_grok"):
-        b = 1
+        audience = 3
     else:
-        b = 0
+        audience = 1
 
-    d = 2 if group.get("U") == 2 else (1 if group.get("U") == 1 or group.get("bettable") else 0)
-    l = 0 if looks_foreign else (2 if has_local else (1 if source_mix.get("x_grok") else 0))
-    t = 2 if group.get("T") == 2 else (1 if group.get("T") == 1 else 0)
+    if topic_type in ("economy", "weather", "politics", "sports"):
+        stake = max(audience, 4)
+    elif topic_type in ("entertainment", "technology"):
+        stake = min(5, max(audience, 3))
+    else:
+        stake = audience
 
-    why = "Local users know the actors and can take a side." if b >= 2 and l >= 2 else ""
-    if not why and b >= 1:
+    two_sided = 5 if group.get("U") == 2 else (3 if group.get("U") == 1 or group.get("bettable") else 0)
+    local = 0 if looks_foreign else (5 if has_local else (2 if source_mix.get("x_grok") else 1))
+    trade_now = 5 if group.get("T") == 2 and audience >= 4 else (3 if group.get("T") == 2 else (2 if group.get("T") == 1 else 0))
+    update = 5 if group.get("T") == 2 and (source_mix.get("x_grok") or group.get("density", 0) >= 3) else (3 if group.get("T") == 2 else (2 if group.get("T") == 1 else 0))
+    comprehension = 4 if group.get("suggested_question") else 1
+    narrative = 5 if has_high_demand and (source_mix.get("x_grok") or topic_type in ("sports", "politics", "entertainment")) else max(1, min(4, audience))
+
+    why = "Local users know the actors and can take a side." if audience >= 4 and local >= 4 else ""
+    if not why and audience >= 3:
         why = "Playable if framed with a clear near-term outcome."
     if not why:
         why = "Low expected betting demand."
 
     return {
-        "B": b,
-        "B_reason": "Measures whether local users would actually want to bet.",
-        "D": d,
-        "D_reason": "Uses uncertainty and likely two-sided demand.",
-        "L": l,
-        "L_reason": "Measures local familiarity and emotional hook.",
-        "T": t,
-        "T_reason": "Uses the market time window and settlement proximity.",
+        "audience_reach": audience,
+        "audience_reach_reason": "Estimated local retail audience size and familiarity.",
+        "stake_salience": stake,
+        "stake_salience_reason": "Estimated money, identity, fandom, livelihood, safety, or status stake.",
+        "two_sided_conviction": two_sided,
+        "two_sided_conviction_reason": "Uses uncertainty and likely motivated counterparties.",
+        "trade_now_trigger": trade_now,
+        "trade_now_trigger_reason": "Measures whether the topic gives users a reason to trade now.",
+        "update_cadence": update,
+        "update_cadence_reason": "Measures whether new information can move prices before settlement.",
+        "comprehension_speed": comprehension,
+        "comprehension_speed_reason": "Measures whether a retail user can understand the market quickly.",
+        "narrative_heat": narrative,
+        "narrative_heat_reason": "Measures rivalry, controversy, emotion, and shareability.",
+        "local_relevance": local,
+        "local_relevance_reason": "Measures local familiarity and direct relevance.",
+        "personas": _infer_personas(topic_type, text),
         "why_users_bet": why,
     }
+
+
+def _infer_personas(topic_type: str, text: str) -> List[str]:
+    personas = []
+    if topic_type in ("sports", "entertainment") or any(term in text for term in ("nba", "pba", "fifa", "movie", "concert", "celebrity")):
+        personas.append("sports/fandom")
+    if topic_type in ("politics", "legal", "security") or any(term in text for term in ("senate", "president", "court", "election")):
+        personas.append("politics/public events")
+    if topic_type == "economy" or any(term in text for term in ("fuel", "rice", "inflation", "peso", "rupiah", "price")):
+        personas.append("cost of living/consumer")
+    if topic_type == "weather" or any(term in text for term in ("typhoon", "flood", "earthquake", "traffic", "transport")):
+        personas.append("weather/transport/safety")
+    if topic_type == "technology" or any(term in text for term in ("game", "gaming", "app", "phone", "ai", "crypto")):
+        personas.append("entertainment/gaming/tech")
+    if any(term in text for term in ("crypto", "stock", "ihsg", "index", "rate", "central bank")):
+        personas.append("finance/crypto")
+    return personas or ["local retail"]
 
 
 def _clip(value: str, length: int) -> str:
@@ -916,6 +1023,8 @@ def cluster_keyword_fallback(clusters: List[Dict],
         "noise": noise,
         "total_entries": len(clusters),
         "clustered_at": dt.datetime.now().isoformat(),
+        "cluster_pipeline": "keyword_fallback",
+        "entries": [_source_entry(i, cluster) for i, cluster in enumerate(clusters)],
     }
 
 
@@ -1089,7 +1198,7 @@ def _entries_from_groups(groups: List[Dict]) -> List[Dict]:
         for cluster in group.get("clusters", []):
             entry_id = cluster.get("id")
             if isinstance(entry_id, int):
-                entries_by_id[entry_id] = _compact_entry(entry_id, cluster)
+                entries_by_id[entry_id] = _source_entry(entry_id, cluster)
     return [entries_by_id[key] for key in sorted(entries_by_id)]
 
 

@@ -13,7 +13,6 @@ After running this, regenerate the HTML (no API calls):
 Usage:
   python3 scripts/add_reddit_angles.py                 # today, ph
   python3 scripts/add_reddit_angles.py 2026-05-24      # specific date, ph
-  python3 scripts/add_reddit_angles.py --region id
   python3 scripts/add_reddit_angles.py --limit 5       # smoke test on first 5 groups
 """
 from __future__ import annotations
@@ -80,7 +79,7 @@ def main() -> None:
         sys.exit(1)
 
     api_key = load_api_key()
-    model = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+    model = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
     client = genai.Client(api_key=api_key)
 
     print(

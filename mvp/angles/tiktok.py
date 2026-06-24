@@ -121,7 +121,9 @@ class TikTokAngle:
             country_name=region_cfg.country_name,
             groups=_build_tiktok_input(groups),
         )
-        response = generate_content_with_retry(client, model, prompt)
+        response = generate_content_with_retry(
+            client, model, prompt, usage_label="tiktok_angle"
+        )
         result = parse_json_response(response.text)
 
         by_index: Dict[int, Dict] = {}
