@@ -13,11 +13,27 @@ on:
       total_limit:
         description: "Final SourceIntel hotspot cap per region"
         required: false
-        default: "120"
+        default: "160"
+      google_news_limit:
+        description: "Google News hotspot cap per region"
+        required: false
+        default: "100"
+      trends_limit:
+        description: "Google Trends hotspot cap per region"
+        required: false
+        default: "20"
       x_limit:
         description: "Grok/X hotspot cap per region"
         required: false
-        default: "30"
+        default: "20"
+      reddit_limit:
+        description: "Reddit hotspot cap per region"
+        required: false
+        default: "20"
+      reddit_post_limit:
+        description: "Reddit candidate post cap before OpenAI normalization"
+        required: false
+        default: "80"
 
 permissions:
   contents: write
@@ -35,11 +51,17 @@ jobs:
       TZ: Asia/Manila
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash' }}
       XAI_MODEL: ${{ vars.XAI_MODEL || 'grok-4.3' }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1-mini' }}
       SOURCE_INTEL_DAYS: ${{ github.event.inputs.days || '7' }}
-      SOURCE_INTEL_TOTAL_LIMIT: ${{ github.event.inputs.total_limit || '120' }}
-      SOURCE_INTEL_X_LIMIT: ${{ github.event.inputs.x_limit || '30' }}
+      SOURCE_INTEL_TOTAL_LIMIT: ${{ github.event.inputs.total_limit || '160' }}
+      SOURCE_INTEL_GOOGLE_NEWS_LIMIT: ${{ github.event.inputs.google_news_limit || '100' }}
+      SOURCE_INTEL_TRENDS_LIMIT: ${{ github.event.inputs.trends_limit || '20' }}
+      SOURCE_INTEL_X_LIMIT: ${{ github.event.inputs.x_limit || '20' }}
+      SOURCE_INTEL_REDDIT_LIMIT: ${{ github.event.inputs.reddit_limit || '20' }}
+      SOURCE_INTEL_REDDIT_POST_LIMIT: ${{ github.event.inputs.reddit_post_limit || '80' }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
@@ -71,8 +93,8 @@ jobs:
       - name: Collect SourceIntel hotspots
         working-directory: SourceIntel
         run: |
-          python -m source_intel.cli collect --source all --region ph --days "$SOURCE_INTEL_DAYS" --limit all --x-limit "$SOURCE_INTEL_X_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
-          python -m source_intel.cli collect --source all --region id --days "$SOURCE_INTEL_DAYS" --limit all --x-limit "$SOURCE_INTEL_X_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
+          python -m source_intel.cli collect --source all --region ph --days "$SOURCE_INTEL_DAYS" --limit "$SOURCE_INTEL_GOOGLE_NEWS_LIMIT" --trends-limit "$SOURCE_INTEL_TRENDS_LIMIT" --x-limit "$SOURCE_INTEL_X_LIMIT" --reddit-limit "$SOURCE_INTEL_REDDIT_LIMIT" --reddit-post-limit "$SOURCE_INTEL_REDDIT_POST_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
+          python -m source_intel.cli collect --source all --region id --days "$SOURCE_INTEL_DAYS" --limit "$SOURCE_INTEL_GOOGLE_NEWS_LIMIT" --trends-limit "$SOURCE_INTEL_TRENDS_LIMIT" --x-limit "$SOURCE_INTEL_X_LIMIT" --reddit-limit "$SOURCE_INTEL_REDDIT_LIMIT" --reddit-post-limit "$SOURCE_INTEL_REDDIT_POST_LIMIT" --total-limit "$SOURCE_INTEL_TOTAL_LIMIT"
 
       - name: Generate PHNews static pages
         working-directory: phnews
